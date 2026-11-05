@@ -10,3 +10,5 @@
 | 19:41 | M1 selvreview: 12 fund (0 alvorlige, 4 middel, 8 små) rettet med 10 nye scenarier | Grøn: npm run check (325 tests); pushet |
 | 20:04 | M2 kerne + tidsmaskine + resten (Uge, Stiger, Mere/Backup, Om/Diagnose, B, motor, Open & Strong) | Grøn: npm run check (338 tests), Playwright 16/16 i pixel9a + UTC; SK1 varm offline: I dag 46 ms (median); pushet |
 | 20:19 | M2 udgivet på Pages efter en hængende GitHub-udrulning (genkørt); røgtest mod den udgivne adresse: indfasning, I dag, service worker, /program | Grøn: Actions 42090360263; varm start 48 ms |
+| 20:44 | Designgennemgang M2: 17 fund (3 høje, 7 middel, 7 lave) rettet; Historik; genoptagelse fra loggen; W3/W5-runder | Grøn: npm run check (338 tests), Playwright 18/18 (6 efter genkørsel pga. Firefox-lukkefejl); SK1 I dag 41 ms; pushet |
+| 20:56 | Rapport (`docs/runs/NAT-1-REPORT.md`); I dag læser startdatoen fra loggen i stedet for en fast tekst | Grøn: npm run check (338 tests), Playwright m2 + faner 9/9 og UTC 1/1; pushet |
