@@ -21,7 +21,7 @@ Appen forklarer sig selv og står på egne ben: hver øvelse har et øvelseskort
 | SK7 | Programdata indeholder alle trin fra `PROGRAM_KILDE.md` | Konverteringstest (`program.spec.ts`) |
 | SK8 | Eksport + import genskaber hele tilstanden byte for byte | Motor-test `S-DATA-02` |
 | SK9 | Hele appen vejer under 150 kB komprimeret JavaScript | Build-rapport |
-| SK10 | Ingen tekst i appen henviser til PDF'en, sidetal eller kilder | Vitest (`no-source-refs.test.ts`: kildekoden, programdata og `content/`) og Playwright (`no-source-refs.spec.ts`: de viste skærme) |
+| SK10 | Ingen tekst i appen henviser til PDF'en, sidetal eller kilder | Vitest (`no-source-refs.test.ts`: kildekoden og programdata; `content.test.ts`: forklaringerne) og Playwright (`no-source-refs.spec.ts`: de viste skærme) |
 | SK11 | Hvert trin og hvert rutinepunkt har en forklaring og en animeret figur, der består valideringen (9.1) | `node scripts/check-explain.ts` (dækning) og Vitest (`content.test.ts`) |
 
 ## 2. Platform
@@ -100,7 +100,7 @@ Skitsen viser opbygningen fra milepæl 2; »Nu og næste« herunder lægges ind 
 - Ét skridt ad gangen i skabelonens rækkefølge (opvarmning → power → par/tri-sæt → finisher → nakke). Par og tri-sæt skifter automatisk mellem øvelserne: A1, pause, B1, pause, A2 …
 - **Hvad nu, og hvad bagefter** (`DECISIONS.md` T8). Under passet skal det altid være klart, hvad der skal laves nu, og hvad der kommer bagefter, så ingen ny øvelse kommer bag på dig, mens tiden går:
   - **Dagens pas** på ét blik, før passet starter: blokkene i rækkefølge med navy skillere og store røde tal, øvelserne med figur, sæt × gentagelser (eller tid), pauser, udstyr og forventet tid. Skærmen åbnes fra I dag-kortet, og »Start passet« står nederst.
-  - **Nu og Næste** er altid synlige under passet: »Nu« med figur, mål og 2 cues og »Næste« med figur, navn og mål, og det samme er fremdriften i passet (fx »Blok 3 af 7«).
+  - **Nu og næste:** under hele passet er »Nu« (figur, mål og 2 cues) og »Næste« (figur, navn og mål) synlige, og det samme er fremdriften i passet (fx »Blok 3 af 7«).
   - **Pausen** viser den næste øvelse stort med animation og dens »Gør klar«-tekst.
   - **Introkort:** første gang en øvelse kommer i passet (dens første sæt), vises et kort introkort med animation og trin, før timeren går. Et tryk lukker det. Ved hold og EMOM starter nedtællingen først, når kortet er lukket, så holdet selv kører uden berøring (SK3). Open & Strong og motorens faser har intet introkort (`DECISIONS.md` D41).
   - Bevægelse i brugerfladen bruges kun, hvor den viser, hvad der ændrede sig (afsnit 5).
