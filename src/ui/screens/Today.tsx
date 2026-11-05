@@ -185,7 +185,7 @@ export function Today(props: {
         </div>
       ))}
 
-      <MainCard plan={plan} onStart={props.onStart} />
+      <MainCard plan={plan} startDate={state.startDate} onStart={props.onStart} />
 
       <div class="card os-row">
         <div>
@@ -224,15 +224,17 @@ export function Today(props: {
 
 function MainCard({
   plan,
+  startDate,
   onStart,
 }: {
   plan: DayPlan;
+  startDate: string;
   onStart: (kind: SessionKind, short: boolean, calmBase: boolean) => void;
 }) {
   if (plan.beforeStart) {
     return (
       <div class="card main-card">
-        <h1>Programmet starter mandag 9. november</h1>
+        <h1>Programmet starter {formatLong(startDate)}</h1>
         <p>
           Open &amp; Strong kan du tage allerede nu. Tidsmaskinen under Mere → Om lader dig prøve et
           pas.
