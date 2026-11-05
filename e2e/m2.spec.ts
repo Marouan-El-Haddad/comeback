@@ -188,8 +188,10 @@ test('luk appen midt i et pas og åbn igen: passet fortsætter samme sted', asyn
   await page.reload();
   await expect(page.locator('.set-count')).toHaveText('Sæt 3 af 3');
 
-  // Without the saved position the log alone tells where the session is.
-  await page.evaluate(() => localStorage.removeItem('comeback.run'));
+  // Without the saved position the log alone tells where the session is. The key is removed in the
+  // new page before the app starts: the session saves its position in an effect after drawing, so
+  // a removal from the old page could be overwritten before the reload.
+  await page.addInitScript(() => localStorage.removeItem('comeback.run'));
   await page.reload();
   await expect(page.locator('.main-card')).toContainText('Passet er i gang');
   await page.getByRole('button', { name: 'Fortsæt passet' }).click();
