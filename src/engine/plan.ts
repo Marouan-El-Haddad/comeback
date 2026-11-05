@@ -245,8 +245,10 @@ function dueMeasures(
   k: number,
 ): Measure[] {
   const monday = mondayOf(date);
+  // Only days before the session's own day count: a measurement logged during the session must
+  // not change the session's plan while it runs.
   const logged = (id: string, from: ISODate) =>
-    state.measurements.some((m) => m.measureId === id && m.date >= from && m.date <= date);
+    state.measurements.some((m) => m.measureId === id && m.date >= from && m.date < date);
   const forKind = (week: Week) =>
     program.measures.filter(
       (m) =>

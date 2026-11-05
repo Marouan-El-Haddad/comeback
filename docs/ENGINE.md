@@ -518,7 +518,7 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 - **S-MEAS-02** Givet `pushups = 52`. Så niveau = Stærk; `wall_test = 1` → Stærk (lowerIsBetter).
 - **S-MEAS-03** Givet runde 1, pw 1. Så base_check torsdag og målinger tirsdag/fredag; runde 2 pw 5 → ingen.
 - **S-MEAS-04** Givet `wallsit.W3` i pw 4. Når fredag beregnes. Så er wall sit-målingen første sæt i wall sit-blokken, og runderne er én færre. (Tilføjet ved selvreview F3.)
-- **S-MEAS-05** Givet pw 4 og et gult A tirsdag uden målinger. Så tilbydes væg-test, push-ups og bord-rows ved næste grønne A (pw 5); burpee-testen ikke, fordi den kun erstatter EMOM'en i en let uge. (Tilføjet ved selvreview F4.)
+- **S-MEAS-05** Givet pw 4 og et gult A tirsdag uden målinger. Så tilbydes væg-test, push-ups og bord-rows ved næste grønne A (pw 5); burpee-testen ikke, fordi den kun erstatter EMOM'en i en let uge. En måling, der logges under et pas, ændrer ikke samme dags plan; fra næste dag er den taget. (Tilføjet ved selvreview F4.)
 - **S-IMP-01** Givet `press.2` og `shoulder.2`. Så `deficit` og `wall_walks` ulåst, `diamond` låst indtil pushups ≥ 25. Givet `shoulder.1` → `wall_walks` låst.
 - **S-IMP-02** Givet 3 × 10 på `press.2` logget og derefter `press.1`. Så er pseudo-planche låst, til pres igen er på mindst trin 2. (Tilføjet ved selvreview F8.)
 - **S-HERO-01** Givet `press.6` med 3 reps pr. side logget. Så hint for »Etarms push-up« vises; `checked` forbliver false, til brugeren krydser af.

@@ -160,6 +160,9 @@ describe('Selvreview af milepæl 1', () => {
     expect(next.some((b) => b.unit === 'emom')).toBe(true);
     // Once they are taken, they are not offered again.
     log.session({ date: TUE(4), measures: { wall_test: 2, pushups: 30, table_rows: 12 } });
+    // The day's plan does not change once the measurements are logged (the session runs on it).
+    const same = planFor(log.program, log.state(TUE(4)), TUE(4)).session?.blocks ?? [];
+    expect(same.filter((b) => b.measureId).map((b) => b.measureId)).toEqual(due);
     const later = planFor(log.program, log.state(dayOf(4, 6)), dayOf(4, 6));
     expect(later.session).toBeNull();
     const week6 = planFor(log.program, log.state(TUE(5)), TUE(5)).session?.blocks ?? [];
