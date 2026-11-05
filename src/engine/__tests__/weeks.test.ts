@@ -1,5 +1,6 @@
 // docs/ENGINE.md 8: weeks, absence, calendar, events and the flat rule.
 import { describe, expect, test } from 'vitest';
+import { findSourceRef } from '../../content/refs.ts';
 import { planFor, startSession } from '../index.ts';
 import { dayOf, Log, mondays, type Steps } from './helpers/log.ts';
 
@@ -92,7 +93,11 @@ describe('Uger og fravær', () => {
     ]) {
       expect(tracks).toContain(id);
     }
-    for (const e of absence) expect(e.type === 'step_changed' && e.explanation).toMatch(/side 47/);
+    for (const e of absence) {
+      const explanation = e.type === 'step_changed' ? e.explanation : '';
+      expect(explanation).toMatch(/Tre uger uden styrkepas: alle stiger ét trin ned\.$/);
+      expect(findSourceRef(explanation), explanation).toBeNull();
+    }
     const state = log.state(dayOf(3, 1));
     expect(state.weeks[3]?.pw).toBe(1);
     expect(state.tracks.press).toMatchObject({ stepId: 'press.2', hits: 0, target: 6 });

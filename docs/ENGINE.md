@@ -6,7 +6,7 @@ Version 1.1 · 5. november 2026 (rettet efter gennemgang mod PDF'en, se `DECISIO
 
 1. **Programmet er data.** `program/*.json` beskriver spor, trin, pas, uger, målinger og overlejringer med stabile ID'er. Koden kender ingen øvelser ved navn.
 2. **Brugerdata er en tilføj-kun hændelseslog.** Tilstanden afledes ved at afspille loggen (`deriveState(program, events, today)`). Intet slettes; rettelser er nye hændelser.
-3. **Motorens beslutninger er hændelser.** Når motoren rykker et trin op eller ned, skriver den en `step_changed` med `explanation`. En senere regelrettelse ændrer aldrig historikken.
+3. **Motorens beslutninger er hændelser.** Når motoren rykker et trin op eller ned, skriver den en `step_changed` med `explanation`. Forklaringen er på dansk i appens egne ord og henviser ikke til PDF'en, sidetal eller kilder (`DECISIONS.md` A2). En senere regelrettelse ændrer aldrig historikken.
 4. **Deterministisk og uden ur.** Ingen funktion i `src/engine` kalder `Date.now()`; `today` og `now` er parametre. Det gør tidsmaskinen og alle tests mulige.
 5. **Forsigtigt som standard.** Når to tolkninger er mulige, vælges den, der rykker langsommere op og hurtigere ned.
 6. **Ingen skyld.** Ingen streaks; gule pas tæller som gennemførte; sprungne pas registreres uden tællere, der »knækker«.
@@ -172,7 +172,7 @@ Tilstanden afledes fra bunden ved hver start og efter hver hændelse (loggen er 
 
 **R-PAIN-SUNDAY:** `sunday_check.painTracks` ikke tom → R-PAIN-SHARP for de spor (Præcisering af side 46 + 48). `tooHeavy` → tilbud om ét trin ned (`by: 'user'`).
 
-**R-ABSENCE-3:** tre på hinanden følgende kalenderuger uden gennemført uge → alle stiger ét trin ned (ikke under trin 1), EMOM ét trin ned, klubsekvens ét trin ned, `hits = 0`, `target = min`, én gang pr. fraværsperiode. Forklaring: »Tre uger uden styrkepas: alle stiger ét trin ned (side 47).«
+**R-ABSENCE-3:** tre på hinanden følgende kalenderuger uden gennemført uge → alle stiger ét trin ned (ikke under trin 1), EMOM ét trin ned, klubsekvens ét trin ned, `hits = 0`, `target = min`, én gang pr. fraværsperiode. Forklaring: »Tre uger uden styrkepas: alle stiger ét trin ned.« (uden sidetal, A2).
 
 ### 5.6 Lette uger og målinger
 
@@ -490,7 +490,7 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 - **S-WEEK-02** Givet k0 og k1 gennemført, k2 uden A/B. Så pw(k3) = pw(k1) = 2; pw(k4) = 3, hvis k3 gennemføres.
 - **S-WEEK-03** Givet kun et gult A i ugen. Så ugen er gennemført.
 - **S-WEEK-04** Givet kun et rødt A og Open & Strong. Så ugen er ikke gennemført.
-- **S-WEEK-05** Givet tre uger uden gennemført. Når den fjerde uge beregnes. Så alle spor –1 trin (ikke under trin 1), EMOM –1, én `step_changed` pr. spor med reason `absence`; pw = sidste gennemførte.
+- **S-WEEK-05** Givet tre uger uden gennemført. Når den fjerde uge beregnes. Så alle spor –1 trin (ikke under trin 1), EMOM –1, én `step_changed` pr. spor med reason `absence`, og forklaringen slutter med »Tre uger uden styrkepas: alle stiger ét trin ned.« uden sidetal; pw = sidste gennemførte.
 - **S-WEEK-06** Givet fire uger uden. Så kun ét sæt absence-ændringer (ikke to).
 - **S-WEEK-07** Givet `status: ill` 10–16/11. Så alle dage i intervallet er røde, og ugen er ikke gennemført.
 - **S-WEEK-08** Givet `status: travel`. Når tirsdag beregnes. Så rejsepas med EMOM `min(E3, trin)`; når det logges `done`, er ugen gennemført, og `hits` uændrede.

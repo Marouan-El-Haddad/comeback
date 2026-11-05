@@ -1,5 +1,6 @@
 // Success criteria from docs/SPEC.md 1 that the engine can show on its own.
 import { describe, expect, test } from 'vitest';
+import { findSourceRef } from '../../content/refs.ts';
 import { dayOf, Log } from './helpers/log.ts';
 
 describe('Succeskriterier', () => {
@@ -41,6 +42,8 @@ describe('Succeskriterier', () => {
       const text = 'explanation' in e ? e.explanation : '';
       expect(text.trim().length, JSON.stringify(e)).toBeGreaterThan(10);
       expect(text.trim().endsWith('.'), text).toBe(true);
+      // ENGINE.md 1, principle 3: in the app's own words, no PDF, page or source (A2).
+      expect(findSourceRef(text), text).toBeNull();
     }
   });
 });

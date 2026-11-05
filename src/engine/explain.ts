@@ -82,13 +82,13 @@ export function explainRestore(program: Program, from: string, to: string): stri
 
 export function explainAbsence(program: Program, from: string, to: string): string {
   if (from === to) {
-    return `${label(program, to)}: bliver på trin ${key(program, to)} og starter forfra. Tre uger uden styrkepas: alle stiger ét trin ned (side 47).`;
+    return `${label(program, to)}: bliver på trin ${key(program, to)} og starter forfra. Tre uger uden styrkepas: alle stiger ét trin ned.`;
   }
-  return `${label(program, to)}: trin ${key(program, to)}. Tre uger uden styrkepas: alle stiger ét trin ned (side 47).`;
+  return `${label(program, to)}: trin ${key(program, to)}. Tre uger uden styrkepas: alle stiger ét trin ned.`;
 }
 
 export function explainAbsenceLoad(program: Program, stepId: string, to: number): string {
-  return `${label(program, stepId)}: ${to} kg i rygsækken og forfra på arbejdstallet. Tre uger uden styrkepas: alle stiger ét trin ned (side 47).`;
+  return `${label(program, stepId)}: ${to} kg i rygsækken og forfra på arbejdstallet. Tre uger uden styrkepas: alle stiger ét trin ned.`;
 }
 
 export function explainUserChoice(program: Program, to: string): string {
