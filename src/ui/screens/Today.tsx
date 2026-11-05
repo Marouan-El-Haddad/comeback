@@ -144,7 +144,7 @@ export function Today(props: {
           case 'reduced_volume':
             return (
               <p key="flat" class="flag">
-                To flade uger i træk: en tredjedel færre sæt denne uge (side 39).
+                To flade uger i træk: en tredjedel færre sæt denne uge.
               </p>
             );
           case 'light_week':

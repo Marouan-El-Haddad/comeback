@@ -10,7 +10,9 @@ const CITATION = String.raw`\([\p{L}'’ .&-]*\p{Lu}[\p{L}'’-]*,?\s(?:19|20)\d
 const PATTERNS: RegExp[] = [
   /\bPDF/iu,
   /\bsidetal/iu,
-  /\b(?:side|sider|s\.)\s*\d/iu,
+  // »side 47« with at most one space (or a no-break space); a tab or a line break is a new table
+  // cell or line in the screen's text, not a page number.
+  /\b(?:side|sider|s\.)[  ]?\d/iu,
   /\bkild(?:e|en|ens|er|erne|ernes)\b/iu,
   new RegExp(CITATION, 'u'),
   /\bhttps?:\/\//iu,

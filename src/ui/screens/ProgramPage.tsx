@@ -1,5 +1,6 @@
 // /program: every ladder and step, the week table, measurements and catalogues straight from
-// program/*.json, read-only, for comparing with the PDF (docs/PLAN.md milestone 1).
+// program/*.json, read-only, for checking the programme (docs/PLAN.md milestone 1). No page
+// numbers: the app never refers to the PDF (docs/DECISIONS.md A2, D38).
 import { formatDose } from '../../engine/format.ts';
 import { PROGRAM } from '../../engine/program.ts';
 import type { Level, Track } from '../../engine/types.ts';
@@ -21,7 +22,6 @@ function TrackSection({ track }: { track: Track }) {
   return (
     <section class="prog-track card" id={track.id}>
       <h2>{track.name}</h2>
-      <p class="muted">PDF side {track.pdfPage}</p>
       <ol class="prog-steps">
         {track.steps.map((step) => (
           <li key={step.id} class="prog-step">

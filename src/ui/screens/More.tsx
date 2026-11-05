@@ -249,7 +249,7 @@ function About({ model, onPage }: { model: Model; onPage: (p: MorePage) => void 
       <p>Programversion {PROGRAM.programVersion}</p>
       <p class="muted">
         Comeback – sekundærtræning til Muay Thai. Programmet er den faglige sandhed; appen ændrer
-        aldrig indholdet. Kilderne står i programmets side 54.
+        aldrig indholdet.
       </p>
       <button
         type="button"
