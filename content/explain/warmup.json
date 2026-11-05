@@ -1,0 +1,430 @@
+{
+  "format": 1,
+  "subject": "warmup",
+  "why": [
+    "Opvarmningen er de samme fire punkter hver gang: pulsen op, leddene i gang, de små muskler tændt og til sidst et par eksplosive gentagelser. Så er kroppen klar til at arbejde hurtigt og hårdt.",
+    "Den fortæller dig også, hvilken dag det er. Føles de første hop eller push-ups tunge og langsomme, er det en gul dag, og du svarer nej til trafiklysets sidste spørgsmål.",
+    "Hofter, ryg, skuldre og håndled får bevægelse, før de skal klare spark, knæ, clinch og push-ups. Håndleddene varmer du op hver gang."
+  ],
+  "items": [
+    {
+      "id": "warmup.1",
+      "trains": "Puls og varme i hele kroppen og lette, hurtige fødder som i ringen.",
+      "start": "Til sjippe-trin står du let på forfødderne med fødderne tæt sammen og bløde knæ. Til skyggeboksning står du i din kampstilling med hænderne oppe.",
+      "steps": [
+        "Vælg sjippe-trin uden tov eller let skyggeboksning.",
+        "Sjippe-trin: hop små hop på forfødderne, og drej håndleddene, som om du svinger et tov.",
+        "Skyggeboksning: bevæg dig let på fødderne, slå lette, lige slag, og før hånden straks tilbage i garden.",
+        "Start roligt, og sæt farten op hen ad vejen, så du slutter hurtigt."
+      ],
+      "tempo": "Fra roligt til hurtigt: start let, og sæt farten op hen ad vejen.",
+      "breathing": "Træk vejret frit. Pust kort ud på hvert slag, når du skyggebokser.",
+      "cues": ["Let på forfødderne", "Roligt først, så hurtigt", "Hænderne tilbage i garden"],
+      "mistakes": [
+        {
+          "mistake": "Du lander tungt på hælene.",
+          "fix": "Bliv på forfødderne, og hop kun et par centimeter op."
+        },
+        {
+          "mistake": "Du starter for hurtigt og er brugt før tid.",
+          "fix": "Start roligt, så du stadig kan sætte farten op til sidst."
+        },
+        {
+          "mistake": "Hænderne falder ned, når du skyggebokser.",
+          "fix": "Før hånden tilbage til kinden efter hvert slag."
+        }
+      ],
+      "easier": "Vælg let skyggeboksning, hvis hop er for hårdt for anklerne eller læggene i dag.",
+      "harder": "Hop fra fod til fod, når du er varm, men hold det let. Opvarmningen må ikke trætte dig.",
+      "equipment": [],
+      "getReady": "Find en fri plads, hvor du kan hoppe og slå uden at ramme noget.",
+      "movements": [
+        {
+          "id": "sjip",
+          "name": "Sjippe-trin uden tov",
+          "positions": [
+            {
+              "id": "nede",
+              "name": "Landet",
+              "text": "Stående på forfødderne med fødderne tæt sammen og hælene lige over gulvet. Knæene er let bøjede og overkroppen oprejst. Albuerne er bøjet ca. 90° ind til siden og hænderne ud for hofterne, som om de holder et tov.",
+              "contacts": [{ "part": "toes", "on": "floor" }]
+            },
+            {
+              "id": "oppe",
+              "name": "I luften",
+              "text": "Som landet, men begge fødder er et par centimeter over gulvet med tæerne pegende ned og næsten strakte knæ. Håndleddene drejer en lille cirkel, som om tovet passerer under fødderne.",
+              "contacts": []
+            }
+          ],
+          "phases": [
+            { "to": "oppe", "seconds": 0.25, "label": "Hop" },
+            { "to": "nede", "seconds": 0.25, "label": "Land blødt" }
+          ]
+        },
+        {
+          "id": "skygge",
+          "name": "Let skyggeboksning",
+          "positions": [
+            {
+              "id": "garde",
+              "name": "Garde",
+              "text": "Kampstilling: forreste fod fladt frem og bagerste fod en skulderbredde bagved på forfoden. Bløde knæ og vægten mest på bagerste ben. Hænderne oppe ved kinderne, albuerne ind og hagen let nede.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "forreste",
+              "name": "Forreste lige",
+              "text": "Som garden, men forreste arm er strakt lige frem i skulderhøjde med knoerne fremad. Bagerste hånd bliver ved kinden, og hagen er gemt bag forreste skulder.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "bagerste",
+              "name": "Bagerste lige",
+              "text": "Som garden, men bagerste arm er strakt lige frem i skulderhøjde. Bagerste hofte og hæl er drejet frem, og forreste hånd bliver ved kinden.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "forreste", "seconds": 0.3, "label": "Forreste lige" },
+            { "to": "garde", "seconds": 0.3, "label": "Tilbage i garden" },
+            { "to": "bagerste", "seconds": 0.4, "label": "Bagerste lige" },
+            { "to": "garde", "seconds": 0.4, "label": "Tilbage i garden" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.2",
+      "trains": "Bevægelighed i hofter, lyske og ryg, som du bruger i knæ, spark og drejninger i clinchen.",
+      "start": "Spiderman-udfald starter i planke med strakte arme, kosak-squat i bred stand og kat-ko på alle fire.",
+      "steps": [
+        "Spiderman-udfald: træd den ene fod frem uden for hånden, drej brystet mod benet, og stræk armen på samme side mod loftet. 5 pr. side.",
+        "Kosak-squat: sæt dig ned på det ene ben, mens det andet er strakt med tæerne op. Skift side, til du har 5 på hver.",
+        "Kat-ko: rund ryggen op mod loftet, og lad den derefter synke med brystet frem. 10 gange."
+      ],
+      "tempo": "Roligt og jævnt med et kort stop yderst i hver bevægelse.",
+      "breathing": "Træk vejret roligt. I kat-ko puster du ud, når du runder ryggen, og ånder ind, når den synker.",
+      "cues": ["Brystet drejer op mod loftet", "Hælen ned, tæerne op", "Rund op, og lad synke"],
+      "mistakes": [
+        {
+          "mistake": "Udfaldet er kort, så hoften ikke kommer ned.",
+          "fix": "Træd foden helt frem til hånden, og lad hoften synke mod gulvet."
+        },
+        {
+          "mistake": "Hælen løfter sig i kosak-squat.",
+          "fix": "Gå kun så dybt, at hælen bliver i gulvet, og hold hænderne foran brystet som modvægt."
+        },
+        {
+          "mistake": "Du bøjer armene i kat-ko i stedet for at bevæge ryggen.",
+          "fix": "Hold armene strakte, og lad bevægelsen komme fra ryggen og bækkenet."
+        }
+      ],
+      "easier": "Sæt bagerste knæ i gulvet i udfaldet, og gå mindre dybt i kosak-squat.",
+      "harder": "Gå lidt dybere i udfald og kosak-squat, men hold det roligt. Det er opvarmning, ikke træning.",
+      "equipment": [],
+      "getReady": "Ryd en plads på gulvet, hvor du kan ligge i planke og stå i bred stand.",
+      "movements": [
+        {
+          "id": "spiderman",
+          "name": "Spiderman-udfald med rotation",
+          "positions": [
+            {
+              "id": "planke",
+              "name": "Planke",
+              "text": "Planke med strakte arme: hænderne i gulvet under skuldrene, kroppen lige fra hæl til hoved og tæerne i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "udfald",
+              "name": "Udfald",
+              "text": "Venstre fod står fladt i gulvet uden for venstre hånd med knæet bøjet ca. 90° over foden. Højre ben er strakt bagud med knæet over gulvet og tæerne i gulvet. Begge hænder i gulvet inden for foden, hoften lav.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "drejet",
+              "name": "Drejet op",
+              "text": "Som udfaldet, men brystet er drejet mod venstre, og venstre arm er strakt lodret op mod loftet. Højre hånd bliver i gulvet inden for foden, og blikket følger den øverste hånd.",
+              "contacts": [
+                { "part": "hand", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "udfald", "seconds": 1.5, "label": "Foden frem til hånden" },
+            { "to": "drejet", "seconds": 1.5, "label": "Drej og stræk op" },
+            { "to": "udfald", "seconds": 1.5, "label": "Hånden ned" },
+            { "to": "planke", "seconds": 1.5, "label": "Tilbage i planke" }
+          ]
+        },
+        {
+          "id": "kosak",
+          "name": "Kosak-squat",
+          "positions": [
+            {
+              "id": "bred",
+              "name": "Bred stand",
+              "text": "Set forfra: stående med fødderne ca. dobbelt skulderbredde fra hinanden og tæerne let udad. Benene er strakte, overkroppen oprejst og hænderne samlet foran brystet.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "venstre",
+              "name": "Ned til venstre",
+              "text": "Siddende dybt på venstre ben: knæet helt bøjet og pegende samme vej som tæerne, hælen i gulvet. Højre ben er strakt ud til siden med hælen i gulvet og tæerne mod loftet. Overkroppen oprejst, hænderne foran brystet.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "heel", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "hojre",
+              "name": "Ned til højre",
+              "text": "Som ned til venstre, men spejlvendt: siddende dybt på højre ben, mens venstre ben er strakt ud til siden med hælen i gulvet og tæerne mod loftet.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "heel", "on": "floor", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "venstre", "seconds": 2, "label": "Ned til venstre" },
+            { "to": "bred", "seconds": 1.5, "label": "Op" },
+            { "to": "hojre", "seconds": 2, "label": "Ned til højre" },
+            { "to": "bred", "seconds": 1.5, "label": "Op" }
+          ]
+        },
+        {
+          "id": "katko",
+          "name": "Kat-ko",
+          "positions": [
+            {
+              "id": "fire",
+              "name": "Alle fire",
+              "text": "På alle fire: hænderne under skuldrene med strakte arme, knæene under hofterne og skinnebenene og vristene i gulvet. Ryggen er lige som en bordplade, og blikket mod gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "knee", "on": "floor" },
+                { "part": "shin", "on": "floor" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "kat",
+              "name": "Kat",
+              "text": "Som alle fire, men ryggen er rundet op mod loftet, hagen trukket mod brystet, maven trukket ind og bækkenet vippet ind under. Hænder og knæ bliver på plads.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "knee", "on": "floor" },
+                { "part": "shin", "on": "floor" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "ko",
+              "name": "Ko",
+              "text": "Som alle fire, men maven synker mod gulvet, så ryggen svajer. Halebenet peger op, brystet skubbes frem, og blikket løftes let. Skuldrene holdes væk fra ørerne.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "knee", "on": "floor" },
+                { "part": "shin", "on": "floor" },
+                { "part": "foot", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "kat", "seconds": 2, "label": "Rund ryggen" },
+            { "to": "ko", "seconds": 2, "label": "Lad ryggen synke" },
+            { "to": "fire", "seconds": 1, "label": "Tilbage til lige" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.3",
+      "trains": "Håndled, skulderblade og hofter klar til push-ups, slag og balancen på ét ben, når du sparker.",
+      "start": "Håndledsvip starter på alle fire, skulderblads-push-ups i planke med strakte arme og hip airplanes stående på ét ben.",
+      "steps": [
+        "Håndledsvip: vip skuldrene frem over hænderne og tilbage med håndfladerne fladt i gulvet. 10 gange.",
+        "Skulderblads-push-ups: lad brystet synke mellem skulderbladene med strakte arme, og skub det op igen. 10 gange.",
+        "Hip airplanes: læn overkroppen frem på ét ben, og drej bækkenet op mod loftet og tilbage. 5 pr. side."
+      ],
+      "tempo": "Roligt og kontrolleret. Bevægelsen skal komme fra det led, du varmer op.",
+      "breathing": "Træk vejret roligt hele vejen, og pust ud, når du skubber op og drejer op.",
+      "cues": [
+        "Håndfladerne fladt i gulvet",
+        "Armene strakte hele tiden",
+        "Knæet peger frem, bækkenet drejer"
+      ],
+      "mistakes": [
+        {
+          "mistake": "Fingrene eller håndfladen letter fra gulvet.",
+          "fix": "Vip kun så langt frem, at hele håndfladen bliver i gulvet."
+        },
+        {
+          "mistake": "Albuerne bøjer i skulderblads-push-ups.",
+          "fix": "Hold armene strakte. Kun brystet og skulderbladene bevæger sig."
+        },
+        {
+          "mistake": "Knæet på standbenet drejer med i hip airplane.",
+          "fix": "Hold knæet og foden pegende frem, og drej hoften op over dem."
+        }
+      ],
+      "easier": "Gør håndleddene ondt, så vip mindre langt frem, og tag skulderblads-push-ups på knoerne. Støt en hånd let mod væggen i hip airplanes.",
+      "harder": "Lav hip airplanes langsommere, og hold et kort øjeblik med bækkenet drejet helt op.",
+      "equipment": [],
+      "getReady": "Find en plads på gulvet, hvor du kan stå på alle fire og i planke.",
+      "movements": [
+        {
+          "id": "haandled",
+          "name": "Håndledsvip på alle fire",
+          "positions": [
+            {
+              "id": "fire",
+              "name": "Alle fire",
+              "text": "På alle fire: håndfladerne fladt i gulvet under skuldrene med fingrene frem og strakte arme. Knæene under hofterne og skinnebenene i gulvet. Ryggen er lige.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "knee", "on": "floor" },
+                { "part": "shin", "on": "floor" }
+              ]
+            },
+            {
+              "id": "frem",
+              "name": "Vippet frem",
+              "text": "Som alle fire, men skuldrene er vippet frem foran hænderne, så håndleddene bøjer mere bagover. Håndfladerne bliver fladt i gulvet, armene er strakte, og knæene bliver på plads.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "knee", "on": "floor" },
+                { "part": "shin", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "frem", "seconds": 1.5, "label": "Vip frem" },
+            { "to": "fire", "seconds": 1.5, "label": "Vip tilbage" }
+          ]
+        },
+        {
+          "id": "skulderblad",
+          "name": "Skulderblads-push-ups",
+          "positions": [
+            {
+              "id": "oppe",
+              "name": "Skubbet op",
+              "text": "Planke med strakte arme: hænderne under skuldrene, kroppen lige fra hæl til hoved og tæerne i gulvet. Skulderbladene er skubbet fra hinanden, så øverste del af ryggen er let rund.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "nede",
+              "name": "Sunket ned",
+              "text": "Som skubbet op, men brystet er sunket et par centimeter ned mellem skulderbladene, som klemmes sammen. Armene er stadig strakte, og kroppen er lige.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "nede", "seconds": 1.5, "label": "Lad brystet synke" },
+            { "to": "oppe", "seconds": 1.5, "label": "Skub op" }
+          ]
+        },
+        {
+          "id": "airplane",
+          "name": "Hip airplane",
+          "positions": [
+            {
+              "id": "laenet",
+              "name": "Lænet frem",
+              "text": "Stående på venstre ben med let bøjet knæ. Overkroppen er lænet frem, gerne tæt på vandret, og højre ben er strakt bagud i linje med kroppen. Hænderne på hofterne og bækkenet vendt mod gulvet.",
+              "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
+            },
+            {
+              "id": "drejet",
+              "name": "Drejet op",
+              "text": "Som lænet frem, men bækkenet og overkroppen er drejet op mod højre, så højre hofte peger mod loftet, og brystet vender ud til siden. Venstre knæ og fod peger stadig frem.",
+              "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
+            }
+          ],
+          "phases": [
+            { "to": "drejet", "seconds": 2, "label": "Drej bækkenet op" },
+            { "to": "laenet", "seconds": 2, "label": "Drej tilbage" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.4",
+      "trains": "Kroppen klar til at være eksplosiv og et tjek af dagsformen, før passet går i gang.",
+      "start": "Stå klar til dagens første power-øvelse, som har sit eget kort. Til pogo-hop står du på forfødderne med fødderne i hoftebredde.",
+      "steps": [
+        "Lav 3 gentagelser af dagens første power-øvelse i halv fart og derefter 3 i fuld fart.",
+        "Tirsdag i Styrke A: lav også 2 × 10 pogo-hop, korte og hurtige hop fra anklerne med næsten strakte knæ.",
+        "Mærk efter: føles hop eller push-ups tunge og langsomme, er det en gul dag."
+      ],
+      "tempo": "Første sæt i halv fart, andet sæt i fuld fart. Pogo-hop er korte og hurtige.",
+      "breathing": "Pust kort ud på hver eksplosiv gentagelse. Hold aldrig vejret.",
+      "cues": ["Halv fart, så fuld fart", "Korte hop fra anklerne", "Tungt og langsomt: gul dag"],
+      "mistakes": [
+        {
+          "mistake": "Du starter i fuld fart.",
+          "fix": "Tag første sæt i halv fart, så kroppen når at vænne sig til bevægelsen."
+        },
+        {
+          "mistake": "Pogo-hop bliver til dybe hop med bøjede knæ.",
+          "fix": "Hold knæene næsten strakte, og lad anklerne gøre arbejdet."
+        },
+        {
+          "mistake": "Du lander tungt på hælene.",
+          "fix": "Land på forfødderne, og gå straks op i næste hop."
+        }
+      ],
+      "easier": "Føles kroppen tung, så tag også andet sæt roligt, og svar ærligt på trafiklysets spørgsmål bagefter.",
+      "harder": "Ingen sværere variant. Potensér skal gøre dig klar, ikke trætte dig.",
+      "equipment": [],
+      "getReady": "Stil dig med plads omkring dig til dagens første power-øvelse.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "landet",
+              "name": "Landet",
+              "text": "Pogo-hop: stående på forfødderne med fødderne i hoftebredde og hælene lige over gulvet. Knæene er næsten strakte, overkroppen oprejst og armene let bøjede ved siden.",
+              "contacts": [{ "part": "toes", "on": "floor" }]
+            },
+            {
+              "id": "luften",
+              "name": "I luften",
+              "text": "Som landet, men et par centimeter over gulvet med strakte ankler og tæerne pegende ned. Knæene er stadig næsten strakte.",
+              "contacts": []
+            }
+          ],
+          "phases": [
+            { "to": "luften", "seconds": 0.2, "label": "Pogo-hop: op" },
+            { "to": "landet", "seconds": 0.2, "label": "Pogo-hop: kort ned" }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,583 @@
+{
+  "format": 1,
+  "subject": "neck",
+  "why": [
+    "En stærk nakke holder hovedet stabilt i clinchen, og når du bliver ramt. Stigen bygger den langsomt op: fra blide tryk liggende over tryk mod din egen hånd og hold over sengekanten til langsomme bevægelser mod modstand.",
+    "Nakken trænes som resten af kroppen: lidt mere over tid. Svarer du »Let« to pas i træk, rykker du et trin op. På de andre dage er hage-ind i Open & Strong nok.",
+    "Ingen nakkebroer uden træner. Let ømhed i musklerne er i orden, men skarp smerte betyder stop og et trin ned i en uge. Stop også ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+  ],
+  "items": [
+    {
+      "id": "neck.N1",
+      "trains": "De dybe muskler foran på halsen, som holder hovedet i ro, når du bliver ramt eller trukket i clinchen.",
+      "start": "Lig på ryggen på gulvet med bøjede knæ, fødderne i gulvet og armene langs siden. Baghovedet hviler på gulvet, og blikket peger mod loftet.",
+      "steps": [
+        "Træk hagen ind, som om du laver en dobbelthage. Hovedet bliver i gulvet.",
+        "Pres baghovedet blidt mod gulvet, og hold trykket roligt.",
+        "Slip roligt, og lig stille i pausen før næste hold.",
+        "Stop ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+      ],
+      "tempo": "Træk hagen roligt ind, hold trykket jævnt hele holdet, og slip roligt.",
+      "breathing": "Træk vejret roligt gennem næsen hele vejen. Hold ikke vejret.",
+      "cues": ["Hagen ind, nakken lang", "Blidt tryk i gulvet", "Slap kæbe og skuldre"],
+      "mistakes": [
+        {
+          "mistake": "Hagen peger op mod loftet, når du presser.",
+          "fix": "Træk hagen ind først, og pres derefter baghovedet ned. Nakken skal blive lang."
+        },
+        {
+          "mistake": "Du presser hårdt og spænder kæben og skuldrene.",
+          "fix": "Pres kun blidt. Lad tænderne være let adskilt og skuldrene ligge tungt i gulvet."
+        },
+        {
+          "mistake": "Du holder vejret under holdet.",
+          "fix": "Træk vejret roligt gennem næsen hele tiden."
+        }
+      ],
+      "easier": "Det er stigens første trin. Er det for meget, så pres endnu blidere.",
+      "harder": "Trin N2: hage-ind og løft, hvor du løfter hovedet 2 cm fra gulvet med hagen inde.",
+      "equipment": [],
+      "getReady": "Læg dig på ryggen på gulvet med bøjede knæ, og lad pulsen falde lidt.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "rest",
+              "name": "Hvile",
+              "text": "Liggende på ryggen med knæene bøjet ca. 90° og fødderne fladt i gulvet i hoftebredde. Armene langs siden med håndfladerne ned. Baghovedet i gulvet, blikket mod loftet og nakken i sin naturlige bue.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "tuck",
+              "name": "Hagen inde",
+              "text": "Som hvile, men hagen er trukket ind mod halsen som en dobbelthage, og baghovedet presser blidt mod gulvet. Nakken er lang og tættere på gulvet. Hovedet løfter sig ikke.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "tuck", "seconds": 2, "label": "Hagen ind" },
+            { "to": "tuck", "seconds": "dose", "label": "Hold" },
+            { "to": "rest", "seconds": 2, "label": "Slip roligt" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neck.N2",
+      "trains": "Musklerne foran på halsen, som bærer hovedets vægt og holder det stille, når du tager imod et slag eller et træk i clinchen.",
+      "start": "Lig på ryggen på gulvet med bøjede knæ, fødderne i gulvet og armene langs siden. Baghovedet hviler på gulvet.",
+      "steps": [
+        "Træk hagen ind som en dobbelthage, mens baghovedet stadig ligger i gulvet.",
+        "Løft hovedet 2 cm fra gulvet, så der lige er luft under baghovedet, og hold.",
+        "Læg hovedet roligt ned, og slip hagen i pausen.",
+        "Stop ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+      ],
+      "tempo": "Løft roligt, hold hovedet helt stille hele holdet, og læg det roligt ned.",
+      "breathing": "Træk vejret roligt gennem næsen. Hold ikke vejret, mens hovedet er løftet.",
+      "cues": ["Hagen ind, så løft", "Kun 2 cm op", "Skuldrene bliver i gulvet"],
+      "mistakes": [
+        {
+          "mistake": "Hagen skyder frem, når hovedet løfter sig.",
+          "fix": "Træk hagen ind igen, og løft kun så højt, at den kan blive inde."
+        },
+        {
+          "mistake": "Du løfter hovedet højt og krummer op i en mavebøjning.",
+          "fix": "Løft kun 2 cm. Skuldrene og skulderbladene bliver i gulvet."
+        },
+        {
+          "mistake": "Du bliver ved, selv om hagen glider frem og hovedet ryster.",
+          "fix": "Læg hovedet ned, og stop holdet dér. Formen er vigtigere end tiden."
+        }
+      ],
+      "easier": "Trin N1: hage-ind liggende, hvor hovedet bliver i gulvet.",
+      "harder": "Trin N3: isometri med halv kraft, hvor du presser hånden mod hovedet i fire retninger.",
+      "equipment": [],
+      "getReady": "Læg dig på ryggen på gulvet med bøjede knæ, og lad pulsen falde lidt.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "rest",
+              "name": "Hvile",
+              "text": "Liggende på ryggen med knæene bøjet ca. 90° og fødderne fladt i gulvet i hoftebredde. Armene langs siden med håndfladerne ned. Baghovedet i gulvet og blikket mod loftet.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "tuck",
+              "name": "Hagen inde",
+              "text": "Som hvile, men hagen er trukket ind mod halsen som en dobbelthage. Baghovedet ligger stadig i gulvet, og nakken er lang.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "lift",
+              "name": "Løftet",
+              "text": "Hagen inde og hovedet løftet 2 cm, så baghovedet svæver lige over gulvet. Skuldrene og skulderbladene ligger i gulvet, blikket mod loftet. Knæ, fødder og arme som i hvile.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "tuck", "seconds": 1, "label": "Hagen ind" },
+            { "to": "lift", "seconds": 1, "label": "Løft 2 cm" },
+            { "to": "lift", "seconds": "dose", "label": "Hold" },
+            { "to": "rest", "seconds": 2, "label": "Ned og slip" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neck.N3",
+      "trains": "Nakken i fire retninger med isometri, dvs. tryk uden bevægelse, så hovedet holder sig stille i clinchen og mod slag.",
+      "start": "Stå oprejst med fødderne i hoftebredde og armene langs siden. Hovedet er lige, og blikket vandret.",
+      "steps": [
+        "Læg hånden mod panden, og pres med halv kraft, mens nakken holder imod, så hovedet står stille.",
+        "Slip roligt efter holdet, og flyt hånden til næste retning i pausen.",
+        "Tag retningerne i rækkefølgen pande, baghoved, venstre og højre side med hånden over øret.",
+        "Stop ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+      ],
+      "tempo": "Byg trykket roligt op, hold det jævnt hele holdet, og slip det roligt igen.",
+      "breathing": "Træk vejret roligt hele vejen. Hold ikke vejret, mens du presser.",
+      "cues": ["Halv kraft, hovedet står stille", "Byg op, og slip roligt", "Blikket vandret"],
+      "mistakes": [
+        {
+          "mistake": "Hovedet giver efter og bevæger sig.",
+          "fix": "Pres mindre med hånden, til hovedet står helt stille."
+        },
+        {
+          "mistake": "Du presser hårdere end halv kraft eller med et ryk.",
+          "fix": "Byg trykket op over et par sekunder, og bliv på cirka halvdelen af dit hårdeste tryk."
+        },
+        {
+          "mistake": "Skuldrene trækker op mod ørerne.",
+          "fix": "Sænk skuldrene, og lad den frie arm hænge løst."
+        }
+      ],
+      "easier": "Trin N2: hage-ind og løft, liggende på ryggen.",
+      "harder": "Trin N4: de samme fire retninger med 80 % kraft og længere hold.",
+      "equipment": [],
+      "getReady": "Stil dig oprejst med fødderne i hoftebredde og armene fri.",
+      "movements": [
+        {
+          "id": "pande",
+          "name": "Retning 1: pande",
+          "positions": [
+            {
+              "id": "klar",
+              "name": "Klar",
+              "text": "Stående oprejst med fødderne i hoftebredde og strakte knæ. Armene hænger langs siden. Hovedet er lige over skuldrene med hagen let inde og blikket vandret.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "pres",
+              "name": "Pres",
+              "text": "Som klar, men den ene hånd ligger fladt mod panden med albuen bøjet og pegende frem. Hånd og hoved presser mod hinanden med halv kraft, og hovedet står stille. Den anden arm hænger løst.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "pres", "seconds": 1, "label": "Hånden mod panden" },
+            { "to": "pres", "seconds": "dose", "label": "Pres og hold" },
+            { "to": "klar", "seconds": 1, "label": "Slip roligt" }
+          ]
+        },
+        {
+          "id": "baghoved",
+          "name": "Retning 2: baghoved",
+          "positions": [
+            {
+              "id": "klar",
+              "name": "Klar",
+              "text": "Stående oprejst med fødderne i hoftebredde og strakte knæ. Armene hænger langs siden. Hovedet er lige over skuldrene med hagen let inde og blikket vandret.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "pres",
+              "name": "Pres",
+              "text": "Som klar, men den ene hånd ligger på baghovedet med albuen bøjet og pegende ud til siden. Hånd og hoved presser mod hinanden med halv kraft, og hovedet står stille med blikket vandret.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "pres", "seconds": 1, "label": "Hånden på baghovedet" },
+            { "to": "pres", "seconds": "dose", "label": "Pres og hold" },
+            { "to": "klar", "seconds": 1, "label": "Slip roligt" }
+          ]
+        },
+        {
+          "id": "sider",
+          "name": "Retning 3 og 4: siderne",
+          "positions": [
+            {
+              "id": "klar",
+              "name": "Klar",
+              "text": "Set forfra: stående oprejst med fødderne i hoftebredde og armene langs siden. Hovedet er lodret over midten af kroppen, og skuldrene er vandrette.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "pres",
+              "name": "Pres til siden",
+              "text": "Som klar, men venstre hånd ligger fladt mod hovedet lige over venstre øre med albuen ud til siden. Hånd og hoved presser mod hinanden med halv kraft, og hovedet står lodret. Højre side tager du med højre hånd.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "pres", "seconds": 1, "label": "Hånden over øret" },
+            { "to": "pres", "seconds": "dose", "label": "Pres og hold" },
+            { "to": "klar", "seconds": 1, "label": "Slip roligt" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neck.N4",
+      "trains": "Den samme isometri som trin N3, men hårdere og længere, så nakken holder hovedet stille under større pres i clinchen.",
+      "start": "Stå oprejst med fødderne i hoftebredde og armene langs siden. Hovedet er lige, og blikket vandret.",
+      "steps": [
+        "Læg hånden mod panden, og pres med 80 % kraft: hårdt, men ikke alt, hvad du har. Hovedet står stille.",
+        "Byg trykket op over et par sekunder, og slip det lige så roligt efter holdet.",
+        "Tag retningerne i rækkefølgen pande, baghoved, venstre og højre side med hånden over øret.",
+        "Stop ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+      ],
+      "tempo": "Byg trykket roligt op, hold det jævnt hele holdet, og slip det roligt igen.",
+      "breathing": "Træk vejret kort og roligt, mens du presser. Hold ikke vejret.",
+      "cues": ["80 %, hovedet står stille", "Byg op, og slip roligt", "Skuldrene nede, kæben slap"],
+      "mistakes": [
+        {
+          "mistake": "Hovedet giver efter eller drejer, når trykket bliver hårdt.",
+          "fix": "Pres lidt mindre, til hovedet står helt stille. Stillingen er vigtigere end kraften."
+        },
+        {
+          "mistake": "Du giver alt, hvad du har, eller presser med et ryk.",
+          "fix": "Bliv på 80 %: hårdt, men med lidt kraft tilbage. Byg op, og slip roligt."
+        },
+        {
+          "mistake": "Du holder vejret og bider tænderne sammen.",
+          "fix": "Træk vejret kort og roligt, og lad tænderne være let adskilt."
+        }
+      ],
+      "easier": "Trin N3: de samme fire retninger med halv kraft og kortere hold.",
+      "harder": "Trin N5: over sengekanten, hvor hovedets egen vægt er modstanden.",
+      "equipment": [],
+      "getReady": "Stil dig oprejst med fødderne i hoftebredde og armene fri.",
+      "movements": [
+        {
+          "id": "pande",
+          "name": "Retning 1: pande",
+          "positions": [
+            {
+              "id": "klar",
+              "name": "Klar",
+              "text": "Stående oprejst med fødderne i hoftebredde og strakte knæ. Armene hænger langs siden. Hovedet er lige over skuldrene med hagen let inde og blikket vandret.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "pres",
+              "name": "Pres",
+              "text": "Som klar, men den ene hånd ligger fladt mod panden med albuen bøjet og pegende frem. Hånd og hoved presser mod hinanden med 80 % kraft, og hovedet står stille. Den anden arm hænger løst.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "pres", "seconds": 1, "label": "Hånden mod panden" },
+            { "to": "pres", "seconds": "dose", "label": "Pres og hold" },
+            { "to": "klar", "seconds": 1, "label": "Slip roligt" }
+          ]
+        },
+        {
+          "id": "baghoved",
+          "name": "Retning 2: baghoved",
+          "positions": [
+            {
+              "id": "klar",
+              "name": "Klar",
+              "text": "Stående oprejst med fødderne i hoftebredde og strakte knæ. Armene hænger langs siden. Hovedet er lige over skuldrene med hagen let inde og blikket vandret.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "pres",
+              "name": "Pres",
+              "text": "Som klar, men den ene hånd ligger på baghovedet med albuen bøjet og pegende ud til siden. Hånd og hoved presser mod hinanden med 80 % kraft, og hovedet står stille med blikket vandret.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "pres", "seconds": 1, "label": "Hånden på baghovedet" },
+            { "to": "pres", "seconds": "dose", "label": "Pres og hold" },
+            { "to": "klar", "seconds": 1, "label": "Slip roligt" }
+          ]
+        },
+        {
+          "id": "sider",
+          "name": "Retning 3 og 4: siderne",
+          "positions": [
+            {
+              "id": "klar",
+              "name": "Klar",
+              "text": "Set forfra: stående oprejst med fødderne i hoftebredde og armene langs siden. Hovedet er lodret over midten af kroppen, og skuldrene er vandrette.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "pres",
+              "name": "Pres til siden",
+              "text": "Som klar, men venstre hånd ligger fladt mod hovedet lige over venstre øre med albuen ud til siden. Hånd og hoved presser mod hinanden med 80 % kraft, og hovedet står lodret. Højre side tager du med højre hånd.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "pres", "seconds": 1, "label": "Hånden over øret" },
+            { "to": "pres", "seconds": "dose", "label": "Pres og hold" },
+            { "to": "klar", "seconds": 1, "label": "Slip roligt" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neck.N5",
+      "trains": "Nakken i fire retninger med hele hovedets vægt som modstand: den styrke, der holder hovedet på plads i clinchen.",
+      "start": "Lig på ryggen på sengen med skuldrene lige ved kanten, så hovedet og nakken er ude over den. Støt baghovedet med den ene hånd.",
+      "steps": [
+        "Før hovedet op med hånden, så nakken er neutral: i lige linje med kroppen, som når du står oprejst.",
+        "Tag hånden væk, og hold hovedet helt stille hele holdet.",
+        "Støt hovedet, ryk lidt ind, og vend dig i pausen. Rækkefølgen er ryg, mave, venstre side og højre side.",
+        "Stop ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+      ],
+      "tempo": "Gå roligt ind i stillingen, hold hovedet helt stille, og støt det med hånden, når holdet er slut.",
+      "breathing": "Træk vejret roligt gennem næsen. Hold ikke vejret, mens hovedet er frit.",
+      "cues": ["Hovedet i lige linje", "Hagen let inde", "Støt hovedet ved hvert skift"],
+      "mistakes": [
+        {
+          "mistake": "Hovedet hænger ned under kanten.",
+          "fix": "Løft det til lige linje med kroppen, som når du står oprejst, og hold det dér."
+        },
+        {
+          "mistake": "Du ligger så langt ude, at skuldrene også er over kanten.",
+          "fix": "Ryk ind, så kun hovedet og nakken er ude over kanten."
+        },
+        {
+          "mistake": "Du vender dig eller rejser dig uden at støtte hovedet.",
+          "fix": "Støt altid hovedet med hånden, når du går ind i og ud af stillingen."
+        }
+      ],
+      "easier": "Trin N4: isometri med 80 % kraft mod din egen hånd, stående.",
+      "harder": "Trin N6: langsomme bevægelser mod modstand fra din egen hånd.",
+      "equipment": ["bed"],
+      "getReady": "Gå hen til sengen, og læg dig på ryggen med skuldrene lige ved kanten og en hånd klar under hovedet.",
+      "movements": [
+        {
+          "id": "ryg",
+          "name": "Retning 1: på ryggen",
+          "positions": [
+            {
+              "id": "stotte",
+              "name": "Med støtte",
+              "text": "Liggende på ryggen på sengen med skuldrene lige ved kanten, knæene bøjet og fødderne på sengen. Hovedet og nakken er ude over kanten. Den ene hånd støtter baghovedet, så hovedet er i lige linje med kroppen.",
+              "contacts": [
+                { "part": "back", "on": "bed" },
+                { "part": "foot", "on": "bed" },
+                { "part": "hand", "on": "bed", "count": 1 }
+              ]
+            },
+            {
+              "id": "hold",
+              "name": "Hold",
+              "text": "Som med støtte, men begge arme ligger langs siden på sengen. Hovedet holder sig selv i lige linje med kroppen med hagen let inde og blikket mod loftet. Intet støtter hovedet.",
+              "contacts": [
+                { "part": "back", "on": "bed" },
+                { "part": "foot", "on": "bed" },
+                { "part": "hand", "on": "bed" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "hold", "seconds": 1.5, "label": "Tag hånden væk" },
+            { "to": "hold", "seconds": "dose", "label": "Hold" },
+            { "to": "stotte", "seconds": 1.5, "label": "Støt hovedet" }
+          ]
+        },
+        {
+          "id": "mave",
+          "name": "Retning 2: på maven",
+          "positions": [
+            {
+              "id": "stotte",
+              "name": "Med støtte",
+              "text": "Liggende på maven på sengen med strakte ben og skuldrene lige ved kanten, så hovedet og nakken er ude over den. Den ene hånd støtter panden, den anden arm ligger langs siden. Blikket mod gulvet.",
+              "contacts": [
+                { "part": "belly", "on": "bed" },
+                { "part": "hand", "on": "bed", "count": 1 }
+              ]
+            },
+            {
+              "id": "hold",
+              "name": "Hold",
+              "text": "Som med støtte, men begge arme ligger langs siden. Hovedet holder sig selv i lige linje med kroppen med blikket lodret ned mod gulvet. Nakken er lang og svajer ikke op.",
+              "contacts": [
+                { "part": "belly", "on": "bed" },
+                { "part": "hand", "on": "bed" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "hold", "seconds": 1.5, "label": "Tag hånden væk" },
+            { "to": "hold", "seconds": "dose", "label": "Hold" },
+            { "to": "stotte", "seconds": 1.5, "label": "Støt hovedet" }
+          ]
+        },
+        {
+          "id": "side",
+          "name": "Retning 3 og 4: på siden",
+          "positions": [
+            {
+              "id": "stotte",
+              "name": "Med støtte",
+              "text": "Liggende på venstre side på sengen med let bøjede knæ og nederste skulder ved kanten, så hovedet er ude over den. Nederste albue på sengen foran brystet og hånden under hovedet, så det er i lige linje med kroppen.",
+              "contacts": [
+                { "part": "side", "on": "bed" },
+                { "part": "knee", "on": "bed", "count": 1 },
+                { "part": "elbow", "on": "bed", "count": 1 }
+              ]
+            },
+            {
+              "id": "hold",
+              "name": "Hold",
+              "text": "Som med støtte, men nederste arm ligger frem på sengen, og øverste hånd støtter let foran brystet. Hovedet holder sig selv i lige linje med kroppen uden at hænge mod gulvet. Højre side er spejlvendt.",
+              "contacts": [
+                { "part": "side", "on": "bed" },
+                { "part": "knee", "on": "bed", "count": 1 },
+                { "part": "hand", "on": "bed" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "hold", "seconds": 1.5, "label": "Tag hånden væk" },
+            { "to": "hold", "seconds": "dose", "label": "Hold" },
+            { "to": "stotte", "seconds": 1.5, "label": "Støt hovedet" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neck.N6",
+      "trains": "Nakkens styrke gennem hele bevægelsen i fire retninger, så den også holder, når hovedet bliver trukket ud af stilling i clinchen.",
+      "start": "Stå oprejst med fødderne i hoftebredde og armene langs siden. Hovedet er lige, og blikket vandret.",
+      "steps": [
+        "Læg hånden mod panden, og bøj hovedet langsomt frem mod brystet, mens hånden holder imod.",
+        "Før hovedet langsomt tilbage til lodret. Hånden holder imod hele vejen.",
+        "Gør det samme bagud med hånden på baghovedet og derefter til venstre og højre med hånden over øret.",
+        "Stop ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+      ],
+      "tempo": "Langsomt og jævnt begge veje, uden ryk. Hånden holder imod hele vejen ud og tilbage.",
+      "breathing": "Pust roligt ud, mens hovedet bevæger sig ud, og ånd ind på vej tilbage til lodret.",
+      "cues": ["Langsomt, ingen ryk", "Hånden holder imod hele vejen", "Kun hovedet bevæger sig"],
+      "mistakes": [
+        {
+          "mistake": "Du bevæger hovedet hurtigt eller med ryk.",
+          "fix": "Sæt farten ned, så hver gentagelse er jævn hele vejen ud og tilbage."
+        },
+        {
+          "mistake": "Du går helt ud i yderstillingen, især bagud.",
+          "fix": "Bevæg kun hovedet så langt, det føles behageligt. Bagud er det nok, at blikket peger skråt op."
+        },
+        {
+          "mistake": "Overkroppen bøjer med i stedet for nakken.",
+          "fix": "Stå stille med overkroppen og skuldrene, og lad kun hovedet bevæge sig."
+        }
+      ],
+      "easier": "Trin N5: over sengekanten, hvor du holder hovedet stille mod dets egen vægt.",
+      "harder": "Det er stigens sidste trin. Nakkebroer laver du kun sammen med en træner.",
+      "equipment": [],
+      "getReady": "Stil dig oprejst med fødderne i hoftebredde og armene fri.",
+      "movements": [
+        {
+          "id": "frem",
+          "name": "Retning 1: frem",
+          "positions": [
+            {
+              "id": "lodret",
+              "name": "Lodret",
+              "text": "Stående oprejst med fødderne i hoftebredde. Den ene hånd ligger fladt mod panden med albuen bøjet og pegende frem, den anden arm hænger løst. Hovedet er lodret, og blikket vandret.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "frem",
+              "name": "Bøjet frem",
+              "text": "Som lodret, men hovedet er bøjet ca. 40° frem med hagen mod brystet, mens hånden på panden holder imod. Overkroppen står stille og oprejst.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "frem", "seconds": 2, "label": "Frem mod hånden" },
+            { "to": "lodret", "seconds": 2, "label": "Tilbage til lodret" }
+          ]
+        },
+        {
+          "id": "bagud",
+          "name": "Retning 2: bagud",
+          "positions": [
+            {
+              "id": "lodret",
+              "name": "Lodret",
+              "text": "Stående oprejst med fødderne i hoftebredde. Den ene hånd ligger på baghovedet med albuen bøjet og pegende ud til siden, den anden arm hænger løst. Hovedet er lodret, og blikket vandret.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "bagud",
+              "name": "Bøjet bagud",
+              "text": "Som lodret, men hovedet er bøjet ca. 30° bagud, så blikket peger skråt op, mens hånden på baghovedet holder imod. Overkroppen står stille og oprejst.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "bagud", "seconds": 2, "label": "Bagud mod hånden" },
+            { "to": "lodret", "seconds": 2, "label": "Tilbage til lodret" }
+          ]
+        },
+        {
+          "id": "sider",
+          "name": "Retning 3 og 4: til siderne",
+          "positions": [
+            {
+              "id": "lodret",
+              "name": "Lodret",
+              "text": "Set forfra: stående oprejst med fødderne i hoftebredde. Venstre hånd ligger fladt mod hovedet lige over venstre øre med albuen ud til siden, højre arm hænger løst. Hovedet er lodret.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "side",
+              "name": "Bøjet til siden",
+              "text": "Som lodret, men hovedet er bøjet ca. 30° til venstre, så øret nærmer sig skulderen, mens hånden holder imod. Skuldrene er i ro og vandrette. Højre side tager du med højre hånd.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "side", "seconds": 2, "label": "Til siden mod hånden" },
+            { "to": "lodret", "seconds": 2, "label": "Tilbage til lodret" }
+          ]
+        }
+      ]
+    }
+  ]
+}
