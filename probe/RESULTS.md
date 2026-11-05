@@ -1,6 +1,6 @@
 # Probe – resultater (milepæl 0)
 
-Udfyldes efter tjeklisten i `docs/PLAN.md`, milepæl 0. Proben: https://marouan-el-haddad.github.io/comeback/probe/
+Udfyldes efter tjeklisten i `docs/PLAN.md`, milepæl 0. Proben ligger på repoets GitHub Pages-adresse under `/comeback/probe/`.
 
 | Felt                              | Værdi |
 | --------------------------------- | ----- |
