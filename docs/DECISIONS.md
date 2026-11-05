@@ -23,7 +23,18 @@ Kort log over beslutninger, der former appen. Nye rækker tilføjes nederst i hv
 | 2026-11-05 | D15 | Probens build er deterministisk (ingen tidsstempler), så udgivelser, der ikke ændrer proben, ikke viser »Ny version klar«. v2 = versionsnummer 2 og baggrund `--c-blueTint`. Start-URL'en har `?source=pwa`, så proben kan se, at den er åbnet fra ikonet | Byggetid i versionsnummeret | Punkt 4 må kun udløses af den rigtige v2 | Indtil M0 er afsluttet, ændrer andre opgaver ikke `probe/`, `src/ui/design-tokens.json` eller versionerne af `preact` og `workbox-window`; ellers viser v1 »Ny version klar« uden at være v2 |
 | 2026-11-05 | D16 | Fallback-videoen i proben er en synlig, tavs 64 × 36 px WebM (VP8 med tavst Opus-spor, 2 sek, `loop`, `muted`) i stedet for 1 × 1 px | 1 × 1 px uden lydspor | Firefox holder efter sin kildekode kun skærmen tændt for video med lydspor (eller fra en mediestrøm); en synlig video viser også, at den kører | M2 bruger den variant, proben viser virker |
 | 2026-11-05 | D17 | Lydene i proben: firkantbølge med styrke 0,8; tik 880 Hz i 60 ms; go 660 Hz og 990 Hz à 100 ms (»200 ms« læst som samlet længde); slut tre stigende toner. »Test på gulvet« spiller tik-tik-tik-go-slut efter 5 sek og vibrerer uden nyt tryk, som timerne i appen vil gøre | Sinusbølge; lyd straks ved tryk | Kraftigst mulige lyd uden forvrængning, og telefonen skal kunne ligge på gulvet, når lyden kommer | M2 justerer efter dine noter fra tjeklisten |
-| 2026-11-05 | D18 | Beslutningsreglen i M0 nævner ikke punkt 3 alene. Rødt punkt 3 i IronFox behandles som rødt 1, 2 eller 4 (proben køres i Vanadium), og »begge rødt« betyder rødt i både IronFox og Vanadium | Ignorere punkt 3 | Appen skal virke offline; forsigtigste læsning | Står også i `probe/RESULTS.md` |
+| 2026-11-05 | D18 | Beslutningsreglen i M0 nævner ikke punkt 3 alene. Rødt punkt 3 i IronFox behandles som rødt 1, 2 eller 4 (proben køres i Vanadium), og »begge rødt« betyder rødt i både IronFox og Vanadium | Ignorere punkt 3 | Appen skal virke offline; forsigtigste læsning | Står også i `probe/RESULTS.md`. **Rettet af D20** |
+| 2026-11-05 | D19 | Platform = IronFox-PWA. Punkt 1, 2 og 4 er grønne i IronFox 159.0.1 på telefonen (`probe/RESULTS.md`); Vanadium og Capacitor bruges ikke. Lukker O1 | Vanadium; Capacitor-APK | Beslutningsreglen i M0 | M2 får intet Capacitor-trin. M0 er afsluttet, så D15's begrænsning for `probe/`, tokens og versioner er ophævet; proben bliver liggende på `/comeback/probe/` |
+| 2026-11-05 | D20 | Retter D18: punkt 3 (offline) afgør ikke platformen. Offline er en bonus for brugeren og ikke et krav; appen beholder offline-funktionen (precache, ingen netværkskald) | D18 (punkt 3 som 1, 2 og 4) | Punkt 3 blev ikke gyldigt testet (wifi tændt i flytilstand), og brugeren har afgjort, at offline ikke er et krav (NAT-1) | Offline testes ikke igen som krav; SK1-målingen sker uden netværk |
+| 2026-11-05 | D21 | Ingen vibration, kun lyd: `navigator.vibrate` findes ikke i IronFox. Appen kalder ikke vibrationen | Vibration med funktionstjek | M0 punkt 6 | Erstatter »vibration som supplement« i D5 og `SPEC.md` afsnit 5; timere giver kun lyd |
+| 2026-11-05 | D22 | Ingen »Del«-knap: Web Share findes ikke i IronFox. Backup er kun download til Downloads og import fra fil. Lukker O2 | Knappen med funktionstjek | M0 punkt 9 | `SPEC.md` 3.6 uden »Del backup« |
+| 2026-11-05 | D23 | `persist()` viser en prompt i IronFox (brugeren tillod i M0). Appen kalder den efter første loggede pas, som `SPEC.md` 9 planlægger, og viser resultatet under Mere → Backup. Lukker O3 | Kald ved første start | En prompt midt i onboardingen er forvirrende; efter første pas er der data at beskytte | – |
+| 2026-11-05 | D24 | Wake Lock via API'et; fallback-videoen fra D16 bruges kun, hvis API'et afvises eller frigives. Lukker O4 | Kun video | Begge holdt skærmen tændt i 3 min (M0 punkt 5) | – |
+| 2026-11-05 | D25 | Telefonens profil er målt: 414 × 847 CSS-px, devicePixelRatio 2 (standalone), sprog en-US (spoofet), tidszone Europe/Copenhagen, JIT slået fra. Playwright-projektet `pixel9a` bruger den (Firefox med `firefoxUserPrefs`, der slår JIT fra); `pixel9a-utc` kører @date-testene igen med tidszone UTC, og Vitest kører datotestene i både Europe/Copenhagen og UTC. Preview-serveren og Playwright bruger `127.0.0.1`. Lukker O5 | 412 × 915, DPR 2,625 fra databladet | M0 punkt 7 og 10; godkendt M0-forslag (NAT-1). Firefox brugte 2 sek på `localhost` (IPv4 før IPv6), hvilket ville forfalske SK1-målingen | Layoutet tegnes til 414 px; `CLAUDE.md` og `SPEC.md` rettet |
+| 2026-11-05 | D26 | Lint-regel: `Date.now()`, `new Date()` uden argument og `Math.random` er forbudt i `src/engine/` (eslint `no-restricted-syntax`/`no-restricted-properties`) | Kun kodegennemgang | Godkendt M0-forslag (NAT-1); motoren skal være deterministisk | Hændelses-id'er dannes uden for motoren og gives til den som funktion |
+| 2026-11-05 | D27 | Pages-adressen indeholder kontonavnet og skrives ikke i filer i repoet (jf. commit d5c3d32). Rapporter skriver `https://<konto>.github.io/comeback/`; den fulde adresse står kun i chatten | Fuld adresse i rapporten | `CLAUDE.md`: ingen navne i det offentlige repo; NAT-1 beder om URL'erne i rapporten – forsigtigste læsning | – |
+| 2026-11-05 | D28 | Milepæl 2 bygges i samme nat som milepæl 1 for at nå programstarten mandag 9/11. Fable-review 1 sker efter natten og bygger på M1-resultatet; rettelser fra review 1 indarbejdes bagefter i `ENGINE.md`, tests og kode | Vente på review 1 før M2 | Brugeren træner fra 9/11 og skal have en brugbar version (NAT-1) | M2 kan få rettelser efter review 1; motoren ændres kun med test |
+| 2026-11-05 | D29 | Tidsmaskinen (`SPEC.md` 3.7, `ENGINE.md` 5.14, S-TIME-01..03) flyttes fra M3 til M2 og bygges lige efter kernen (onboarding, I dag, Styrke A). Lagerlaget bygges fra starten, så det kan åbnes skrivebeskyttet, og tidsmaskinen kører på en kopi af loggen i hukommelsen | Tidsmaskinen i M3 som planlagt | Programmet starter først 9/11; uden tidsmaskinen kan brugeren ikke prøve et pas på telefonen før (brugerens tilføjelse til NAT-1) | Med i nattens acceptkriterier (Playwright tæller hændelser før og efter) og i tjeklisten til telefonen; `PLAN.md` M2 og M3 rettet |
 
 ## 2. Brugerens svar på fase 1 (2026-11-05)
 
@@ -48,6 +59,7 @@ Kort log over beslutninger, der former appen. Nye rækker tilføjes nederst i hv
 | T3 | Tilføjelse | Automatisk gendannelse af trinnet 7 dage efter en skarp-smerte-nedrykning, hvis ingen ny smerte | »Gå et trin ned i en uge« (s. 7, 46) siger ikke, hvordan man kommer op igen |
 | T4 | Tilføjelse | Rejsepasset tæller ugen som gennemført, men er neutralt for progression | Programmets minimum på rejse (s. 47) skal ikke koste en gentaget uge |
 | T5 | Tilføjelse | Tidsmaskine på en kopi af loggen med skrivebeskyttet lager | Brugerens testbehov; aldrig risiko for de rigtige data |
+| T6 | Tilføjelse | Mere → Om → »Diagnose«: version, service worker, varigt lager, lagerplads, Wake Lock, lydtilstand, viewport, tidszone, sprog og tiden til første tegning og til I dag | En fejl kan rapporteres med ét skærmbillede (NAT-1) |
 
 ## 4. Præciseringer af programmets regler
 
@@ -81,14 +93,14 @@ Kort log over beslutninger, der former appen. Nye rækker tilføjes nederst i hv
 
 ## 5. Åbne punkter (afgøres af M0 eller senere)
 
-| ID | Punkt | Afgøres af |
-|---|---|---|
-| O1 | Endelig platform (IronFox-PWA, Vanadium eller Capacitor-APK) | `probe/RESULTS.md` |
-| O2 | Web Share som backup-knap | M0 punkt 9 |
-| O3 | Om `persist()` giver en prompt på Android | M0 punkt 2 |
-| O4 | Wake Lock i IronFox eller fallback-video | M0 punkt 5 |
-| O5 | Faktisk viewport-højde (fanelinje + indhold) | M0 punkt 10 |
-| O6 | Mørkt tema | Efter M5, hvis brugeren ønsker det |
+| ID | Punkt | Afgøres af | Status |
+|---|---|---|---|
+| O1 | Endelig platform (IronFox-PWA, Vanadium eller Capacitor-APK) | `probe/RESULTS.md` | Lukket 5/11: IronFox-PWA (D19) |
+| O2 | Web Share som backup-knap | M0 punkt 9 | Lukket 5/11: ingen »Del«-knap (D22) |
+| O3 | Om `persist()` giver en prompt på Android | M0 punkt 2 | Lukket 5/11: prompt; kaldes efter første loggede pas (D23) |
+| O4 | Wake Lock i IronFox eller fallback-video | M0 punkt 5 | Lukket 5/11: API'et, video som fallback (D24) |
+| O5 | Faktisk viewport-højde (fanelinje + indhold) | M0 punkt 10 | Lukket 5/11: 414 × 847 CSS-px, DPR 2 (D25) |
+| O6 | Mørkt tema | Efter M5, hvis brugeren ønsker det | Åben |
 
 ## 6. Rettelser efter gennemgang mod PDF'en (2026-11-05, version 1.1)
 

@@ -1,6 +1,6 @@
 # CLAUDE.md – Comeback
 
-Offline PWA til én bruger på en Pixel 9a (IronFox, portræt 412 px), som træner til et 12-ugers program. Programmet er den faglige sandhed; korrekt træningslogik vejer tungere end features; ingen data må gå tabt. Brugeren er ikke udvikler: han læser kun dine opsummeringer og tester på telefonen.
+Offline PWA til én bruger på en Pixel 9a (IronFox-PWA, portræt 414 × 847 CSS-px), som træner til et 12-ugers program. Programmet er den faglige sandhed; korrekt træningslogik vejer tungere end features; ingen data må gå tabt. Brugeren er ikke udvikler: han læser kun dine opsummeringer og tester på telefonen.
 
 Dansk prosa og UI-tekst; kode, filnavne, identifikatorer og commit-beskeder på engelsk.
 
@@ -27,7 +27,7 @@ npm install                       # engangs
 npx playwright install firefox chromium   # engangs, før første e2e-kørsel
 npm run dev                       # lokal udvikling
 npm test                          # vitest: motor, program, lager
-npm run test:e2e                  # playwright-projektet pixel9a
+npm run test:e2e                  # playwright-projekterne pixel9a og pixel9a-utc
 npm run typecheck                 # tsc --noEmit
 npm run lint                      # eslint + prettier --check
 npm run build                     # produktion; udskriver bundle-størrelser
@@ -53,7 +53,7 @@ e2e/  screenshots/    playwright-tests og seneste skærmbilleder
 
 ## Motoren (`src/engine`)
 
-- Ingen DOM, ingen `Date.now()`, ingen `new Date()` uden argument, ingen tilfældighed. `today`/`now` er altid parametre; datoer er `YYYY-MM-DD` i Europe/Copenhagen via `Intl` med `timeZone: 'Europe/Copenhagen'`; visning med `da-DK`.
+- Ingen DOM, ingen `Date.now()`, ingen `new Date()` uden argument, ingen tilfældighed (eslint håndhæver de tre i `src/engine/`). `today`/`now` er altid parametre; datoer er `YYYY-MM-DD` i Europe/Copenhagen via `Intl` med `timeZone: 'Europe/Copenhagen'`; visning med `da-DK`.
 - Koden kender ingen øvelser ved navn; alt indhold kommer fra `program/*.json` med de ID'er, `docs/ENGINE.md` afsnit 2 fastlægger.
 - Tests før kode: en regel implementeres ved først at skrive scenariets test med scenarie-ID'et som testnavn (fx `S-EMOM-02`), så koden. Ingen ændring i motoren uden en test, der beskriver den.
 - Motorens beslutninger skrives som `step_changed`-hændelser med `explanation` på dansk.
@@ -79,7 +79,7 @@ Gælder i alle sessioner, også korte fejlrettelser:
 ## Design og tests
 
 - UI-arbejde: læs `docs/SPEC.md` afsnit 5 og 6 først, og hold dig til dem – særligt listen af forbudte mønstre. Trin uden eget piktogram bruger stigens nærmeste via `program/pictos.json`, aldrig et generisk ikon.
-- Playwright-projekt `pixel9a`: viewport 412 × 915, `deviceScaleFactor: 2.625`, `hasTouch`, Firefox-motor uden `isMobile` (Playwright afviser `isMobile` i Firefox); kan Firefox ikke installeres, så kør Chromium med `isMobile: true`, og sig det i opsummeringen. Timere simuleres med `page.clock`.
+- Playwright-projekt `pixel9a` = telefonen som målt i M0: viewport 414 × 847, `deviceScaleFactor: 2`, `hasTouch`, `locale: 'en-US'`, `timezoneId: 'Europe/Copenhagen'`, Firefox-motor med JIT slået fra via `firefoxUserPrefs` og uden `isMobile` (Playwright afviser `isMobile` i Firefox); kan Firefox ikke installeres, så kør Chromium med `isMobile: true`, og sig det i opsummeringen. `pixel9a-utc` kører testene mærket `@date` igen med tidszone UTC. Server og `baseURL` bruger `127.0.0.1`, ikke `localhost` (Firefox mister 2 sek på IPv4/IPv6). Timere simuleres med `page.clock`.
 - Skærmbilleder af ændrede skærme gemmes i `screenshots/` og nævnes i opsummeringen. Telefonen er den endelige test; det, der kræver den, står i milepælens tjekliste.
 
 ## Ændringsprotokol

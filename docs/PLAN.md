@@ -70,13 +70,13 @@ Samme probe køres i Vanadium, hvis punkt 1, 2 eller 4 fejler i IronFox.
 
 **Mål:** appen kan bruges til hvert pas fra og med dagen, den udgives.
 
-**Med:** lagerlag (IndexedDB + spejl, skemaversion, `persist()` efter første pas), onboarding med indfasning (SPEC 4.1), I dag (3.1) med »pas i går blev ikke logget«-kortet, Uge (kun visning), guidet pas (3.2) for Styrke A, Styrke B, Motor (alle faser), Open & Strong, nakke og opvarmning, trafiklys (3.3) inkl. udledte svar og hint fra klublog (klublog-dialogen selv kommer i M3; hinten viser blot intet før), logning med »som planlagt«, reserve og smerte, hold-/pause-/EMOM-/klubsekvens-timere med lyd, vibration og Wake Lock, opsummering med motorens forklaringer, Stiger-fanen (visning + »vælg selv et trin«), Mere → Backup (eksport/import/»Sidste backup«), Om med version, opdateringsbanner, PWA-installation, designsystemet (SPEC 5) med fonte og piktogrammer.
+**Med:** lagerlag (IndexedDB + spejl, skemaversion, `persist()` efter første pas, skrivebeskyttet tilstand til tidsmaskinen fra starten), onboarding med indfasning (SPEC 4.1), I dag (3.1) med »pas i går blev ikke logget«-kortet, tidsmaskinen (SPEC 3.7, ENGINE 5.14) lige efter kernen (onboarding, I dag og Styrke A; flyttet fra M3, `DECISIONS.md` D29), Uge (kun visning), guidet pas (3.2) for Styrke A, Styrke B, Motor (alle faser), Open & Strong, nakke og opvarmning, trafiklys (3.3) inkl. udledte svar og hint fra klublog (klublog-dialogen selv kommer i M3; hinten viser blot intet før), logning med »som planlagt«, reserve og smerte, hold-/pause-/EMOM-/klubsekvens-timere med lyd og Wake Lock (ingen vibration, D21), opsummering med motorens forklaringer, Stiger-fanen (visning + »vælg selv et trin«), Mere → Backup (eksport/import/»Sidste backup«), Om med version og »Diagnose« (Tilføjelse T6), opdateringsbanner, PWA-installation, designsystemet (SPEC 5) med fonte og piktogrammer.
 
-**Ikke med:** historik ud over listen, målinger (uge 4 er først 30/11 – men tag dem med, hvis M2 er færdig før 27/11), lette uger (samme), Hero, imponer, boss, Turbo, klublog, søndagstjek, flytning, status, overlejringer, .ics, tidsmaskine.
+**Ikke med:** historik ud over listen, målinger (uge 4 er først 30/11 – men tag dem med, hvis M2 er færdig før 27/11), lette uger (samme), Hero, imponer, boss, Turbo, klublog, søndagstjek, flytning, status, overlejringer, .ics.
 
-**Acceptkriterier:** SK1, SK2, SK3, SK4 (minus opdateringstest, som gentages i M5), SK5, SK8, SK9 i `SPEC.md`; Playwright-flows: onboarding → I dag → Styrke A grøn start-til-slut med »som planlagt« på alle sæt → opsummering med forklaring; samme med gul; Open & Strong start-til-slut uden tryk (timere simuleret); eksport/import.
+**Acceptkriterier:** SK1, SK2, SK3, SK4 (minus opdateringstest, som gentages i M5), SK5, SK8, SK9 i `SPEC.md`; S-TIME-01..03 grønne og dækket af UI; Playwright-flows: onboarding → I dag → Styrke A grøn start-til-slut med »som planlagt« på alle sæt → opsummering med forklaring; samme med gul; Open & Strong start-til-slut uden tryk (timere simuleret); eksport/import; tidsmaskinen: et pas logget i simuleringen, og lagerets antal hændelser er det samme før og efter.
 
-**Automatiske tests:** motor-tests uændrede og grønne; Playwright (Firefox-motor i 412 × 915; Chromium, hvis Firefox ikke kan installeres i miljøet – sig det i opsummeringen); lagertest med fake-indexeddb; visuel røgtest: skærmbilleder af I dag, pas-skridt, trafiklys, pause-timer gemmes i `screenshots/` og vedhæftes opsummeringen.
+**Automatiske tests:** motor-tests uændrede og grønne; Playwright (projekt `pixel9a`: Firefox-motor med JIT slået fra i 414 × 847; `pixel9a-utc` til datotestene; Chromium, hvis Firefox ikke kan installeres i miljøet – sig det i opsummeringen); lagertest med fake-indexeddb; visuel røgtest: skærmbilleder af I dag, pas-skridt, trafiklys, pause-timer gemmes i `screenshots/` og vedhæftes opsummeringen.
 
 **Tjekliste på telefonen:**
 1. Installer appen; gennemfør onboarding under 5 minutter med dine rigtige trin og uger.
@@ -89,20 +89,21 @@ Samme probe køres i Vanadium, hvis punkt 1, 2 eller 4 fejler i IronFox.
 8. Genstart telefonen: er alt der?
 9. Fredag: kør Styrke B inkl. klubsekvensen og nakke.
 10. Notér alt, der føles klodset, i én liste til mig.
+11. Før 9/11: åbn tidsmaskinen (langt tryk på versionen under Mere → Om), vælg tirsdag 10/11, og kør Styrke A. Afslut simuleringen: er dine rigtige data uændrede (samme I dag og ingen pas i Historik)?
 
 **Færdig når:** du har brugt appen en hel uge, og Fable-review 2 er gennemført.
 
-## Milepæl 3 – Livet og tidsmaskinen
+## Milepæl 3 – Livet (tidsmaskinen er flyttet til M2)
 
 **Mål:** appen holder, når ugen ikke går som planlagt, og du kan teste kalenderlogikken selv.
 
-**Med:** klublog-dialog og lørdagskarakter (SPEC 4.6), søndagstjek (4.7), sprunget pas/uge/tre uger (ENGINE 5.7), status syg/rejse/ferie/klubben lukket, begivenheder og »dagen før«-reglen, jul- og nytårsoverlejringer, flytning af pas (5.9), ugeplan med ekstra Muay Thai-dage (5.10), flad-reglen (5.11), rejsepas, smerte-gendannelse efter 7 dage, .ics-download, tidsmaskinen (SPEC 3.7) med skrivebeskyttet lager, historik-listen med klubtræninger.
+**Med:** klublog-dialog og lørdagskarakter (SPEC 4.6), søndagstjek (4.7), sprunget pas/uge/tre uger (ENGINE 5.7), status syg/rejse/ferie/klubben lukket, begivenheder og »dagen før«-reglen, jul- og nytårsoverlejringer, flytning af pas (5.9), ugeplan med ekstra Muay Thai-dage (5.10), flad-reglen (5.11), rejsepas, smerte-gendannelse efter 7 dage, .ics-download, historik-listen med klubtræninger. Tidsmaskinen (SPEC 3.7) er flyttet til M2 (`DECISIONS.md` D29); M3 bruger den til tjeklisten.
 
 **Ikke med:** målinger/lette uger (M4, medmindre de blev taget i M2), Hero, imponer, boss, Turbo.
 
-**Acceptkriterier:** alle scenarier S-WEEK, S-XMAS, S-EVENT, S-FLAT, S-MOVE, S-EXTRA, S-TIME, S-TL-07, S-PAIN-02/03/05 er grønne og dækket af UI; tidsmaskinen kan ikke skrive til lageret (Playwright-test tæller hændelser før og efter); .ics-filen importeres korrekt i en kalender (valideret med en ics-parser i test).
+**Acceptkriterier:** alle scenarier S-WEEK, S-XMAS, S-EVENT, S-FLAT, S-MOVE, S-EXTRA, S-TL-07, S-PAIN-02/03/05 er grønne og dækket af UI (S-TIME og tidsmaskinens Playwright-test er flyttet til M2 og skal forblive grønne); .ics-filen importeres korrekt i en kalender (valideret med en ics-parser i test).
 
-**Automatiske tests:** motor; Playwright for klublog, søndagstjek, flytning, status, tidsmaskine.
+**Automatiske tests:** motor; Playwright for klublog, søndagstjek, flytning, status (tidsmaskinens test kører fra M2).
 
 **Tjekliste på telefonen:**
 1. Åbn tidsmaskinen (langt tryk på versionen), sæt datoen til 21/12 2026: foreslår appen motor 23/12 og Styrke B 26/12?

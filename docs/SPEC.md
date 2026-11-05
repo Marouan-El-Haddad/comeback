@@ -22,11 +22,13 @@ Comeback er en lokal, offline webapp til én bruger på en Pixel 9a. Den overtag
 
 ## 2. Platform
 
-**Valg:** PWA i IronFox, installeret fra menuen (»Installér«/»Føj til startskærm«), hostet som statiske filer på GitHub Pages fra et offentligt repo. Fallback i rækkefølge: (1) samme PWA i Vanadium, (2) samme webkode pakket som Android-APK med Capacitor, bygget af GitHub Actions. Valget afgøres af milepæl 0.
+**Valg:** PWA i IronFox, installeret fra menuen (»Installér«/»Føj til startskærm«), hostet som statiske filer på GitHub Pages fra et offentligt repo. Fallback i rækkefølge: (1) samme PWA i Vanadium, (2) samme webkode pakket som Android-APK med Capacitor, bygget af GitHub Actions. Valget afgøres af milepæl 0. **Afgjort 5/11: IronFox-PWA** (`DECISIONS.md` D19).
 
 **Verificeret (websøgning 5/11 2026):** IronFox 159.0.1 findes og bygger på Firefox 159.0. IronFox' standard: JIT fra, WebGL fra, locale spoofet til en-US, lyst tema til websider, notifikationsprompter blokeret, begrænset adgang til systemfonte, disk-cache fra, tidszone-spoof til UTC-0 er en valgfri indstilling. Firefox for Android kan installere PWA'er, som åbner i egen session med eget ikon. Screen Wake Lock er slået til som standard i Firefox fra version 124/126, også Android. `navigator.storage.persist()` i Firefox giver en brugerprompt på desktop. Pixel 9a: 1080 × 2424 px, 6,3", 422 ppi; forventet viewport ca. 412 × 915 CSS-px (pixelratio 2,625).
 
 **Skal testes på telefonen i M0 (ikke verificeret):** om IronFox har beholdt PWA-installation; om service worker-cache og IndexedDB overlever lukning, genstart og opdatering af IronFox; om indstillingen »Slet browserdata ved lukning« er slået til (den ville slette appens data); om `persist()` viser en prompt eller afvises stille på Android; Wake Lock i IronFox (kan være lukket af hærdning); vibration; Web Audio-lydstyrke med telefonen på gulvet; Web Share; download og upload af filer; faktisk viewport; opstartstid uden JIT; `Intl` med eksplicit tidszone og `da-DK`, uanset spoof.
+
+**Målt i M0 (5/11, IronFox 159.0.1, `probe/RESULTS.md`):** PWA-installation og standalone virker; IndexedDB og localStorage overlever lukning og genstart (»Delete browsing data on quit« er slået fra); `persist()` giver en prompt; opdatering med »Ny version klar« virker uden datatab; Wake Lock og fallback-videoen holder skærmen tændt; lyden høres fra gulvet; `navigator.vibrate` og Web Share findes ikke; tidszone Europe/Copenhagen, sprog en-US (spoofet), `da-DK` og `en-CA` virker eksplicit; viewport 414 × 847 CSS-px med devicePixelRatio 2 i standalone; urets opløsning 16,7 ms. Konsekvenser: ingen vibration (D21), ingen »Del«-knap (D22), layout og Playwright-profil til 414 × 847 (D25).
 
 ### Udrulning og opdatering
 
@@ -98,7 +100,7 @@ Fire faner i bunden: **I dag · Uge · Stiger · Mere**. Et aktivt pas åbner so
 - **Power:** reps logges som planlagt; til sidst ét spørgsmål: »Alle hop/reps lige høje og hurtige?«.
 - **Nakke-stigen:** til sidst: »Let · Passende · Hårdt«.
 - **Motor:** faser som timer (opvarmning 10 min, 3 stigningsløb, hoveddel efter fase, 5 min nedjogging); 30/15 og kamp-runder med lyd ved hvert skift, 10-sekunders eksplosioner og all-out. Base-pas: ét samlet ur og distance-felt til sidst (valgfrit).
-- **Wake Lock** aktiveres ved start af pas og frigives ved afslutning. Fallback: en tavs, loopet 1 × 1-px video, hvis API'et afvises.
+- **Wake Lock** aktiveres ved start af pas og frigives ved afslutning. Fallback: probens tavse, loopede 64 × 36 px-video med lydspor (`DECISIONS.md` D16, D24), hvis API'et afvises.
 - »Hvorfor« viser kildens korte begrundelse (fx evidens-boksen) og PDF-sidetal.
 - **Hold pause** fryser timere. **✕** spørger »Afslut passet? Det, du har logget, gemmes«.
 
@@ -136,7 +138,7 @@ Liste over de ti stiger og tre power-spor med nuværende trin, niveau-badge (Bas
 - **Målinger, Målbræt, Hero-tavle, Imponer-katalog, Boss-udfordringer:** se afsnit 4.8–4.10.
 - **Ugeplan:** klubdage (standard man/ons/lør), tider, valgfri clinch. Ændringer flytter de sekundære pas efter reglerne i `ENGINE.md` 5.10.
 - **Status og begivenheder:** »Syg«, »Rejse«, »Ferie/pause«, »Klubben lukket« med datointerval; »Begivenhed« (fx kamp) med dato – dagen før spærres for tunge ben, Nordic og intervaller.
-- **Backup:** »Eksportér backup« (download til Downloads, filnavn `comeback-backup-YYYY-MM-DD.json`), »Del backup« (Web Share, kun hvis M0 viser, at den virker), »Importér backup« (filvælger → forhåndsvisning: antal hændelser, periode, programversion → »Erstat alt« eller »Flet«).
+- **Backup:** »Eksportér backup« (download til Downloads, filnavn `comeback-backup-YYYY-MM-DD.json`), ingen »Del backup« (Web Share findes ikke i IronFox, `DECISIONS.md` D22), »Importér backup« (filvælger → forhåndsvisning: antal hændelser, periode, programversion → »Erstat alt« eller »Flet«).
 - **Kalender (.ics):** »Download kalenderfil« med ugentlige gentagelser: tirsdag Styrke A, torsdag Motor, fredag Styrke B, søndag Søndagstjek, med de klokkeslæt du vælger. Ingen notifikationer i appen.
 - **Turbo** (fra uge 5, valgfri): vælg én øvelse; dagstæller 0–5 lette sæt.
 - **Om:** version, programversion, kilder (PDF side 54 som links). Langt tryk på versionen i 2 sekunder åbner **Tidsmaskinen**.
@@ -224,13 +226,13 @@ Efter hver måleuge og hver 7. dag uden backup viser I dag backup-linjen. Ekspor
 
 **Typografi:** Kanit 700 til tal (64–96 px i pas, 32 px på kort) og overskrifter (28/22 px); Bai Jamjuree 400/600 til tekst (18 px minimum i pas, 16 px ellers). Linjehøjde 1,3. Selvhostede woff2 fra `public/fonts`.
 
-**Layout:** 412 px bred portræt; sikker zone 16 px; primær handling altid i bunden (tommelfinger) med 64 px højde; øvrige trykflader mindst 56 × 56 px og 8 px afstand. Ingen swipe-kun-gestus, intet dobbelttryk, intet langt tryk undtagen tidsmaskinen. Kort med 12 px hjørner, 1 px navy/10 % kant, ingen skygger over 2 px.
+**Layout:** 414 px bred portræt (målt i M0: 414 × 847 CSS-px, `DECISIONS.md` D25); sikker zone 16 px; primær handling altid i bunden (tommelfinger) med 64 px højde; øvrige trykflader mindst 56 × 56 px og 8 px afstand. Ingen swipe-kun-gestus, intet dobbelttryk, intet langt tryk undtagen tidsmaskinen. Kort med 12 px hjørner, 1 px navy/10 % kant, ingen skygger over 2 px.
 
 **Komponenter:** Dagskort, Pas-skridt (piktogram + tal + cues), Reserve-vælger (tre knapper), Pausetimer (ring + tal), Hold-timer, EMOM-ur, Trafiklys-række, Stige-liste, Niveau-badge, Måle-felt med forrige værdi, Banner (opdatering, simulering, lagerfejl).
 
 **Piktogrammer:** SVG'erne fra `pictos/` i navy/lilla/rød som i PDF'en, 120 × 120 px i pas. Trin uden eget piktogram bruger stigens nærmeste (fx `one_arm_push_up` for trin 5–7 i Pres) plus udførelsesteksten. Kortlægning i `program/pictos.json`; manglende tegnes i den valgfri milepæl 6.
 
-**Lyd:** syntetiseret via Web Audio: tik (880 Hz, 60 ms) ved 3-2-1, »go« (to toner 660→990 Hz, 200 ms), »slut« (tre toner), minutskifte i EMOM (én lang tone). Vibration som supplement: 100 ms ved tik, 300 ms ved go/slut. Appen beder ved pas-start: »Skru op for medielyden« første gang.
+**Lyd:** syntetiseret via Web Audio: tik (880 Hz, 60 ms) ved 3-2-1, »go« (to toner 660→990 Hz, 200 ms), »slut« (tre toner), minutskifte i EMOM (én lang tone). Ingen vibration: `navigator.vibrate` findes ikke i IronFox (`DECISIONS.md` D21). Appen beder ved pas-start: »Skru op for medielyden« første gang.
 
 **Mønstre, der skal undgås (Opus):** creme/off-white baggrund; kursive accentord i overskrifter; nummererede »01/02/03«-labels; monospace-labels; pilleformede knapper (brug 12 px hjørner); gradienter og glas-effekter; dekorative ikoner uden funktion; konfetti/fyrværkeri; streak-flammer; skeleton-loaders (alt er lokalt); karruseller; modale dialoger til almindelig logning; placeholder-tekst i stedet for labels; tekst under 16 px; grå-på-grå; hover-afhængige elementer; emojis i UI-tekst.
 
