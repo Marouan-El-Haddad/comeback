@@ -144,6 +144,7 @@ Liste over de ti stiger og tre power-spor med nuværende trin, niveau-badge (Bas
 - **Kalender (.ics):** »Download kalenderfil« med ugentlige gentagelser: tirsdag Styrke A, torsdag Motor, fredag Styrke B, søndag Søndagstjek, med de klokkeslæt du vælger. Ingen notifikationer i appen.
 - **Turbo** (fra uge 5, valgfri): vælg én øvelse; dagstæller 0–5 lette sæt.
 - **Om:** version, programversion, kilder (PDF side 54 som links). Langt tryk på versionen i 2 sekunder åbner **Tidsmaskinen**.
+- **Diagnose** (under Om, `DECISIONS.md` T6): version, programversion, service worker, spejlets status (antal hændelser og hvornår det sidst blev gemt, eller fejlen), varigt lager, lagerplads, Wake Lock, lyd, viewport, tidszone, sprog og opstartstiden fra ikonet (afsnit 7).
 
 ### 3.7 Tidsmaskinen (skjult)
 
@@ -253,6 +254,7 @@ Efter hver måleuge og hver 7. dag uden backup viser I dag backup-linjen. Ekspor
 - Motoren afleder tilstanden fra loggen én gang ved start (hundredvis af hændelser, millisekunder selv uden JIT) og cacher øjebliksbilledet i hukommelsen; UI'et læser kun øjebliksbilledet.
 - Timere bruger `performance.now()` + tidsstempler, ikke `setInterval`-tælling, så de er præcise efter en baggrundsperiode. Opdatering af visning højst 4 gange i sekundet.
 - Ingen netværkskald efter installation. Ingen analytics.
+- **Opstartstiden på Diagnose** (Mere → Om → Diagnose, `DECISIONS.md` D34) tæller kun en ren opstart fra ikonet. En indlæsning er en ren opstart, når alle fire gælder: (1) appen kører installeret, dvs. `matchMedia('(display-mode: standalone)')` matcher; (2) indlæsningen er en ny navigation med navigationstypen `navigate`, ikke en genindlæsning (`reload`), tilbage/frem (`back_forward`) eller en ukendt type; (3) I dag er den første skærm, appen viser; (4) hverken indfasningen eller tidsmaskinen har været i brug i samme indlæsning, før I dag er synlig. Målingen tages, når I dag er tegnet med sine fonte: første tegning (`first-contentful-paint`) og I dag synlig (mærket `cb-today`), begge i ms fra navigationens start. De seneste 5 rene opstarter gemmes på enheden i `localStorage['comeback.startup']`, uden for hændelsesloggen og uden for backup. Diagnose viser den seneste og medianen af de gemte og siger, om den aktuelle opstart talte med, og ellers hvorfor ikke. Er der ingen ren opstart endnu, står der: »Ingen måling endnu. Luk appen helt, og åbn den fra ikonet.«
 
 ## 8. Tid og sprog
 
