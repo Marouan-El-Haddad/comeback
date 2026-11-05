@@ -19,8 +19,9 @@ import { estimate, isPersisted } from '../../storage/persist.ts';
 import type { MirrorStatus } from '../../storage/store.ts';
 import { audioState, type AudioState } from '../audio.ts';
 import type { Model } from '../model.ts';
-import { median, readStartupTimes, thisStart } from '../startup.ts';
+import { median, readStartupTimes, startupTimesFor, thisStart } from '../startup.ts';
 import { swStatus } from '../sw.ts';
+import { APP_VERSION } from '../version.ts';
 import { History } from './History.tsx';
 import { wakeLockSupported, wakeState, type WakeState } from '../wakelock.ts';
 
@@ -39,9 +40,6 @@ const SOUND: Record<AudioState, string> = {
   blocked: 'blokeret',
   unsupported: 'findes ikke',
 };
-
-declare const __APP_VERSION__: string;
-export const APP_VERSION = typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : 'dev';
 
 export function More({
   model,
@@ -353,9 +351,10 @@ function Diagnose({ model, onBack }: { model: Model; onBack: () => void }) {
   );
 }
 
-/** Only clean starts from the icon (docs/SPEC.md 7, D34): the latest and the median. */
+/** Only clean starts from the icon with this version (docs/SPEC.md 7, D34, D42). */
 function StartupTimes() {
-  const times = readStartupTimes();
+  const kept = readStartupTimes();
+  const times = startupTimesFor(kept, APP_VERSION);
   const last = times[times.length - 1];
   const verdict = thisStart();
   return (
@@ -395,6 +394,11 @@ function StartupTimes() {
       ) : (
         <p class="hint" data-testid="startup-none">
           Ingen måling endnu. Luk appen helt, og åbn den fra ikonet.
+        </p>
+      )}
+      {kept.length > times.length && (
+        <p class="muted" data-testid="startup-older">
+          Målinger fra en anden version tæller ikke med.
         </p>
       )}
       <p class="muted" data-testid="startup-this">

@@ -1,8 +1,10 @@
 // Start-up times for Diagnose (docs/SPEC.md 7, docs/DECISIONS.md D34). Only a clean start from the
 // icon counts: the installed app (display-mode standalone) opened as a new page load (navigation
-// type »navigate«), I dag as the first screen, and neither the onboarding nor the time machine in
-// use before I dag is on screen. The last clean starts are kept on the device in localStorage,
-// outside the event log and the backup: no schema change, no migration.
+// type »navigate«), I dag as the first screen, neither the onboarding nor the time machine in use,
+// and the app in the foreground until I dag is on screen (D42). The last clean starts of the
+// running version are kept on the device in localStorage, outside the event log and the backup:
+// no schema change, no migration.
+import { APP_VERSION } from './version.ts';
 
 /** performance.mark: I dag is on screen with its fonts (SK1; read by e2e/perf.spec.ts). */
 export const TODAY_MARK = 'cb-today';
@@ -17,6 +19,8 @@ export interface StartupTime {
   paint: number | null;
   /** I dag on screen with its fonts, ms after the navigation started. */
   today: number;
+  /** The app version that started (APP_VERSION); missing in times kept before D42. */
+  version?: string;
 }
 
 /** What a page load looked like when I dag was first on screen. */
@@ -28,6 +32,8 @@ export interface LoadFacts {
   first: string | null;
   onboarding: boolean;
   timeMachine: boolean;
+  /** The app was in the background at some point before I dag was on screen. */
+  hidden: boolean;
 }
 
 /** Why a load is not a clean start from the icon (Danish, for Diagnose); null when it is one. */
@@ -40,6 +46,8 @@ export function notClean(facts: LoadFacts): string | null {
   if (facts.onboarding) return 'indfasningen var i brug';
   if (facts.timeMachine) return 'tidsmaskinen var i brug';
   if (facts.first !== 'today') return 'I dag var ikke første skærm';
+  // requestAnimationFrame waits while the app is hidden, so the time would include the break.
+  if (facts.hidden) return 'appen var i baggrunden';
   return null;
 }
 
@@ -58,7 +66,8 @@ function isStartupTime(value: unknown): value is StartupTime {
   return (
     typeof time.at === 'string' &&
     typeof time.today === 'number' &&
-    (time.paint === null || typeof time.paint === 'number')
+    (time.paint === null || typeof time.paint === 'number') &&
+    (time.version === undefined || typeof time.version === 'string')
   );
 }
 
@@ -72,8 +81,17 @@ export function parseStartupTimes(raw: string | null): StartupTime[] {
   }
 }
 
+/** Keeps the new time and the latest ones of the same version; another version's are dropped. */
 export function withStartupTime(list: readonly StartupTime[], time: StartupTime): StartupTime[] {
-  return [...list, time].slice(-STARTUP_KEEP);
+  return [...startupTimesFor(list, time.version), time].slice(-STARTUP_KEEP);
+}
+
+/** The times of one version: Diagnose shows only the running version's (D42). */
+export function startupTimesFor(
+  list: readonly StartupTime[],
+  version: string | undefined,
+): StartupTime[] {
+  return list.filter((time) => time.version === version);
 }
 
 export function readStartupTimes(): StartupTime[] {
@@ -89,6 +107,7 @@ const load = {
   first: null as string | null,
   onboarding: false,
   timeMachine: false,
+  hidden: typeof document !== 'undefined' && document.visibilityState === 'hidden',
   marked: false,
   /** undefined until I dag has been on screen; then null (counted) or why not. */
   verdict: undefined as string | null | undefined,
@@ -103,6 +122,12 @@ export function noteScreen(screen: string): void {
 export function noteTimeMachine(): void {
   load.timeMachine = true;
 }
+
+// From the moment this file runs until I dag is measured, a switch to the background is noted.
+function onVisibility(): void {
+  if (document.visibilityState === 'hidden') load.hidden = true;
+}
+if (typeof document !== 'undefined') document.addEventListener('visibilitychange', onVisibility);
 
 /** This load: undefined before I dag has been on screen, null if it counted, else why not. */
 export function thisStart(): string | null | undefined {
@@ -168,6 +193,7 @@ export function markTodayVisible(): void {
   requestAnimationFrame(() => {
     void document.fonts.ready.then(async () => {
       performance.mark(TODAY_MARK);
+      document.removeEventListener('visibilitychange', onVisibility);
       const today = performance.getEntriesByName(TODAY_MARK)[0]?.startTime;
       const verdict = notClean({ standalone: standalone(), navigation: navigationType(), ...load });
       load.verdict = verdict ?? (today === undefined ? 'tiden kunne ikke måles' : null);
@@ -175,7 +201,8 @@ export function markTodayVisible(): void {
       const at = new Date().toISOString();
       const paint = await waitForFirstPaint();
       try {
-        const list = withStartupTime(readStartupTimes(), { at, paint, today: Math.round(today) });
+        const time = { at, paint, today: Math.round(today), version: APP_VERSION };
+        const list = withStartupTime(readStartupTimes(), time);
         localStorage.setItem(STARTUP_KEY, JSON.stringify(list));
       } catch {
         // Storage full or disabled: Diagnose simply has no time to show.
