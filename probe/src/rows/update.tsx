@@ -25,11 +25,9 @@ export function UpdateRow(props: {
     text = 'Læser lageret …';
   } else if (needRefresh) {
     text = 'Ny version klar – tryk »Opdatér« øverst.';
-  } else if (!previous && PROBE_VERSION === 1) {
-    text =
-      'Venter på version 2. Når den er udgivet: åbn appen, og vent på »Ny version klar« øverst.';
   } else if (!previous) {
-    text = 'Denne browser har ikke set en tidligere version, så opdateringen kan ikke prøves her.';
+    // Also right for a browser that first meets a later version (e.g. Vanadium after v2).
+    text = `Venter på version ${PROBE_VERSION + 1}. Når den er udgivet: åbn appen, og vent på »Ny version klar« øverst.`;
   } else {
     const kept =
       marker !== undefined &&
