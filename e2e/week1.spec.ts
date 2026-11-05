@@ -92,3 +92,23 @@ test('uge 1 fredag: Styrke B med pike, hollow, sideplanke, wall sit og balance',
   expect(stats.measurements).toBe(5);
   expect(await storedEventCount(page)).toBeGreaterThan(before + 20);
 });
+
+test('Styrke B med wall sit W3: runder med timer og »Rene runder?«', async ({ page }) => {
+  await openApp(page, '2026-11-20');
+  await expect(page.getByTestId('onboarding')).toBeVisible();
+  for (let i = 0; i < 3; i++) await page.getByTestId('onboarding-next').click();
+  // The step page: Wall sit two steps up (W1 → W3).
+  const wall = page.locator('[data-track="wallsit"]');
+  await wall.getByRole('button', { name: 'Wall sit: sværere trin' }).click();
+  await wall.getByRole('button', { name: 'Wall sit: sværere trin' }).click();
+  await expect(wall).toContainText('Trin W3 · Wall sit til squats');
+  await page.getByTestId('onboarding-next').click(); // the week-1 measurements page
+  await page.getByTestId('onboarding-done').click();
+  await expect(page.getByTestId('main-card')).toContainText('Wall sit trin W3 · 3 runder');
+  await startStrength(page);
+  for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
+  await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+  const stats = await runSessionToSummary(page);
+  expect(stats.clicks).toBeGreaterThan(10);
+  await expect(page.locator('.logged')).toContainText('Wall sit trin W3: udført');
+});

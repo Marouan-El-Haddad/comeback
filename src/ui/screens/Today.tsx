@@ -46,8 +46,12 @@ function blockLine(block: BlockPlan): string | null {
   const step = getStep(PROGRAM, block.stepId);
   if (block.unit === 'emom' && block.emom)
     return `Burpees EMOM ${step.key} · ${block.emom.minutes} × ${block.emom.reps}`;
-  if (block.unit === 'rounds')
-    return `${track.short} ${step.key} · ${block.sets} × ${block.rounds ?? 1} runde${(block.rounds ?? 1) > 1 ? 'r' : ''}`;
+  if (block.unit === 'rounds') {
+    const rounds = block.rounds ?? 1;
+    const word = rounds === 1 ? 'runde' : 'runder';
+    const dose = block.sets > 1 ? `${block.sets} × ${rounds} ${word}` : `${rounds} ${word}`;
+    return `${track.short} trin ${step.key} · ${dose}${block.measureId ? ' + måling' : ''}`;
+  }
   const unit = block.unit === 'sec' ? ' sek' : '';
   const per =
     block.per === 'side'

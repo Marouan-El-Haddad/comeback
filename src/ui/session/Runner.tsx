@@ -608,6 +608,26 @@ export function Runner({
         />
       );
       break;
+    case 'round':
+      body = (
+        <RoundStep
+          key={`round-${step.block.blockId}-${step.round}`}
+          block={step.block}
+          round={step.round}
+          paused={paused}
+          onDone={advance}
+        />
+      );
+      break;
+    case 'rounds-q':
+      body = (
+        <Question
+          title={getStep(PROGRAM, step.block.stepId).name}
+          question="Rene runder?"
+          onAnswer={(yes) => void logResult(step.block, { clean: yes })}
+        />
+      );
+      break;
     case 'club-q':
       body = (
         <Question
@@ -1136,6 +1156,31 @@ function ClubStep(props: { block: BlockPlan; set: number; paused: boolean; onDon
         Klubsekvensen · trin {getStep(PROGRAM, props.block.stepId).key} · sæt {props.set} af{' '}
         {props.block.sets}
       </p>
+      <PhaseRunner phases={phases} paused={props.paused} onDone={props.onDone} />
+    </div>
+  );
+}
+
+/** A round of wall sit W3/W5 as the timed parts in the data (P49). */
+function RoundStep(props: {
+  block: BlockPlan;
+  round: number;
+  paused: boolean;
+  onDone: () => void;
+}) {
+  const step = getStep(PROGRAM, props.block.stepId);
+  const phases: Phase[] = [
+    { label: 'Klar', seconds: 5 },
+    ...(step.round ?? []).map((p) => ({ label: p.label, seconds: p.seconds })),
+  ];
+  return (
+    <div class="stack">
+      <p class="step-kicker">
+        {getTrack(PROGRAM, props.block.trackId).short} · trin {step.key} · runde {props.round} af{' '}
+        {props.block.rounds ?? 1}
+      </p>
+      <h1>{step.name}</h1>
+      <p class="cue">{step.execution}</p>
       <PhaseRunner phases={phases} paused={props.paused} onDone={props.onDone} />
     </div>
   );

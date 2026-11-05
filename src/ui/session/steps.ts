@@ -21,6 +21,9 @@ export type Step =
   | { type: 'emom-q'; block: BlockPlan; group: string }
   | { type: 'club'; block: BlockPlan; set: number; group: string }
   | { type: 'club-q'; block: BlockPlan; group: string }
+  /** One round of a rounds step in a pair (wall sit W3, W5). */
+  | { type: 'round'; block: BlockPlan; round: number; group: string }
+  | { type: 'rounds-q'; block: BlockPlan; group: string }
   | { type: 'neck'; block: BlockPlan; group: string }
   | { type: 'neck-q'; block: BlockPlan; group: string }
   | { type: 'motor'; group: string }
@@ -115,14 +118,27 @@ export function buildSteps(plan: SessionPlan): Step[] {
       for (const b of group) {
         if (s > setCount(b)) continue;
         const measure = b.measureId !== undefined && s === 1;
-        for (const side of measure ? [undefined] : sides(b)) {
-          sequence.push({ type: 'set', block: b, setIndex: s, side, measure, group: label });
+        if (b.unit === 'rounds' && !measure) {
+          sequence.push({
+            type: 'round',
+            block: b,
+            round: s - (b.measureId ? 1 : 0),
+            group: label,
+          });
+        } else {
+          for (const side of measure ? [undefined] : sides(b)) {
+            sequence.push({ type: 'set', block: b, setIndex: s, side, measure, group: label });
+          }
         }
         sequence.push({ type: 'rest', seconds: b.restSec, group: label, blockId: b.blockId });
       }
     }
     steps.push(...sequence);
     if (block.role === 'power') steps.push({ type: 'power-q', block, group: label });
+    for (const b of group) {
+      if (b.unit === 'rounds' && (b.rounds ?? 0) > 0)
+        steps.push({ type: 'rounds-q', block: b, group: label });
+    }
     i += group.length;
   }
   // No rest straight before the finish.

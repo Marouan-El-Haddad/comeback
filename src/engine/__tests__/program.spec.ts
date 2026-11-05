@@ -554,6 +554,7 @@ describe('shapes (src/engine/types.ts)', () => {
             note: 'string?',
             tags: 'strings?',
             with: 'string?',
+            round: 'array?',
           },
           step.id,
         );

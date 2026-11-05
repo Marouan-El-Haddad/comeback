@@ -123,8 +123,8 @@ export async function runSessionToSummary(
     const question = page.locator('.session-body h1');
     // allTextContents() does not wait: a rest or timer screen has no heading.
     const title = (await question.allTextContents())[0] ?? '';
-    if (/lige høje og hurtige/.test(title) || /Ren runde/.test(title)) {
-      const yes = /Ren runde/.test(title) ? (answers.clean ?? true) : (answers.quality ?? true);
+    if (/lige høje og hurtige/.test(title) || /Ren(e)? runde/.test(title)) {
+      const yes = /Ren(e)? runde/.test(title) ? (answers.clean ?? true) : (answers.quality ?? true);
       await page.getByRole('button', { name: yes ? 'Ja' : 'Nej', exact: true }).click();
       stats.clicks++;
       continue;
@@ -143,6 +143,13 @@ export async function runSessionToSummary(
     const startEmom = page.getByRole('button', { name: 'Start EMOM' });
     if (await startEmom.isVisible()) {
       await startEmom.click();
+      stats.clicks++;
+      continue;
+    }
+    // A part without a set length (20 squats, strides): the user taps »Videre«.
+    const onward = page.getByRole('button', { name: 'Videre', exact: true });
+    if (await onward.isVisible()) {
+      await onward.click();
       stats.clicks++;
       continue;
     }

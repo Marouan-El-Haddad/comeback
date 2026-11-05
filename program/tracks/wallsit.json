@@ -39,7 +39,11 @@
       "dose": { "kind": "rounds", "sets": 1, "rounds": [2, 3], "text": "2–3 runder" },
       "execution": "45 sek wall sit og direkte 20 kontrollerede squats – klubbens kombination.",
       "cues": ["45 sek wall sit og direkte 20 kontrollerede squats – klubbens kombination"],
-      "pdfPage": 17
+      "pdfPage": 17,
+      "round": [
+        { "label": "Wall sit", "seconds": 45 },
+        { "label": "20 kontrollerede squats", "seconds": 0 }
+      ]
     },
     {
       "id": "wallsit.W4",
@@ -59,7 +63,12 @@
       "dose": { "kind": "rounds", "sets": 1, "rounds": [1, 1], "text": "1 runde" },
       "execution": "3 min med garde og slag. Sidste minut på ét ben, 30 sek pr. side.",
       "cues": ["3 min med garde og slag", "Sidste minut på ét ben, 30 sek pr. side"],
-      "pdfPage": 17
+      "pdfPage": 17,
+      "round": [
+        { "label": "Wall sit med garde og slag", "seconds": 120 },
+        { "label": "Ét ben, venstre – garde og slag", "seconds": 30 },
+        { "label": "Ét ben, højre – garde og slag", "seconds": 30 }
+      ]
     }
   ]
 }

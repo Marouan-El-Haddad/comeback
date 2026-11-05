@@ -41,6 +41,8 @@ interface TableTrack extends Meta {
   stepTags?: Record<string, string[]>;
   /** Steps done after another step's dose in the same block (shoulder 3: P17). */
   stepWith?: Record<string, string>;
+  /** One round of a rounds step as timed parts (wall sit W3 and W5, page 17; P49). */
+  stepRound?: Record<string, Array<{ label: string; seconds: number }>>;
   /** Cues when they are not the first sentences of the execution (press: docs/ENGINE.md 7.2). */
   cues?: Record<string, string[]>;
 }
@@ -86,6 +88,17 @@ const TABLE_TRACKS: TableTrack[] = [
     short: 'Wall sit',
     progression: 'hold',
     category: 'ladder',
+    stepRound: {
+      W3: [
+        { label: 'Wall sit', seconds: 45 },
+        { label: '20 kontrollerede squats', seconds: 0 },
+      ],
+      W5: [
+        { label: 'Wall sit med garde og slag', seconds: 120 },
+        { label: 'Ét ben, venstre – garde og slag', seconds: 30 },
+        { label: 'Ét ben, højre – garde og slag', seconds: 30 },
+      ],
+    },
   },
   {
     id: 'posterior',
@@ -410,6 +423,7 @@ function makeStep(fields: {
   pdfPage: number;
   tags?: string[] | undefined;
   with?: string | undefined;
+  round?: Array<{ label: string; seconds: number }> | undefined;
 }): Step {
   return {
     id: fields.id,
@@ -422,6 +436,7 @@ function makeStep(fields: {
     pdfPage: fields.pdfPage,
     ...(fields.tags ? { tags: fields.tags } : {}),
     ...(fields.with ? { with: fields.with } : {}),
+    ...(fields.round ? { round: fields.round } : {}),
   };
 }
 
@@ -477,6 +492,7 @@ function tableTrack(config: TableTrack): Track {
       pdfPage: section.page,
       tags: config.stepTags?.[key],
       with: config.stepWith?.[key],
+      round: config.stepRound?.[key],
     });
   });
   return makeTrack(config, {

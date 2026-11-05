@@ -48,6 +48,8 @@ export interface Step {
   tags?: string[];
   /** This step is done after the given step's dose in the same block (shoulder 3, P17). */
   with?: string;
+  /** One round as timed parts; 0 seconds = until the user taps (wall sit W3, W5; P49). */
+  round?: Array<{ label: string; seconds: number }>;
 }
 
 export interface Track {
