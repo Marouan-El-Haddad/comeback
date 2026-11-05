@@ -1,0 +1,299 @@
+// Types for the explanations and figures in content/ (docs/SPEC.md 9.1, docs/DECISIONS.md D37).
+// The files are a layer on top of the programme: names, doses and rules come from program/*.json;
+// content/explain/<id>.json explains each step in the app's own words and describes its positions
+// in words, and content/figures/<id>.json holds the keyframes the figure system draws and animates.
+// One file per track (program/tracks) and per routine (program/routines.json).
+
+/** Format version of every file in content/. A new field that old files lack needs a new version. */
+export const CONTENT_FORMAT = 1;
+
+// ---------------------------------------------------------------------------------------------
+// Shared vocabulary
+// ---------------------------------------------------------------------------------------------
+
+/** The equipment a step can need, with the label the app shows (the programme's equipment list). */
+export const EQUIPMENT = {
+  wall: 'Væg',
+  chair: 'Stol',
+  sofa: 'Sofa',
+  bed: 'Seng',
+  table: 'Bord',
+  step: 'Trappetrin',
+  books: 'Bøger',
+  pillow: 'Pude',
+  towel: 'Håndklæde',
+  backpack: 'Rygsæk',
+  bottles: 'Vandflasker',
+} as const;
+export type Equipment = keyof typeof EQUIPMENT;
+
+/** What a body part can rest on or touch. Everything but the floor must be in the equipment. */
+export const SURFACES = [
+  'floor',
+  'wall',
+  'chair',
+  'sofa',
+  'bed',
+  'table',
+  'step',
+  'books',
+  'pillow',
+  'towel',
+] as const;
+export type Surface = (typeof SURFACES)[number];
+
+/** Body parts that come in pairs: a contact says whether one or both touch (`count`). */
+export const PAIRED_PARTS = [
+  'hand',
+  'forearm',
+  'elbow',
+  'knee',
+  'shin',
+  'foot',
+  'toes',
+  'heel',
+] as const;
+/** Body parts without a pair: hip = the seat, back/belly/side = lying on it. */
+export const SINGLE_PARTS = ['hip', 'back', 'belly', 'side', 'shoulders', 'chest', 'head'] as const;
+export type BodyPart = (typeof PAIRED_PARTS)[number] | (typeof SINGLE_PARTS)[number];
+
+// ---------------------------------------------------------------------------------------------
+// Explanations: content/explain/<id>.json
+// ---------------------------------------------------------------------------------------------
+
+/** A body part touching something in a position; the figure test checks it (milestone 6). */
+export interface Contact {
+  part: BodyPart;
+  on: Surface;
+  /** Paired parts only: 1 = one of them (one-arm push-up), 2 = both (the default). */
+  count?: 1 | 2;
+}
+
+/** A key position in words. The figure file has one keyframe per position id. */
+export interface Position {
+  /** Lowercase a–z, digits and _, unique in the movement: 'top', 'bottom'. */
+  id: string;
+  /** Shown under the still image when motion is reduced: »Oppe«, »Nede«. */
+  name: string;
+  /** Where hands, feet, knees, hip and head are, the angles, and what touches what. */
+  text: string;
+  /** What touches the floor, wall, chair …; empty = in the air (a jump). */
+  contacts: Contact[];
+}
+
+/** One part of a repetition: the figure moves to (or stays in) a position in this time. */
+export interface Phase {
+  /** The position at the end of the phase; the same position as before = a pause or a hold. */
+  to: string;
+  /**
+   * Seconds in the step's tempo (0.2–10). "dose" = as long as the dose says: the hold of a hold
+   * step, a part of a round, or a routine item's time.
+   */
+  seconds: number | 'dose';
+  /** The text under the figure while the phase runs: »3 sek ned«. */
+  label: string;
+}
+
+/** A movement: the positions and the phases of one repetition. Starts in positions[0]. */
+export interface Movement {
+  /** Needed when an item has more than one movement (the warm-up's »Mobilisér«). */
+  id?: string;
+  /** Shown above the figure when there is more than one movement. */
+  name?: string;
+  positions: Position[];
+  phases: Phase[];
+}
+
+export interface Mistake {
+  mistake: string;
+  fix: string;
+}
+
+/** The explanation of one step or routine item. */
+export interface ExplainItem {
+  /** A step id ('press.1') or a routine item id ('warmup.1', 'os.3' = routine id + item key). */
+  id: string;
+  /** »Træner«: what the step does for the body and for Muay Thai. One sentence. */
+  trains: string;
+  /** »Udgangsstilling«. 1–2 sentences. */
+  start: string;
+  /** »Sådan gør du«: 2–4 short, numbered steps in the imperative. */
+  steps: string[];
+  /** »Tempo«, as in the programme. Every »N sek« here is also a phase. */
+  tempo: string;
+  /** »Vejrtrækning«. */
+  breathing: string;
+  /** 2–3 cues of at most six words that can be read from the floor in the middle of a set. */
+  cues: string[];
+  /** »Typiske fejl«: 2–3, each with how to correct it. */
+  mistakes: Mistake[];
+  /** »Lettere«: the step below or the programme's own easier variant. */
+  easier: string;
+  /** »Sværere«: the step above or a harder variant. */
+  harder: string;
+  /** »Udstyr«; empty = nothing but the floor. */
+  equipment: Equipment[];
+  /** »Gør klar«: one sentence for the rest before the exercise. */
+  getReady: string;
+  /** Usually one; one per exercise when an item holds several (the warm-up). */
+  movements: Movement[];
+}
+
+/** A step explained exactly like another item in the same file (the EMOM steps E2–E9). */
+export interface ExplainLike {
+  id: string;
+  like: string;
+}
+
+export type ExplainEntry = ExplainItem | ExplainLike;
+
+export interface ExplainFile {
+  format: typeof CONTENT_FORMAT;
+  /** The track id or routine id; the same as the file name. */
+  subject: string;
+  /** The track's »Hvorfor« in the app's own words: 1–3 short paragraphs, no sources. */
+  why: string[];
+  /** In the programme's order; steps without an explanation yet are left out. */
+  items: ExplainEntry[];
+}
+
+export function isLike(entry: ExplainEntry): entry is ExplainLike {
+  return 'like' in entry;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Figures: content/figures/<id>.json – the format of tools/pictos/picto.py as data
+// ---------------------------------------------------------------------------------------------
+
+/** A point in figure units: x to the right, y up, the floor at y = 0. */
+export type Point = [number, number];
+
+/** Segment lengths in figure units, as the pictograms (tools/pictos/picto.py). */
+export const BODY = {
+  shin: 23,
+  thigh: 24,
+  torso: 30,
+  upperArm: 16,
+  forearm: 15,
+  neck: 11,
+  headRadius: 6.4,
+  /** Ankle to toes, or wrist to fingers, when a tip is given as an angle. */
+  tip: 7.5,
+} as const;
+
+/** Front view: the default widths of the shoulders and the pelvis. */
+export const FRONT_WIDTH = { shoulders: 22, hips: 12 } as const;
+
+export type View = 'side' | 'front' | 'top';
+export type LimbSide = 'near' | 'far';
+
+/**
+ * A limb solved with two-bone IK: the hand (arm) or the ankle (leg) reaches `to`. In side view the
+ * elbow or knee bends the anatomical way by itself (see `FigureItem.facing`); in front and top view
+ * `bend` picks the side, as picto.py's bend.
+ */
+export interface IkLimb {
+  to: Point;
+  bend?: 1 | -1;
+  /** Foot or hand beyond the ankle or wrist: a point, or an angle in degrees (length BODY.tip). */
+  tip?: Point | number;
+  /** A shorter upper arm or thigh when it points toward the viewer (the push-up's elbows: 12.5). */
+  upper?: number;
+  /** A shorter forearm or shin, for the same reason. */
+  lower?: number;
+}
+
+/** A limb with its joints given, for a limb lying along a surface (forearms in a plank). */
+export interface JointLimb {
+  joint: Point;
+  end: Point;
+  tip?: Point;
+}
+
+/** null = the limb is hidden; the same limbs must be shown in every keyframe of a figure. */
+export type Limb = IkLimb | JointLimb | null;
+
+export interface Pose {
+  /** The hip joint. */
+  hip: Point;
+  /** Direction from the hip to the shoulders in degrees: 0 = +x, 90 = straight up. */
+  torso: number;
+  /** The head's angle to the torso line in degrees (+ = counterclockwise); default 0. */
+  head?: number;
+  /** Front view only: shoulder and pelvis width (default FRONT_WIDTH). */
+  width?: { shoulders: number; hips: number };
+  arms: Record<LimbSide, Limb>;
+  legs: Record<LimbSide, Limb>;
+}
+
+/** Where a carried prop sits: a hand, a foot or the back. */
+export type Anchor = 'near.hand' | 'far.hand' | 'near.foot' | 'far.foot' | 'back';
+
+export type Prop =
+  /** A wall at x; side 1 = the room is to the left (−x), −1 = to the right. */
+  | { type: 'wall'; x: number; side: 1 | -1 }
+  /** Furniture from x to x + width with its top at y = height; a sofa can have a backrest. */
+  | { type: 'chair' | 'bed' | 'table' | 'step'; x: number; width: number; height: number }
+  | {
+      type: 'sofa';
+      x: number;
+      width: number;
+      height: number;
+      back?: number;
+      backSide?: 'left' | 'right';
+    }
+  /** Small things on the floor or on furniture; `at` = the lower left corner. */
+  | { type: 'books'; at: Point; width?: number; count?: number }
+  | { type: 'pillow'; at: Point; width: number }
+  | { type: 'towel'; at: Point; width: number; rolled?: boolean }
+  /** A towel under a hand or foot that slides with it (rollout, leg curl). */
+  | { type: 'towel'; attach: Anchor; width: number }
+  | { type: 'backpack'; at: Point }
+  | { type: 'backpack'; attach: Anchor }
+  | { type: 'bottles'; attach: Anchor };
+
+export type PropType = Prop['type'];
+
+/** The segments drawn in Thai red: the muscles that work. */
+export type Segment = 'torso' | `${LimbSide}.${'upperArm' | 'forearm' | 'thigh' | 'shin'}`;
+
+/** The figure of one step or routine item (one movement of it). */
+export interface FigureItem {
+  /** The step or routine item id, as in content/explain. */
+  id: string;
+  /** The movement's id when the explanation has more than one. */
+  movement?: string;
+  view: View;
+  /**
+   * Side view: the way the chest faces when the figure is turned upright without mirroring:
+   * 1 = right, −1 = left. Standing with the chest to the right, a push-up or plank with the head to
+   * the right, and lying on the back with the head to the left are all 1; a handstand with the
+   * chest to the right is −1. It decides which way knees and elbows bend.
+   */
+  facing?: 1 | -1;
+  props: Prop[];
+  /** Segments in red, at least one. */
+  highlight: Segment[];
+  /** One pose per position id of the movement in content/explain. */
+  keyframes: Record<string, Pose>;
+}
+
+/** A figure drawn exactly like another figure in the same file. */
+export interface FigureLike {
+  id: string;
+  movement?: string;
+  like: string;
+}
+
+export type FigureEntry = FigureItem | FigureLike;
+
+export interface FigureFile {
+  format: typeof CONTENT_FORMAT;
+  /** The track id or routine id; the same as the file name and the explanation file. */
+  subject: string;
+  figures: FigureEntry[];
+}
+
+export function isFigureLike(entry: FigureEntry): entry is FigureLike {
+  return 'like' in entry;
+}
