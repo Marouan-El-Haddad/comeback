@@ -20,6 +20,7 @@ Version 1.1 · 5. november 2026 (rettet efter gennemgang mod PDF'en, se `DECISIO
 | Niveau (`Level`) | `basis`, `staerk`, `imponerende`, `boss` | På trin som i PDF'en; trin uden niveau er mellemtrin |
 | Dosis (`Dose`) | `reps`, `hold`, `power`, `fixed`, `rounds`, `emom`, `always` | Se typerne i afsnit 7 |
 | Pas-skabelon (`SessionTemplate`) | `A`, `B`, `motor`, `os`, `travel` | Blokke i rækkefølge med par/tri-sæt, pauser, hvad der udgår på gul dag og i let uge |
+| Rutine (`Routine`) | `warmup`, `os`; punkterne `warmup.1` … `warmup.4`, `os.1` … `os.6` | Opvarmningen og Open & Strong; et punkts ID er rutinens ID og punktets nummer. Forklaringer og figurer bruger samme ID'er (`SPEC.md` 9.1) |
 | Blok (`Block`) | `A.power`, `A.pair1.press` … | Henviser til et spor; sæt-antal kommer fra ugen |
 | Uge (`Week`) | 1–12 | Fase, let uge, sæt, reserve, power-sæt, motor, EMOM-loft, målinger |
 | Fase | `fundament`, `opbygning`, `kampform`, `let` | Afledt af ugen |
@@ -586,6 +587,6 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 | 47 | Flere Muay Thai-pas, motoren ryger først, tunge ben før en begivenhed, rejse, sygdom, sprungne uger | R-EXTRA-MT, R-MOVE, R-EVENT, R-TRAVEL, R-ILL, R-PW, R-ABSENCE-3, R-REST | S-WEEK-02..08, S-WEEK-11..12, S-EXTRA-*, S-MOVE-01, S-MOVE-03, S-EVENT-01..02 |
 | 48 | Restitution, søndagstjek | `sunday_check`, R-PAIN-SUNDAY | S-PAIN-05 |
 | 49 | Log | Historik (SPEC 3.6), eksport | S-DATA-02 |
-| 51–54 | Bag om programmet, kilder | »Hvorfor«-tekster og Om-skærm | – |
+| 51–54 | Bag om programmet, kilder | »Hvorfor« i appens egne ord (`content/explain/`, `SPEC.md` 9.1); appen viser ingen kilder (`DECISIONS.md` A2) | – |
 
 Afvigelser og tilføjelser: A1 (begivenheder i stedet for sparring), T1 (klublog), T2 (indfasning), T3 (gendannelse efter smerte-uge), T4 (rejsepas tæller ugen). Alle Præciseringer er markeret i teksten og samlet i `DECISIONS.md`.

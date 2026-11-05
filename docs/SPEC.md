@@ -1,10 +1,12 @@
 # SPEC.md – Comeback-appen
 
-Version 1.1 · 5. november 2026 · Produktspecifikation (rettet efter gennemgang mod PDF'en, se `DECISIONS.md` afsnit 6). Træningsreglerne står i `ENGINE.md`; milepælene i `PLAN.md`; beslutningslog i `DECISIONS.md`.
+Version 1.2 · 5. november 2026 · Produktspecifikation (rettet efter gennemgang mod PDF'en, se `DECISIONS.md` afsnit 6, og efter brugerens første test: appen forklarer sig selv, `DECISIONS.md` A2, T7–T9 og D36–D41). Træningsreglerne står i `ENGINE.md`; milepælene i `PLAN.md`; beslutningslog i `DECISIONS.md`.
 
 ## 1. Formål
 
 Comeback er en lokal, offline webapp til én bruger på en Pixel 9a. Den overtager alt tænkearbejdet i 12-ugers-programmet »Comeback – sekundærtræning til Muay Thai« (`PROGRAM_KILDE.md`): den viser, hvad der skal laves i dag, guider passet med timere, logger med få tryk og implementerer programmets regler for progression, trafiklys, lette uger, målinger og fravær. Programmet er den faglige sandhed; appen ændrer aldrig indholdet.
+
+Appen forklarer sig selv og står på egne ben: hver øvelse har et øvelseskort med en animeret figur, trin, cues og typiske fejl (3.8), passet viser altid, hvad der skal laves nu, og hvad der kommer bagefter (3.2), og »Sådan virker programmet« forklarer reglerne (3.9). Forklaringerne er et lag ovenpå programmet i egne filer (9.1); navne, doser og regler kommer stadig fra programmet. Appen henviser aldrig til PDF'en, sidetal eller kilder uden for appen (`DECISIONS.md` A2).
 
 ### Målbare succeskriterier
 
@@ -19,6 +21,8 @@ Comeback er en lokal, offline webapp til én bruger på en Pixel 9a. Den overtag
 | SK7 | Programdata indeholder alle trin fra `PROGRAM_KILDE.md` | Konverteringstest (`program.spec.ts`) |
 | SK8 | Eksport + import genskaber hele tilstanden byte for byte | Motor-test `S-DATA-02` |
 | SK9 | Hele appen vejer under 150 kB komprimeret JavaScript | Build-rapport |
+| SK10 | Ingen tekst i appen henviser til PDF'en, sidetal eller kilder | Vitest (`no-source-refs.test.ts`: kildekoden, programdata og `content/`) og Playwright (`no-source-refs.spec.ts`: de viste skærme) |
+| SK11 | Hvert trin og hvert rutinepunkt har en forklaring og en animeret figur, der består valideringen (9.1) | `node scripts/check-explain.ts` (dækning) og Vitest (`content.test.ts`) |
 
 ## 2. Platform
 
@@ -91,7 +95,15 @@ Fire faner i bunden: **I dag · Uge · Stiger · Mere**. Et aktivt pas åbner so
 └──────────────────────────────────────┘
 ```
 
+Skitsen viser opbygningen fra milepæl 2; »Nu og næste« herunder lægges ind i den i milepæl 6.
+
 - Ét skridt ad gangen i skabelonens rækkefølge (opvarmning → power → par/tri-sæt → finisher → nakke). Par og tri-sæt skifter automatisk mellem øvelserne: A1, pause, B1, pause, A2 …
+- **Hvad nu, og hvad bagefter** (`DECISIONS.md` T8). Under passet skal det altid være klart, hvad der skal laves nu, og hvad der kommer bagefter, så ingen ny øvelse kommer bag på dig, mens tiden går:
+  - **Dagens pas** på ét blik, før passet starter: blokkene i rækkefølge med navy skillere og store røde tal, øvelserne med figur, sæt × gentagelser (eller tid), pauser, udstyr og forventet tid. Skærmen åbnes fra I dag-kortet, og »Start passet« står nederst.
+  - **Nu og Næste** er altid synlige under passet: »Nu« med figur, mål og 2 cues og »Næste« med figur, navn og mål, og det samme er fremdriften i passet (fx »Blok 3 af 7«).
+  - **Pausen** viser den næste øvelse stort med animation og dens »Gør klar«-tekst.
+  - **Introkort:** første gang en øvelse kommer i passet (dens første sæt), vises et kort introkort med animation og trin, før timeren går. Et tryk lukker det. Ved hold og EMOM starter nedtællingen først, når kortet er lukket, så holdet selv kører uden berøring (SK3). Open & Strong og motorens faser har intet introkort (`DECISIONS.md` D41).
+  - Bevægelse i brugerfladen bruges kun, hvor den viser, hvad der ændrede sig (afsnit 5).
 - **Logning:** »Som planlagt« logger målet og den planlagte reserve. Afvigelser rettes med −/+ og reserveknapperne, før man trykker. Smerte-knappen åbner tre valg: »Let (≤3)«, »Skarp eller i et led«, »Stop øvelsen«.
 - **Pausetimer** starter af sig selv, når et sæt er logget, med stor nedtælling, lyd ved 3-2-1 og en markant slutlyd. Næste sæt vises under timeren, så man kan læse, mens man hviler.
 - **Hold-øvelser** (planker, wall sit, hollow, Copenhagen, håndstand): timeren starter efter en 5-sekunders nedtælling (»klar – 5 – 4 …«), tæller holdet ned, siger til ved halvvejs og ved 3-2-1 og logger selv »som planlagt«, når tiden er gået. Pausen starter straks. Man rører kun skærmen, hvis man måtte stoppe før tid (»Stoppede før tid« → indtast sekunder).
@@ -101,7 +113,7 @@ Fire faner i bunden: **I dag · Uge · Stiger · Mere**. Et aktivt pas åbner so
 - **Nakke-stigen:** til sidst: »Let · Passende · Hårdt«.
 - **Motor:** faser som timer (opvarmning 10 min, 3 stigningsløb, hoveddel efter fase, 5 min nedjogging); 30/15 og kamp-runder med lyd ved hvert skift, 10-sekunders eksplosioner og all-out. Base-pas: ét samlet ur og distance-felt til sidst (valgfrit).
 - **Wake Lock** aktiveres ved start af pas og frigives ved afslutning. Fallback: probens tavse, loopede 64 × 36 px-video med lydspor (`DECISIONS.md` D16, D24), hvis API'et afvises.
-- »Hvorfor« viser kildens korte begrundelse (fx evidens-boksen) og PDF-sidetal.
+- »Hvorfor« forklarer i appens egne ord, hvorfor øvelsen er med: sporets »Hvorfor« fra `content/explain/` (9.1). Indtil forklaringen findes, vises programmets egen tekst uden sidetal og kildehenvisninger. Ingen sidetal og ingen kilder (`DECISIONS.md` A2).
 - **Hold pause** fryser timere. **✕** spørger »Afslut passet? Det, du har logget, gemmes«.
 
 ### 3.3 Trafiklys (før hvert pas, undtagen Open & Strong)
@@ -132,7 +144,7 @@ Syv rækker som PDF side 6 med chips: pas, varighed, status (✓ logget, ◐ gul
 
 ### 3.5 Stiger
 
-Liste over de ti stiger og tre power-spor med nuværende trin, niveau-badge (Basis/Stærk/Imponerende/Boss) og afstanden til næste trin som tekst: »1 pas mere med 3 × 12 og 2 i reserve«. Et tryk åbner stigen: alle trin, dosis og udførelse, dit trin markeret, piktogram pr. trin (fallback: stigens nærmeste piktogram + tekst), og knappen »Vælg selv et andet trin« (advarsel én gang, logges som dit valg). Sidegrene vælges her (højst én aktiv).
+Liste over de ti stiger og tre power-spor med nuværende trin, niveau-badge (Basis/Stærk/Imponerende/Boss) og afstanden til næste trin som tekst: »1 pas mere med 3 × 12 og 2 i reserve«. Et tryk åbner stigen: alle trin, dosis og udførelse, dit trin markeret, piktogram pr. trin (fallback: stigens nærmeste piktogram + tekst), og knappen »Vælg selv et andet trin« (advarsel én gang, logges som dit valg). Et tryk på et trin åbner øvelseskortet (3.8). Sidegrene vælges her (højst én aktiv).
 
 ### 3.6 Mere
 
@@ -143,18 +155,35 @@ Liste over de ti stiger og tre power-spor med nuværende trin, niveau-badge (Bas
 - **Backup:** »Eksportér backup« (download til Downloads, filnavn `comeback-backup-YYYY-MM-DD.json`), ingen »Del backup« (Web Share findes ikke i IronFox, `DECISIONS.md` D22), »Importér backup« (filvælger → forhåndsvisning: antal hændelser, periode, programversion → »Erstat alt« eller »Flet«).
 - **Kalender (.ics):** »Download kalenderfil« med ugentlige gentagelser: tirsdag Styrke A, torsdag Motor, fredag Styrke B, søndag Søndagstjek, med de klokkeslæt du vælger. Ingen notifikationer i appen.
 - **Turbo** (fra uge 5, valgfri): vælg én øvelse; dagstæller 0–5 lette sæt.
-- **Om:** version, programversion, kilder (PDF side 54 som links). Langt tryk på versionen i 2 sekunder åbner **Tidsmaskinen**.
+- **Sådan virker programmet** (3.9).
+- **Programmet** (`/program/`): en dataside med alle stiger, trin, uger, målinger og kataloger direkte fra `program/*.json`, så programmet kan tjekkes. Uden sidetal (`DECISIONS.md` D38).
+- **Om:** version og programversion. Ingen kilder og ingen henvisninger til PDF'en (`DECISIONS.md` A2). Langt tryk på versionen i 2 sekunder åbner **Tidsmaskinen**.
 - **Diagnose** (under Om, `DECISIONS.md` T6): version, programversion, service worker, spejlets status (antal hændelser og hvornår det sidst blev gemt, eller fejlen), varigt lager, lagerplads, Wake Lock, lyd, viewport, tidszone, sprog og opstartstiden fra ikonet (afsnit 7).
 
 ### 3.7 Tidsmaskinen (skjult)
 
 Vælg en dato (standard i morgen). Appen genstarter i simuleret tilstand med et rødt banner »SIMULERET · 24. dec 2026 · Afslut« og arbejder på en kopi af hændelsesloggen i hukommelsen. Alt kan prøves, inkl. logning af pas og dage fremad (»+1 dag«). Intet skrives til den rigtige log; »Afslut« kasserer kopien. Lageret åbnes skrivebeskyttet, mens simuleringen kører (motor-test `S-TIME-01..03`).
 
+### 3.8 Øvelseskortet
+
+Ét kort pr. trin og pr. rutinepunkt (opvarmning og Open & Strong), som åbnes fra Stiger, fra »Dagens pas« og fra passet (»Nu« og pausen) (`DECISIONS.md` T7). Navn og dosis kommer fra programmet; resten fra `content/explain/` og `content/figures/` (9.1). En, der aldrig har set øvelsen, skal kunne lave den rigtigt ud fra kortet og figuren.
+
+- **Øverst:** navn, dosis fra programmet (fx »3 × 6–12«) og den animerede figur. Under figuren står faserne som tekst (»3 sek ned · 1 sek stille · Op«), og den, der kører, er fremhævet.
+- **Synligt uden at folde ud:** »Træner«, udgangsstilling, 2–4 nummererede trin og 2–3 cues.
+- **Foldet sammen** (ét tryk åbner): tempo og vejrtrækning, typiske fejl med rettelse, lettere og sværere variant, udstyr og sporets »Hvorfor«.
+- **Figuren** animerer mellem positionerne i øvelsens tempo, fx push-up: 3 sek ned, 1 sek stille, op. Et tryk på figuren skifter til slowmotion (halv fart) og tilbage. Ved `prefers-reduced-motion: reduce` vises positionerne som stillbilleder side om side med deres navn. Figuren har et tekstalternativ, der beskriver positionerne og faserne.
+- Har et trin flere bevægelser (fx opvarmningens »Mobilisér«), har hver sin figur med navn.
+- Mangler forklaringen eller figuren, viser kortet programmets udførelse og piktogrammet.
+
+### 3.9 Sådan virker programmet
+
+Et kort, interaktivt afsnit under Mere og i indfasningen (4.1), der forklarer trafiklyset, reserve, dobbelt progression, ugerne og de lette uger (`DECISIONS.md` T9). Små dynamiske grafikker i stedet for tekstmure: fx en reserve-skala, du kan trykke på, og en trappe, der viser, at to pas med alle sæt på toppen og 2 i reserve giver næste trin. Teksterne bruger de samme ord som resten af appen og henviser ikke til PDF'en.
+
 ## 4. Brugerflows
 
 ### 4.1 Første start og indfasning (under 5 minutter)
 
-1. Velkomst: én skærm, én knap.
+1. Velkomst: én skærm, én knap og et link til »Sådan virker programmet« (3.9), som kan læses før indfasningen og bagefter under Mere.
 2. Startdato (standard 9. november 2026).
 3. Uger siden start: en række pr. kalenderuge med »Gennemført · Ikke gennemført« (standard: gennemført). Det afgør programugen (regel R-WEEK).
 4. Trin pr. stige: de ti stiger, rotationsstigen (Mave 2), de tre power-spor (power ben, power overkrop, burpee-trin E1–E9), klubsekvensen (C1–C6) og nakke-stigen (N1–N6), hver med en vælger (standard trin 1, E1, C1 og N1) og hjælpeteksten »Det sværeste trin, hvor du kan lave 3 sæt i bunden med perfekt form og 2–3 i reserve. I tvivl: et trin lavere«. Valgfrit felt »seneste reps/sek« pr. stige, som sætter arbejdstallet.
@@ -225,27 +254,41 @@ Efter hver måleuge og hver 7. dag uden backup viser I dag backup-linjen. Ekspor
 
 **Identitet:** PDF'ens: thai-rød og navy (»rødt og blåt hjørne«), Kanit til overskrifter og store tal, Bai Jamjuree til brødtekst. Alle farver kommer fra `design-tokens.json` i starter-kittet som CSS-variabler med filens navne (`--c-red`, `--c-navy`, `--c-blue`, `--c-gold`, `--c-ink`, `--c-muted`, `--c-panel`, `--c-line`, `--c-paper` = #FFFFFF, `--c-green` og `--c-amber` til trafiklyset osv.). Ingen andre farver, heller ingen sand- eller cremetoner.
 
+**Plakatstil** (`DECISIONS.md` D39): appen skal føles poleret, ikke tom. Store tal og overskrifter i Kanit, navy skillere med store røde tal mellem blokkene (i et pas og i »Dagens pas«), og øvelsen og figuren er hovedpersonen på hver skærm, hvor der er en øvelse.
+
 **Tema:** ét eksplicit lyst, højkontrast-tema. Ingen `prefers-color-scheme`-afhængighed (IronFox melder altid lyst). Baggrund ren hvid; tekst navy; primærknap rød med hvid tekst; sekundær navy-outline; gul og rød trafiklys-tilstande med egne nuancer fra tokens. Mørkt tema er ikke i v1.
 
 **Typografi:** Kanit 700 til tal (64–96 px i pas, 32 px på kort) og overskrifter (28/22 px); Bai Jamjuree 400/600 til tekst (18 px minimum i pas, 16 px ellers). Linjehøjde 1,3. Selvhostede woff2 fra `public/fonts`.
 
 **Layout:** 414 px bred portræt (målt i M0: 414 × 847 CSS-px, `DECISIONS.md` D25); sikker zone 16 px; primær handling altid i bunden (tommelfinger) med 64 px højde; øvrige trykflader mindst 56 × 56 px og 8 px afstand. Ingen swipe-kun-gestus, intet dobbelttryk, intet langt tryk undtagen tidsmaskinen. Kort med 12 px hjørner, 1 px navy/10 % kant, ingen skygger over 2 px.
 
-**Komponenter:** Dagskort, Pas-skridt (piktogram + tal + cues), Reserve-vælger (tre knapper), Pausetimer (ring + tal), Hold-timer, EMOM-ur, Trafiklys-række, Stige-liste, Niveau-badge, Måle-felt med forrige værdi, Banner (opdatering, simulering, lagerfejl).
+**Komponenter:** Dagskort, Pas-skridt (figur + tal + cues), Nu og Næste, Dagens pas-liste, Øvelseskort (3.8), Figur, Reserve-vælger (tre knapper), Pausetimer (ring + tal), Hold-timer, EMOM-ur, Trafiklys-række, Stige-liste, Niveau-badge, Måle-felt med forrige værdi, Banner (opdatering, simulering, lagerfejl).
 
-**Piktogrammer:** SVG'erne fra `pictos/` i navy/lilla/rød som i PDF'en, 120 × 120 px i pas. Trin uden eget piktogram bruger stigens nærmeste (fx `one_arm_push_up` for trin 5–7 i Pres) plus udførelsesteksten. Kortlægning i `program/pictos.json`; manglende tegnes i den valgfri milepæl 6.
+**Piktogrammer:** SVG'erne fra `pictos/` i navy/lilla/rød som i PDF'en, 120 × 120 px i pas. Trin uden eget piktogram bruger stigens nærmeste (fx `one_arm_push_up` for trin 5–7 i Pres) plus udførelsesteksten. Kortlægning i `program/pictos.json`. Piktogrammerne bruges, indtil et trin har sin figur.
+
+**Figurer** (milepæl 6, `DECISIONS.md` D36): animerede SVG-figurer i samme stil som piktogrammerne (navy nære lemmer, lys lilla fjerne lemmer, thai-rød på de muskler, der arbejder, lyse rekvisitter) med farverne fra `design-tokens.json` (`pictogram` og `color`). Figursystemet er en TypeScript-udgave af `tools/pictos/`: y op, gulvet i y = 0, hofte, overkrop og lemmer med to-leds invers kinematik, og det tegner keyframes fra `content/figures/` (9.1). Led bøjer den rigtige vej, hænder og fødder står fast på gulv, væg og stol, og faserne følger tempoet i dosis. Alt er SVG, ingen billeder.
+
+**Bevægelse:** figurernes animation viser øvelsen. Anden bevægelse i brugerfladen bruges kun, hvor den viser, hvad der ændrede sig (fx et sæt, der blev logget, eller den næste øvelse, der bliver »Nu«), højst 200 ms og aldrig som pynt. Ved `prefers-reduced-motion: reduce` står alt stille, og figurerne vises som stillbilleder.
 
 **Lyd:** syntetiseret via Web Audio: tik (880 Hz, 60 ms) ved 3-2-1, »go« (to toner 660→990 Hz, 200 ms), »slut« (tre toner), minutskifte i EMOM (én lang tone). Ingen vibration: `navigator.vibrate` findes ikke i IronFox (`DECISIONS.md` D21). Appen beder ved pas-start: »Skru op for medielyden« første gang.
 
-**Mønstre, der skal undgås (Opus):** creme/off-white baggrund; kursive accentord i overskrifter; nummererede »01/02/03«-labels; monospace-labels; pilleformede knapper (brug 12 px hjørner); gradienter og glas-effekter; dekorative ikoner uden funktion; konfetti/fyrværkeri; streak-flammer; skeleton-loaders (alt er lokalt); karruseller; modale dialoger til almindelig logning; placeholder-tekst i stedet for labels; tekst under 16 px; grå-på-grå; hover-afhængige elementer; emojis i UI-tekst.
+**Mønstre, der skal undgås (Opus):** creme/off-white baggrund; kursive accentord i overskrifter; nummererede »01/02/03«-labels; monospace-labels; pilleformede knapper (brug 12 px hjørner); gradienter og glas-effekter; dekorative ikoner uden funktion; konfetti/fyrværkeri; streak-flammer; skeleton-loaders (alt er lokalt); karruseller; modale dialoger til almindelig logning; placeholder-tekst i stedet for labels; tekst under 16 px; grå tekst på grå baggrund; ens kort i gitter; hover-afhængige elementer; emojis i UI-tekst; henvisninger til PDF'en, sidetal eller kilder (A2).
 
 ## 6. Tilgængelighed og ergonomi
 
+Kravene er skærpet efter brugerens første test (`DECISIONS.md` D39) og tjekkes automatisk i Playwright, hvor det kan lade sig gøre (kontrast, trykflader, tekststørrelse og tekstalternativer).
+
+- **Kontrast:** mindst 4,5:1 for al tekst og 7:1 for al tekst i passet.
+- **Trykflader:** mindst 56 × 56 px med 8 px afstand; primær handling 64 px høj.
+- **Tekst:** mindst 16 px overalt og 18 px i passet.
+- **Tekstalternativ:** figurer og animationer har et tekstalternativ (`role="img"` og et `aria-label`, der beskriver positionerne og faserne), og alle knapper har tekst, ikke kun ikon.
+- **Intet budskab kun med farve:** trafiklys, niveauer, smerte og status har også tekst eller form.
+- **Bevægelse:** `prefers-reduced-motion` respekteres (afsnit 5, Bevægelse).
 - Svedige fingre: store flader, ingen præcise gestus, knapper tåler et »klodset« tryk (ingen hurtigt skiftende knapper på samme sted; »Som planlagt« ligger altid samme sted).
-- Telefonen på gulvet ca. 1 meter væk: tal på 96 px, cues 18–20 px, kontrast mindst 7:1 for al tekst i pas.
+- Telefonen på gulvet ca. 1 meter væk: tal på 96 px, cues 18–20 px.
 - Sollys: lyst tema, ingen tynde skrifter under 600 i vægt til vigtig tekst.
 - Én hånd: alt vigtigt i nederste halvdel; fanelinje i bunden.
-- Skærmlæser er ikke et krav, men alle knapper har tekst, ikke kun ikon.
+- Skærmlæser er ikke et krav, men alt har tekst.
 - Ingen afhængighed af tale (ingen TTS).
 
 ## 7. Ydelse
@@ -254,7 +297,8 @@ Efter hver måleuge og hver 7. dag uden backup viser I dag backup-linjen. Ekspor
 - Motoren afleder tilstanden fra loggen én gang ved start (hundredvis af hændelser, millisekunder selv uden JIT) og cacher øjebliksbilledet i hukommelsen; UI'et læser kun øjebliksbilledet.
 - Timere bruger `performance.now()` + tidsstempler, ikke `setInterval`-tælling, så de er præcise efter en baggrundsperiode. Opdatering af visning højst 4 gange i sekundet.
 - Ingen netværkskald efter installation. Ingen analytics.
-- **Kun det, første skærm bruger, indlæses ved start** (`DECISIONS.md` D35): startkoden ligger i to filer af omtrent samme størrelse (motoren med programdata og resten af appen), som browseren parser samtidig. Kode og data, som I dag ikke bruger (det guidede pas, Open & Strong og senere forklaringer og figurer), ligger i egne filer, som hentes i baggrunden, når I dag er tegnet, eller ved første tryk. Service workeren precacher alle filer.
+- **Kun det, første skærm bruger, indlæses ved start** (`DECISIONS.md` D35, D37): startkoden ligger i to filer af omtrent samme størrelse (motoren med programdata og resten af appen), som browseren parser samtidig. Kode, som I dag ikke bruger (det guidede pas, Open & Strong, øvelseskortet, figursystemet og »Sådan virker programmet«), ligger i egne filer, som hentes med `lazy()` fra `src/ui/lazy.tsx` i baggrunden, når I dag er tegnet, eller ved første tryk. Service workeren precacher alle filer.
+- **Forklaringer og figurer er JSON-filer, ikke JavaScript** (D37): filerne i `content/` (9.1) udgives af Vite som egne JSON-filer og hentes med `src/content/load.ts`, når en skærm skal bruge dem. `src/content/load.ts` (og det, der importerer den) må kun importeres fra kode, der hentes med `lazy()`. Service workeren precacher JSON-filerne, så de også hentes uden net. `scripts/bundle-size.ts` viser dem som en egen linje (»Content JSON«), der ikke tæller med i JavaScript-budgettet, og bygget fejler, hvis startfilerne henviser til en af dem, eller hvis service workeren ikke precacher dem alle.
 - **Opstartstiden på Diagnose** (Mere → Om → Diagnose, `DECISIONS.md` D34) tæller kun en ren opstart fra ikonet. En indlæsning er en ren opstart, når alle fire gælder: (1) appen kører installeret, dvs. `matchMedia('(display-mode: standalone)')` matcher; (2) indlæsningen er en ny navigation med navigationstypen `navigate`, ikke en genindlæsning (`reload`), tilbage/frem (`back_forward`) eller en ukendt type; (3) I dag er den første skærm, appen viser; (4) hverken indfasningen eller tidsmaskinen har været i brug i samme indlæsning, før I dag er synlig. Målingen tages, når I dag er tegnet med sine fonte: første tegning (`first-contentful-paint`) og I dag synlig (mærket `cb-today`), begge i ms fra navigationens start. De seneste 5 rene opstarter gemmes på enheden i `localStorage['comeback.startup']`, uden for hændelsesloggen og uden for backup. Diagnose viser den seneste og medianen af de gemte og siger, om den aktuelle opstart talte med, og ellers hvorfor ikke. Er der ingen ren opstart endnu, står der: »Ingen måling endnu. Luk appen helt, og åbn den fra ikonet.«
 
 ## 8. Tid og sprog
@@ -272,6 +316,61 @@ Efter hver måleuge og hver 7. dag uden backup viser I dag backup-linjen. Ekspor
 - **Eksportfil:** `{ app: 'comeback', schemaVersion, programVersion, exportedAt, events: [...] }`. Import validerer, viser forhåndsvisning og kan erstatte eller flette (hændelser med samme `id` ignoreres).
 - Tidsmaskinen skriver aldrig til lageret.
 
+### 9.1 Forklaringer og figurer (`content/`)
+
+Forklaringerne og figurerne er et lag ovenpå programmet (`DECISIONS.md` D37). De ligger i egne filer, så `program/*.json` stadig kan sammenlignes ord for ord med kilden, og de ændrer aldrig navne, doser, tempo eller regler. Typerne står i `src/content/types.ts`, og valideringen i `src/content/validate.ts` håndhæver reglerne herunder.
+
+**Filer.** Én forklaringsfil og én figurfil pr. spor (`program/tracks/<id>.json`) og pr. rutine (`warmup` og `os` i `program/routines.json`), så flere indholdsagenter kan skrive samtidig uden at røre hinandens filer:
+
+| Fil | Indhold |
+|---|---|
+| `content/explain/<id>.json` | Sporets eller rutinens »Hvorfor« og én forklaring pr. trin eller rutinepunkt med positionerne i ord og faserne |
+| `content/figures/<id>.json` | Keyframes til figuren for hvert forklaret trin: én pose pr. position i forklaringen |
+
+`<id>` er sporets eller rutinens ID (`press`, `warmup`). Et trin har sit ID fra programmet (`press.1`, `wallsit.W3`); et rutinepunkt får rutinens ID og punktets nummer (`warmup.1` … `warmup.4`, `os.1` … `os.6`). Trin, der ikke er skrevet endnu, udelades; filen må gerne vokse trin for trin.
+
+**Tjek.** `node scripts/check-explain.ts <fil>` tjekker én forklarings- eller figurfil og skriver korte danske fejlbeskeder med sted (fx `press.1 › cues[1]: højst 6 ord (har 8)`); en figurfil tjekkes mod forklaringen med samme navn. Uden fil tjekkes alle filer i `content/`, og dækningen udskrives. Kommandoen fejler også, hvis prettier ville ændre filen. Vitest (`src/content/__tests__/content.test.ts`) validerer alle filerne ved hver `npm run check`.
+
+**Forklaringsfilen** (`ExplainFile`): `format` (1), `subject` (filens navn), `why` og `items` i programmets rækkefølge. Et punkt i `items` er enten en fuld forklaring eller `{ "id": "burpee_emom.E2", "like": "burpee_emom.E1" }`, når trinnet forklares og tegnes præcis som et andet trin i filen.
+
+| Felt | Kortet viser | Regel |
+|---|---|---|
+| `why` | Sporets »Hvorfor« | 1–3 afsnit à højst 280 tegn i appens egne ord |
+| `trains` | Træner | Én sætning, højst 150 tegn: hvad trinnet gør for kroppen og for Muay Thai |
+| `start` | Udgangsstilling | 1–2 sætninger, højst 220 tegn |
+| `steps` | Sådan gør du | 2–4 korte trin i bydeform, højst 140 tegn hver |
+| `tempo` | Tempo | Som i programmet, højst 120 tegn; hvert »N sek« her er også en fase |
+| `breathing` | Vejrtrækning | Højst 120 tegn |
+| `cues` | Cues | 2–3, højst 6 ord og 40 tegn hver, uden punktum |
+| `mistakes` | Typiske fejl | 2–3 par `{ "mistake", "fix" }`, højst 90 og 140 tegn |
+| `easier`, `harder` | Lettere, sværere | Nabotrinnet eller programmets egen variant, højst 160 tegn |
+| `equipment` | Udstyr | ID'er fra `EQUIPMENT`: `wall`, `chair`, `sofa`, `bed`, `table`, `step`, `books`, `pillow`, `towel`, `backpack`, `bottles`; tom liste = kun gulvet |
+| `getReady` | Gør klar (i pausen før øvelsen) | Én sætning, højst 140 tegn |
+| `movements` | Figuren | 1–4 bevægelser (se herunder) |
+
+**Bevægelser, positioner og faser** – det, figursystemet bygger på:
+
+- En bevægelse har `positions` (1–6, typisk 2–4) og `phases` (1–12). Har et punkt flere bevægelser (opvarmningens »Mobilisér«), får hver et `id` og et `name`.
+- En position har `id` (små bogstaver, tal og `_`, fx `top`, `bottom`), `name` (højst 3 ord, fx »Oppe«), `text` (positionen i ord: hvor hænder, fødder, knæ, hofte og hoved er, vinklerne, og hvad der rører hvad; højst 240 tegn) og `contacts`.
+- En kontakt er `{ "part", "on", "count"? }`. Kropsdele, der er to af: `hand`, `forearm`, `elbow`, `knee`, `shin`, `foot`, `toes`, `heel` (`count` 1 = den ene, 2 = begge, standard 2). Andre: `hip` (siddefladen), `back`, `belly`, `side` (liggende på den), `shoulders`, `chest`, `head`. Flader: `floor`, `wall`, `chair`, `sofa`, `bed`, `table`, `step`, `books`, `pillow`, `towel`; alt andet end gulvet skal også stå i `equipment`. Ingen kontakter = i luften (et hop).
+- En fase er `{ "to", "seconds", "label" }`: figuren bevæger sig til positionen `to` (samme position som før = en pause eller et hold) på `seconds` sekunder (0,2–10) og viser `label` under figuren (højst 5 ord, fx »3 sek ned«). Bevægelsen starter i den første position, og hver position nås af en fase.
+- `"seconds": "dose"` betyder »så længe dosis siger«: selve holdet i en hold-øvelse (påkrævet), en del af en runde eller en rutines tid. Øvelser med gentagelser og power bruger kun sekunder.
+- En gentagelse slutter, hvor den startede: i øvelser med gentagelser (ikke power, hold og runder) går sidste fase til den første position.
+- **Tempoet i dosis:** hver tid, programmet nævner for trinnet (»3 sek ned, 1 sek pause«, »på 4–5 sek«), skal findes som en fase med den varighed; en tid over 10 sek (et hold på 45 sek) er `"dose"`-fasen.
+
+**Tekstregler for alle felter:** dansk du-form, konkret og kort; prosa slutter med punktum, cues, navne og labels gør ikke; ingen udråbstegn, emojis, linjeskift eller dobbelte mellemrum; ingen henvisning til PDF'en, sidetal eller kilder (A2); i et spors trin ingen dosis som »3 × 8« (dosis står på kortet fra programmet).
+
+**Figurfilen** (`FigureFile`): `format` (1), `subject` og `figures`. Formatet er Python-motorens (`tools/pictos/picto.py`) som data, og figursystemet i milepæl 6 tegner og animerer det:
+
+- Koordinater i figurenheder: x til højre, y op, gulvet i y = 0. Led og længder som piktogrammerne (`BODY`: skinneben 23, lår 24, overkrop 30, overarm 16, underarm 15, hals 11, hoved med radius 6,4).
+- En figur har `id` (trinnet), `movement` (kun ved flere bevægelser), `view` (`side`, `front` eller `top`), `facing` (sidebillede: 1, når brystet vender mod højre, efter at figuren er drejet op at stå uden at spejle den; en push-up eller planke med hovedet til højre og liggende på ryggen med hovedet til venstre er 1, en håndstand med brystet mod højre er −1), `props`, `highlight` (de røde segmenter: `torso`, `near.thigh`, `far.forearm` …) og `keyframes` med én pose pr. position i forklaringen. En figur kan også være `{ "id", "like" }`, når den tegnes som en anden figur i filen.
+- En pose har `hip` (punkt), `torso` (vinkel i grader fra hoften til skuldrene: 90 = lodret op), `head` (hovedets vinkel til overkroppen, standard 0), i frontbilledet `width` (skuldre og hofter, standard 22 og 12) og `arms` og `legs` med `near` og `far`.
+- Et lem er enten `{ "to", "bend"?, "tip"?, "upper"?, "lower"? }`, hvor hånden eller anklen når punktet `to` med to-leds invers kinematik, eller `{ "joint", "end", "tip"? }` med leddene givet (underarme i gulvet i en planke), eller `null` (skjult i alle keyframes). I sidebilledet bøjer albuer og knæ selv den anatomiske vej ud fra `facing`, så `bend` udelades; forfra og ovenfra vælger `bend` (1 eller −1) siden. `tip` er fod eller hånd ud over anklen eller håndleddet (et punkt eller en vinkel); `upper` og `lower` forkorter et led, der peger mod beskueren.
+- Rekvisitter: `wall` (`x`, `side`), `chair`, `bed`, `table`, `step` og `sofa` (`x`, `width`, `height` og for sofaen `back` og `backSide`), `books`, `pillow`, `towel` og `backpack` med `at` (nederste venstre hjørne), og `towel`, `backpack` og `bottles` med `attach` (`near.hand`, `far.hand`, `near.foot`, `far.foot`, `back`), så de følger hånden eller foden. Hver rekvisit skal stå i forklaringens udstyr, og hver flade, en position rører, skal være en rekvisit.
+- Figursystemets egne tests (milepæl 6) tjekker geometrien: knæ og albuer bøjer den rigtige vej, kontakterne i forklaringen passer med gulv, væg og stol i figuren, og fasernes varighed svarer til tempoet i dosis. Hænder og fødder, der står fast, har samme punkt i alle keyframes, så de ikke glider.
+
+**Indlæsning:** se afsnit 7. Filerne hentes som JSON efter start og precaches af service workeren.
+
 ## 10. Ikke med i v1
 
-Mørkt tema, notifikationer, tale, flere brugere, synkronisering, Android-widget, grafik ud over simple kurver, imponer-videoer, kost-logning.
+Mørkt tema, notifikationer, tale, flere brugere, synkronisering, Android-widget, video og fotos (figurerne er tegnede SVG'er), imponer-videoer, kost-logning.

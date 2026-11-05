@@ -1,6 +1,8 @@
 # PLAN.md – Milepæle
 
-Version 1.1 · 5. november 2026. Rækkefølgen er fast; en milepæl er færdig, når acceptkriterierne er opfyldt, testene er grønne, og du har gennemgået tjeklisten på telefonen. Opus laver alt i milepælen og ikke mere; fund uden for den rapporteres som forslag i opsummeringen.
+Version 1.2 · 5. november 2026 (NAT-2: milepæl 6 rykket frem og udvidet, tjeklister som Playwright-flows, `DECISIONS.md` D36 og D40). Rækkefølgen er fast: M0 → M1 → M2 → M6 → M3 → M4 → M5. En milepæl er færdig, når acceptkriterierne er opfyldt, testene er grønne, og du har gennemgået tjeklisten på telefonen. Opus laver alt i milepælen og ikke mere; fund uden for den rapporteres som forslag i opsummeringen.
+
+**Tjeklister som Playwright-flows** (D40): fra NAT-2 laves tjeklisterne for de milepæle, der bygges, som Playwright-flows i tidsmaskinen (`pixel9a`, og `pixel9a-utc` når datoer indgår), så du ikke skal gennemføre dem i hånden. Telefonen tjekker kun det, Playwright ikke kan – lyd fra gulvet, at skærmen holder sig tændt, og om alt kan læses i sollys og på gulvet – med højst seks ja/nej-punkter pr. milepæl.
 
 **Hosting:** offentligt GitHub-repo `comeback`, GitHub Pages fra `main` via Actions, Vite `base: '/comeback/'`. Hver milepæl ender med en URL, du åbner i IronFox, og en kort tjekliste.
 
@@ -93,6 +95,35 @@ Samme probe køres i Vanadium, hvis punkt 1, 2 eller 4 fejler i IronFox.
 
 **Færdig når:** du har brugt appen en hel uge, og Fable-review 2 er gennemført.
 
+## Milepæl 6 – Forklaringer og figurer (rykket frem og udvidet, D36)
+
+**Mål:** appen forklarer selv hver øvelse og programmet og kan bruges uden PDF'en: forståelige, konkrete forklaringer, animerede figurer i piktogrammernes stil, et pas, hvor det altid er klart, hvad der skal laves nu, og hvad der kommer bagefter, og et design, der føles poleret.
+
+**Med:**
+- Kilderne og datamodellen (`SPEC.md` 9.1): `content/explain/` og `content/figures/`, typer, validering og `node scripts/check-explain.ts <fil>`. Ingen henvisninger til PDF'en, sidetal eller kilder i appen (A2).
+- Forklaringer for alle trin og rutinepunkter (`SPEC.md` 3.8): først trin 1 og 2 i alle spor, burpee-teknik, nakke, opvarmningen og Open & Strong; derefter resten.
+- Figursystemet: en TypeScript-udgave af `tools/pictos/`, der tegner figurerne som SVG og animerer mellem keyframes i øvelsens tempo, med faserne som tekst, slowmotion ved tryk og stillbilleder ved reduceret bevægelse; et kontaktark (PNG) pr. spor til review.
+- Figurer for alle trin i samme rækkefølge som forklaringerne.
+- Passet: »Dagens pas«, »Nu og næste«, den næste øvelse i pausen og introkortet (`SPEC.md` 3.2).
+- Designløftet og sproget (`SPEC.md` 5 og 6, rykket frem fra M5).
+- »Sådan virker programmet« (`SPEC.md` 3.9).
+
+**Ikke med:** nye øvelser og ændrede navne, doser, tempo eller regler; forklaringerne er et lag ovenpå programmet.
+
+**Acceptkriterier:** SK10 og SK11; alle filer i `content/` består valideringen; figursystemets tests er grønne (led bøjer den rigtige vej, kontakten med gulv, væg og stol passer, fasernes varighed svarer til tempoet i dosis); Playwright-flows: øvelseskortet fra Stiger og fra passet; figuren animerer, et tryk giver slowmotion, og reduceret bevægelse giver stillbilleder; Styrke A, Styrke B, motor og Open & Strong gennem tidsmaskinen med »Nu«, »Næste«, pause og introkort; et pas uden berøring, hvor SK3 lover det; »Sådan virker programmet« fra Mere og fra indfasningen. JavaScript under 150 kB gz, og opstarten er ikke blevet langsommere (`e2e/perf.spec.ts`).
+
+**Automatiske tests:** Vitest for indholdet og figurerne; Playwright som ovenfor i `pixel9a` (og `pixel9a-utc`, hvor datoer indgår); skærmbilleder af kortene og kontaktarkene i `screenshots/`.
+
+**Tjekliste på telefonen** (i tidsmaskinen, højst seks punkter):
+1. Stiger → Pres → trin 1: laver figuren push-uppen i tempoet 3 sek ned, 1 sek stille, op?
+2. Tryk på figuren: kører den i slowmotion?
+3. Start Styrke A: kan du hele tiden se, hvad du skal nu, og hvad der kommer bagefter?
+4. Viser pausen den næste øvelse stort med »Gør klar«?
+5. Kan figurer og tal læses med telefonen på gulvet?
+6. Forstår du trafiklyset og reserve efter »Sådan virker programmet«?
+
+**Færdig når:** alle trin har forklaring og figur, og tjeklisten er gennemgået.
+
 ## Milepæl 3 – Livet (tidsmaskinen er flyttet til M2)
 
 **Mål:** appen holder, når ugen ikke går som planlagt, og du kan teste kalenderlogikken selv.
@@ -105,7 +136,7 @@ Samme probe køres i Vanadium, hvis punkt 1, 2 eller 4 fejler i IronFox.
 
 **Automatiske tests:** motor; Playwright for klublog, søndagstjek, flytning, status (tidsmaskinens test kører fra M2).
 
-**Tjekliste på telefonen:**
+**Tjekliste på telefonen** (bliver Playwright-flows i tidsmaskinen, når milepælen bygges, D40; kun det, der kræver telefonen, bliver på listen):
 1. Åbn tidsmaskinen (langt tryk på versionen), sæt datoen til 21/12 2026: foreslår appen motor 23/12 og Styrke B 26/12?
 2. Spring videre til 28/12: foreslår den målinger 29–30/12 (hvis programugen er 8)?
 3. Simulér to uger uden pas: gentager den sidste gennemførte uge? Tre uger: rykker alle stiger ned med forklaring?
@@ -131,7 +162,7 @@ Samme probe køres i Vanadium, hvis punkt 1, 2 eller 4 fejler i IronFox.
 
 **Automatiske tests:** motor; Playwright for en komplet uge 4 (tirsdag, torsdag, fredag) i tidsmaskinen.
 
-**Tjekliste på telefonen:**
+**Tjekliste på telefonen** (bliver Playwright-flows i tidsmaskinen, når milepælen bygges, D40):
 1. I tidsmaskinen: gå til uge 4, kør tirsdagens pas: kommer væg-test, push-ups max, bord-rows max og burpee-test de rigtige steder?
 2. Fredag: pike, hollow, sideplanke, wall sit, balance?
 3. Viser målingerne forrige værdi og niveau?
@@ -147,13 +178,13 @@ Samme probe køres i Vanadium, hvis punkt 1, 2 eller 4 fejler i IronFox.
 
 **Mål:** appen føles som et færdigt produkt og tåler opdateringer.
 
-**Med:** ydelsespas mod budgettet (SPEC 7), designgennemgang af alle skærme mod SPEC 5 og listen af forbudte mønstre, lyd og haptik justeret efter dine noter, alle tomme tilstande og fejl (SPEC 4.13), opdateringstest (ny version uden datatab) med skemamigration v1→v2 (en reel, lille ændring), eksport-påmindelser, gennemgang af alle UI-tekster for sprog og konsistens, `README.md` med installation og opdatering.
+**Med:** ydelsespas mod budgettet (SPEC 7), designgennemgang af alle skærme mod SPEC 5 og listen af forbudte mønstre, lyd og haptik justeret efter dine noter, alle tomme tilstande og fejl (SPEC 4.13), opdateringstest (ny version uden datatab) med skemamigration v1→v2 (en reel, lille ændring), eksport-påmindelser, gennemgang af alle UI-tekster for sprog og konsistens, `README.md` med installation og opdatering. Designløftet og sproggennemgangen er rykket frem til M6 (D36); M5 gentager gennemgangen for skærmene fra M3 og M4.
 
 **Ikke med:** nye funktioner.
 
 **Acceptkriterier:** alle SK1–SK9; ingen åbne fejl fra M2–M4; build-rapport under budget; Playwright-sæt grønt; migrationstest S-DATA-04 grøn i UI.
 
-**Tjekliste på telefonen:**
+**Tjekliste på telefonen** (det, Playwright kan, bliver flows i tidsmaskinen, D40):
 1. Opdatér appen fra den gamle version: banner, opdatering, alle data intakte.
 2. Opstart fra ikonet under 1 sekund (varm) – tag tid.
 3. Gennemgå alle skærme i sollys og på gulvet: kan alt læses?
@@ -163,15 +194,9 @@ Samme probe køres i Vanadium, hvis punkt 1, 2 eller 4 fejler i IronFox.
 
 **Færdig når:** Fable-review 3 er gennemført, og `DECISIONS.md` er opdateret med den endelige platform og de åbne ønsker.
 
-## Milepæl 6 (valgfri) – Manglende piktogrammer
+## Milepæl 6
 
-**Mål:** alle trin har eget piktogram i PDF'ens stil.
-
-**Med:** Opus bruger Python-motoren fra starter-kittet til at tegne de trin, der i `program/pictos.json` er markeret `fallback: true`, ét ad gangen, og lægger dem i `pictos/` med samme navnekonvention. Hvert piktogram leveres som PNG-forhåndsvisning til dig; du godkender eller afviser med en kort kommentar, før det tages i brug.
-
-**Acceptkriterier:** `pictos.json` har ingen `fallback: true` tilbage; alle nye SVG'er bruger tokens-farverne; UI-tests grønne.
-
-**Tjekliste:** gennemse hvert nyt piktogram i appen på det rigtige trin.
+Rykket frem til efter M2 og udvidet med forklaringer og animation (D36); se »Milepæl 6 – Forklaringer og figurer« ovenfor. De statiske piktogrammer med `fallback: true` i `program/pictos.json` bliver ikke tegnet om i Python: trinnene får en animeret figur i stedet, og piktogrammet bruges, indtil figuren findes.
 
 ## Skabelon for en milepæl-besked til Opus
 
