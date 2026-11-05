@@ -117,17 +117,19 @@ export function MeasureInput(props: {
         )}
 
       {level && <p class="hint">Målbrættet: {LEVEL[level]}</p>}
-      <button
-        type="button"
-        class="btn primary block"
-        disabled={value === null || busy}
-        onClick={() => void save()}
-      >
-        Gem målingen
-      </button>
-      <button type="button" class="btn block" onClick={props.onSkip}>
-        Spring målingen over
-      </button>
+      <div class="fixed-actions">
+        <button type="button" class="btn block" onClick={props.onSkip}>
+          Spring målingen over
+        </button>
+        <button
+          type="button"
+          class="btn primary block"
+          disabled={value === null || busy}
+          onClick={() => void save()}
+        >
+          Gem målingen
+        </button>
+      </div>
     </div>
   );
 }

@@ -115,8 +115,8 @@
 }
 
 .btn.small {
-  min-height: 48px;
-  min-width: 48px;
+  min-height: 56px;
+  min-width: 56px;
   padding: 0 12px;
   font-size: 16px;
 }
@@ -130,7 +130,7 @@
 .btn.primary.yellow {
   border-color: var(--c-amber);
   background: var(--c-amber);
-  color: var(--c-ink);
+  color: var(--c-navyDark);
 }
 
 /* I dag */
@@ -148,8 +148,6 @@
 .main-card {
   display: grid;
   gap: 12px;
-  border-width: 2px;
-  border-color: var(--c-navy);
 }
 
 .main-card-head {
@@ -337,7 +335,7 @@
 }
 
 .why summary {
-  min-height: 48px;
+  min-height: 56px;
   display: flex;
   align-items: center;
   font-weight: 600;
@@ -402,14 +400,14 @@
 
 .countdown {
   position: relative;
-  width: 240px;
-  height: 240px;
+  width: 300px;
+  height: 300px;
   margin: 0 auto;
 }
 
 .countdown.big {
-  width: 260px;
-  height: 260px;
+  width: 320px;
+  height: 320px;
 }
 
 .ring {
@@ -441,7 +439,7 @@
 .countdown-number {
   font-family: 'Kanit', system-ui, sans-serif;
   font-weight: 700;
-  font-size: 72px;
+  font-size: 96px;
   line-height: 1;
   color: var(--c-navy);
 }
@@ -463,6 +461,10 @@
   gap: 16px;
 }
 
+.next-up p {
+  font-weight: 600;
+}
+
 .next-up .next-title {
   font-weight: 700;
 }
@@ -479,6 +481,21 @@
 
 .phase-label {
   font-size: 28px;
+}
+
+.notice {
+  display: block;
+  width: calc(100% - 32px);
+  min-height: 48px;
+  margin: 8px 16px 0;
+  padding: 8px 12px;
+  border: 2px solid var(--c-gold);
+  border-radius: 12px;
+  background: var(--c-goldTint);
+  color: var(--c-ink);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
 }
 
 .confirm {
@@ -609,7 +626,7 @@
 }
 
 .week-facts dt {
-  color: var(--c-muted);
+  color: var(--c-ink);
 }
 
 .week-facts dd {
@@ -634,7 +651,11 @@
 }
 
 .week-day.today {
-  border: 2px solid var(--c-navy);
+  background: var(--c-panel);
+}
+
+.week-day.today .week-day-name::after {
+  content: ' · i dag';
 }
 
 .week-day-name {
@@ -760,4 +781,87 @@
 .session .big-number .unit,
 .session .phase-count {
   color: var(--c-ink);
+}
+
+/* The session's actions in one fixed block at the bottom: »Som planlagt« stays in the same place
+   on every set (SPEC 3.2, 6; design review D2). The body leaves room for it. */
+.session-body {
+  padding-bottom: 260px;
+}
+
+.fixed-actions {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 15;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 12px 16px 16px;
+  display: grid;
+  gap: 8px;
+  background: var(--c-paper);
+  border-top: 1px solid var(--c-line);
+}
+
+.adjust-note {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+/* Half a second after a change of screen taps are ignored (D1). */
+.session.settling button {
+  pointer-events: none;
+}
+
+/* D6: at least 18 px in a session. */
+.session .step-kicker,
+.session .small-print,
+.session .btn.small,
+.session .btn.red-outline {
+  font-size: 18px;
+}
+
+/* A disabled primary button must look disabled. */
+.btn.primary:disabled {
+  border-color: var(--c-line);
+  background: var(--c-panel);
+  color: var(--c-muted);
+}
+
+/* D11: on I dag the cards sit low, near the thumb and the tab bar. */
+.screen.today {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  flex-direction: column;
+}
+
+.screen.today .today-head {
+  margin-bottom: auto;
+}
+
+/* D9: Backup with its actions at the bottom. */
+.screen.backup {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  flex-direction: column;
+}
+
+.backup-actions {
+  margin-top: auto;
+  display: grid;
+  gap: 8px;
+}
+
+/* D10: the distance to the next step is important text. */
+.ladder-distance {
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+.history-row {
+  grid-template-columns: 1fr;
+  min-height: 72px;
 }

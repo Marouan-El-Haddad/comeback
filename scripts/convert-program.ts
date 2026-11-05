@@ -533,10 +533,18 @@ function emomTrack(): Track {
   });
 }
 
-/** C1–C6 (P6); the round itself is the numbered list on page 13 and becomes the note. */
+/** Seconds for the five parts of a round: 3-second holds; the ten micro pumps and the full rep
+ * get a set time so the round runs without a touch (P49). */
+const CLUB_ROUND_SECONDS = [3, 3, 3, 8, 4];
+
+/** C1–C6 (P6); the round itself is the numbered list on page 13: the note and the timed parts. */
 function clubTrack(): Track {
   const section = sectionNamed(CLUB.section);
   const round = section.lines.filter((line) => /^\d+\. /.test(line));
+  const parts = round.map((line, i) => ({
+    label: line.replace(/^\d+\. /, ''),
+    seconds: CLUB_ROUND_SECONDS[i] ?? 3,
+  }));
   const steps = CLUB.steps.map((step) =>
     makeStep({
       id: `${CLUB.id}.${step.key}`,
@@ -550,6 +558,7 @@ function clubTrack(): Track {
       },
       execution: `${step.text}.`,
       pdfPage: section.page,
+      round: parts,
     }),
   );
   return makeTrack(CLUB, {

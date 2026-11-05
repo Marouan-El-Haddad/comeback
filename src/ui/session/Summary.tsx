@@ -1,7 +1,7 @@
-// After »Afslut passet«: logged against planned, the engine's decisions with their explanation
-// (SK5), pain flags and one button (docs/SPEC.md 4.2).
-import { formatLong, getStep, getTrack, PROGRAM } from '../../engine/index.ts';
-import type { SessionSummary } from '../../engine/types.ts';
+// After »Afslut passet« (and from Historik): logged against planned, what changes next time with
+// one explanation each (SK5), pain flags and one button (docs/SPEC.md 4.2, design review D15).
+import { formatLong, formatDose, getStep, getTrack, PROGRAM } from '../../engine/index.ts';
+import type { LoggedSet, PlannedBlockRef, SessionSummary } from '../../engine/types.ts';
 
 const STATUS: Record<string, string> = {
   green: 'Grøn',
@@ -10,12 +10,36 @@ const STATUS: Record<string, string> = {
   travel: 'Rejse',
 };
 
+function values(sets: LoggedSet[]): string {
+  const value = (s: LoggedSet) => `${s.reps ?? s.seconds ?? 0}`;
+  const left = sets.filter((s) => s.side === 'L');
+  const right = sets.filter((s) => s.side === 'R');
+  if (left.length === 0 && right.length === 0) return sets.map(value).join(', ');
+  return `venstre ${left.map(value).join(', ')} · højre ${right.map(value).join(', ')}`;
+}
+
+function blockName(ref: PlannedBlockRef): string {
+  const track = getTrack(PROGRAM, ref.trackId);
+  const step = getStep(PROGRAM, ref.stepId);
+  if (track.progression === 'emom') return `Burpees EMOM ${step.key}`;
+  return `${track.short} trin ${step.key}`;
+}
+
+function planText(ref: PlannedBlockRef): string {
+  const step = getStep(PROGRAM, ref.stepId);
+  if (step.dose.kind === 'emom' || step.dose.kind === 'rounds') return formatDose(step.dose);
+  const unit = step.dose.kind === 'hold' ? ' sek' : '';
+  return `${ref.sets} × ${ref.target}${unit}`;
+}
+
 export function Summary({
   session,
   onDone,
+  doneLabel = 'Færdig',
 }: {
   session: SessionSummary | null;
   onDone: () => void;
+  doneLabel?: string;
 }) {
   if (!session) {
     return (
@@ -25,7 +49,7 @@ export function Summary({
         </div>
         <div class="session-actions">
           <button type="button" class="btn primary block" onClick={onDone}>
-            Færdig
+            {doneLabel}
           </button>
         </div>
       </div>
@@ -47,9 +71,9 @@ export function Summary({
         {session.aborted && <p class="hint">Passet blev afsluttet før tid. Det loggede er gemt.</p>}
 
         <section class="stack">
-          <h2>Motorens beslutninger</h2>
+          <h2>Næste gang</h2>
           {session.decisions.length === 0 && targetChanges.length === 0 && (
-            <p>Ingen ændringer i trin efter dette pas.</p>
+            <p>Ingen ændringer efter dette pas.</p>
           )}
           <ul class="decisions" data-testid="decisions">
             {session.decisions.map((d) => (
@@ -91,16 +115,10 @@ export function Summary({
             {session.blocks.map((b) => {
               const sets = session.sets.filter((s) => s.blockId === b.blockId && !s.measureId);
               const result = session.results.find((r) => r.blockId === b.blockId);
-              const step = getStep(PROGRAM, b.stepId);
-              const values = sets
-                .map((s) => `${s.reps ?? s.seconds ?? 0}${s.side ? s.side : ''}`)
-                .join(', ');
+              const logged = sets.length > 0 ? values(sets) : result ? 'udført' : 'ikke logget';
               return (
                 <li key={b.blockId}>
-                  <strong>
-                    {getTrack(PROGRAM, b.trackId).short} trin {step.key}
-                  </strong>
-                  : {values || (result ? 'udført' : 'ikke logget')}
+                  <strong>{blockName(b)}</strong>: {logged} (plan {planText(b)})
                 </li>
               );
             })}
@@ -109,7 +127,7 @@ export function Summary({
       </div>
       <div class="session-actions">
         <button type="button" class="btn primary block" onClick={onDone} data-testid="done">
-          Færdig
+          {doneLabel}
         </button>
       </div>
     </div>

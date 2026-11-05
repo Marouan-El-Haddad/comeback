@@ -27,13 +27,13 @@ import type {
   SessionSummary,
   Side,
 } from '../../engine/types.ts';
-import { enableAudio, play } from '../audio.ts';
+import { audioState, enableAudio, play } from '../audio.ts';
 import { Picto } from '../components/Picto.tsx';
 import { readLocal, useModel, writeLocal } from '../hooks.ts';
 import { ulid } from '../ids.ts';
 import type { Model } from '../model.ts';
 import { requestPersistOnce } from '../persist.ts';
-import { keepAwake, releaseAwake } from '../wakelock.ts';
+import { keepAwake, onWakeState, releaseAwake, wakeState } from '../wakelock.ts';
 import { buildSteps, setCount, type Step } from './steps.ts';
 import { Countdown, PhaseRunner, type Phase } from './timers.tsx';
 import { MeasureInput } from './MeasureInput.tsx';
@@ -58,6 +58,8 @@ interface RunState extends RunRequest {
 }
 
 const RUN_KEY = 'comeback.run';
+/** »Skru op for medielyden« is shown at the first session only (SPEC 5, Lyd). */
+const SOUND_KEY = 'comeback.soundNoted';
 
 /** A session left half-way today is resumed at the same step after the app was closed. */
 export function resumableRun(model: Model): RunRequest | null {
@@ -99,13 +101,38 @@ export function Runner({
   useModel(model);
   const [run, setRun] = useState<RunState>(() => {
     const saved = readLocal<RunState>(RUN_KEY);
+    // Resume only the same session: same day, kind and world (a time-machine run never comes
+    // back in the real app), and its session still open in the log.
+    const open =
+      saved?.sessionId === null ||
+      model.state.sessions.some((s) => s.sessionId === saved?.sessionId && !s.completed);
     if (
       saved &&
       saved.date === request.date &&
       saved.kind === request.kind &&
-      saved.phase !== 'summary'
+      saved.phase !== 'summary' &&
+      saved.sim === (model.sim !== null) &&
+      open
     )
       return saved;
+    // No saved step (e.g. local storage was cleared) but the session is open in the log: go on
+    // with it; the first step without a logged set is found once the steps are known.
+    const started = model.state.sessions.find(
+      (s) => s.date === request.date && s.kind === request.kind && !s.completed,
+    );
+    if (started) {
+      return {
+        ...request,
+        phase: 'run',
+        answers: started.answers,
+        red: started.light === 'red',
+        preIndex: 0,
+        stepIndex: -1,
+        sessionId: started.sessionId,
+        intervalsAnyway: false,
+        sim: model.sim !== null,
+      };
+    }
     const defaults = defaultAnswers(model.state, request.date);
     return {
       ...request,
@@ -120,6 +147,17 @@ export function Runner({
     };
   });
   const [paused, setPaused] = useState(false);
+  // A button that appears after a change of screen cannot be hit by the same clumsy double tap
+  // (SPEC 6, design review D1): taps are ignored for half a second.
+  const [settling, setSettling] = useState(false);
+  useEffect(() => {
+    setSettling(true);
+    const id = setTimeout(() => setSettling(false), 500);
+    return () => clearTimeout(id);
+  }, [run.phase, run.preIndex, run.stepIndex]);
+  const sessionClass = settling ? 'session settling' : 'session';
+  const [firstTime] = useState(() => readLocal<boolean>(SOUND_KEY) !== true);
+  const soundNoted = () => writeLocal(true, SOUND_KEY);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [finished, setFinished] = useState<SessionSummary | null>(null);
 
@@ -158,6 +196,38 @@ export function Runner({
   }, [state, run.date, run.kind, light, run.short, run.calmBase, run.intervalsAnyway, session]);
 
   const steps = useMemo(() => buildSteps(plan), [plan]);
+
+  // Resumed from the log alone (stepIndex -1): the first set, result or measurement not logged.
+  useEffect(() => {
+    if (run.phase !== 'run' || run.stepIndex >= 0 || !session) return;
+    const done = (step: Step): boolean => {
+      switch (step.type) {
+        case 'set':
+          return session.sets.some(
+            (s) =>
+              s.blockId === step.block.blockId &&
+              s.setIndex === step.setIndex &&
+              s.side === step.side,
+          );
+        case 'power-q':
+        case 'emom-q':
+        case 'club-q':
+        case 'neck-q':
+        case 'rounds-q':
+          return session.results.some((r) => r.blockId === step.block.blockId);
+        case 'emom':
+        case 'club':
+        case 'neck':
+        case 'round':
+          return session.results.some((r) => r.blockId === step.block.blockId);
+        default:
+          return false;
+      }
+    };
+    let index = steps.findIndex((step) => step.type !== 'rest' && !done(step));
+    if (index < 0) index = steps.length - 1;
+    setRun((r) => ({ ...r, stepIndex: index }));
+  }, [run.phase, run.stepIndex, session, steps]);
 
   // Blocks ended by sharp pain or »Stop« (5.3.3): their remaining sets are skipped.
   const ended = useMemo(() => {
@@ -243,10 +313,13 @@ export function Runner({
       : ['Sovet mindst 6 timer?', 'Fri for ledsmerter, kun let øm?'];
     const now: Light = lightFor(motor ? run.answers : [run.answers[0], run.answers[1], true]);
     return (
-      <div class="session">
+      <div class={sessionClass}>
         <SessionHeader title={plan.name} onClose={close} />
         <div class="session-body">
           <h1>Før du starter – 10 sekunder</h1>
+          {firstTime && (
+            <p class="hint">Skru op for medielyden: lyden er dit signal i hold og pauser.</p>
+          )}
           {questions.map((q, i) => (
             <YesNo
               key={q}
@@ -279,9 +352,20 @@ export function Runner({
         <div class="session-actions">
           <button
             type="button"
+            class="btn block red-outline"
+            onClick={() => {
+              void enableAudio();
+              void begin(true);
+            }}
+          >
+            Rød: syg, feber, skarp smerte eller under 4 timers søvn
+          </button>
+          <button
+            type="button"
             class={now === 'green' ? 'btn primary block' : 'btn primary block yellow'}
             onClick={() => {
               void enableAudio();
+              soundNoted();
               if (motor) void begin(false);
               else setRun((r) => ({ ...r, phase: 'pre', preIndex: 0 }));
             }}
@@ -293,16 +377,6 @@ export function Runner({
               : now === 'green'
                 ? 'Start opvarmningen'
                 : 'GUL – start opvarmningen'}
-          </button>
-          <button
-            type="button"
-            class="btn block red-outline"
-            onClick={() => {
-              void enableAudio();
-              void begin(true);
-            }}
-          >
-            Rød: syg, feber, skarp smerte eller under 4 timers søvn
           </button>
         </div>
       </div>
@@ -320,7 +394,7 @@ export function Runner({
     if (index < measureFirst.length && measureFirst[0]) {
       const block = measureFirst[0];
       return (
-        <div class="session">
+        <div class={sessionClass}>
           <SessionHeader
             title="Måling før opvarmning"
             paused={paused}
@@ -357,7 +431,7 @@ export function Runner({
     if (item) {
       const power = plan.blocks.find((b) => b.role === 'power');
       return (
-        <div class="session">
+        <div class={sessionClass}>
           <SessionHeader
             title={`Opvarmning · ${itemIndex + 1}/${items.length}`}
             paused={paused}
@@ -378,8 +452,6 @@ export function Runner({
               onDone={nextPre}
               end="go"
             />
-          </div>
-          <div class="session-actions">
             <button type="button" class="btn block" onClick={nextPre}>
               Videre
             </button>
@@ -390,7 +462,7 @@ export function Runner({
     // Question 3 after warm-up step 4; then the session starts (session_started).
     const q1q2Yellow = !run.answers[0] || !run.answers[1];
     return (
-      <div class="session">
+      <div class={sessionClass}>
         <SessionHeader title="Trafiklys" onClose={close} />
         <div class="session-body">
           <h1>Spørgsmål 3</h1>
@@ -402,15 +474,15 @@ export function Runner({
           {q1q2Yellow && <p class="hint">Et nej i spørgsmål 1 eller 2 giver en gul dag.</p>}
         </div>
         <div class="session-actions">
+          <button type="button" class="btn block red-outline" onClick={() => void begin(true)}>
+            Rød: syg, feber, skarp smerte eller under 4 timers søvn
+          </button>
           <button
             type="button"
             class={light === 'green' ? 'btn primary block' : 'btn primary block yellow'}
             onClick={() => void begin(false)}
           >
             {light === 'green' ? 'GRØN – kør passet' : 'GUL – minimumsdosis'}
-          </button>
-          <button type="button" class="btn block red-outline" onClick={() => void begin(true)}>
-            Rød: syg, feber, skarp smerte eller under 4 timers søvn
           </button>
         </div>
       </div>
@@ -423,14 +495,18 @@ export function Runner({
   if (!step || !run.sessionId || !session) return null;
   const sessionId = run.sessionId;
   const date = run.date;
-  const groupSteps = steps.filter((s) => s.group === step.group && s.type !== 'rest');
-  const position = groupSteps.indexOf(step) + 1;
+  const groupSets = steps.filter((s) => s.group === step.group && s.type === 'set');
+  const current =
+    step.type === 'rest'
+      ? steps.slice(run.stepIndex).find((s) => s.type === 'set' && s.group === step.group)
+      : step;
+  const position = current ? groupSets.indexOf(current) + 1 : 0;
 
   const header = (
     <SessionHeader
       title={
         step.group
-          ? `${step.group}${position > 0 ? ` · ${position}/${groupSteps.length}` : ''}`
+          ? `${step.group}${position > 0 ? ` · sæt ${position}/${groupSets.length}` : ''}`
           : plan.name
       }
       paused={paused}
@@ -566,9 +642,11 @@ export function Runner({
               </p>
             </div>
           )}
-          <button type="button" class="btn block" onClick={advance}>
-            Spring pausen over
-          </button>
+          <div class="fixed-actions">
+            <button type="button" class="btn block" onClick={advance}>
+              Spring pausen over
+            </button>
+          </div>
         </div>
       );
       break;
@@ -728,7 +806,7 @@ export function Runner({
       body = (
         <div class="stack">
           <h1>{plan.name}</h1>
-          <p class="cue">Alt er logget. Tryk for at se, hvad motoren beslutter.</p>
+          <p class="cue">Alt er logget. Tryk for at se, hvad der ændres til næste gang.</p>
         </div>
       );
       break;
@@ -755,9 +833,10 @@ export function Runner({
     ) : null;
 
   return (
-    <div class="session">
+    <div class={sessionClass}>
       {header}
       {endBar}
+      <DeviceNotices />
       <div class="session-body">{body}</div>
       {actions}
     </div>
@@ -766,6 +845,28 @@ export function Runner({
 
 // ---------------------------------------------------------------------------------------------
 // Pieces
+
+/** SPEC 4.13: »Tryk for at slå lyd til« when sound is blocked; »Skærmen kan slukke« without Wake Lock. */
+function DeviceNotices() {
+  const [, setTick] = useState(0);
+  useEffect(() => onWakeState(() => setTick((n) => n + 1)), []);
+  const sound = audioState();
+  const silent = sound === 'blocked' || sound === 'suspended' || sound === 'off';
+  return (
+    <>
+      {silent && (
+        <button
+          type="button"
+          class="notice"
+          onClick={() => void enableAudio().then(() => setTick((n) => n + 1))}
+        >
+          Tryk for at slå lyd til
+        </button>
+      )}
+      {wakeState() === 'failed' && <p class="notice">Skærmen kan slukke under passet</p>}
+    </>
+  );
+}
 
 function SessionHeader(props: {
   title: string;
@@ -778,7 +879,7 @@ function SessionHeader(props: {
       <p class="session-title">{props.title}</p>
       {props.onPause && (
         <button type="button" class="btn small" onClick={props.onPause} aria-pressed={props.paused}>
-          {props.paused ? 'Fortsæt' : 'Pause'}
+          {props.paused ? 'Fortsæt' : 'Hold pause'}
         </button>
       )}
       <button type="button" class="btn small" onClick={props.onClose} aria-label="Afslut passet">
@@ -819,12 +920,12 @@ function Question(props: { title: string; question: string; onAnswer: (yes: bool
     <div class="stack">
       <p class="step-kicker">{props.title}</p>
       <h1>{props.question}</h1>
-      <div class="row">
-        <button type="button" class="btn primary grow" onClick={() => props.onAnswer(true)}>
-          Ja
-        </button>
-        <button type="button" class="btn grow" onClick={() => props.onAnswer(false)}>
+      <div class="fixed-actions">
+        <button type="button" class="btn block" onClick={() => props.onAnswer(false)}>
           Nej
+        </button>
+        <button type="button" class="btn primary block" onClick={() => props.onAnswer(true)}>
+          Ja
         </button>
       </div>
     </div>
@@ -836,7 +937,7 @@ function Feel({ onAnswer }: { onAnswer: (feel: 'easy' | 'ok' | 'hard') => void }
     <div class="stack">
       <p class="step-kicker">Nakke-stigen</p>
       <h1>Hvordan føltes trinnet?</h1>
-      <div class="stack">
+      <div class="fixed-actions">
         <button type="button" class="btn block" onClick={() => onAnswer('easy')}>
           Let
         </button>
@@ -859,13 +960,15 @@ function EmomQuestions({ onSave }: { onSave: (clean: boolean, rest20: boolean) =
       <p class="step-kicker">Burpees</p>
       <YesNo label="Alle minutter rene?" value={clean ?? true} onChange={setClean} />
       <YesNo label="Mindst 20 sek pause i sidste minut?" value={rest ?? true} onChange={setRest} />
-      <button
-        type="button"
-        class="btn primary block"
-        onClick={() => onSave(clean ?? true, rest ?? true)}
-      >
-        Gem
-      </button>
+      <div class="fixed-actions">
+        <button
+          type="button"
+          class="btn primary block"
+          onClick={() => onSave(clean ?? true, rest ?? true)}
+        >
+          Gem
+        </button>
+      </div>
     </div>
   );
 }
@@ -963,9 +1066,11 @@ function SetStep(props: {
           }}
         />
         {cues}
-        <button type="button" class="btn block" onClick={() => setStopped(true)}>
-          Stoppede før tid
-        </button>
+        <div class="fixed-actions">
+          <button type="button" class="btn block" onClick={() => setStopped(true)}>
+            Stoppede før tid
+          </button>
+        </div>
       </div>
     );
   }
@@ -979,66 +1084,6 @@ function SetStep(props: {
         <span class="unit">{unitWord(block)}</span>
       </div>
       {cues}
-      <button
-        type="button"
-        class="btn primary block"
-        disabled={busy}
-        onClick={() => void submit()}
-        data-testid="as-planned"
-      >
-        {power
-          ? asPlanned
-            ? `Som planlagt (${block.target} ${unitWord(block)})`
-            : `Log ${value} ${unitWord(block)}`
-          : asPlanned
-            ? `Som planlagt (${block.target} · reserve ${rirText(planned)})`
-            : `Log ${value} · reserve ${rirText(rir)}`}
-      </button>
-      <div class="adjust row">
-        <button
-          type="button"
-          class="btn"
-          aria-label="Færre"
-          onClick={() => setValue(Math.max(0, value - (isHold ? 5 : 1)))}
-        >
-          −
-        </button>
-        <span class="adjust-value">
-          {value} {unitWord(block)}
-        </span>
-        <button
-          type="button"
-          class="btn"
-          aria-label="Flere"
-          onClick={() => setValue(value + (isHold ? 5 : 1))}
-        >
-          +
-        </button>
-        <button
-          type="button"
-          class="btn"
-          onClick={() => setPainOpen(!painOpen)}
-          aria-expanded={painOpen}
-        >
-          Smerte
-        </button>
-      </div>
-      {!power && (
-        <div class="adjust row" role="group" aria-label="Reserve">
-          <span class="adjust-label">Reserve</span>
-          {([1, 2, 3] as Rir[]).map((r) => (
-            <button
-              key={r}
-              type="button"
-              class={rir === r ? 'btn selected' : 'btn'}
-              aria-pressed={rir === r}
-              onClick={() => setRir(r)}
-            >
-              {rirText(r)}
-            </button>
-          ))}
-        </div>
-      )}
       {painOpen && (
         <div class="pain card panel">
           <button type="button" class="btn block" onClick={() => void submit('light')}>
@@ -1052,11 +1097,77 @@ function SetStep(props: {
           </button>
         </div>
       )}
-      {range && (
+      {range && !power && (
         <p class="muted small-print">
           Trinnets interval: {range.min}–{range.max} {unitWord(block)}
         </p>
       )}
+      <div class="fixed-actions">
+        <button
+          type="button"
+          class="btn primary block"
+          disabled={busy}
+          onClick={() => void submit()}
+          data-testid="as-planned"
+        >
+          {power
+            ? asPlanned
+              ? `Som planlagt (${block.target} ${unitWord(block)})`
+              : `Log ${value} ${unitWord(block)}`
+            : asPlanned
+              ? `Som planlagt (${block.target} · reserve ${rirText(planned)})`
+              : `Log ${value} · reserve ${rirText(rir)}`}
+        </button>
+        <div class="adjust row">
+          <button
+            type="button"
+            class="btn"
+            aria-label="Færre"
+            onClick={() => setValue(Math.max(0, value - (isHold ? 5 : 1)))}
+          >
+            −
+          </button>
+          <span class="adjust-value">
+            {value} {unitWord(block)}
+          </span>
+          <button
+            type="button"
+            class="btn"
+            aria-label="Flere"
+            onClick={() => setValue(value + (isHold ? 5 : 1))}
+          >
+            +
+          </button>
+          <button
+            type="button"
+            class="btn"
+            onClick={() => setPainOpen(!painOpen)}
+            aria-expanded={painOpen}
+          >
+            Smerte
+          </button>
+        </div>
+        {power ? (
+          <p class="adjust-note">
+            Trinnets interval: {range?.min}–{range?.max} {unitWord(block)}
+          </p>
+        ) : (
+          <div class="adjust row" role="group" aria-label="Reserve">
+            <span class="adjust-label">Reserve</span>
+            {([1, 2, 3] as Rir[]).map((r) => (
+              <button
+                key={r}
+                type="button"
+                class={rir === r ? 'btn selected' : 'btn'}
+                aria-pressed={rir === r}
+                onClick={() => setRir(r)}
+              >
+                {rirText(r)}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -1112,16 +1223,18 @@ function EmomStep(props: { block: BlockPlan; paused: boolean; onDone: () => void
       {!started ? (
         <>
           <p class="cue">Start et nyt sæt i starten af hvert minut. Resten af minuttet er pause.</p>
-          <button
-            type="button"
-            class="btn primary block"
-            onClick={() => {
-              void enableAudio();
-              setStarted(true);
-            }}
-          >
-            Start EMOM
-          </button>
+          <div class="fixed-actions">
+            <button
+              type="button"
+              class="btn primary block"
+              onClick={() => {
+                void enableAudio();
+                setStarted(true);
+              }}
+            >
+              Start EMOM
+            </button>
+          </div>
         </>
       ) : (
         <PhaseRunner
@@ -1135,20 +1248,15 @@ function EmomStep(props: { block: BlockPlan; paused: boolean; onDone: () => void
   );
 }
 
-const CLUB_ROUND: Phase[] = [
-  { label: 'Ned til midten', detail: 'Hold 3 sek.', seconds: 3 },
-  { label: 'Helt ned', detail: 'Hold 3 sek lige over gulvet.', seconds: 3 },
-  { label: 'Op til midten', detail: 'Hold 3 sek.', seconds: 3 },
-  { label: '10 hurtige mikro-pumps', detail: 'I midten.', seconds: 8 },
-  { label: 'Helt ned og helt op', detail: 'Det er én runde.', seconds: 4 },
-];
-
+/** The club sequence: the round's five timed parts from the data, once per round. */
 function ClubStep(props: { block: BlockPlan; set: number; paused: boolean; onDone: () => void }) {
   const rounds = props.block.rounds ?? 1;
+  const parts = getStep(PROGRAM, props.block.stepId).round ?? [];
   const phases: Phase[] = [{ label: 'Klar', seconds: 5 }];
   for (let r = 1; r <= rounds; r++) {
-    for (const p of CLUB_ROUND)
-      phases.push({ ...p, label: rounds > 1 ? `Runde ${r}: ${p.label}` : p.label });
+    for (const p of parts) {
+      phases.push({ label: rounds > 1 ? `Runde ${r}: ${p.label}` : p.label, seconds: p.seconds });
+    }
   }
   return (
     <div class="stack">
@@ -1240,16 +1348,18 @@ function MotorStep(props: { plan: SessionPlan; paused: boolean; onDone: () => vo
       <h1>{motor.title}</h1>
       {props.plan.calmBase && <p class="hint">Rolig base i dag.</p>}
       {!started ? (
-        <button
-          type="button"
-          class="btn primary block"
-          onClick={() => {
-            void enableAudio();
-            setStarted(true);
-          }}
-        >
-          Start uret
-        </button>
+        <div class="fixed-actions">
+          <button
+            type="button"
+            class="btn primary block"
+            onClick={() => {
+              void enableAudio();
+              setStarted(true);
+            }}
+          >
+            Start uret
+          </button>
+        </div>
       ) : (
         <PhaseRunner phases={phases} paused={props.paused} onDone={props.onDone} />
       )}

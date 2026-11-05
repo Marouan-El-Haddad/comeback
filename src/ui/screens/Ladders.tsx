@@ -39,7 +39,14 @@ export function distanceText(track: Track, t: TrackState, pendingUp: boolean): s
   const range = workRange(step.dose);
   if (!range) return '';
   const unit = range.unit === 'sec' ? ' sek' : '';
-  if (t.target < range.max) return `Arbejdstal ${t.target}${unit} af ${range.max}${unit}`;
+  // SPEC 3.5: what it takes to move up, also while the working number is still climbing (D10).
+  if (t.target < range.max) {
+    const then =
+      rule === 'power'
+        ? `derefter 2 pas med alle sæt på ${range.max} og lige høje reps`
+        : `derefter 2 pas med alle sæt på ${range.max}${unit} og 2 i reserve`;
+    return `Arbejdstal ${t.target}${unit} af ${range.max}${unit} · ${then}`;
+  }
   if (rule === 'power') return `${left} pas mere med alle sæt på ${range.max} og lige høje reps`;
   return `${left} pas mere med alle sæt på ${range.max}${unit} og 2 i reserve`;
 }
@@ -65,7 +72,9 @@ export function Ladders({ model }: { model: Model }) {
                     {track.short} · trin {step.key} <LevelBadge level={step.level} />
                   </span>
                   <span class="ladder-step">{step.name}</span>
-                  <span class="muted">{distanceText(track, t, state.emom.pendingUp)}</span>
+                  <span class="ladder-distance">
+                    {distanceText(track, t, state.emom.pendingUp)}
+                  </span>
                 </span>
               </button>
             </li>

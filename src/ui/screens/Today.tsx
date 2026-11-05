@@ -7,15 +7,19 @@ import {
   formatLong,
   getStep,
   getTrack,
+  getWeek,
+  measurementWeek,
   mondayOf,
   osThisWeek,
   planFor,
   PROGRAM,
   weekday,
+  weekInfoAt,
   type BlockPlan,
   type DayPlan,
 } from '../../engine/index.ts';
 import type { SessionKind } from '../../engine/types.ts';
+import { sessionMinutes } from '../format.ts';
 import type { Model } from '../model.ts';
 
 const PHASE: Record<string, string> = {
@@ -103,7 +107,13 @@ export function Today(props: {
   const os = osThisWeek(state, monday);
   const backupAge = state.lastBackup ? daysBetween(state.lastBackup, today) : null;
   const hasLog = state.sessions.some((s) => s.completed);
-  const showBackup = hasLog && (backupAge === null || backupAge > 7);
+  // SPEC 3.1/4.12: after 7 days without a backup, and in the week after a measurement week.
+  const lastWeek = plan.k > 0 ? weekInfoAt(PROGRAM, state, plan.k - 1) : null;
+  const afterMeasurements =
+    lastWeek !== null &&
+    measurementWeek(getWeek(PROGRAM, lastWeek.pw), lastWeek.round) &&
+    (state.lastBackup ?? '') < lastWeek.monday;
+  const showBackup = hasLog && (backupAge === null || backupAge > 7 || afterMeasurements);
   const rest = [1, 2, 3, 4, 5, 6]
     .map((d) => addDays(today, d))
     .filter((d) => d <= addDays(monday, 6))
@@ -300,7 +310,7 @@ function MainCard({
     <div class="card main-card" data-testid="main-card">
       <div class="main-card-head">
         <h1>{SESSION_NAME[plan.kind]}</h1>
-        <p class="muted">ca. {session.durationMin[1]} min</p>
+        <p class="muted">ca. {sessionMinutes(session)} min</p>
       </div>
       {motor ? (
         <p class="block-line">{motor.title}</p>
@@ -322,7 +332,7 @@ function MainCard({
         data-testid="start-session"
         onClick={() => onStart(plan.kind ?? 'A', plan.short, session.calmBase)}
       >
-        START PASSET
+        Start passet
       </button>
     </div>
   );

@@ -115,10 +115,12 @@ Fire faner i bunden: **I dag · Uge · Stiger · Mere**. Et aktivt pas åbner so
 │                              [JA][nej]│
 │ ⓘ I går var klubtræningen hård.      │
 │                                      │
-│ [ GRØN – kør passet ]   (afledt)     │
 │ [ Rød: syg, feber, skarp smerte ]    │
+│ [ GRØN – kør passet ]   (afledt)     │
 └──────────────────────────────────────┘
 ```
+
+Primærknappen står nederst, hvor tommelfingeren rammer først, og rød-knappen over den (rettet efter designgennemgangen, `docs/reviews/m2-design-review.md` D8). I et pas står »Som planlagt« og de øvrige handlinger i en fast bundblok, så de ligger samme sted på hvert sæt; en knap, der vises efter et skift af skærm, kan først trykkes efter et halvt sekund (D1, D2).
 
 - Alle tre står på »ja« som standard. Spørgsmål 2 står på »nej«, hvis der er logget skarp smerte inden for 2 dage eller søndagstjekket har noteret smerte, der ikke gik væk. Spørgsmål 3 kan først besvares efter opvarmningen: skærmen vises før opvarmningen med spørgsmål 1–2, og spørgsmål 3 dukker op efter opvarmningens trin 4.
 - Resultat: grøn → planlagt pas; gul → minimumsdosis (par 1 og par 2, 2 sæt, reserve 3, ingen power, ingen burpees, nakke udgår), ca. 25 min; rød → kun Open & Strong og en gåtur, passet markeres rødt. Motor på gul dag → rolig base 30 min. Rød-knappen hedder »Rød: syg, feber, skarp smerte eller under 4 timers søvn« (PDF s. 7).

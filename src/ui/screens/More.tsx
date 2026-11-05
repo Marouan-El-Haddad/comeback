@@ -14,12 +14,27 @@ import {
   type ImportResult,
 } from '../../engine/index.ts';
 import { estimate, isPersisted } from '../../storage/persist.ts';
-import { audioState } from '../audio.ts';
+import { audioState, type AudioState } from '../audio.ts';
 import type { Model } from '../model.ts';
 import { swStatus } from '../sw.ts';
-import { wakeLockSupported, wakeState } from '../wakelock.ts';
+import { History } from './History.tsx';
+import { wakeLockSupported, wakeState, type WakeState } from '../wakelock.ts';
 
-export type MorePage = 'menu' | 'backup' | 'about' | 'diagnose' | 'timemachine';
+export type MorePage = 'menu' | 'history' | 'backup' | 'about' | 'diagnose' | 'timemachine';
+
+const WAKE: Record<WakeState, string> = {
+  off: 'fra',
+  lock: 'låst',
+  video: 'video-fallback',
+  failed: 'fejlet',
+};
+const SOUND: Record<AudioState, string> = {
+  off: 'fra (slås til ved start af et pas)',
+  running: 'kører',
+  suspended: 'sat på pause',
+  blocked: 'blokeret',
+  unsupported: 'findes ikke',
+};
 
 declare const __APP_VERSION__: string;
 export const APP_VERSION = typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : 'dev';
@@ -33,6 +48,7 @@ export function More({
   page: MorePage;
   onPage: (p: MorePage) => void;
 }) {
+  if (page === 'history') return <History model={model} onBack={() => onPage('menu')} />;
   if (page === 'backup') return <Backup model={model} onBack={() => onPage('menu')} />;
   if (page === 'about') return <About model={model} onPage={onPage} />;
   if (page === 'diagnose') return <Diagnose onBack={() => onPage('about')} />;
@@ -41,6 +57,9 @@ export function More({
     <div class="screen more" data-testid="more">
       <h1>Mere</h1>
       <div class="stack">
+        <button type="button" class="btn block" onClick={() => onPage('history')}>
+          Historik
+        </button>
         <button type="button" class="btn block" onClick={() => onPage('backup')}>
           Backup
         </button>
@@ -115,37 +134,14 @@ function Backup({ model, onBack }: { model: Model; onBack: () => void }) {
           {state.lastBackup ? `${formatDay(state.lastBackup)} (${age} dage siden)` : 'aldrig'}
         </strong>
       </p>
-      <p class="muted">
+      <p class={persisted === false ? 'flag' : ''}>
         Varigt lager:{' '}
         {persisted === null
           ? 'ukendt'
           : persisted
             ? 'ja'
-            : 'nej – browseren kan slette data ved pladsmangel'}
+            : 'nej – browseren kan slette data ved pladsmangel. Eksportér en backup jævnligt.'}
       </p>
-      {simulated ? (
-        <p class="hint">Backup og import er slået fra, mens tidsmaskinen kører.</p>
-      ) : (
-        <>
-          <button
-            type="button"
-            class="btn primary block"
-            onClick={() => void doExport()}
-            data-testid="export"
-          >
-            Eksportér backup
-          </button>
-          <label class="btn block file-button">
-            Importér backup
-            <input
-              type="file"
-              accept="application/json,.json"
-              data-testid="import-file"
-              onChange={(e) => void onFile((e.target as HTMLInputElement).files?.[0])}
-            />
-          </label>
-        </>
-      )}
       {message && (
         <p class="hint" role="status">
           {message}
@@ -157,7 +153,7 @@ function Backup({ model, onBack }: { model: Model; onBack: () => void }) {
         </p>
       )}
       {preview?.ok && (
-        <div class="card panel stack" data-testid="import-preview">
+        <div class="card stack" data-testid="import-preview">
           <h2>Forhåndsvisning</h2>
           <p>
             {preview.preview.count} hændelser
@@ -190,6 +186,31 @@ function Backup({ model, onBack }: { model: Model; onBack: () => void }) {
           </button>
         </div>
       )}
+      <div class="backup-actions">
+        {simulated ? (
+          <p class="hint">Backup og import er slået fra, mens tidsmaskinen kører.</p>
+        ) : (
+          <>
+            <label class="btn block file-button">
+              Importér backup
+              <input
+                type="file"
+                accept="application/json,.json"
+                data-testid="import-file"
+                onChange={(e) => void onFile((e.target as HTMLInputElement).files?.[0])}
+              />
+            </label>
+            <button
+              type="button"
+              class="btn primary block"
+              onClick={() => void doExport()}
+              data-testid="export"
+            >
+              Eksportér backup
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
@@ -259,7 +280,8 @@ function Diagnose({ onBack }: { onBack: () => void }) {
     .getEntriesByType('paint')
     .find((p) => p.name === 'first-contentful-paint');
   const today = performance.getEntriesByName('cb-today')[0];
-  const controller = navigator.serviceWorker?.controller?.scriptURL.split('/').pop() ?? 'ingen';
+  const controller =
+    navigator.serviceWorker?.controller?.scriptURL.split('/').pop() ?? 'ikke aktiv endnu';
   const rows: Array<[string, string]> = [
     ['Version', APP_VERSION],
     ['Programversion', PROGRAM.programVersion],
@@ -269,8 +291,11 @@ function Diagnose({ onBack }: { onBack: () => void }) {
     ],
     ['Varigt lager', info.persisted === null ? 'ukendt' : info.persisted ? 'ja' : 'nej'],
     ['Lagerplads', info.usage],
-    ['Wake Lock', `${wakeLockSupported() ? 'API findes' : 'API mangler'} · nu: ${wakeState()}`],
-    ['Lyd', audioState()],
+    [
+      'Wake Lock',
+      `${wakeLockSupported() ? 'API findes' : 'API mangler'} · nu: ${WAKE[wakeState()]}`,
+    ],
+    ['Lyd', SOUND[audioState()]],
     ['Viewport', `${window.innerWidth} × ${window.innerHeight}, DPR ${window.devicePixelRatio}`],
     ['Tidszone', Intl.DateTimeFormat().resolvedOptions().timeZone],
     ['Sprog', navigator.language],

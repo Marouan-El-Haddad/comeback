@@ -2,6 +2,7 @@
 // status, and the week's sets, reserve, power, motor and EMOM cap at the top.
 import { formatLong, PROGRAM, weekPlan } from '../../engine/index.ts';
 import type { SessionKind } from '../../engine/types.ts';
+import { capitalize, sessionMinutes } from '../format.ts';
 import type { Model } from '../model.ts';
 
 const NAME: Record<SessionKind, string> = {
@@ -46,13 +47,13 @@ export function WeekView({ model }: { model: Model }) {
           else if (d.open) status = 'i gang';
           return (
             <li key={d.date} class={today ? 'week-day today' : 'week-day'}>
-              <p class="week-day-name">{formatLong(d.date)}</p>
+              <p class="week-day-name">{capitalize(formatLong(d.date))}</p>
               <div class="chips">
                 {d.kind && (
                   <span class="chip">
                     {NAME[d.kind]}
                     {d.short ? ' · kort' : ''}
-                    {d.session ? ` · ${d.session.durationMin[1]} min` : ''}
+                    {d.session ? ` · ${sessionMinutes(d.session)} min` : ''}
                   </span>
                 )}
                 {!d.kind && session && <span class="chip">{NAME[session.kind]}</span>}

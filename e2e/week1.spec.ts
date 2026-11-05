@@ -110,5 +110,5 @@ test('Styrke B med wall sit W3: runder med timer og »Rene runder?«', async ({ 
   await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
   const stats = await runSessionToSummary(page);
   expect(stats.clicks).toBeGreaterThan(10);
-  await expect(page.locator('.logged')).toContainText('Wall sit trin W3: udført');
+  await expect(page.locator('.logged')).toContainText('Wall sit trin W3: udført (plan 2–3 runder)');
 });

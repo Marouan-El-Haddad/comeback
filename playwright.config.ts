@@ -31,6 +31,9 @@ export default defineConfig({
   testDir: 'e2e',
   outputDir: 'test-results',
   forbidOnly: !!process.env.CI,
+  // Firefox sometimes fails to close a browser context under load (»_maybeDontRestoreTabs«);
+  // one retry, and the report shows such tests as flaky.
+  retries: 1,
   reporter: 'list',
   use: {
     baseURL: 'http://127.0.0.1:4173',

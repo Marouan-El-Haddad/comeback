@@ -172,3 +172,26 @@ test('I dag viser datoen i dansk tid uanset browserens tidszone @date', async ({
   await expect(page.locator('.today-head .date')).toHaveText('Onsdag 11. november');
   await expect(page.locator('.tomorrow')).toContainText('Motor');
 });
+
+test('luk appen midt i et pas og åbn igen: passet fortsætter samme sted', async ({ page }) => {
+  await openApp(page, TUESDAY_WEEK2);
+  await onboard(page);
+  await page.getByTestId('start-session').click();
+  await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+  await throughWarmup(page);
+  await page.getByTestId('as-planned').click(); // power, set 1
+  await page.getByText('Spring pausen over').click();
+  await page.getByTestId('as-planned').click(); // power, set 2
+  await page.getByText('Spring pausen over').click();
+  await expect(page.locator('.set-count')).toHaveText('Sæt 3 af 3');
+
+  await page.reload();
+  await expect(page.locator('.set-count')).toHaveText('Sæt 3 af 3');
+
+  // Without the saved position the log alone tells where the session is.
+  await page.evaluate(() => localStorage.removeItem('comeback.run'));
+  await page.reload();
+  await expect(page.locator('.main-card')).toContainText('Passet er i gang');
+  await page.getByRole('button', { name: 'Fortsæt passet' }).click();
+  await expect(page.locator('.set-count')).toHaveText('Sæt 3 af 3');
+});
