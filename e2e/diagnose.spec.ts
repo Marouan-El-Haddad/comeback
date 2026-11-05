@@ -161,3 +161,18 @@ test('Diagnose med syntetiske målinger (skærmbillede)', async ({ page }) => {
   await page.getByTestId('startup-this').scrollIntoViewIfNeeded();
   await page.screenshot({ path: 'screenshots/diagnose.png', scale: 'css' });
 });
+
+test('Diagnose viser tidspunktet i dansk tid uanset browserens tidszone @date', async ({
+  page,
+}) => {
+  await page.goto('/comeback/');
+  await onboard(page);
+  // 23:30 UTC on 5/11 is 00:30 on 6/11 in Copenhagen.
+  await page.evaluate(({ key, value }) => localStorage.setItem(key, value), {
+    key: STARTUP_KEY,
+    value: JSON.stringify([{ at: '2026-11-05T23:30:00.000Z', paint: 3767, today: 3833 }]),
+  });
+  await openDiagnose(page);
+  await expect(page.getByTestId('startup-when')).toHaveText('Seneste: 6. november kl. 00.30');
+  await expect(page.getByTestId('startup-today-last')).toHaveText('3.833 ms');
+});
