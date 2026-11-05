@@ -1,0 +1,84 @@
+{
+  "id": "pull",
+  "name": "Træk: rows",
+  "short": "Træk",
+  "pdfPage": 15,
+  "progression": "double",
+  "category": "ladder",
+  "note": "I Styrke B laver du altid rygsæk-row, 3 × 8–15 pr. side. Læg mere i tasken, når du rammer 15.",
+  "why": [
+    {
+      "kind": "fysio",
+      "text": "Brug et tungt spisebord, ikke et klapbord. Lig under langsiden, og træk først let. Vipper det det mindste, så bliv på rygsæk-row."
+    }
+  ],
+  "steps": [
+    {
+      "id": "pull.1",
+      "key": "1",
+      "name": "Rygsæk-row med én arm",
+      "level": "basis",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [8, 15], "per": "side" },
+      "execution": "Støt hånden på en stol. Træk albuen mod hoften, 1 sek stop i toppen.",
+      "cues": ["Støt hånden på en stol", "Træk albuen mod hoften, 1 sek stop i toppen"],
+      "pdfPage": 15
+    },
+    {
+      "id": "pull.2",
+      "key": "2",
+      "name": "Bord-row, bøjede knæ",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [8, 12] },
+      "execution": "Lig under et solidt bord, og grib kanten. Brystet mod kanten, 1 sek pause.",
+      "cues": ["Lig under et solidt bord, og grib kanten", "Brystet mod kanten, 1 sek pause"],
+      "pdfPage": 15
+    },
+    {
+      "id": "pull.3",
+      "key": "3",
+      "name": "Bord-row, strakte ben",
+      "level": "staerk",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [6, 12] },
+      "execution": "Kroppen som en planke fra hæl til hoved.",
+      "cues": ["Kroppen som en planke fra hæl til hoved"],
+      "pdfPage": 15
+    },
+    {
+      "id": "pull.4",
+      "key": "4",
+      "name": "Fødderne på en stol",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [6, 12] },
+      "execution": "Kroppen vandret. Samme pause i toppen.",
+      "cues": ["Kroppen vandret", "Samme pause i toppen"],
+      "pdfPage": 15
+    },
+    {
+      "id": "pull.5",
+      "key": "5",
+      "name": "Archer bord-row",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [4, 8], "per": "side" },
+      "execution": "Grib bredt. Den ene arm trækker, den anden hjælper kun lidt.",
+      "cues": ["Grib bredt", "Den ene arm trækker, den anden hjælper kun lidt"],
+      "pdfPage": 15
+    },
+    {
+      "id": "pull.6",
+      "key": "6",
+      "name": "Etarms bord-row",
+      "level": "imponerende",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 8], "per": "side" },
+      "execution": "Hoften må ikke dreje. Den frie arm langs siden.",
+      "cues": ["Hoften må ikke dreje", "Den frie arm langs siden"],
+      "pdfPage": 15
+    },
+    {
+      "id": "pull.7",
+      "key": "7",
+      "name": "Med 3 sek pause",
+      "level": "boss",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 5], "per": "side" },
+      "execution": "Hold brystet ved kanten i 3 sek hver rep.",
+      "cues": ["Hold brystet ved kanten i 3 sek hver rep"],
+      "pdfPage": 15
+    }
+  ]
+}

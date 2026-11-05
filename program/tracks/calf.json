@@ -1,0 +1,19 @@
+{
+  "id": "calf",
+  "name": "Læg og fødder",
+  "short": "Læg",
+  "pdfPage": 17,
+  "progression": "load",
+  "category": "extra",
+  "steps": [
+    {
+      "id": "calf.1",
+      "key": "1",
+      "name": "Etbens tåløft på et trappetrin",
+      "dose": { "kind": "reps", "sets": [2, 2], "reps": [12, 20], "per": "ben" },
+      "execution": "3 sek ned, 1 sek stop i toppen. Senere med rygsæk. Stærke lægge og akillessener til fodarbejde og hop.",
+      "cues": ["3 sek ned, 1 sek stop i toppen", "Senere med rygsæk"],
+      "pdfPage": 17
+    }
+  ]
+}

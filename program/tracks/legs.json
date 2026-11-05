@@ -1,0 +1,84 @@
+{
+  "id": "legs",
+  "name": "Ben: split squat til pistol",
+  "short": "Ben",
+  "pdfPage": 16,
+  "progression": "double",
+  "category": "ladder",
+  "tags": ["heavy_legs"],
+  "why": [
+    {
+      "kind": "fysio",
+      "text": "Knæ-til-væg: tæerne 10 cm fra væggen. Når knæet væggen, uden at hælen letter? Ellers: 2 × 10 ankel-vip først og en tynd bog under hælen i trin 4–6."
+    }
+  ],
+  "steps": [
+    {
+      "id": "legs.1",
+      "key": "1",
+      "name": "Split squat",
+      "level": "basis",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [8, 12], "per": "ben" },
+      "execution": "Bagerste knæ ned til en pude på 3 sek. Forreste hæl i gulvet.",
+      "cues": ["Bagerste knæ ned til en pude på 3 sek", "Forreste hæl i gulvet"],
+      "pdfPage": 16
+    },
+    {
+      "id": "legs.2",
+      "key": "2",
+      "name": "Bulgarsk split squat",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [6, 12], "per": "ben" },
+      "execution": "Bagerste fod på sofaen. Knæet må gerne gå frem over tæerne.",
+      "cues": ["Bagerste fod på sofaen", "Knæet må gerne gå frem over tæerne"],
+      "pdfPage": 16
+    },
+    {
+      "id": "legs.3",
+      "key": "3",
+      "name": "Bulgarsk med rygsæk",
+      "level": "staerk",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [6, 10], "per": "ben" },
+      "execution": "Eller 3 sek pause i bunden. Dybt og kontrolleret.",
+      "cues": ["Eller 3 sek pause i bunden", "Dybt og kontrolleret"],
+      "pdfPage": 16
+    },
+    {
+      "id": "legs.4",
+      "key": "4",
+      "name": "Etbens rejs-dig fra stol",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [5, 8], "per": "ben" },
+      "execution": "Armene frem som modvægt. Sænk sædet gradvist.",
+      "cues": ["Armene frem som modvægt", "Sænk sædet gradvist"],
+      "pdfPage": 16
+    },
+    {
+      "id": "legs.5",
+      "key": "5",
+      "name": "Pistol-negativer",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 5], "per": "ben" },
+      "execution": "5 sek ned på ét ben, rejs dig på to. Hælen bliver i gulvet.",
+      "cues": ["5 sek ned på ét ben, rejs dig på to", "Hælen bliver i gulvet"],
+      "pdfPage": 16
+    },
+    {
+      "id": "legs.6",
+      "key": "6",
+      "name": "Pistol squat",
+      "level": "imponerende",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 8], "per": "ben" },
+      "execution": "Hele vejen ned og op på ét ben.",
+      "cues": ["Hele vejen ned og op på ét ben"],
+      "pdfPage": 16
+    },
+    {
+      "id": "legs.7",
+      "key": "7",
+      "name": "Pistol med pause og knæ",
+      "level": "boss",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 5], "per": "ben" },
+      "execution": "2 sek pause i bunden. Rejs dig, og driv det frie knæ op i et knæspark.",
+      "cues": ["2 sek pause i bunden", "Rejs dig, og driv det frie knæ op i et knæspark"],
+      "pdfPage": 16
+    }
+  ]
+}

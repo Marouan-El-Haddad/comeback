@@ -1,0 +1,83 @@
+{
+  "id": "shoulder",
+  "name": "Skuldre: pike til håndstand",
+  "short": "Skuldre",
+  "pdfPage": 14,
+  "progression": "double",
+  "category": "ladder",
+  "why": [
+    {
+      "kind": "fysio",
+      "text": "Hovedet lander blødt – aldrig med vægt eller vrid. Lær at komme ned ved at dreje ud til siden, før du øver væk fra væggen."
+    }
+  ],
+  "steps": [
+    {
+      "id": "shoulder.1",
+      "key": "1",
+      "name": "Pike push-up",
+      "level": "basis",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [6, 12] },
+      "execution": "Hoften højt. Hovedet ned foran hænderne, så hoved og hænder danner en trekant.",
+      "cues": ["Hoften højt", "Hovedet ned foran hænderne, så hoved og hænder danner en trekant"],
+      "pdfPage": 14
+    },
+    {
+      "id": "shoulder.2",
+      "key": "2",
+      "name": "Fødderne på en stol",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [5, 10] },
+      "execution": "Hoften over skuldrene. Jo højere fødder, jo mere vægt.",
+      "cues": ["Hoften over skuldrene", "Jo højere fødder, jo mere vægt"],
+      "pdfPage": 14
+    },
+    {
+      "id": "shoulder.3",
+      "key": "3",
+      "name": "+ håndstand mod væggen",
+      "level": "staerk",
+      "dose": { "kind": "hold", "sets": [3, 3], "seconds": [20, 45] },
+      "execution": "Gå op ad væggen med maven mod den. Ribben nede, skub gulvet væk.",
+      "cues": ["Gå op ad væggen med maven mod den", "Ribben nede, skub gulvet væk"],
+      "pdfPage": 14
+    },
+    {
+      "id": "shoulder.4",
+      "key": "4",
+      "name": "HSPU-negativer",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 5] },
+      "execution": "Spark op med ryggen mod væggen. Sænk dig på 4–5 sek til en pude, og træd ned.",
+      "cues": ["Spark op med ryggen mod væggen", "Sænk dig på 4–5 sek til en pude, og træd ned"],
+      "pdfPage": 14
+    },
+    {
+      "id": "shoulder.5",
+      "key": "5",
+      "name": "HSPU til en pude",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 8] },
+      "execution": "Op og ned. Gør puden lidt tyndere hver uge.",
+      "cues": ["Op og ned", "Gør puden lidt tyndere hver uge"],
+      "pdfPage": 14
+    },
+    {
+      "id": "shoulder.6",
+      "key": "6",
+      "name": "Fuld HSPU mod væggen",
+      "level": "imponerende",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 6] },
+      "execution": "Hovedet blødt ned til gulvet og op igen.",
+      "cues": ["Hovedet blødt ned til gulvet og op igen"],
+      "pdfPage": 14
+    },
+    {
+      "id": "shoulder.7",
+      "key": "7",
+      "name": "Deficit-HSPU",
+      "level": "boss",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 6] },
+      "execution": "Hænderne på to stakke bøger, så hovedet går under håndhøjde.",
+      "cues": ["Hænderne på to stakke bøger, så hovedet går under håndhøjde"],
+      "pdfPage": 14
+    }
+  ]
+}

@@ -90,6 +90,27 @@ Kort log over beslutninger, der former appen. Nye rækker tilføjes nederst i hv
 | P23 | »Film dig selv hver anden uge« (9) | Påmindelse i søndagstjekket hver anden uge; ingen videooptagelse i appen |
 | P24 | Datoer (SPEC 8) | Et pas hører til startdatoen; »i dag« beregnes i Europe/Copenhagen uanset browserens tidszone |
 | P25 | »Var onsdagen brutal, så tag den rolige base« (31) | Klublog »Hård« dagen før en motor-dag med intervaller → rolig base som standard med valget »Kør intervallerne alligevel« |
+| P26 | Pas-planen (ENGINE 3.1, 5.3) | `session_started` gemmer passets plan (blok, trin, sæt, arbejdstal, reserve-plan), så afspilningen vurderer passet mod det, der var planlagt, og et genoptaget pas bruger samme plan. Tilføjet felt (M1, 5/11) |
+| P27 | Ugeplan (ENGINE 5.10) | Standardugen (A tirsdag, motor torsdag, B fredag) bevares, når de tre dage er frie, og der er en hviledag. Algoritmen i 5.10 bruges kun ved ekstra klubdage; uden undtagelsen ville den lægge B om torsdagen i standardugen |
+| P28 | »done = alle sæt i par 1 logget« (ENGINE 4) | En blok, som smerte-reglen stoppede (skarp eller stop), tæller som logget for `done`, så et pas, der blev afbrudt efter reglerne, stadig kan gennemføre ugen |
+| P29 | Trinnets dosis (ENGINE 7.1–7.2) | `dose` gemmes som i stigens tabel (fx 3 × 6–12, 2–3 × 3–5). Antal sæt i et pas kommer fra ugetabellen og blokken (6.3). Eksemplet i 7.2 med `sets: [3, 4]` følges ikke, så data kan sammenlignes ord for ord med kilden |
+| P30 | »3 (+1 valgfrit)« (37) | Kun de planlagte sæt (pr. side) tæller for progression; et valgfrit ekstra sæt kan hverken give eller tage et hit |
+| P31 | Målinger på en gul dag (40) | På en gul dag udgår målingerne (ingen max-forsøg på en dårlig dag); de kan tages ved næste grønne pas |
+| P32 | Klubsekvensen i let uge (ENGINE 5.6) | 1 runde i alt (1 sæt × 1 runde) |
+| P33 | Boss i lette uger (45) | Ingen boss-udfordring i lette uger, hvor EMOM'en allerede er erstattet af burpee-testen |
+| P34 | Ny skarp smerte (ENGINE 6.5) | Så længe et midlertidigt trin er aktivt (også efter `until`, indtil det er gendannet), forlænger ny skarp smerte med 7 dage fra den nye dag og viser Fysio-rådet; trinnet går ikke længere ned. Forlængelsen skrives som `step_changed` med samme `from` og `to` |
+| P35 | Nakke-stigen (ENGINE 6.2) | Arbejdstallet bliver på trinnets minimum (6.2 har ingen target-regel for nakke); trinskift sker kun efter »let« to gange i træk |
+| P36 | EMOM-oprykning (ENGINE 5.4) | Et kvalificerende A-pas sætter `pendingUp = ren ∧ 20 sek pause`; et urent pas annullerer en ventende oprykning. Oprykningen sker kun, når pasets plan indeholder EMOM'en (ikke gul dag, ikke boss), aldrig over ugens loft, aldrig ned, og ikke i en uge med reduceret mængde (R-FLAT) |
+| P37 | Tre uger uden (ENGINE 5.5, 5.7) | Tæller kun uger fra onboarding-ugen. Alle spor med trin (stigerne, power, EMOM, klubsekvens, nakke) får én `step_changed` med årsag `absence`; spor på trin 1 bliver på trin 1 med arbejdstal = min. Læg, etbens RDL og rygsæk-row (ét trin) og burpee-varianter ændres ikke |
+| P38 | Rejsepas (47, P18) | Rejsepasset bruger dine egne trin på pres, rygsæk-row og ben med ugens sæt og 6 min EMOM med reps fra `min(E3, dit trin)` |
+| P39 | Motor-faser (31–32) | Base-uger er ét samlet ur (uge 3: base 40 min, derefter 4 stigningsløb). Intervaller og kamp-runder: 10 min opvarmning, 3 stigningsløb (uden fast længde i kilden: brugeren trykker, når de er gjort), hoveddel, 5 min nedjogging. Sprints: 2 serier af 6 × (8 sek + 30 sek gang) med 3 min pause. Rolig base i stedet for intervaller er 30 min |
+| P40 | Et pas, der aldrig blev afsluttet | Et pas, der står åbent fra en tidligere dag, afsluttes som afbrudt ved næste dags beregning, så dets sæt tæller (S-DP-11's regel) |
+| P41 | Adgangskrav (ENGINE 5.12) | Et præstationskrav (fx »3 × 8 archer pr. side«) er også opfyldt, når dit nuværende trin er højere end kravets trin |
+| P42 | Rygsækkens vægt (P8, R-LOAD) | Ny hændelse `load_changed` til motorens +2 kg og brugerens egen rettelse af vægten (ENGINE 3.1 har ingen hændelse til vægt) |
+| P43 | Burpee-trappens niveauer (11) | E1 er Basis og E9 Imponerende (side 11: »Start« og »Imponerende« for Burpees); E2–E8 har intet niveau |
+| P44 | Overlejringer (ENGINE 5.8) | Forslaget gælder, indtil brugeren vælger »Vælg anden«; planen viser altså standardløsningen fra start |
+| P45 | »B uden etbens-RDL med rygsæk« (ENGINE 5.1) | Dagen før en begivenhed udgår etbens RDL kun, når der er vægt i rygsækken |
+| P46 | Konvertering af programdata (M1) | Navne, doser og udførelse er ordret fra kilden (fed skrift fjernet). Spor uden tabel: læg = »Etbens tåløft på et trappetrin«, etbens RDL = »Etbens RDL«, rygsæk-row = træk trin 1's tekst + »Læg mere i tasken, når du rammer 15.«; EMOM-trin hedder »EMOM 4 × 3« osv. (side 11) med udførelsen »N minutter med M burpees i starten af hvert minut«; klubsekvensens fem dele står i sporets note. Cues er de første én–to sætninger af udførelsen. Coach-, Fysio- og Evidens-bokse hører til sidens tabel-spor. Hero-felterne har kravet i `ready`. Nordic-målingens »Sådan« er taget fra posterior.4, fordi side 40 ingen har. Piktogrammer: kun stigens egne eller nærmeste |
 
 ## 5. Åbne punkter (afgøres af M0 eller senere)
 

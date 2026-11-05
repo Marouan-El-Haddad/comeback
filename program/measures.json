@@ -1,0 +1,211 @@
+{
+  "measures": [
+    {
+      "id": "wall_test",
+      "name": "Væg-testen",
+      "how": "Hæle, baller og skulderblade mod væggen, hagen vandret. Mål fra baghoved til væg.",
+      "unit": "cm",
+      "weekday": 2,
+      "placement": { "type": "before_warmup" },
+      "levels": { "basis": 4, "staerk": 2, "imponerende": 0, "lowerIsBetter": true },
+      "weeks": "all_light_and_1"
+    },
+    {
+      "id": "pushups",
+      "name": "Push-ups",
+      "how": "Max i ét sæt. Brystet til knytnæve-højde, kroppen lige.",
+      "unit": "reps",
+      "weekday": 2,
+      "placement": { "type": "replace_first_set", "trackId": "press" },
+      "levels": { "basis": 25, "staerk": 50, "imponerende": 70 },
+      "weeks": "all_light_and_1"
+    },
+    {
+      "id": "table_rows",
+      "name": "Bord-rows",
+      "how": "Max i ét sæt. Kroppen lige, brystet op til kanten.",
+      "unit": "reps",
+      "weekday": 2,
+      "placement": { "type": "replace_first_set", "trackId": "pull" },
+      "levels": { "basis": 8, "staerk": 15, "imponerende": 25 },
+      "weeks": "all_light_and_1"
+    },
+    {
+      "id": "burpee_3min",
+      "name": "Burpees, 3 min",
+      "how": "Uge 4, 8 og 12 i stedet for EMOM. Flest rene reps.",
+      "unit": "reps",
+      "weekday": 2,
+      "placement": { "type": "replace_finisher" },
+      "levels": { "basis": 40, "staerk": 50, "imponerende": 60 },
+      "weeks": "light_only"
+    },
+    {
+      "id": "base_check",
+      "name": "Base-check",
+      "how": "Uge 1: 30 min i tale-tempo. Notér distancen.",
+      "unit": "m",
+      "weekday": 4,
+      "placement": { "type": "motor" },
+      "weeks": "all_light_and_1"
+    },
+    {
+      "id": "cooper",
+      "name": "Cooper",
+      "how": "Uge 4, 8 og 12, valgfri: længst mulig distance på 12 min.",
+      "unit": "m",
+      "weekday": 4,
+      "placement": { "type": "motor" },
+      "levels": { "basis": 2400, "staerk": 2800, "imponerende": 3100 },
+      "weeks": "light_only",
+      "optional": true
+    },
+    {
+      "id": "pike",
+      "name": "Pike push-ups",
+      "how": "Max i ét sæt. Hoften højt, hovedet let ned foran hænderne.",
+      "unit": "reps",
+      "weekday": 5,
+      "placement": { "type": "replace_first_set", "trackId": "shoulder" },
+      "levels": { "basis": 10, "staerk": 20, "imponerende": 30 },
+      "weeks": "all_light_and_1"
+    },
+    {
+      "id": "hollow",
+      "name": "Hollow hold",
+      "how": "Max tid. Stop, når lænden løfter sig fra gulvet.",
+      "unit": "sec",
+      "weekday": 5,
+      "placement": { "type": "standalone", "before": "B.pair2.core_side" },
+      "levels": { "basis": 30, "staerk": 60, "imponerende": 90 },
+      "weeks": "all_light_and_1"
+    },
+    {
+      "id": "side_plank",
+      "name": "Sideplanke",
+      "how": "Max tid pr. side på albuen. Stop, når hoften synker.",
+      "unit": "sec",
+      "weekday": 5,
+      "placement": { "type": "replace_first_set", "trackId": "core_side" },
+      "levels": { "basis": 45, "staerk": 75, "imponerende": 120 },
+      "weeks": "all_light_and_1"
+    },
+    {
+      "id": "wall_sit",
+      "name": "Wall sit",
+      "how": "Max tid med lårene vandrette.",
+      "unit": "sec",
+      "weekday": 5,
+      "placement": { "type": "replace_first_set", "trackId": "wallsit" },
+      "levels": { "basis": 90, "staerk": 180, "imponerende": 240 },
+      "weeks": "all_light_and_1"
+    },
+    {
+      "id": "balance",
+      "name": "Balance",
+      "how": "Lukkede øjne, max 60 sek pr. ben. Stop, når foden flytter sig.",
+      "unit": "sec",
+      "weekday": 5,
+      "placement": { "type": "standalone", "after": "B.neck" },
+      "levels": { "basis": 20, "staerk": 45, "imponerende": 60 },
+      "weeks": "all_light_and_1"
+    },
+    {
+      "id": "nordic_depth",
+      "name": "Nordic",
+      "how": "Sænk så langt, du kan styre, og tag fra med hænderne.",
+      "unit": "depth",
+      "weekday": 2,
+      "placement": { "type": "after_block", "trackId": "posterior", "minStep": "posterior.4" },
+      "levels": { "basis": 1, "staerk": 2, "imponerende": 3 },
+      "weeks": "all_light_and_1",
+      "depthLabels": ["Kvart vej", "Halvvejs", "Helt ned"]
+    }
+  ],
+  "board": [
+    {
+      "name": "Væg-test, cm",
+      "measureId": "wall_test",
+      "basis": "4",
+      "staerk": "2",
+      "imponerende": "0"
+    },
+    {
+      "name": "Balance, sek pr. ben",
+      "measureId": "balance",
+      "basis": "20",
+      "staerk": "45",
+      "imponerende": "60"
+    },
+    {
+      "name": "Push-ups",
+      "measureId": "pushups",
+      "basis": "25",
+      "staerk": "50",
+      "imponerende": "70"
+    },
+    {
+      "name": "Bord-rows",
+      "measureId": "table_rows",
+      "basis": "8",
+      "staerk": "15",
+      "imponerende": "25"
+    },
+    {
+      "name": "Pike push-ups",
+      "measureId": "pike",
+      "basis": "10",
+      "staerk": "20",
+      "imponerende": "30"
+    },
+    {
+      "name": "Hollow hold, sek",
+      "measureId": "hollow",
+      "basis": "30",
+      "staerk": "60",
+      "imponerende": "90"
+    },
+    {
+      "name": "Sideplanke, sek pr. side",
+      "measureId": "side_plank",
+      "basis": "45",
+      "staerk": "75",
+      "imponerende": "120"
+    },
+    {
+      "name": "Wall sit, min:sek",
+      "measureId": "wall_sit",
+      "basis": "1:30",
+      "staerk": "3:00",
+      "imponerende": "4:00"
+    },
+    {
+      "name": "Burpees på 3 min",
+      "measureId": "burpee_3min",
+      "basis": "40",
+      "staerk": "50",
+      "imponerende": "60"
+    },
+    {
+      "name": "Cooper, meter",
+      "measureId": "cooper",
+      "basis": "2.400",
+      "staerk": "2.800",
+      "imponerende": "3.100"
+    },
+    {
+      "name": "Nordic",
+      "measureId": "nordic_depth",
+      "basis": "Kvart vej",
+      "staerk": "Halvvejs",
+      "imponerende": "Helt ned"
+    },
+    {
+      "name": "Ben, pr. ben",
+      "derived": "legs",
+      "basis": "Split 3 × 12",
+      "staerk": "Bulgarsk 3 × 12",
+      "imponerende": "5 pistols"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "id": "neck",
+  "name": "Nakke-stigen",
+  "short": "Nakke",
+  "pdfPage": 34,
+  "progression": "neck",
+  "category": "extra",
+  "note": "Ryk op, når trinnet føles let to pas i træk. På de andre dage er hage-ind i Open & Strong nok.",
+  "why": [
+    {
+      "kind": "fysio",
+      "text": "Ingen nakkebroer uden træner. Stop ved snurren, svimmelhed eller smerte ud i armen – og søg læge, hvis det ikke går over."
+    },
+    {
+      "kind": "evidens",
+      "text": "Eksperter anbefaler progressiv nakketræning i kamp- og kontaktsport efter almindelige styrkeprincipper, selv om evidensen for skadesforebyggelse stadig er blandet (Fownes-Walpole 2025)."
+    }
+  ],
+  "steps": [
+    {
+      "id": "neck.N1",
+      "key": "N1",
+      "name": "Hage-ind liggende",
+      "level": "basis",
+      "dose": { "kind": "hold", "sets": [10, 10], "seconds": [10, 10] },
+      "execution": "Træk hagen ind, og pres baghovedet blidt mod gulvet.",
+      "cues": ["Træk hagen ind, og pres baghovedet blidt mod gulvet"],
+      "pdfPage": 34
+    },
+    {
+      "id": "neck.N2",
+      "key": "N2",
+      "name": "Hage-ind og løft",
+      "dose": { "kind": "hold", "sets": [3, 3], "seconds": [10, 30] },
+      "execution": "Hagen ind, og løft hovedet 2 cm fra gulvet.",
+      "cues": ["Hagen ind, og løft hovedet 2 cm fra gulvet"],
+      "pdfPage": 34
+    },
+    {
+      "id": "neck.N3",
+      "key": "N3",
+      "name": "Isometri, halv kraft",
+      "level": "staerk",
+      "dose": { "kind": "hold", "sets": [2, 2], "seconds": [10, 10], "per": "retning" },
+      "execution": "Pres hånden mod pande, baghoved og begge sider. Hovedet står stille.",
+      "cues": ["Pres hånden mod pande, baghoved og begge sider", "Hovedet står stille"],
+      "pdfPage": 34
+    },
+    {
+      "id": "neck.N4",
+      "key": "N4",
+      "name": "Isometri, 80 % kraft",
+      "dose": { "kind": "hold", "sets": [3, 3], "seconds": [15, 15], "per": "retning" },
+      "execution": "Samme fire retninger, hårdere og længere.",
+      "cues": ["Samme fire retninger, hårdere og længere"],
+      "pdfPage": 34
+    },
+    {
+      "id": "neck.N5",
+      "key": "N5",
+      "name": "Over sengekanten",
+      "level": "imponerende",
+      "dose": { "kind": "hold", "sets": [3, 3], "seconds": [20, 30], "per": "retning" },
+      "execution": "Hovedet ud over kanten. Hold nakken neutral liggende på ryg, mave og begge sider.",
+      "cues": [
+        "Hovedet ud over kanten",
+        "Hold nakken neutral liggende på ryg, mave og begge sider"
+      ],
+      "pdfPage": 34
+    },
+    {
+      "id": "neck.N6",
+      "key": "N6",
+      "name": "Bevægelse mod modstand",
+      "level": "boss",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [8, 12], "per": "retning" },
+      "execution": "Langsomme bevægelser mod modstand fra din egen hånd.",
+      "cues": ["Langsomme bevægelser mod modstand fra din egen hånd"],
+      "pdfPage": 34
+    }
+  ]
+}

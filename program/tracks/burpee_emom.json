@@ -1,0 +1,100 @@
+{
+  "id": "burpee_emom",
+  "name": "Burpees: kapacitet",
+  "short": "Burpees",
+  "pdfPage": 25,
+  "progression": "emom",
+  "category": "power",
+  "note": "EMOM betyder hvert minut: du starter et nyt sæt i starten af hvert minut, og resten af minuttet er pause. E3 er 6 minutter med 4 burpees.",
+  "why": [
+    {
+      "kind": "coach",
+      "text": "Højst ét trin om ugen. Ryk op, når alle minutter er rene, og du har mindst 20 sek pause i det sidste minut. Ellers bliver du på trinnet. Ugens loft står i ugeoversigten (side 37)."
+    }
+  ],
+  "steps": [
+    {
+      "id": "burpee_emom.E1",
+      "key": "E1",
+      "name": "EMOM 4 × 3",
+      "level": "basis",
+      "dose": { "kind": "emom", "minutes": 4, "reps": 3 },
+      "execution": "4 minutter med 3 burpees i starten af hvert minut.",
+      "cues": ["4 minutter med 3 burpees i starten af hvert minut"],
+      "pdfPage": 25
+    },
+    {
+      "id": "burpee_emom.E2",
+      "key": "E2",
+      "name": "EMOM 5 × 4",
+      "dose": { "kind": "emom", "minutes": 5, "reps": 4 },
+      "execution": "5 minutter med 4 burpees i starten af hvert minut.",
+      "cues": ["5 minutter med 4 burpees i starten af hvert minut"],
+      "pdfPage": 25
+    },
+    {
+      "id": "burpee_emom.E3",
+      "key": "E3",
+      "name": "EMOM 6 × 4",
+      "dose": { "kind": "emom", "minutes": 6, "reps": 4 },
+      "execution": "6 minutter med 4 burpees i starten af hvert minut.",
+      "cues": ["6 minutter med 4 burpees i starten af hvert minut"],
+      "pdfPage": 25
+    },
+    {
+      "id": "burpee_emom.E4",
+      "key": "E4",
+      "name": "EMOM 6 × 5",
+      "dose": { "kind": "emom", "minutes": 6, "reps": 5 },
+      "execution": "6 minutter med 5 burpees i starten af hvert minut.",
+      "cues": ["6 minutter med 5 burpees i starten af hvert minut"],
+      "pdfPage": 25
+    },
+    {
+      "id": "burpee_emom.E5",
+      "key": "E5",
+      "name": "EMOM 8 × 5",
+      "dose": { "kind": "emom", "minutes": 8, "reps": 5 },
+      "execution": "8 minutter med 5 burpees i starten af hvert minut.",
+      "cues": ["8 minutter med 5 burpees i starten af hvert minut"],
+      "pdfPage": 25
+    },
+    {
+      "id": "burpee_emom.E6",
+      "key": "E6",
+      "name": "EMOM 8 × 6",
+      "dose": { "kind": "emom", "minutes": 8, "reps": 6 },
+      "execution": "8 minutter med 6 burpees i starten af hvert minut.",
+      "cues": ["8 minutter med 6 burpees i starten af hvert minut"],
+      "pdfPage": 25
+    },
+    {
+      "id": "burpee_emom.E7",
+      "key": "E7",
+      "name": "EMOM 10 × 6",
+      "dose": { "kind": "emom", "minutes": 10, "reps": 6 },
+      "execution": "10 minutter med 6 burpees i starten af hvert minut.",
+      "cues": ["10 minutter med 6 burpees i starten af hvert minut"],
+      "pdfPage": 25
+    },
+    {
+      "id": "burpee_emom.E8",
+      "key": "E8",
+      "name": "EMOM 10 × 7",
+      "dose": { "kind": "emom", "minutes": 10, "reps": 7 },
+      "execution": "10 minutter med 7 burpees i starten af hvert minut.",
+      "cues": ["10 minutter med 7 burpees i starten af hvert minut"],
+      "pdfPage": 25
+    },
+    {
+      "id": "burpee_emom.E9",
+      "key": "E9",
+      "name": "EMOM 10 × 8",
+      "level": "imponerende",
+      "dose": { "kind": "emom", "minutes": 10, "reps": 8 },
+      "execution": "10 minutter med 8 burpees i starten af hvert minut.",
+      "cues": ["10 minutter med 8 burpees i starten af hvert minut"],
+      "pdfPage": 25
+    }
+  ]
+}

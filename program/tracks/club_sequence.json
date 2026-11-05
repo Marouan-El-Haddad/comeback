@@ -1,0 +1,70 @@
+{
+  "id": "club_sequence",
+  "name": "Klubsekvensen",
+  "short": "Klubsekvensen",
+  "pdfPage": 13,
+  "progression": "rounds",
+  "category": "extra",
+  "note": "1. Ned til midten. Hold 3 sek.\n2. Helt ned. Hold 3 sek lige over gulvet.\n3. Op til midten. Hold 3 sek.\n4. 10 hurtige mikro-pumps i midten.\n5. Helt ned og helt op. Det er én runde.",
+  "steps": [
+    {
+      "id": "club_sequence.C1",
+      "key": "C1",
+      "name": "Klubsekvensen",
+      "dose": { "kind": "rounds", "sets": 2, "rounds": [1, 1], "text": "2 × 1 runde" },
+      "execution": "2 × 1 runde.",
+      "cues": ["2 × 1 runde"],
+      "pdfPage": 13
+    },
+    {
+      "id": "club_sequence.C2",
+      "key": "C2",
+      "name": "Klubsekvensen",
+      "dose": { "kind": "rounds", "sets": 2, "rounds": [2, 2], "text": "2 × 2 runder" },
+      "execution": "2 × 2 runder.",
+      "cues": ["2 × 2 runder"],
+      "pdfPage": 13
+    },
+    {
+      "id": "club_sequence.C3",
+      "key": "C3",
+      "name": "Klubsekvensen",
+      "dose": { "kind": "rounds", "sets": 1, "rounds": [3, 3], "text": "1 × 3 runder" },
+      "execution": "1 × 3 runder.",
+      "cues": ["1 × 3 runder"],
+      "pdfPage": 13
+    },
+    {
+      "id": "club_sequence.C4",
+      "key": "C4",
+      "name": "Klubsekvensen",
+      "dose": { "kind": "rounds", "sets": 1, "rounds": [5, 5], "text": "5 runder i træk" },
+      "execution": "5 runder i træk.",
+      "cues": ["5 runder i træk"],
+      "pdfPage": 13
+    },
+    {
+      "id": "club_sequence.C5",
+      "key": "C5",
+      "name": "Klubsekvensen på knoer",
+      "dose": { "kind": "rounds", "sets": 1, "rounds": [5, 5], "text": "5 runder i træk på knoer" },
+      "execution": "5 runder i træk på knoer.",
+      "cues": ["5 runder i træk på knoer"],
+      "pdfPage": 13
+    },
+    {
+      "id": "club_sequence.C6",
+      "key": "C6",
+      "name": "Klubsekvensen som diamond",
+      "dose": {
+        "kind": "rounds",
+        "sets": 1,
+        "rounds": [5, 5],
+        "text": "5 runder i træk som diamond"
+      },
+      "execution": "5 runder i træk som diamond.",
+      "cues": ["5 runder i træk som diamond"],
+      "pdfPage": 13
+    }
+  ]
+}

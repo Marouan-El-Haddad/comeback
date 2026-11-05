@@ -1,0 +1,1 @@
+{ "id": "motor", "name": "Motor", "defaultWeekday": 4, "durationMin": [30, 45], "blocks": [] }

@@ -1,0 +1,76 @@
+{
+  "id": "power_legs",
+  "name": "Power: ben",
+  "short": "Power ben",
+  "pdfPage": 23,
+  "progression": "power",
+  "category": "power",
+  "tags": ["heavy_legs"],
+  "note": "3–5 reps pr. sæt og 60–90 sek pause.\nStop sættet, når højden eller farten falder.\n40–60 landinger pr. pas – og land stille som en kat.",
+  "why": [
+    {
+      "kind": "evidens",
+      "text": "At stoppe ved ca. 20 % fartfald gav næsten tre gange så stor springfremgang som at køre sættet langt ud – med 40 % færre gentagelser (Pareja-Blanco 2017)."
+    }
+  ],
+  "steps": [
+    {
+      "id": "power_legs.1",
+      "key": "1",
+      "name": "Squat jump",
+      "level": "basis",
+      "dose": { "kind": "power", "sets": [3, 3], "reps": [3, 5] },
+      "execution": "Maks højde. Land blødt, og frys 2 sek.",
+      "cues": ["Maks højde", "Land blødt, og frys 2 sek"],
+      "pdfPage": 23
+    },
+    {
+      "id": "power_legs.2",
+      "key": "2",
+      "name": "Længdespring",
+      "dose": { "kind": "power", "sets": [3, 3], "reps": [3, 3] },
+      "execution": "Så langt du kan, med stille landing.",
+      "cues": ["Så langt du kan, med stille landing"],
+      "pdfPage": 23
+    },
+    {
+      "id": "power_legs.3",
+      "key": "3",
+      "name": "Skater-hop",
+      "level": "staerk",
+      "dose": { "kind": "power", "sets": [3, 3], "reps": [3, 4], "per": "side" },
+      "execution": "Spring sidelæns fra ét ben til det andet, og frys på landingen.",
+      "cues": ["Spring sidelæns fra ét ben til det andet, og frys på landingen"],
+      "pdfPage": 23
+    },
+    {
+      "id": "power_legs.4",
+      "key": "4",
+      "name": "Split jumps",
+      "dose": { "kind": "power", "sets": [3, 3], "reps": [3, 4], "per": "ben" },
+      "execution": "Skifte-udfald i luften. Lavt, hurtigt og i balance.",
+      "cues": ["Skifte-udfald i luften", "Lavt, hurtigt og i balance"],
+      "pdfPage": 23
+    },
+    {
+      "id": "power_legs.5",
+      "key": "5",
+      "name": "Tuck jumps",
+      "level": "imponerende",
+      "dose": { "kind": "power", "sets": [3, 3], "reps": [3, 5] },
+      "execution": "Knæene op mod brystet i luften.",
+      "cues": ["Knæene op mod brystet i luften"],
+      "pdfPage": 23
+    },
+    {
+      "id": "power_legs.6",
+      "key": "6",
+      "name": "Etbens bounds",
+      "level": "boss",
+      "dose": { "kind": "power", "sets": [3, 3], "reps": [3, 3], "per": "ben" },
+      "execution": "Tre lange spring i træk på samme ben, eller drop-hop fra et trappetrin.",
+      "cues": ["Tre lange spring i træk på samme ben, eller drop-hop fra et trappetrin"],
+      "pdfPage": 23
+    }
+  ]
+}

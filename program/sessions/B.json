@@ -1,0 +1,98 @@
+{
+  "id": "B",
+  "name": "Styrke B",
+  "defaultWeekday": 5,
+  "durationMin": [45, 50],
+  "blocks": [
+    {
+      "id": "B.warmup",
+      "trackId": "warmup",
+      "role": "warmup",
+      "setsRule": "fixed",
+      "inYellow": true
+    },
+    {
+      "id": "B.power",
+      "trackId": "power_upper",
+      "role": "power",
+      "setsRule": "power",
+      "restSec": 75,
+      "inYellow": false
+    },
+    {
+      "id": "B.pair1.shoulder",
+      "trackId": "shoulder",
+      "role": "pair",
+      "group": "pair1",
+      "setsRule": "par12",
+      "restSec": 60,
+      "inYellow": true
+    },
+    {
+      "id": "B.pair1.backpack_row",
+      "trackId": "backpack_row",
+      "role": "pair",
+      "group": "pair1",
+      "setsRule": "par12",
+      "restSec": 60,
+      "inYellow": true
+    },
+    {
+      "id": "B.pair2.sl_rdl",
+      "trackId": "sl_rdl",
+      "role": "pair",
+      "group": "pair2",
+      "setsRule": "par12",
+      "restSec": 45,
+      "inYellow": true
+    },
+    {
+      "id": "B.pair2.core_side",
+      "trackId": "core_side",
+      "role": "pair",
+      "group": "pair2",
+      "setsRule": "fixed",
+      "fixedSets": [2, 2],
+      "restSec": 45,
+      "inYellow": true
+    },
+    {
+      "id": "B.pair2.core_rot",
+      "trackId": "core_rot",
+      "role": "pair",
+      "group": "pair2",
+      "setsRule": "fixed",
+      "fixedSets": [2, 2],
+      "restSec": 45,
+      "inYellow": true
+    },
+    {
+      "id": "B.pair3.core_situp",
+      "trackId": "core_situp",
+      "role": "pair",
+      "group": "pair3",
+      "setsRule": "other",
+      "restSec": 45,
+      "inYellow": false
+    },
+    {
+      "id": "B.pair3.wallsit",
+      "trackId": "wallsit",
+      "role": "pair",
+      "group": "pair3",
+      "setsRule": "other",
+      "fixedSets": [2, 3],
+      "restSec": 45,
+      "inYellow": false
+    },
+    {
+      "id": "B.finisher",
+      "trackId": "club_sequence",
+      "role": "finisher",
+      "setsRule": "fixed",
+      "restSec": 120,
+      "inYellow": false
+    },
+    { "id": "B.neck", "trackId": "neck", "role": "neck", "setsRule": "fixed", "inYellow": false }
+  ]
+}

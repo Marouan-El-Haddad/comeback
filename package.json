@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "vite",
     "dev:probe": "vite --config probe/vite.config.ts",
-    "build": "vite build && vite build --config probe/vite.config.ts && node scripts/bundle-size.ts",
+    "build": "vite build && vite build --config probe/vite.config.ts && node scripts/copy-routes.ts && node scripts/bundle-size.ts",
     "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test",
@@ -18,7 +18,8 @@
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
     "check": "npm test && npm run typecheck && npm run lint && npm run build",
-    "simulate": "node scripts/simulate.ts"
+    "simulate": "node scripts/simulate.ts",
+    "convert-program": "node scripts/convert-program.ts"
   },
   "dependencies": {
     "preact": "^11.1.1",

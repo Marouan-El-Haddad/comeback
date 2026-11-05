@@ -1,0 +1,245 @@
+[
+  {
+    "pw": 1,
+    "phase": "fundament",
+    "light": false,
+    "sets": { "par12": 2, "other": 2 },
+    "rirPlan": 3,
+    "powerSets": 2,
+    "motor": { "type": "base_check", "minutes": 30 },
+    "emomCap": "burpee_emom.E1",
+    "emomFixed": true,
+    "measurements": true,
+    "text": {
+      "from": "9/11",
+      "phase": "Fundament",
+      "strength": "2 sæt, 3 i reserve",
+      "power": "2 sæt",
+      "motor": "Rolig base, 30 min",
+      "burpees": "E1: 4 × 3",
+      "note": "Nulpunkt: målinger tirsdag og fredag, distancen torsdag."
+    }
+  },
+  {
+    "pw": 2,
+    "phase": "fundament",
+    "light": false,
+    "sets": { "par12": 3, "other": 3 },
+    "rirPlan": 3,
+    "powerSets": 3,
+    "motor": { "type": "base", "minutes": 35 },
+    "emomCap": "burpee_emom.E2",
+    "measurements": false,
+    "text": {
+      "from": "16/11",
+      "phase": "Fundament",
+      "strength": "3 sæt, 3 i reserve",
+      "power": "3 sæt",
+      "motor": "Rolig base, 35 min",
+      "burpees": "Højst E2",
+      "note": ""
+    }
+  },
+  {
+    "pw": 3,
+    "phase": "fundament",
+    "light": false,
+    "sets": { "par12": 3, "other": 3 },
+    "rirPlan": 2,
+    "powerSets": 3,
+    "motor": { "type": "base", "minutes": 40, "strides": 4 },
+    "emomCap": "burpee_emom.E3",
+    "measurements": false,
+    "text": {
+      "from": "23/11",
+      "phase": "Fundament",
+      "strength": "3 sæt, 2 i reserve",
+      "power": "3 sæt",
+      "motor": "Base 40 min + 4 stigningsløb",
+      "burpees": "Højst E3",
+      "note": ""
+    }
+  },
+  {
+    "pw": 4,
+    "phase": "let",
+    "light": true,
+    "sets": { "par12": 2, "other": 2 },
+    "rirPlan": 3,
+    "powerSets": 2,
+    "motor": { "type": "cooper_or_base" },
+    "emomCap": "test",
+    "measurements": true,
+    "text": {
+      "from": "30/11",
+      "phase": "Let uge",
+      "strength": "2 sæt, 3 i reserve",
+      "power": "2 sæt",
+      "motor": "Cooper eller base-check",
+      "burpees": "Burpee-test, 3 min",
+      "note": "Målinger tirsdag og fredag. Ryk op bagefter."
+    }
+  },
+  {
+    "pw": 5,
+    "phase": "opbygning",
+    "light": false,
+    "sets": { "par12": 3, "other": 3, "optionalPlusOne": true },
+    "rirPlan": 2,
+    "powerSets": 3,
+    "powerOptionalPlusOne": true,
+    "motor": { "type": "intervals_30_15", "series": 2, "reps": 10 },
+    "emomCap": "burpee_emom.E4",
+    "measurements": false,
+    "text": {
+      "from": "7/12",
+      "phase": "Opbygning",
+      "strength": "3–4 sæt, 2 i reserve",
+      "power": "3–4 sæt",
+      "motor": "30/15: 2 × 10",
+      "burpees": "Højst E4",
+      "note": ""
+    }
+  },
+  {
+    "pw": 6,
+    "phase": "opbygning",
+    "light": false,
+    "sets": { "par12": 4, "other": 3 },
+    "rirPlan": 1,
+    "powerSets": 4,
+    "motor": { "type": "intervals_30_15", "series": 2, "reps": 13 },
+    "emomCap": "burpee_emom.E5",
+    "measurements": false,
+    "text": {
+      "from": "14/12",
+      "phase": "Opbygning",
+      "strength": "4 sæt på par 1 og 2, 1–2 i reserve",
+      "power": "4 sæt",
+      "motor": "30/15: 2 × 13",
+      "burpees": "Højst E5",
+      "note": ""
+    }
+  },
+  {
+    "pw": 7,
+    "phase": "opbygning",
+    "light": false,
+    "sets": { "par12": 4, "other": 3 },
+    "rirPlan": 1,
+    "powerSets": 4,
+    "motor": { "type": "intervals_30_15", "series": 3, "reps": 10 },
+    "emomCap": "burpee_emom.E6",
+    "measurements": false,
+    "text": {
+      "from": "21/12",
+      "phase": "Opbygning",
+      "strength": "Som uge 6",
+      "power": "4 sæt",
+      "motor": "30/15: 3 × 10",
+      "burpees": "Højst E6",
+      "note": "Jul: motor onsdag 23/12 som rolig base og Styrke B 26. eller 27/12."
+    }
+  },
+  {
+    "pw": 8,
+    "phase": "let",
+    "light": true,
+    "sets": { "par12": 2, "other": 2 },
+    "rirPlan": 3,
+    "powerSets": 2,
+    "motor": { "type": "cooper_or_base" },
+    "emomCap": "test",
+    "measurements": true,
+    "text": {
+      "from": "28/12",
+      "phase": "Let uge",
+      "strength": "2 sæt + målinger",
+      "power": "2 sæt",
+      "motor": "Cooper eller base-check",
+      "burpees": "Burpee-test, 3 min",
+      "note": "Nytår: læg målingerne 29.–30/12 eller 2.–3/1."
+    }
+  },
+  {
+    "pw": 9,
+    "phase": "kampform",
+    "light": false,
+    "sets": { "par12": 3, "other": 3 },
+    "rirPlan": 2,
+    "powerSets": 4,
+    "motor": { "type": "fight_rounds", "rounds": 5, "sprints": false },
+    "emomCap": "burpee_emom.E7",
+    "measurements": false,
+    "text": {
+      "from": "4/1",
+      "phase": "Kampform",
+      "strength": "3 sæt på dit sværeste trin, 2 i reserve",
+      "power": "4 sæt, maks fart",
+      "motor": "Kamp-runder, 5 × 3 min",
+      "burpees": "Højst E7",
+      "note": ""
+    }
+  },
+  {
+    "pw": 10,
+    "phase": "kampform",
+    "light": false,
+    "sets": { "par12": 3, "other": 3 },
+    "rirPlan": 2,
+    "powerSets": 4,
+    "motor": { "type": "fight_rounds", "rounds": 6, "sprints": true },
+    "emomCap": "burpee_emom.E8",
+    "measurements": false,
+    "text": {
+      "from": "11/1",
+      "phase": "Kampform",
+      "strength": "3 sæt, 2 i reserve",
+      "power": "4 sæt",
+      "motor": "6 × 3 min + 2 × 6 sprints",
+      "burpees": "Højst E8",
+      "note": ""
+    }
+  },
+  {
+    "pw": 11,
+    "phase": "kampform",
+    "light": false,
+    "sets": { "par12": 3, "other": 3 },
+    "rirPlan": 2,
+    "powerSets": 4,
+    "motor": { "type": "fight_rounds", "rounds": 6, "sprints": true },
+    "emomCap": "burpee_emom.E9",
+    "measurements": false,
+    "bossAllowed": true,
+    "text": {
+      "from": "18/1",
+      "phase": "Kampform",
+      "strength": "3 sæt, 2 i reserve",
+      "power": "4 sæt",
+      "motor": "6 × 3 min + 2 × 6 sprints",
+      "burpees": "Højst E9 eller en boss-udfordring",
+      "note": ""
+    }
+  },
+  {
+    "pw": 12,
+    "phase": "let",
+    "light": true,
+    "sets": { "par12": 2, "other": 2 },
+    "rirPlan": 3,
+    "powerSets": 2,
+    "motor": { "type": "cooper_or_base", "cooperOnly": true },
+    "emomCap": "test",
+    "measurements": true,
+    "text": {
+      "from": "25/1",
+      "phase": "Let uge",
+      "strength": "2 sæt + slutmåling",
+      "power": "2 sæt",
+      "motor": "Cooper-test",
+      "burpees": "Burpee-test, 3 min",
+      "note": "Sammenlign med uge 1, og start ny runde fra uge 5."
+    }
+  }
+]

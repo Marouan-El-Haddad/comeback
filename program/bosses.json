@@ -1,0 +1,44 @@
+[
+  {
+    "id": "death_by_burpees",
+    "name": "Death by burpees",
+    "how": "Minut 1: 1 burpee, minut 2: 2 burpees og så videre, til du ikke når det.",
+    "staerk": "15 min",
+    "imponerende": "20 min"
+  },
+  {
+    "id": "hundred_burpees",
+    "name": "100 burpees",
+    "how": "På tid, med brystet i gulvet og hop i hver rep.",
+    "staerk": "Under 6:00",
+    "imponerende": "Under 5:00"
+  },
+  {
+    "id": "diamond_ladder",
+    "name": "Diamond-stigen",
+    "how": "1, 2, 3 … 10 … 3, 2, 1 diamond push-ups uden at lægge knæene – 100 reps.",
+    "staerk": "Gennemført",
+    "imponerende": "Under 5 min"
+  },
+  {
+    "id": "plank_gauntlet",
+    "name": "Planke-handsken",
+    "how": "1 min RKC, 30 sek 2-punkts pr. side, 45 sek sideplanke pr. side og 30 sek long-lever – uden pause.",
+    "staerk": "Gennemført",
+    "imponerende": "Med stjerne-sideplanker"
+  },
+  {
+    "id": "wall_sit_round",
+    "name": "Wall sit-runden",
+    "how": "3 min wall sit med garde og lige slag.",
+    "staerk": "Gennemført",
+    "imponerende": "Sidste minut på ét ben"
+  },
+  {
+    "id": "club_sequence_x5",
+    "name": "Klubsekvensen × 5",
+    "how": "5 runder i træk.",
+    "staerk": "Flade hænder",
+    "imponerende": "På knoer"
+  }
+]

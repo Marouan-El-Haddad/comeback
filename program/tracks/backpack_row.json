@@ -1,0 +1,19 @@
+{
+  "id": "backpack_row",
+  "name": "Træk: rygsæk-row",
+  "short": "Rygsæk-row",
+  "pdfPage": 15,
+  "progression": "load",
+  "category": "extra",
+  "steps": [
+    {
+      "id": "backpack_row.1",
+      "key": "1",
+      "name": "Rygsæk-row med én arm",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [8, 15], "per": "side" },
+      "execution": "Støt hånden på en stol. Træk albuen mod hoften, 1 sek stop i toppen. Læg mere i tasken, når du rammer 15.",
+      "cues": ["Støt hånden på en stol", "Træk albuen mod hoften, 1 sek stop i toppen"],
+      "pdfPage": 15
+    }
+  ]
+}

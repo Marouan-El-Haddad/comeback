@@ -1,0 +1,23 @@
+{
+  "id": "sl_rdl",
+  "name": "Etbens RDL",
+  "short": "Etbens RDL",
+  "pdfPage": 18,
+  "progression": "load",
+  "category": "extra",
+  "tags": ["heavy_legs_if_loaded"],
+  "steps": [
+    {
+      "id": "sl_rdl.1",
+      "key": "1",
+      "name": "Etbens RDL",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [6, 10], "per": "ben" },
+      "execution": "Skub hoften bagud med lang ryg; det frie ben følger overkroppen. Senere med rygsæk.",
+      "cues": [
+        "Skub hoften bagud med lang ryg; det frie ben følger overkroppen",
+        "Senere med rygsæk"
+      ],
+      "pdfPage": 18
+    }
+  ]
+}

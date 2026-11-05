@@ -1,0 +1,30 @@
+[
+  {
+    "id": "xmas_2026_motor",
+    "week": "2026-12-21",
+    "moves": [
+      { "kind": "motor", "default": "2026-12-23", "alternative": "2026-12-24", "calmBase": true }
+    ],
+    "label": "Jul: motor onsdag 23/12 som rolig base",
+    "alternativeLabel": "Torsdag 24/12 som normalt"
+  },
+  {
+    "id": "xmas_2026_B",
+    "week": "2026-12-21",
+    "moves": [{ "kind": "B", "default": "2026-12-26", "alternative": "2026-12-27" }],
+    "label": "Jul: Styrke B lørdag 26/12",
+    "alternativeLabel": "Søndag 27/12"
+  },
+  {
+    "id": "newyear_2026_measure",
+    "week": "2026-12-28",
+    "onlyIfLight": true,
+    "measurements": true,
+    "moves": [
+      { "kind": "A", "default": "2026-12-29", "alternative": "2027-01-02" },
+      { "kind": "B", "default": "2026-12-30", "alternative": "2027-01-03" }
+    ],
+    "label": "Nytår: målingerne 29.–30/12",
+    "alternativeLabel": "2.–3/1"
+  }
+]

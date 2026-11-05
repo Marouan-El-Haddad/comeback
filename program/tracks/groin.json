@@ -1,0 +1,65 @@
+{
+  "id": "groin",
+  "name": "Lyske: Copenhagen",
+  "short": "Lyske",
+  "pdfPage": 22,
+  "progression": "double",
+  "category": "ladder",
+  "why": [
+    {
+      "kind": "evidens",
+      "text": "Et program med kun Copenhagen-øvelsen gav 41 % færre lyskeproblemer hos fodboldspillere (Harøy 2019). En metaanalyse fra 2025 fandt store styrkefremskridt, men ingen sikker skadesforebyggelse (meget lav sikkerhed). Styrken er gevinsten under alle omstændigheder."
+    }
+  ],
+  "steps": [
+    {
+      "id": "groin.1",
+      "key": "1",
+      "name": "Liggende adduktorløft",
+      "level": "basis",
+      "dose": { "kind": "reps", "sets": [2, 2], "reps": [10, 15], "per": "side" },
+      "execution": "Lig på siden med det øverste ben foran. Løft det nederste ben langsomt.",
+      "cues": ["Lig på siden med det øverste ben foran", "Løft det nederste ben langsomt"],
+      "pdfPage": 22
+    },
+    {
+      "id": "groin.2",
+      "key": "2",
+      "name": "Kort Copenhagen, hold",
+      "dose": { "kind": "hold", "sets": [2, 3], "seconds": [15, 30], "per": "side" },
+      "execution": "Knæet på sofaen, albuen under skulderen. Kroppen som en planke.",
+      "cues": ["Knæet på sofaen, albuen under skulderen", "Kroppen som en planke"],
+      "pdfPage": 22
+    },
+    {
+      "id": "groin.3",
+      "key": "3",
+      "name": "Kort, hoften op og ned",
+      "level": "staerk",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [6, 10], "per": "side" },
+      "execution": "Langsomt. Lysken løfter dig.",
+      "cues": ["Langsomt", "Lysken løfter dig"],
+      "pdfPage": 22
+    },
+    {
+      "id": "groin.4",
+      "key": "4",
+      "name": "Lang Copenhagen, hold",
+      "level": "imponerende",
+      "dose": { "kind": "hold", "sets": [3, 3], "seconds": [15, 45], "per": "side" },
+      "execution": "Foden på sofaen i stedet for knæet. Det nederste ben hænger frit.",
+      "cues": ["Foden på sofaen i stedet for knæet", "Det nederste ben hænger frit"],
+      "pdfPage": 22
+    },
+    {
+      "id": "groin.5",
+      "key": "5",
+      "name": "Lang, benet op og ned",
+      "level": "boss",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [6, 10], "per": "side" },
+      "execution": "Før det nederste ben op til sofaen og ned igen.",
+      "cues": ["Før det nederste ben op til sofaen og ned igen"],
+      "pdfPage": 22
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "id": "burpee_skill",
+  "name": "Teknik og varianter",
+  "short": "Burpee-varianter",
+  "pdfPage": 26,
+  "progression": "manual",
+  "category": "extra",
+  "note": "Øv varianten i de 2 sidste minutter af EMOM'en, når du er på E6 eller højere – eller i kamp-runderne.",
+  "steps": [
+    {
+      "id": "burpee_skill.V1",
+      "key": "1",
+      "name": "Teknik-burpee",
+      "level": "basis",
+      "dose": { "kind": "always", "text": "Altid" },
+      "execution": "Brystet til gulvet, hop med strakt hofte og hænderne over hovedet.",
+      "cues": ["Brystet til gulvet, hop med strakt hofte og hænderne over hovedet"],
+      "pdfPage": 26
+    },
+    {
+      "id": "burpee_skill.V2",
+      "key": "2",
+      "name": "Sprawl til garde",
+      "dose": { "kind": "fixed", "sets": 2, "reps": 5 },
+      "execution": "Hofterne ned mod gulvet, op i kampstilling uden hop.",
+      "cues": ["Hofterne ned mod gulvet, op i kampstilling uden hop"],
+      "pdfPage": 26
+    },
+    {
+      "id": "burpee_skill.V3",
+      "key": "3",
+      "name": "Muay Thai-burpee",
+      "level": "staerk",
+      "dose": { "kind": "fixed", "sets": 2, "reps": 5 },
+      "execution": "Land i garde, og giv 2 knæ.",
+      "cues": ["Land i garde, og giv 2 knæ"],
+      "pdfPage": 26
+    },
+    {
+      "id": "burpee_skill.V4",
+      "key": "4",
+      "name": "Burpee + tuck jump",
+      "level": "imponerende",
+      "dose": { "kind": "fixed", "sets": 2, "reps": 5 },
+      "execution": "Eller + klap push-up. Samme rytme.",
+      "cues": ["Eller + klap push-up", "Samme rytme"],
+      "pdfPage": 26
+    },
+    {
+      "id": "burpee_skill.V5",
+      "key": "5",
+      "name": "Etbens burpee",
+      "level": "boss",
+      "dose": { "kind": "fixed", "sets": 3, "reps": 5, "per": "ben" },
+      "execution": "Ned, push-up og op igen på samme ben.",
+      "cues": ["Ned, push-up og op igen på samme ben"],
+      "pdfPage": 26
+    }
+  ]
+}

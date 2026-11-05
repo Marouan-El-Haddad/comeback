@@ -1,0 +1,168 @@
+[
+  {
+    "id": "knuckle_pushups",
+    "name": "Knoer-push-ups",
+    "how": "På knyttede næver med lige håndled – samme linje som i et slag.",
+    "ready": "Altid",
+    "requires": { "type": "always" },
+    "group": "Overkrop og planke"
+  },
+  {
+    "id": "plank_punch",
+    "name": "Planke-slag",
+    "how": "I push-up-position på knoerne: skiftevis lige slag frem, uden at hoften drejer.",
+    "ready": "3 × 30 sek RKC",
+    "requires": {
+      "type": "performance",
+      "trackId": "core_front",
+      "stepId": "core_front.3",
+      "sets": 3,
+      "seconds": 30
+    },
+    "group": "Overkrop og planke"
+  },
+  {
+    "id": "t_pushup",
+    "name": "T push-up",
+    "how": "Push-up, og rotér op i sideplanke med armen mod loftet.",
+    "ready": "25 push-ups",
+    "requires": { "type": "measure", "measureId": "pushups", "min": 25 },
+    "group": "Overkrop og planke"
+  },
+  {
+    "id": "archer_typewriter",
+    "name": "Archer typewriter",
+    "how": "Glid fra side til side i bunden af en archer push-up.",
+    "ready": "3 × 8 archer pr. side",
+    "requires": {
+      "type": "performance",
+      "trackId": "press",
+      "stepId": "press.4",
+      "sets": 3,
+      "reps": 8
+    },
+    "group": "Overkrop og planke"
+  },
+  {
+    "id": "wall_walks",
+    "name": "Wall walks",
+    "how": "Fra push-up-position: gå op ad væggen, til maven rører, og ned igen.",
+    "ready": "Skulder trin 2",
+    "requires": { "type": "step", "trackId": "shoulder", "minStep": "shoulder.2" },
+    "group": "Overkrop og planke"
+  },
+  {
+    "id": "free_handstand",
+    "name": "Fri håndstand",
+    "how": "Spark op væk fra væggen, og hold 10 sek, senere 30 sek.",
+    "ready": "Skulder trin 5",
+    "requires": { "type": "step", "trackId": "shoulder", "minStep": "shoulder.5" },
+    "group": "Overkrop og planke"
+  },
+  {
+    "id": "plank_knee",
+    "name": "Planke-knæ",
+    "how": "Fra planke: knæ eksplosivt mod modsat albue, skiftevis.",
+    "ready": "3 × 30 sek RKC",
+    "requires": {
+      "type": "performance",
+      "trackId": "core_front",
+      "stepId": "core_front.3",
+      "sets": 3,
+      "seconds": 30
+    },
+    "group": "Overkrop og planke"
+  },
+  {
+    "id": "superman",
+    "name": "Superman push-up",
+    "how": "Eksplosiv push-up med armene strakt frem i luften.",
+    "ready": "4 × 5 klap push-ups",
+    "requires": {
+      "type": "performance",
+      "trackId": "power_upper",
+      "stepId": "power_upper.4",
+      "sets": 4,
+      "reps": 5
+    },
+    "group": "Overkrop og planke"
+  },
+  {
+    "id": "pistol_knee",
+    "name": "Pistol-knæ",
+    "how": "Rejs dig fra en pistol, og driv det frie ben op i et knæspark.",
+    "ready": "5 pistols pr. ben",
+    "requires": {
+      "type": "performance",
+      "trackId": "legs",
+      "stepId": "legs.6",
+      "sets": 1,
+      "reps": 5
+    },
+    "group": "Ben, mave og burpees"
+  },
+  {
+    "id": "slow_kick",
+    "name": "Slow-motion spark",
+    "how": "Teep, knæ eller rundspark: 3 sek ud, 3 sek hold, 3 sek tilbage – uden at røre gulvet.",
+    "ready": "Altid",
+    "requires": { "type": "always" },
+    "group": "Ben, mave og burpees"
+  },
+  {
+    "id": "split_jump_knee",
+    "name": "Split jumps med knæ",
+    "how": "Et knæspark efter hvert fjerde skifte-hop.",
+    "ready": "Power-ben trin 4",
+    "requires": { "type": "step", "trackId": "power_legs", "minStep": "power_legs.4" },
+    "group": "Ben, mave og burpees"
+  },
+  {
+    "id": "one_leg_wallsit_punch",
+    "name": "Etbens wall sit med slag",
+    "how": "Etbens wall sit med garde og lige slag.",
+    "ready": "W4",
+    "requires": { "type": "step", "trackId": "wallsit", "minStep": "wallsit.W4" },
+    "group": "Ben, mave og burpees"
+  },
+  {
+    "id": "side_plank_teep",
+    "name": "Sideplanke-teep",
+    "how": "Fra sideplanken: træk det øverste knæ til brystet, og spark ud som en teep.",
+    "ready": "S3",
+    "requires": { "type": "step", "trackId": "core_side", "minStep": "core_side.S3" },
+    "group": "Ben, mave og burpees"
+  },
+  {
+    "id": "situp_elbows",
+    "name": "Sit-up med albuer",
+    "how": "Sit-up; i toppen 2 albuer og 2 lige slag.",
+    "ready": "Altid",
+    "requires": { "type": "always" },
+    "group": "Ben, mave og burpees"
+  },
+  {
+    "id": "burpee_switch_kick",
+    "name": "Burpee med switch kick",
+    "how": "Land i garde, og fyr et switch kick.",
+    "ready": "Burpee-variant 3",
+    "requires": { "type": "step", "trackId": "burpee_skill", "minStep": "burpee_skill.V3" },
+    "group": "Ben, mave og burpees"
+  },
+  {
+    "id": "sprawl_teep",
+    "name": "Sprawl med teep",
+    "how": "Sprawl, op i garde og teep.",
+    "ready": "Burpee-variant 2",
+    "requires": { "type": "step", "trackId": "burpee_skill", "minStep": "burpee_skill.V2" },
+    "group": "Ben, mave og burpees"
+  },
+  {
+    "id": "seal_burpee",
+    "name": "SEAL-burpee",
+    "how": "Burpee med 3 push-ups og et knæ til brystet mellem hver.",
+    "ready": "50 på burpee-testen",
+    "requires": { "type": "measure", "measureId": "burpee_3min", "min": 50 },
+    "group": "Ben, mave og burpees"
+  }
+]

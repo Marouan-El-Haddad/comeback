@@ -1,0 +1,51 @@
+{
+  "id": "core_rot",
+  "name": "Mave 2: rotation",
+  "short": "Rotation",
+  "pdfPage": 20,
+  "progression": "double",
+  "category": "extra",
+  "note": "Hoften må hverken synke eller dreje. Læg en vandflaske på lænden i 2-punkts planken – den må ikke falde af.",
+  "steps": [
+    {
+      "id": "core_rot.R1",
+      "key": "R1",
+      "name": "Planke med skulder-tap",
+      "level": "basis",
+      "dose": { "kind": "reps", "sets": [2, 2], "reps": [10, 20], "per": "side" },
+      "execution": "Brede fødder gør det lettere. Hoften stille.",
+      "cues": ["Brede fødder gør det lettere", "Hoften stille"],
+      "pdfPage": 20
+    },
+    {
+      "id": "core_rot.R2",
+      "key": "R2",
+      "name": "2-punkts planke",
+      "level": "staerk",
+      "dose": { "kind": "hold", "sets": [2, 2], "seconds": [10, 30], "per": "side" },
+      "execution": "På albuerne, modsat arm og ben strakt. Hoften i niveau.",
+      "cues": ["På albuerne, modsat arm og ben strakt", "Hoften i niveau"],
+      "pdfPage": 20
+    },
+    {
+      "id": "core_rot.R3",
+      "key": "R3",
+      "name": "2-punkts på hænderne",
+      "level": "imponerende",
+      "dose": { "kind": "hold", "sets": [2, 2], "seconds": [10, 30], "per": "side" },
+      "execution": "Samme på strakte arme – højere og mere ustabil.",
+      "cues": ["Samme på strakte arme – højere og mere ustabil"],
+      "pdfPage": 20
+    },
+    {
+      "id": "core_rot.R4",
+      "key": "R4",
+      "name": "2-punkts med bevægelse",
+      "level": "boss",
+      "dose": { "kind": "reps", "sets": [2, 2], "reps": [5, 5], "per": "side" },
+      "execution": "Før arm og ben langsomt ud til siden og tilbage.",
+      "cues": ["Før arm og ben langsomt ud til siden og tilbage"],
+      "pdfPage": 20
+    }
+  ]
+}

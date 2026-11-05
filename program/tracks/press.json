@@ -1,0 +1,78 @@
+{
+  "id": "press",
+  "name": "Pres: push-ups",
+  "short": "Pres",
+  "pdfPage": 12,
+  "progression": "double",
+  "category": "ladder",
+  "painCue": "Gør push-ups ondt i håndleddet, så tag dem på knoer.",
+  "steps": [
+    {
+      "id": "press.1",
+      "key": "1",
+      "name": "Push-up med tempo",
+      "level": "basis",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [6, 12] },
+      "execution": "3 sek ned, 1 sek pause lige over gulvet. Kroppen som én planke, albuerne ca. 45° ud. Under 3 × 6: hænderne på sofaen.",
+      "cues": ["3 sek ned, 1 sek stille", "Albuerne 45° ud"],
+      "pdfPage": 12
+    },
+    {
+      "id": "press.2",
+      "key": "2",
+      "name": "Fødderne på en stol",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [6, 12] },
+      "execution": "Samme planke. Mere af vægten på armene.",
+      "cues": ["Samme planke", "Hoften i niveau"],
+      "pdfPage": 12
+    },
+    {
+      "id": "press.3",
+      "key": "3",
+      "name": "Skæv push-up",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [5, 10], "per": "side" },
+      "execution": "Den ene hånd på 3–4 bøger, den anden i gulvet. Den nederste arm arbejder mest.",
+      "cues": ["Nederste arm arbejder"],
+      "pdfPage": 12
+    },
+    {
+      "id": "press.4",
+      "key": "4",
+      "name": "Archer push-up",
+      "level": "staerk",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [4, 8], "per": "side" },
+      "execution": "Hænderne i dobbelt skulderbredde. Sænk dig mod den ene hånd; den strakte arm hjælper mindst muligt.",
+      "cues": ["Dobbelt skulderbredde", "Strakt arm hjælper mindst"],
+      "pdfPage": 12
+    },
+    {
+      "id": "press.5",
+      "key": "5",
+      "name": "Etarms push-up på skrå",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 8], "per": "side" },
+      "execution": "Hånden på et bord, senere sofa, stol og trappetrin. Fødderne bredt, hoften i niveau.",
+      "cues": ["Fødderne bredt", "Hoften i niveau"],
+      "pdfPage": 12
+    },
+    {
+      "id": "press.6",
+      "key": "6",
+      "name": "Etarms push-up",
+      "level": "imponerende",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 6], "per": "side" },
+      "execution": "I gulvet med brede fødder. Den frie hånd på lænden.",
+      "cues": ["Frie hånd på lænden"],
+      "pdfPage": 12
+    },
+    {
+      "id": "press.7",
+      "key": "7",
+      "name": "Etarms, samlede fødder",
+      "level": "boss",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 5], "per": "side" },
+      "execution": "Fødderne i hoftebredde. Ingen vridning.",
+      "cues": ["Ingen vridning"],
+      "pdfPage": 12
+    }
+  ]
+}

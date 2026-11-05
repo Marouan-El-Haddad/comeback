@@ -1,0 +1,66 @@
+{
+  "id": "power_upper",
+  "name": "Power: overkrop",
+  "short": "Power overkrop",
+  "pdfPage": 24,
+  "progression": "power",
+  "category": "power",
+  "note": "4 sæt med 60–90 sek pause.\nLand med bløde albuer, gerne på et tæppe.\nRyk op, når alle reps i alle sæt har samme højde.",
+  "why": [
+    {
+      "kind": "coach",
+      "text": "Superman, Aztec og dobbeltklap hører til i imponer-kataloget, ikke i programmet. De koster meget og giver lidt ekstra."
+    }
+  ],
+  "steps": [
+    {
+      "id": "power_upper.1",
+      "key": "1",
+      "name": "Hurtig push-up",
+      "level": "basis",
+      "dose": { "kind": "power", "sets": [4, 4], "reps": [3, 5] },
+      "execution": "Kontrolleret ned, eksplosivt op. Hænderne bliver i gulvet.",
+      "cues": ["Kontrolleret ned, eksplosivt op", "Hænderne bliver i gulvet"],
+      "pdfPage": 24
+    },
+    {
+      "id": "power_upper.2",
+      "key": "2",
+      "name": "Plyo push-up på skrå",
+      "dose": { "kind": "power", "sets": [4, 4], "reps": [3, 5] },
+      "execution": "Hænderne på sofaen. Skub dig fri, og land med bløde albuer.",
+      "cues": ["Hænderne på sofaen", "Skub dig fri, og land med bløde albuer"],
+      "pdfPage": 24
+    },
+    {
+      "id": "power_upper.3",
+      "key": "3",
+      "name": "Plyo push-up",
+      "level": "staerk",
+      "dose": { "kind": "power", "sets": [4, 4], "reps": [3, 5] },
+      "execution": "Fra gulvet. Hænderne letter.",
+      "cues": ["Fra gulvet", "Hænderne letter"],
+      "pdfPage": 24
+    },
+    {
+      "id": "power_upper.4",
+      "key": "4",
+      "name": "Klap push-up",
+      "level": "imponerende",
+      "dose": { "kind": "power", "sets": [4, 4], "reps": [3, 5] },
+      "execution": "Ét klap i luften og en blød landing.",
+      "cues": ["Ét klap i luften og en blød landing"],
+      "pdfPage": 24
+    },
+    {
+      "id": "power_upper.5",
+      "key": "5",
+      "name": "Helkrops-plyo",
+      "level": "boss",
+      "dose": { "kind": "power", "sets": [4, 4], "reps": [2, 4] },
+      "execution": "Hænder og fødder letter samtidig.",
+      "cues": ["Hænder og fødder letter samtidig"],
+      "pdfPage": 24
+    }
+  ]
+}

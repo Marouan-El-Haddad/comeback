@@ -1,0 +1,59 @@
+{
+  "id": "core_side",
+  "name": "Mave 2: side",
+  "short": "Mave side",
+  "pdfPage": 20,
+  "progression": "double",
+  "category": "ladder",
+  "steps": [
+    {
+      "id": "core_side.S1",
+      "key": "S1",
+      "name": "Sideplanke på albuen",
+      "level": "basis",
+      "dose": { "kind": "hold", "sets": [2, 2], "seconds": [20, 45] },
+      "execution": "Hoved, hofte og fødder på én linje.",
+      "cues": ["Hoved, hofte og fødder på én linje"],
+      "pdfPage": 20
+    },
+    {
+      "id": "core_side.S2",
+      "key": "S2",
+      "name": "Med benløft",
+      "dose": { "kind": "reps", "sets": [2, 2], "reps": [8, 12], "per": "side" },
+      "execution": "Løft det øverste ben langsomt op og ned.",
+      "cues": ["Løft det øverste ben langsomt op og ned"],
+      "pdfPage": 20
+    },
+    {
+      "id": "core_side.S3",
+      "key": "S3",
+      "name": "Stjerne-sideplanke",
+      "level": "staerk",
+      "dose": { "kind": "hold", "sets": [2, 2], "seconds": [15, 30] },
+      "execution": "Øverste arm og ben strakt op.",
+      "cues": ["Øverste arm og ben strakt op"],
+      "pdfPage": 20
+    },
+    {
+      "id": "core_side.S4",
+      "key": "S4",
+      "name": "Stjerne på strakt arm",
+      "level": "imponerende",
+      "dose": { "kind": "hold", "sets": [2, 2], "seconds": [15, 45] },
+      "execution": "Hånden lige under skulderen.",
+      "cues": ["Hånden lige under skulderen"],
+      "pdfPage": 20
+    },
+    {
+      "id": "core_side.S5",
+      "key": "S5",
+      "name": "Stjerne-teep",
+      "level": "boss",
+      "dose": { "kind": "reps", "sets": [2, 2], "reps": [5, 5], "per": "side" },
+      "execution": "Fra stjernen: knæ til brystet, og spark ud som en teep.",
+      "cues": ["Fra stjernen: knæ til brystet, og spark ud som en teep"],
+      "pdfPage": 20
+    }
+  ]
+}

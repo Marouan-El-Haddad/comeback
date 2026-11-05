@@ -1,0 +1,146 @@
+[
+  {
+    "id": "hero_one_arm_pushup",
+    "name": "Etarms push-up",
+    "how": "",
+    "ready": "3 strikte pr. side",
+    "requires": {
+      "type": "performance",
+      "trackId": "press",
+      "stepId": "press.6",
+      "sets": 1,
+      "reps": 3
+    }
+  },
+  {
+    "id": "hero_clap_pushup",
+    "name": "Klap push-up",
+    "how": "",
+    "ready": "5 ens, bløde landinger",
+    "requires": {
+      "type": "performance",
+      "trackId": "power_upper",
+      "stepId": "power_upper.4",
+      "sets": 1,
+      "reps": 5
+    }
+  },
+  {
+    "id": "hero_hspu",
+    "name": "HSPU mod væg",
+    "how": "",
+    "ready": "5 med fuld dybde",
+    "requires": {
+      "type": "performance",
+      "trackId": "shoulder",
+      "stepId": "shoulder.6",
+      "sets": 1,
+      "reps": 5
+    }
+  },
+  {
+    "id": "hero_one_arm_row",
+    "name": "Etarms bord-row",
+    "how": "",
+    "ready": "5 pr. side",
+    "requires": {
+      "type": "performance",
+      "trackId": "pull",
+      "stepId": "pull.6",
+      "sets": 1,
+      "reps": 5
+    }
+  },
+  {
+    "id": "hero_pistol",
+    "name": "Pistol squat",
+    "how": "",
+    "ready": "5 pr. ben med 2 sek pause",
+    "requires": {
+      "type": "performance",
+      "trackId": "legs",
+      "stepId": "legs.7",
+      "sets": 1,
+      "reps": 5
+    }
+  },
+  {
+    "id": "hero_nordic",
+    "name": "Nordic",
+    "how": "",
+    "ready": "5 helt ned på 5 sek",
+    "requires": {
+      "type": "performance",
+      "trackId": "posterior",
+      "stepId": "posterior.5",
+      "sets": 1,
+      "reps": 5
+    }
+  },
+  {
+    "id": "hero_dragon_flag",
+    "name": "Dragon flag",
+    "how": "",
+    "ready": "5 strikte",
+    "requires": {
+      "type": "performance",
+      "trackId": "core_situp",
+      "stepId": "core_situp.6",
+      "sets": 1,
+      "reps": 5
+    }
+  },
+  {
+    "id": "hero_star_side_plank",
+    "name": "Stjerne-sideplanke",
+    "how": "",
+    "ready": "45 sek pr. side på strakt arm",
+    "requires": {
+      "type": "performance",
+      "trackId": "core_side",
+      "stepId": "core_side.S4",
+      "sets": 1,
+      "seconds": 45
+    }
+  },
+  {
+    "id": "hero_long_copenhagen",
+    "name": "Lang Copenhagen",
+    "how": "",
+    "ready": "45 sek pr. side",
+    "requires": {
+      "type": "performance",
+      "trackId": "groin",
+      "stepId": "groin.4",
+      "sets": 1,
+      "seconds": 45
+    }
+  },
+  {
+    "id": "hero_standing_rollout",
+    "name": "Stående rollout",
+    "how": "",
+    "ready": "5 mod væggen",
+    "requires": {
+      "type": "performance",
+      "trackId": "core_front",
+      "stepId": "core_front.6",
+      "sets": 1,
+      "reps": 5
+    }
+  },
+  {
+    "id": "hero_burpee_emom",
+    "name": "Burpee-EMOM",
+    "how": "",
+    "ready": "10 × 8 med rene reps",
+    "requires": { "type": "clean", "trackId": "burpee_emom", "stepId": "burpee_emom.E9" }
+  },
+  {
+    "id": "hero_club_sequence",
+    "name": "Klubsekvensen",
+    "how": "",
+    "ready": "5 runder i træk på knoer",
+    "requires": { "type": "clean", "trackId": "club_sequence", "stepId": "club_sequence.C5" }
+  }
+]

@@ -1,0 +1,65 @@
+{
+  "id": "wallsit",
+  "name": "Wall sit, squats og lægge",
+  "short": "Wall sit",
+  "pdfPage": 17,
+  "progression": "hold",
+  "category": "ladder",
+  "why": [
+    {
+      "kind": "evidens",
+      "text": "Isometrisk træning sænkede hvileblodtrykket mest af alle træningsformer i en stor metaanalyse – og wall sit var den bedste enkeltøvelse (Edwards 2023)."
+    }
+  ],
+  "steps": [
+    {
+      "id": "wallsit.W1",
+      "key": "W1",
+      "name": "Wall sit, 90°",
+      "level": "basis",
+      "dose": { "kind": "hold", "sets": [3, 3], "seconds": [45, 90] },
+      "execution": "Ryggen flad mod væggen, lårene vandrette, knæene over anklerne.",
+      "cues": ["Ryggen flad mod væggen, lårene vandrette, knæene over anklerne"],
+      "pdfPage": 17
+    },
+    {
+      "id": "wallsit.W2",
+      "key": "W2",
+      "name": "Med garde og lige slag",
+      "level": "staerk",
+      "dose": { "kind": "hold", "sets": [3, 3], "seconds": [60, 90] },
+      "execution": "Hold garden, og slå rolige lige slag. Pust ud på hvert slag.",
+      "cues": ["Hold garden, og slå rolige lige slag", "Pust ud på hvert slag"],
+      "pdfPage": 17
+    },
+    {
+      "id": "wallsit.W3",
+      "key": "W3",
+      "name": "Wall sit til squats",
+      "dose": { "kind": "rounds", "sets": 1, "rounds": [2, 3], "text": "2–3 runder" },
+      "execution": "45 sek wall sit og direkte 20 kontrollerede squats – klubbens kombination.",
+      "cues": ["45 sek wall sit og direkte 20 kontrollerede squats – klubbens kombination"],
+      "pdfPage": 17
+    },
+    {
+      "id": "wallsit.W4",
+      "key": "W4",
+      "name": "Etbens wall sit",
+      "level": "imponerende",
+      "dose": { "kind": "hold", "sets": [3, 3], "seconds": [15, 45], "per": "ben" },
+      "execution": "Det andet ben strakt frem. Hoften i niveau.",
+      "cues": ["Det andet ben strakt frem", "Hoften i niveau"],
+      "pdfPage": 17
+    },
+    {
+      "id": "wallsit.W5",
+      "key": "W5",
+      "name": "Wall sit-runden",
+      "level": "boss",
+      "dose": { "kind": "rounds", "sets": 1, "rounds": [1, 1], "text": "1 runde" },
+      "execution": "3 min med garde og slag. Sidste minut på ét ben, 30 sek pr. side.",
+      "cues": ["3 min med garde og slag", "Sidste minut på ét ben, 30 sek pr. side"],
+      "pdfPage": 17
+    }
+  ]
+}

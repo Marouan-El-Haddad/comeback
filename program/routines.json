@@ -1,0 +1,95 @@
+[
+  {
+    "id": "warmup",
+    "name": "Opvarmning",
+    "minutes": 8,
+    "pdfPage": 28,
+    "items": [
+      {
+        "key": "1",
+        "name": "Hæv pulsen",
+        "dose": "2 min",
+        "execution": "Sjippe-trin uden tov eller let skyggeboksning, fra roligt til hurtigt.",
+        "seconds": 120
+      },
+      {
+        "key": "2",
+        "name": "Mobilisér",
+        "dose": "3 min",
+        "execution": "5 spiderman-udfald med rotation pr. side, 5 kosak-squats pr. side og 10 kat-ko.",
+        "seconds": 180
+      },
+      {
+        "key": "3",
+        "name": "Aktivér",
+        "dose": "2 min",
+        "execution": "10 håndledsvip på alle fire, 10 skulderblads-push-ups og 5 hip airplanes pr. side.",
+        "seconds": 120
+      },
+      {
+        "key": "4",
+        "name": "Potensér",
+        "dose": "1 min",
+        "execution": "2 × 3 af dagens første power-øvelse – først i halv, så i fuld fart. Tirsdag også 2 × 10 pogo-hop.",
+        "seconds": 60
+      }
+    ]
+  },
+  {
+    "id": "os",
+    "name": "Open & Strong",
+    "minutes": 6,
+    "pdfPage": 33,
+    "items": [
+      {
+        "key": "1",
+        "name": "Brystryg over håndklæde",
+        "dose": "3 positioner × 3 dybe vejrtrækninger",
+        "execution": "Et sammenrullet håndklæde under brystryggen.",
+        "seconds": 60,
+        "picto": "thoracic_ext"
+      },
+      {
+        "key": "2",
+        "name": "Åben bog",
+        "dose": "5 pr. side",
+        "execution": "På siden med bøjede knæ. Før den øverste arm over til den anden side.",
+        "seconds": 45,
+        "picto": "open_book"
+      },
+      {
+        "key": "3",
+        "name": "Y-løft på maven",
+        "dose": "2 × 8",
+        "execution": "Armene i et Y, tommelfingrene op. Løft, og hold 2 sek.",
+        "seconds": 80,
+        "picto": "prone_y",
+        "laterCue": "Y-løft med to små vandflasker"
+      },
+      {
+        "key": "4",
+        "name": "Wall slides",
+        "dose": "8 langsomme",
+        "execution": "Underarmene mod væggen. Glid op til et Y, og løft armene 2 cm fra væggen.",
+        "seconds": 40,
+        "picto": "wall_slide"
+      },
+      {
+        "key": "5",
+        "name": "Hage-ind",
+        "dose": "8 × 5 sek",
+        "execution": "Træk hagen lige bagud, som om du laver en dobbelthage. Blikket vandret.",
+        "seconds": 56,
+        "picto": "chin_tuck"
+      },
+      {
+        "key": "6",
+        "name": "Couch stretch",
+        "dose": "45 sek pr. side",
+        "execution": "Bagerste knæ ved sofaen, skinnebenet op ad den. Klem ballen.",
+        "seconds": 95,
+        "picto": "couch_stretch"
+      }
+    ]
+  }
+]

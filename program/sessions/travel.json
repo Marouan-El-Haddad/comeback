@@ -1,0 +1,49 @@
+{
+  "id": "travel",
+  "name": "Rejsepas",
+  "defaultWeekday": 0,
+  "durationMin": [25, 25],
+  "blocks": [
+    {
+      "id": "travel.warmup",
+      "trackId": "warmup",
+      "role": "warmup",
+      "setsRule": "fixed",
+      "inYellow": true
+    },
+    {
+      "id": "travel.pair1.press",
+      "trackId": "press",
+      "role": "pair",
+      "group": "pair1",
+      "setsRule": "par12",
+      "restSec": 60,
+      "inYellow": true
+    },
+    {
+      "id": "travel.pair1.backpack_row",
+      "trackId": "backpack_row",
+      "role": "pair",
+      "group": "pair1",
+      "setsRule": "par12",
+      "restSec": 60,
+      "inYellow": true
+    },
+    {
+      "id": "travel.pair2.legs",
+      "trackId": "legs",
+      "role": "pair",
+      "group": "pair2",
+      "setsRule": "par12",
+      "restSec": 60,
+      "inYellow": true
+    },
+    {
+      "id": "travel.finisher",
+      "trackId": "burpee_emom",
+      "role": "finisher",
+      "setsRule": "fixed",
+      "inYellow": false
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "id": "core_front",
+  "name": "Mave 1: front",
+  "short": "Mave front",
+  "pdfPage": 19,
+  "progression": "double",
+  "category": "ladder",
+  "note": "Trin 5–7 kræver glat gulv. På tæppe: long-lever planke og walkouts.",
+  "steps": [
+    {
+      "id": "core_front.1",
+      "key": "1",
+      "name": "Dead bug, langsom",
+      "level": "basis",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [6, 10], "per": "side" },
+      "execution": "Lænden presset mod gulvet. Pust helt ud, når arm og ben strækkes.",
+      "cues": ["Lænden presset mod gulvet", "Pust helt ud, når arm og ben strækkes"],
+      "pdfPage": 19
+    },
+    {
+      "id": "core_front.2",
+      "key": "2",
+      "name": "Hollow hold",
+      "dose": { "kind": "hold", "sets": [3, 3], "seconds": [20, 45] },
+      "execution": "Start med bøjede knæ. Stræk benene, når 45 sek er let.",
+      "cues": ["Start med bøjede knæ", "Stræk benene, når 45 sek er let"],
+      "pdfPage": 19
+    },
+    {
+      "id": "core_front.3",
+      "key": "3",
+      "name": "RKC-planke",
+      "level": "staerk",
+      "dose": { "kind": "hold", "sets": [3, 3], "seconds": [15, 30] },
+      "execution": "Maks spænding: træk albuerne mod tæerne, klem baller og lår.",
+      "cues": ["Maks spænding: træk albuerne mod tæerne, klem baller og lår"],
+      "pdfPage": 19
+    },
+    {
+      "id": "core_front.4",
+      "key": "4",
+      "name": "Long-lever planke",
+      "dose": { "kind": "hold", "sets": [3, 3], "seconds": [15, 30] },
+      "execution": "Albuerne et stykke foran hovedet. Lang løftestang, samme spænding.",
+      "cues": ["Albuerne et stykke foran hovedet", "Lang løftestang, samme spænding"],
+      "pdfPage": 19
+    },
+    {
+      "id": "core_front.5",
+      "key": "5",
+      "name": "Rollout fra knæ",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [6, 12] },
+      "execution": "Hænderne på et håndklæde på glat gulv. Rul ud uden svaj, og træk tilbage.",
+      "cues": ["Hænderne på et håndklæde på glat gulv", "Rul ud uden svaj, og træk tilbage"],
+      "pdfPage": 19
+    },
+    {
+      "id": "core_front.6",
+      "key": "6",
+      "name": "Stående rollout mod væg",
+      "level": "imponerende",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 8] },
+      "execution": "Fra stående ud, til væggen stopper dig. Flyt dig længere fra væggen.",
+      "cues": ["Fra stående ud, til væggen stopper dig", "Flyt dig længere fra væggen"],
+      "pdfPage": 19
+    },
+    {
+      "id": "core_front.7",
+      "key": "7",
+      "name": "Fuld stående rollout",
+      "level": "boss",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 6] },
+      "execution": "Hele vejen ud og tilbage uden væg.",
+      "cues": ["Hele vejen ud og tilbage uden væg"],
+      "pdfPage": 19
+    }
+  ]
+}

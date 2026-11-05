@@ -1,0 +1,83 @@
+{
+  "id": "core_situp",
+  "name": "Mave 3: sit-ups",
+  "short": "Sit-ups",
+  "pdfPage": 21,
+  "progression": "double",
+  "category": "ladder",
+  "why": [
+    {
+      "kind": "coach",
+      "text": "Sit-up med albuer er klubbens showpiece: i toppen af hver sit-up 2 albuer og 2 lige slag, så ned på 3 sek. Brug den i klassen, når trin 3 sidder."
+    }
+  ],
+  "steps": [
+    {
+      "id": "core_situp.1",
+      "key": "1",
+      "name": "Omvendt crunch",
+      "level": "basis",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [8, 15] },
+      "execution": "Rul hoften op fra gulvet med bøjede knæ. Langsomt ned.",
+      "cues": ["Rul hoften op fra gulvet med bøjede knæ", "Langsomt ned"],
+      "pdfPage": 21
+    },
+    {
+      "id": "core_situp.2",
+      "key": "2",
+      "name": "Strikt sit-up",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [8, 15] },
+      "execution": "Fødderne i gulvet uden at blive holdt. Armene krydset, 3 sek ned.",
+      "cues": ["Fødderne i gulvet uden at blive holdt", "Armene krydset, 3 sek ned"],
+      "pdfPage": 21
+    },
+    {
+      "id": "core_situp.3",
+      "key": "3",
+      "name": "Hollow rocks",
+      "level": "staerk",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [10, 20] },
+      "execution": "Gyng i hollow-position uden at miste formen.",
+      "cues": ["Gyng i hollow-position uden at miste formen"],
+      "pdfPage": 21
+    },
+    {
+      "id": "core_situp.4",
+      "key": "4",
+      "name": "V-ups",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [8, 15] },
+      "execution": "Strakte ben. Hænderne rører tæerne i toppen.",
+      "cues": ["Strakte ben", "Hænderne rører tæerne i toppen"],
+      "pdfPage": 21
+    },
+    {
+      "id": "core_situp.5",
+      "key": "5",
+      "name": "Dragon flag-negativer",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 5] },
+      "execution": "Hold om et tungt møbel bag hovedet. Sænk den strakte krop på 5 sek. Vægten på skulderbladene, aldrig på nakken.",
+      "cues": ["Hold om et tungt møbel bag hovedet", "Sænk den strakte krop på 5 sek"],
+      "pdfPage": 21
+    },
+    {
+      "id": "core_situp.6",
+      "key": "6",
+      "name": "Dragon flag",
+      "level": "imponerende",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 6] },
+      "execution": "Op og ned som én planke. Bruce Lees signaturøvelse.",
+      "cues": ["Op og ned som én planke", "Bruce Lees signaturøvelse"],
+      "pdfPage": 21
+    },
+    {
+      "id": "core_situp.7",
+      "key": "7",
+      "name": "Dragon flag med pause",
+      "level": "boss",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [2, 4] },
+      "execution": "3 sek pause halvvejs nede.",
+      "cues": ["3 sek pause halvvejs nede"],
+      "pdfPage": 21
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "id": "posterior",
+  "name": "Bagkæde: baglår og baller",
+  "short": "Bagkæde",
+  "pdfPage": 18,
+  "progression": "double",
+  "category": "ladder",
+  "why": [
+    {
+      "kind": "evidens",
+      "text": "Nordic-programmer har cirka halveret baglårsskader (van Dyk 2019); en genanalyse kalder effekten mere usikker. Start med 2 × 3 – første uge giver ømme baglår."
+    }
+  ],
+  "steps": [
+    {
+      "id": "posterior.1",
+      "key": "1",
+      "name": "Etbens hoftebro",
+      "level": "basis",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [8, 15], "per": "ben" },
+      "execution": "2 sek i toppen. Ribben nede, så ballen arbejder – ikke lænden.",
+      "cues": ["2 sek i toppen", "Ribben nede, så ballen arbejder – ikke lænden"],
+      "pdfPage": 18
+    },
+    {
+      "id": "posterior.2",
+      "key": "2",
+      "name": "Glidende leg curl, to ben",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [6, 12] },
+      "execution": "Hælene på et håndklæde på glat gulv. Hoften oppe hele vejen.",
+      "cues": ["Hælene på et håndklæde på glat gulv", "Hoften oppe hele vejen"],
+      "pdfPage": 18
+    },
+    {
+      "id": "posterior.3",
+      "key": "3",
+      "name": "Glidende leg curl, ét ben",
+      "level": "staerk",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [5, 10], "per": "ben" },
+      "execution": "Langsomt ud, hurtigt ind.",
+      "cues": ["Langsomt ud, hurtigt ind"],
+      "pdfPage": 18
+    },
+    {
+      "id": "posterior.4",
+      "key": "4",
+      "name": "Nordic-negativer",
+      "dose": { "kind": "reps", "sets": [2, 3], "reps": [3, 5] },
+      "execution": "Fødderne under sofaen, en pude under knæene. Sænk så langt, du kan styre, og tag fra med hænderne.",
+      "cues": [
+        "Fødderne under sofaen, en pude under knæene",
+        "Sænk så langt, du kan styre, og tag fra med hænderne"
+      ],
+      "pdfPage": 18,
+      "tags": ["nordic"]
+    },
+    {
+      "id": "posterior.5",
+      "key": "5",
+      "name": "Nordic ned på 5 sek",
+      "level": "imponerende",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [3, 5] },
+      "execution": "Kroppen lige fra knæ til hoved hele vejen ned.",
+      "cues": ["Kroppen lige fra knæ til hoved hele vejen ned"],
+      "pdfPage": 18,
+      "tags": ["nordic"]
+    },
+    {
+      "id": "posterior.6",
+      "key": "6",
+      "name": "Nordic op igen",
+      "level": "boss",
+      "dose": { "kind": "reps", "sets": [3, 3], "reps": [2, 4] },
+      "execution": "Et lille skub fra hænderne i bunden, så trækker baglårene dig op.",
+      "cues": ["Et lille skub fra hænderne i bunden, så trækker baglårene dig op"],
+      "pdfPage": 18,
+      "tags": ["nordic"]
+    }
+  ]
+}

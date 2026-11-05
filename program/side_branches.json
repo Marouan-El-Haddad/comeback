@@ -1,0 +1,36 @@
+[
+  {
+    "id": "knuckles",
+    "name": "Knoer",
+    "how": "Lige håndled som i et slag. Skåner håndleddene.",
+    "ready": "Altid",
+    "requires": { "type": "always" }
+  },
+  {
+    "id": "diamond",
+    "name": "Diamond",
+    "how": "Hænderne samlet under brystbenet. Triceps til lige slag.",
+    "ready": "25 push-ups",
+    "requires": { "type": "measure", "measureId": "pushups", "min": 25 }
+  },
+  {
+    "id": "deficit",
+    "name": "Deficit",
+    "how": "Hænderne på bøger, brystet under håndhøjde. Styrke i bunden.",
+    "ready": "Pres trin 2",
+    "requires": { "type": "step", "trackId": "press", "minStep": "press.2" }
+  },
+  {
+    "id": "pseudo_planche",
+    "name": "Pseudo-planche",
+    "how": "Hænderne ved hoften, skuldrene foran. Forreste skulder og core.",
+    "ready": "3 × 10 på trin 2",
+    "requires": {
+      "type": "performance",
+      "trackId": "press",
+      "stepId": "press.2",
+      "sets": 3,
+      "reps": 10
+    }
+  }
+]
