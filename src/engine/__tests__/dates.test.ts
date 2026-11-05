@@ -6,6 +6,8 @@ import {
   calendarWeek,
   deriveState,
   finishSession,
+  formatDay,
+  formatLong,
   PROGRAM,
   startSession,
   todayIn,
@@ -16,6 +18,12 @@ import type { AppEvent, EventBody, ISODate } from '../types.ts';
 describe('Datoer', () => {
   test('kører i projektets tidszone', () => {
     expect(Intl.DateTimeFormat().resolvedOptions().timeZone).toBe(process.env.TZ);
+  });
+
+  test('visning på dansk uanset browserens sprog (SPEC 8)', () => {
+    expect(formatLong('2026-11-17')).toBe('tirsdag 17. november');
+    expect(formatLong('2027-03-28')).toBe('søndag 28. marts');
+    expect(formatDay('2027-01-03')).toBe('3. januar');
   });
 
   test('S-DATE-01: 23:30 UTC den 10/11 er 11/11 i dansk tid, uanset browserens tidszone', () => {

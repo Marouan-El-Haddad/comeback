@@ -453,6 +453,7 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 - **S-HOLD-01** Givet `core_front.2` hollow, target 20. Når 3 × 20 sek logges. Så target = 25.
 - **S-HOLD-02** Givet target 45 (max), hits 1. Når 3 × 45 logges. Så `core_front.2 → core_front.3`, target = 15.
 - **S-HOLD-03** Givet hold-timeren. Når brugeren stopper ved 17 af 20 sek. Så sættet logges 17, `asPlanned = false`, target uændret.
+- **S-HOLD-04** Givet `shoulder.3` (P17). Når Styrke B planlægges. Så går trin 2-dosis (fødderne på en stol, ugens sæt × 10) forud for håndstandsholdet i par 1, og kun holdet tæller i progressionen. (Tilføjet ved selvreview F1.)
 - **S-POW-01** Givet `power_legs.1`, target 3, pw 2. Når 3 sæt 3 og quality = true. Så target = 4.
 - **S-POW-02** Givet target 5, hits 1. Når 3 × 5 og quality = true. Så `power_legs.1 → power_legs.2`.
 - **S-POW-03** Givet hits 1. Når quality = false. Så hits = 0, target uændret.
@@ -461,6 +462,8 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 - **S-EMOM-03** Givet E3, pendingUp, pw 4 (let). Når A startes. Så blokken er burpee-test, pendingUp bevaret; i pw 5 trin = E4.
 - **S-EMOM-04** Givet E2 og pendingUp, A flyttet til samme programuge som en tidligere oprykning. Når A startes. Så trin uændret.
 - **S-EMOM-05** Givet runde 2, pw 5, stepAtRoundStart E7. Når planen beregnes. Så loft = E7, ikke E4.
+- **S-EMOM-06** Givet `pendingUp`. Når EMOM rykker ned (tre uger uden, skarp smerte eller eget valg). Så `pendingUp = false`, og næste A-pas rykker ikke op. (Tilføjet ved selvreview F2.)
+- **S-VARIANT-01** Givet EMOM E5. Når brugeren vælger burpee-variant V2. Så afvises valget (R-VARIANT: »Næste variant« først fra E6); givet E6 → V2 er valgt, og V3 kræver V2 først. (Tilføjet ved selvreview F11.)
 - **S-CLUB-01** Givet C2, ét rent pas. Når rent igen. Så C3.
 - **S-NECK-01** Givet N1, feel easy to gange i grønne pas. Så N2. Givet feel hard. Så hits = 0.
 - **S-LOAD-01** Givet `backpack_row`, target 15, hits 1, load 0. Når 3 × 15/rir 2 pr. side. Så load = 2, target = 8, trin uændret.
@@ -492,10 +495,13 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 - **S-WEEK-08** Givet `status: travel`. Når tirsdag beregnes. Så rejsepas med EMOM `min(E3, trin)`; når det logges `done`, er ugen gennemført, og `hits` uændrede.
 - **S-WEEK-09** Givet onboarding 30/11 med completedWeeks = [9/11, 16/11] og ikke 23/11. Så pw(30/11) = 2 og trin fra `step_set`.
 - **S-WEEK-10** Givet pw 12 gennemført. Så næste uge pw = 5, round = 2, ingen uge-1-målinger.
+- **S-WEEK-11** Givet tre uger uden gennemført og rygsæk-row med 4 kg, target 15, hits 1. Når den fjerde uge beregnes. Så vægten er 2 kg, target = min og hits = 0 på læg, etbens RDL og rygsæk-row (ét trin ned svarer til −2 kg, ikke under 0). (Tilføjet ved selvreview F6.)
+- **S-WEEK-12** Givet rejse og `legs.5`. Når tirsdag beregnes. Så er rejsepassets ben split squat-trinnet `legs.3` (dit trin, højst `legs.3`) med arbejdstal = min. (Tilføjet ved selvreview F7.)
 - **S-XMAS-01** Givet dato 21/12 2026, pw 7. Så overlejringer `xmas_2026_motor` (23/12) og `xmas_2026_B` (26/12) foreslås.
 - **S-XMAS-02** Givet uge fra 28/12 med pw 8. Så målinger foreslås 29–30/12; med pw 6 foreslås ingen målinger.
 - **S-XMAS-03** Givet `club_closed` 24/12–3/1. Så Muay Thai-dage viser kamp-runder.
 - **S-EVENT-01** Givet begivenhed »Kamp« 20/1. Når planen for 19/1 beregnes. Så ingen power-ben, ingen ben-stige, ingen Nordic-trin, ingen intervaller, ingen boss; flaget vises.
+- **S-EVENT-02** Givet en begivenhed fredag i pw 3 og i pw 4. Når torsdagens motor beregnes. Så er den rolig base uden stigningsløb og uden Cooper-test. (Tilføjet ved selvreview F5.)
 - **S-FLAT-01** Givet standardforløbet (k4 = pw 5, k5 = pw 6, k6 = pw 7), freshness flat i k4 og technique 4 i k5. Så k6 får volumeFactor 0.67: 4 sæt → 2 (rund ned, min 2), 3 → 2; EMOM rykker ikke op i k6; k7 normal.
 - **S-FLAT-02** Givet flad i k5 og k6 i standardforløbet, så k7 er let uge (pw 8). Så skubbes reduktionen til k8 (pw 9).
 
@@ -511,8 +517,12 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 - **S-MEAS-01** Givet pw 4 tirsdag. Så planen har wall_test før opvarmning, pushups som første sæt i pres, table_rows som første sæt i træk, burpee_3min i stedet for EMOM; målesæt har rir 0 og tæller ikke i hits.
 - **S-MEAS-02** Givet `pushups = 52`. Så niveau = Stærk; `wall_test = 1` → Stærk (lowerIsBetter).
 - **S-MEAS-03** Givet runde 1, pw 1. Så base_check torsdag og målinger tirsdag/fredag; runde 2 pw 5 → ingen.
+- **S-MEAS-04** Givet `wallsit.W3` i pw 4. Når fredag beregnes. Så er wall sit-målingen første sæt i wall sit-blokken, og runderne er én færre. (Tilføjet ved selvreview F3.)
+- **S-MEAS-05** Givet pw 4 og et gult A tirsdag uden målinger. Så tilbydes væg-test, push-ups og bord-rows ved næste grønne A (pw 5); burpee-testen ikke, fordi den kun erstatter EMOM'en i en let uge. (Tilføjet ved selvreview F4.)
 - **S-IMP-01** Givet `press.2` og `shoulder.2`. Så `deficit` og `wall_walks` ulåst, `diamond` låst indtil pushups ≥ 25. Givet `shoulder.1` → `wall_walks` låst.
+- **S-IMP-02** Givet 3 × 10 på `press.2` logget og derefter `press.1`. Så er pseudo-planche låst, til pres igen er på mindst trin 2. (Tilføjet ved selvreview F8.)
 - **S-HERO-01** Givet `press.6` med 3 reps pr. side logget. Så hint for »Etarms push-up« vises; `checked` forbliver false, til brugeren krydser af.
+- **S-HERO-02** Givet indfasning på `press.7` og `legs.7` uden loggede sæt. Så vises ingen Hero-hints og intet ben-niveau på Målbrættet; de kræver loggede sæt. (Tilføjet ved selvreview F9.)
 - **S-BOSS-01** Givet pw 11, grøn, ingen begivenhed i morgen. Så boss tilbydes; givet pw 10 → ikke; givet boss logget for 20 dage siden → ikke.
 - **S-TURBO-01** Givet pw 4. Så Turbo skjult; pw 5 → synlig.
 
@@ -545,7 +555,7 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 | 9 | Starttrin, tempo, hastigheder, film dig selv | Onboarding 4.1 (SPEC), cues; film = påmindelse i søndagstjek hver anden uge | S-BACKFILL-01 |
 | 11 | Ét trin pr. stige, sidegrene | `TrackState.stepId`, R-SIDE | S-IMP-01 |
 | 12 | Pres-stigen | `press.json` | S-DP-* |
-| 13 | Klubsekvensen, sidegrene | R-CLUB, R-SIDE | S-CLUB-01, S-IMP-01 |
+| 13 | Klubsekvensen, sidegrene | R-CLUB, R-SIDE | S-CLUB-01, S-IMP-01, S-IMP-02 |
 | 14 | Skuldre | `shoulder.json`; trin 3 = hold + trin 2-dosis (Præcisering) | S-HOLD-* |
 | 15 | Træk, rygsæk-row i B | `pull.json`, `backpack_row`, R-LOAD | S-LOAD-01 |
 | 16 | Ben, knæ-til-væg | `legs.json` (trin 3 følger R-DP; rygsækkens vægt er et felt); fysio-tekst som »Hvorfor« | S-PAIN-01..02 |
@@ -555,8 +565,8 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 | 22 | Lyske | `groin.json` | S-PAIN-05 |
 | 23 | Power: ben | `power_legs.json`, R-POWER | S-POW-01..03 |
 | 24 | Power: overkrop | `power_upper.json`, R-POWER | S-POW-* |
-| 25 | EMOM-trappen, loft, ét trin pr. uge | R-EMOM, 6.3 | S-EMOM-01..05 |
-| 26 | Burpee-teknik og varianter | `burpee_skill.json`, R-VARIANT | – (manuel) |
+| 25 | EMOM-trappen, loft, ét trin pr. uge | R-EMOM, 6.3 | S-EMOM-01..06 |
+| 26 | Burpee-teknik og varianter | `burpee_skill.json`, R-VARIANT | S-VARIANT-01 |
 | 28 | Opvarmning, trafiklys-trin 4 | `warmup`, 5.2 q3 | S-TL-01 |
 | 29 | Styrke A, gul dag | `A.json`, 6.1 | S-TL-02, S-DP-11 |
 | 30 | Styrke B, mave 2 + 2, imponer efter klubsekvens | `B.json`, R-SIDE, R-IMPRESS | S-IMP-01 |
@@ -567,13 +577,13 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 | 36 | Faser, lette uger, Turbo, ny runde fra uge 5 | 6.3, R-TURBO, R-ROUND2 | S-TURBO-01, S-WEEK-10 |
 | 37–38 | Ugetabel, jul, nytår | 6.3, 5.8 | S-XMAS-01..03, S-EMOM-* |
 | 39 | Belastning, burpee-loft, flad i klassen | 6.3, R-EMOM, R-FLAT | S-FLAT-01..02 |
-| 40 | Målinger, lørdagskarakter | 5.6, `club_logged.technique` | S-MEAS-01..03 |
+| 40 | Målinger, lørdagskarakter | 5.6, `club_logged.technique` | S-MEAS-01..05 |
 | 41 | Målbrættet, i klassen ved Stærk | R-LEVELS, R-IMPRESS-tekst | S-MEAS-02 |
-| 42 | Hero-tavlen | R-HERO | S-HERO-01 |
+| 42 | Hero-tavlen | R-HERO | S-HERO-01..02 |
 | 43–44 | Imponer-kataloget | R-IMPRESS | S-IMP-01 |
 | 45 | Boss-udfordringer | R-BOSS | S-BOSS-01 |
 | 46 | Reglerne, comeback-fælden | R-PAIN-*, R-USER-STEP (advarsel), cues (knoer, nakke) | S-PAIN-* |
-| 47 | Flere Muay Thai-pas, motoren ryger først, tunge ben før en begivenhed, rejse, sygdom, sprungne uger | R-EXTRA-MT, R-MOVE, R-EVENT, R-TRAVEL, R-ILL, R-PW, R-ABSENCE-3, R-REST | S-WEEK-02..08, S-EXTRA-*, S-MOVE-01, S-MOVE-03, S-EVENT-01 |
+| 47 | Flere Muay Thai-pas, motoren ryger først, tunge ben før en begivenhed, rejse, sygdom, sprungne uger | R-EXTRA-MT, R-MOVE, R-EVENT, R-TRAVEL, R-ILL, R-PW, R-ABSENCE-3, R-REST | S-WEEK-02..08, S-WEEK-11..12, S-EXTRA-*, S-MOVE-01, S-MOVE-03, S-EVENT-01..02 |
 | 48 | Restitution, søndagstjek | `sunday_check`, R-PAIN-SUNDAY | S-PAIN-05 |
 | 49 | Log | Historik (SPEC 3.6), eksport | S-DATA-02 |
 | 51–54 | Bag om programmet, kilder | »Hvorfor«-tekster og Om-skærm | – |

@@ -11,6 +11,7 @@ import {
   minTarget,
   perSide,
   ruleOf,
+  stepIndex,
   workRange,
 } from './lookup.ts';
 import type {
@@ -93,7 +94,10 @@ function evaluateBlock(
 ): BlockEvaluation {
   const t = state.tracks[ref.trackId];
   const all = session.sets.filter((s) => s.blockId === ref.blockId);
-  const pain = all.some((s) => s.pain === 'sharp' || s.pain === 'stop');
+  // Sharp pain ends the track's work in the session, in every block of that track.
+  const pain = session.sets.some(
+    (s) => s.trackId === ref.trackId && (s.pain === 'sharp' || s.pain === 'stop'),
+  );
   const result: BlockEvaluation = {
     trackId: ref.trackId,
     stepId: ref.stepId,
@@ -108,10 +112,12 @@ function evaluateBlock(
   if (!t || !track) return result;
   const step = getStep(program, ref.stepId);
   const week = getWeek(program, session.pw);
-  // Neutral: not green, light week, sharp pain, or the step changed while the session ran.
-  if (session.status !== 'green' || week.light || pain || t.stepId !== ref.stepId) return result;
-
   const rule = ruleOf(track, step);
+  // Neutral: not green, light week, sharp pain, or the block ran another step than the track's
+  // (a companion block, P17). The EMOM runs at min(your step, the week's cap): that still counts.
+  const otherStep = t.stepId !== ref.stepId && rule !== 'emom';
+  if (session.status !== 'green' || week.light || pain || otherStep) return result;
+
   const sided = perSide(step.dose);
   const work = all.filter((s) => s.measureId === undefined && s.rir !== 0);
   const outcome = session.results.find((r) => r.blockId === ref.blockId)?.result;
@@ -211,10 +217,10 @@ function applyStepChange(program: Program, state: State, e: EventOf<'step_change
   t.hits = 0;
   if (e.trackId === 'burpee_emom') {
     state.emom.stepId = e.to;
-    if (e.reason === 'progression') {
-      state.emom.pendingUp = false;
-      if (e.week) state.emom.lastStepUpWeek = e.week;
-    }
+    // A step-up uses the pending step-up; any other change (absence, pain, own choice) drops it,
+    // just as it sets hits to 0 on the other tracks (S-EMOM-06).
+    state.emom.pendingUp = false;
+    if (e.reason === 'progression' && e.week) state.emom.lastStepUpWeek = e.week;
   }
   if (e.trackId === 'burpee_skill') state.burpeeVariant = e.to;
   state.decisions.push({
@@ -232,6 +238,24 @@ function applyStepChange(program: Program, state: State, e: EventOf<'step_change
       .find((s) => s.sessionId === e.sessionId)
       ?.decisions.push({ trackId: e.trackId, explanation: e.explanation });
   }
+}
+
+/** The step from which »Næste variant« is allowed (R-VARIANT: E6). */
+const VARIANT_FROM = 'burpee_emom.E6';
+
+/**
+ * R-VARIANT: going back is always allowed; the next variant only one at a time and only from
+ * EMOM E6 (S-VARIANT-01).
+ */
+export function variantAllowed(program: Program, state: State, stepId: string): boolean {
+  const current = stepIndex(program, state.burpeeVariant);
+  const wanted = stepIndex(program, stepId);
+  if (wanted < 0) return false;
+  if (wanted <= current) return true;
+  return (
+    wanted === current + 1 &&
+    stepIndex(program, state.emom.stepId) >= stepIndex(program, VARIANT_FROM)
+  );
 }
 
 /** Step ids from an older programme version are mapped to the current one (S-DATA-05). */
@@ -439,7 +463,7 @@ function apply(program: Program, state: State, raw: AppEvent, emomHistory: EmomP
       state.sideBranch = e.branchId;
       break;
     case 'variant_set':
-      state.burpeeVariant = e.stepId;
+      if (variantAllowed(program, state, e.stepId)) state.burpeeVariant = e.stepId;
       break;
     case 'hero_checked':
       state.heroes[e.heroId] = e.checked;

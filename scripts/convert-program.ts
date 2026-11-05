@@ -39,6 +39,8 @@ interface TableTrack extends Meta {
   /** Prefix of the step id before the source's number ('V' for the burpee variants). */
   idPrefix?: string;
   stepTags?: Record<string, string[]>;
+  /** Steps done after another step's dose in the same block (shoulder 3: P17). */
+  stepWith?: Record<string, string>;
   /** Cues when they are not the first sentences of the execution (press: docs/ENGINE.md 7.2). */
   cues?: Record<string, string[]>;
 }
@@ -67,6 +69,7 @@ const TABLE_TRACKS: TableTrack[] = [
     short: 'Skuldre',
     progression: 'double',
     category: 'ladder',
+    stepWith: { '3': 'shoulder.2' },
   },
   { id: 'pull', section: 'Træk: rows', short: 'Træk', progression: 'double', category: 'ladder' },
   {
@@ -406,6 +409,7 @@ function makeStep(fields: {
   cues?: string[] | undefined;
   pdfPage: number;
   tags?: string[] | undefined;
+  with?: string | undefined;
 }): Step {
   return {
     id: fields.id,
@@ -417,6 +421,7 @@ function makeStep(fields: {
     cues: fields.cues ?? cuesOf(fields.execution),
     pdfPage: fields.pdfPage,
     ...(fields.tags ? { tags: fields.tags } : {}),
+    ...(fields.with ? { with: fields.with } : {}),
   };
 }
 
@@ -471,6 +476,7 @@ function tableTrack(config: TableTrack): Track {
       cues: config.cues?.[key],
       pdfPage: section.page,
       tags: config.stepTags?.[key],
+      with: config.stepWith?.[key],
     });
   });
   return makeTrack(config, {

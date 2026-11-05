@@ -31,6 +31,7 @@
     },
     {
       "id": "travel.pair2.legs",
+      "maxStep": "legs.3",
       "trackId": "legs",
       "role": "pair",
       "group": "pair2",

@@ -553,6 +553,7 @@ describe('shapes (src/engine/types.ts)', () => {
             pdfPage: 'number',
             note: 'string?',
             tags: 'strings?',
+            with: 'string?',
           },
           step.id,
         );
@@ -748,6 +749,7 @@ describe('shapes (src/engine/types.ts)', () => {
             fixedSets: 'pair?',
             restSec: 'number?',
             inYellow: 'boolean',
+            maxStep: 'string?',
           },
           block.id,
         );

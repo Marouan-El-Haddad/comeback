@@ -46,6 +46,8 @@ export interface Step {
   note?: string;
   /** Rule tags, e.g. 'nordic' (no Nordic the day before an event). */
   tags?: string[];
+  /** This step is done after the given step's dose in the same block (shoulder 3, P17). */
+  with?: string;
 }
 
 export interface Track {
@@ -79,6 +81,8 @@ export interface Block {
   fixedSets?: [number, number];
   restSec?: number;
   inYellow: boolean;
+  /** The highest step this block uses (the travel session's split squats: S-WEEK-12). */
+  maxStep?: string;
 }
 
 export interface SessionTemplate {

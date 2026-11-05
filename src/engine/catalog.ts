@@ -37,8 +37,22 @@ function bestMeasure(state: State, measureId: string): number | null {
   return values.length > 0 ? Math.max(...values) : null;
 }
 
-/** Whether the log and the current steps meet a requirement. */
-export function requirementMet(program: Program, state: State, requires: Requires): boolean {
+function atOrAbove(program: Program, state: State, stepId: string): boolean {
+  const current = state.tracks[trackIdOf(stepId)]?.stepId;
+  return current !== undefined && stepIndex(program, current) >= stepIndex(program, stepId);
+}
+
+/**
+ * Whether a requirement is met. 'unlock' (impress catalogue, side branches): a performance on a
+ * step counts while your step is still at least that step, and a higher step counts by itself
+ * (P41, S-IMP-02). 'evidence' (Hero hints): only logged sets count (R-HERO, S-HERO-02).
+ */
+export function requirementMet(
+  program: Program,
+  state: State,
+  requires: Requires,
+  mode: 'unlock' | 'evidence' = 'unlock',
+): boolean {
   switch (requires.type) {
     case 'always':
       return true;
@@ -56,10 +70,12 @@ export function requirementMet(program: Program, state: State, requires: Require
       return best !== null && best >= requires.min;
     }
     case 'performance': {
-      if (beyond(program, state, requires.stepId)) return true;
       const unit = requires.seconds !== undefined ? 'sec' : 'reps';
       const value = requires.seconds ?? requires.reps ?? 0;
-      return logged(program, state, requires.stepId, requires.sets, value, unit);
+      const done = logged(program, state, requires.stepId, requires.sets, value, unit);
+      if (mode === 'evidence') return done;
+      if (!atOrAbove(program, state, requires.stepId)) return false;
+      return done || beyond(program, state, requires.stepId);
     }
     case 'clean':
       return state.sessions.some((s) =>
@@ -96,7 +112,7 @@ export function heroStatus(
 ): Array<{ item: Requirement; hint: boolean; checked: boolean }> {
   return program.heroes.map((item) => ({
     item,
-    hint: requirementMet(program, state, item.requires),
+    hint: requirementMet(program, state, item.requires, 'evidence'),
     checked: state.heroes[item.id] === true,
   }));
 }
@@ -113,8 +129,8 @@ export function measureLevel(program: Program, measureId: string, value: number)
   return null;
 }
 
-function hitOn(program: Program, state: State, stepId: string): boolean {
-  if (beyond(program, state, stepId)) return true;
+/** A logged hit on the step (the board needs logged sets, not just a step: S-HERO-02). */
+function hitOn(state: State, stepId: string): boolean {
   return state.sessions.some((s) =>
     Object.values(s.evaluations).some((e) => e.stepId === stepId && e.hit),
   );
@@ -122,11 +138,9 @@ function hitOn(program: Program, state: State, stepId: string): boolean {
 
 /** The legs row of Målbrættet: Split 3 × 12, Bulgarsk 3 × 12, 5 pistols (5.6). */
 export function legsLevel(program: Program, state: State): Level | null {
-  if (beyond(program, state, 'legs.6') || logged(program, state, 'legs.6', 1, 5, 'reps')) {
-    return 'imponerende';
-  }
-  if (hitOn(program, state, 'legs.2')) return 'staerk';
-  if (hitOn(program, state, 'legs.1')) return 'basis';
+  if (logged(program, state, 'legs.6', 1, 5, 'reps')) return 'imponerende';
+  if (hitOn(state, 'legs.2')) return 'staerk';
+  if (hitOn(state, 'legs.1')) return 'basis';
   return null;
 }
 

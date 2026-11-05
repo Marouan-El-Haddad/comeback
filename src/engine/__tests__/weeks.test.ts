@@ -124,6 +124,12 @@ describe('Uger og fravær', () => {
     }
     expect(planFor(log.program, state, '2026-11-17').red).toBe(false);
     expect(state.weeks[0]?.completed).toBe(false);
+    // A session started anyway on a sick day is red and does not complete the week (R-ILL).
+    const { started, finished } = log.session({ date: '2026-11-10', kind: 'A' });
+    expect(started.find((e) => e.type === 'session_started')).toMatchObject({ light: 'red' });
+    expect(finished[0]).toMatchObject({ status: 'red', done: false });
+    expect(log.state('2026-11-17').weeks[0]?.completed).toBe(false);
+    expect(log.state('2026-11-17').weeks[1]?.pw).toBe(1);
   });
 
   test('S-WEEK-08: rejse om tirsdagen giver rejsepasset med EMOM på min(E3, trin); done gennemfører ugen uden at ændre hits', () => {

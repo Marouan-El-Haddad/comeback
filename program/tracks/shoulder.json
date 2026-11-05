@@ -39,7 +39,8 @@
       "dose": { "kind": "hold", "sets": [3, 3], "seconds": [20, 45] },
       "execution": "Gå op ad væggen med maven mod den. Ribben nede, skub gulvet væk.",
       "cues": ["Gå op ad væggen med maven mod den", "Ribben nede, skub gulvet væk"],
-      "pdfPage": 14
+      "pdfPage": 14,
+      "with": "shoulder.2"
     },
     {
       "id": "shoulder.4",

@@ -4,6 +4,7 @@ import { addDays, calendarWeek, daysBetween, mondayOf } from './dates.ts';
 import { deriveState } from './derive.ts';
 import {
   explainAbsence,
+  explainAbsenceLoad,
   explainEmomUp,
   explainLoad,
   explainPain,
@@ -28,6 +29,7 @@ import {
   emomCap,
   lightFor,
   sessionPlan,
+  statusOn,
   unloggedOn,
   weekInfoAt,
   type BlockPlan,
@@ -211,7 +213,9 @@ function hardClubYesterday(state: State, date: ISODate): boolean {
 export function startSession(ctx: Ctx, events: readonly AppEvent[], input: StartInput): AppEvent[] {
   const { program, make } = ctx;
   const state = deriveState(program, events, input.date);
-  const light: Light = input.red ? 'red' : lightFor(input.answers);
+  // R-ILL: a sick day is red whatever the answers (6.1).
+  const ill = statusOn(state, input.date) === 'ill';
+  const light: Light = input.red || ill ? 'red' : lightFor(input.answers);
   const k = calendarWeek(state.startDate, input.date);
   const info = weekInfoAt(program, state, Math.max(0, k));
   const pw = info?.pw ?? 1;
@@ -335,11 +339,14 @@ function decide(ctx: Ctx, state: State, sessionId: string): AppEvent[] {
   const session = state.sessions.find((s) => s.sessionId === sessionId);
   if (!session) return [];
   const out: AppEvent[] = [];
-  const seen = new Set<string>();
-  for (const ref of session.blocks) {
-    if (seen.has(ref.trackId)) continue;
-    seen.add(ref.trackId);
-    const t = state.tracks[ref.trackId];
+  const trackIds = [...new Set(session.blocks.map((b) => b.trackId))];
+  for (const trackId of trackIds) {
+    const t = state.tracks[trackId];
+    // A track can have two blocks (shoulder 3 after the step-2 dose, P17): the one on the
+    // track's own step decides; pain counts in either (the replay marks it track-wide).
+    const refs = session.blocks.filter((b) => b.trackId === trackId);
+    const ref = refs.find((b) => b.stepId === t?.stepId) ?? refs[0];
+    if (!ref) continue;
     const evaluation = session.evaluations[ref.blockId];
     if (!t || !evaluation) continue;
     const track = getTrack(program, ref.trackId);
@@ -454,7 +461,26 @@ export function catchUp(ctx: Ctx, events: readonly AppEvent[], today: ISODate): 
     for (const track of program.tracks) {
       const t = state.tracks[track.id];
       const first = track.steps[0];
-      if (!t || !first || !ABSENCE_RULES.has(track.progression)) continue;
+      if (!t || !first) continue;
+      if (track.progression === 'load') {
+        // One step down on a load track is 2 kg less (not below 0), target min, hits 0 (S-WEEK-11).
+        const to = Math.max(0, t.load - 2);
+        out.push(
+          make(
+            {
+              type: 'load_changed',
+              trackId: track.id,
+              from: t.load,
+              to,
+              by: 'engine',
+              explanation: explainAbsenceLoad(program, t.stepId, to),
+            },
+            today,
+          ),
+        );
+        continue;
+      }
+      if (!ABSENCE_RULES.has(track.progression)) continue;
       const to = previousStep(program, t.stepId)?.id ?? t.stepId;
       out.push(
         make(

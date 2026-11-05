@@ -87,6 +87,10 @@ export function explainAbsence(program: Program, from: string, to: string): stri
   return `${label(program, to)}: trin ${key(program, to)}. Tre uger uden styrkepas: alle stiger ét trin ned (side 47).`;
 }
 
+export function explainAbsenceLoad(program: Program, stepId: string, to: number): string {
+  return `${label(program, stepId)}: ${to} kg i rygsækken og forfra på arbejdstallet. Tre uger uden styrkepas: alle stiger ét trin ned (side 47).`;
+}
+
 export function explainUserChoice(program: Program, to: string): string {
   return `${label(program, to)}: trin ${key(program, to)} – dit eget valg.`;
 }

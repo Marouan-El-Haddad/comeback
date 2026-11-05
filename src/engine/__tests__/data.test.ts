@@ -154,18 +154,15 @@ describe('Tidsmaskinen', () => {
     expect(newYear.overlays.map((o) => o.overlayId)).toEqual(['newyear_2026_measure']);
   });
 
+  // The engine half of S-TIME-02: the simulation works on its own copy and never changes the log
+  // it was given. The storage half (the real store is read-only while the time machine runs, and
+  // its event count is unchanged) is tested in src/storage/__tests__/store.test.ts and in
+  // e2e/m2.spec.ts (selvreview F12).
   test('S-TIME-02: simuleringen skriver aldrig til lageret', () => {
     const real = new Log().onboard();
     real.session({ date: TUE(0) });
-    const stored = Object.freeze([...real.events]);
-    const store = {
-      readOnly: true,
-      writes: 0,
-      append(events: AppEvent[]) {
-        if (this.readOnly) throw new Error('read-only');
-        this.writes += events.length;
-      },
-    };
+    const snapshot = JSON.stringify(real.events);
+    const stored = Object.freeze(real.events.map((e) => Object.freeze({ ...e })));
     const sim = simulate(PROGRAM, stored, TUE(1));
     const helper = new Log(PROGRAM, 'sim');
     helper.events = [...sim.events];
@@ -181,9 +178,8 @@ describe('Tidsmaskinen', () => {
     sim.append(helper.events.slice(before));
     expect(sim.events.length).toBeGreaterThan(stored.length);
     expect(stored).toHaveLength(real.events.length);
-    expect(store.writes).toBe(0);
-    expect(() => store.append(helper.events.slice(before))).toThrow('read-only');
-    expect(store.writes).toBe(0);
+    expect(JSON.stringify(stored)).toBe(snapshot);
+    expect(sim.state().sessions.length).toBeGreaterThan(real.state(TUE(1)).sessions.length);
   });
 
   test('S-TIME-03: efter simuleringen viser I dag den rigtige dato og tilstand', () => {

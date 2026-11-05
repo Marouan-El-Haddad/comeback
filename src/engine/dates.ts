@@ -75,14 +75,22 @@ function utc(date: ISODate): Date {
   return new Date(dayNumber(date) * DAY_MS);
 }
 
-/** "tirsdag 10. november" */
+function part(
+  formatter: Intl.DateTimeFormat,
+  date: ISODate,
+  type: Intl.DateTimeFormatPartTypes,
+): string {
+  return formatter.formatToParts(utc(date)).find((p) => p.type === type)?.value ?? '';
+}
+
+/** "tirsdag 10. november" – built from parts, so every browser's ICU gives the same text. */
 export function formatLong(date: ISODate): string {
-  return longFormatter.format(utc(date));
+  return `${part(longFormatter, date, 'weekday')} ${formatDay(date)}`;
 }
 
 /** "10. november" */
 export function formatDay(date: ISODate): string {
-  return shortFormatter.format(utc(date));
+  return `${part(shortFormatter, date, 'day')}. ${part(shortFormatter, date, 'month')}`;
 }
 
 const WEEKDAYS = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag', 'søndag'];

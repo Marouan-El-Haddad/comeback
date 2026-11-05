@@ -231,10 +231,49 @@ export function measurementWeek(week: Week, round: number): boolean {
   return week.measurements && (week.pw !== 1 || round === 1);
 }
 
-function measuresFor(program: Program, kind: SessionKind, week: Week, round: number): Measure[] {
-  if (!measurementWeek(week, round)) return [];
-  return program.measures.filter(
-    (m) => kindForWeekday(program, m.weekday) === kind && (m.weeks !== 'light_only' || week.light),
+/**
+ * The measurements due in a session (5.6): in a measurement week those of the session's day not
+ * yet logged this week; the week after, those that were not taken (a yellow day, skipped) are
+ * offered at the next green session of the same kind – not the burpee test or the motor's
+ * distance, which belong to the light week itself (P31, S-MEAS-05).
+ */
+function dueMeasures(
+  program: Program,
+  state: State,
+  kind: SessionKind,
+  date: ISODate,
+  k: number,
+): Measure[] {
+  const monday = mondayOf(date);
+  const logged = (id: string, from: ISODate) =>
+    state.measurements.some((m) => m.measureId === id && m.date >= from && m.date <= date);
+  const forKind = (week: Week) =>
+    program.measures.filter(
+      (m) =>
+        kindForWeekday(program, m.weekday) === kind && (m.weeks !== 'light_only' || week.light),
+    );
+  const info = weekInfoAt(program, state, Math.max(0, k));
+  if (info) {
+    const week = getWeek(program, info.pw);
+    if (measurementWeek(week, info.round))
+      return forKind(week).filter((m) => !logged(m.id, monday));
+  }
+  const previous = k > 0 ? weekInfoAt(program, state, k - 1) : null;
+  if (!previous) return [];
+  const before = getWeek(program, previous.pw);
+  if (!measurementWeek(before, previous.round)) return [];
+  const lastMonday = addDays(monday, -7);
+  // Only after a session of this kind that was logged without them (not a week declared done
+  // at onboarding, where the measurements may be on paper).
+  const sessionThen = state.sessions.some(
+    (s) => s.kind === kind && s.completed && s.date >= lastMonday && s.date < monday,
+  );
+  if (!sessionThen) return [];
+  return forKind(before).filter(
+    (m) =>
+      m.placement.type !== 'replace_finisher' &&
+      m.placement.type !== 'motor' &&
+      !logged(m.id, lastMonday),
   );
 }
 
@@ -308,7 +347,7 @@ export function sessionPlan(
   const week = getWeek(program, pw);
   const factor = info?.volumeFactor ?? 1;
   const tomorrow = eventTomorrow(state, date);
-  const measures = kind === 'travel' ? [] : measuresFor(program, kind, week, round);
+  const measures = kind === 'travel' ? [] : dueMeasures(program, state, kind, date, k);
   const blocks: BlockPlan[] = [];
 
   const measureBlock = (m: Measure, id: string): BlockPlan => ({
@@ -414,7 +453,10 @@ export function sessionPlan(
       continue;
     }
 
-    const step = getStep(program, t.stepId);
+    // The travel session's split squats stay on a split squat step (S-WEEK-12).
+    const stepId = block.maxStep ? lowerStep(program, t.stepId, block.maxStep) : t.stepId;
+    const capped = stepId !== t.stepId;
+    const step = getStep(program, stepId);
     const per = 'per' in step.dose ? step.dose.per : undefined;
     const tempDown = t.tempDown
       ? {
@@ -423,13 +465,18 @@ export function sessionPlan(
           lighter: t.tempDown.lighter,
         }
       : undefined;
+    const firstSet = measures.find(
+      (m) => m.placement.type === 'replace_first_set' && m.placement.trackId === block.trackId,
+    );
 
     if (step.dose.kind === 'rounds') {
       const ranged = step.dose.rounds[0] !== step.dose.rounds[1];
       const weekSets = reduce(setsFor(block.setsRule, block.fixedSets, week), factor);
       // Club sequence: its own sets × rounds; one round in a light week (5.6). W3: rounds = sets.
       const sets = ranged ? 1 : week.light ? 1 : step.dose.sets;
-      const rounds = ranged ? weekSets : week.light ? 1 : step.dose.rounds[0];
+      const all = ranged ? weekSets : week.light ? 1 : step.dose.rounds[0];
+      // A measurement takes the place of the first round (S-MEAS-04).
+      const rounds = firstSet ? Math.max(0, all - 1) : all;
       blocks.push({
         ...base,
         stepId: step.id,
@@ -437,6 +484,7 @@ export function sessionPlan(
         target: rounds,
         unit: 'rounds',
         rounds,
+        measureId: firstSet?.id,
         tempDown,
       });
       continue;
@@ -449,14 +497,25 @@ export function sessionPlan(
     if (block.setsRule === 'fixed' && !block.fixedSets && 'sets' in step.dose) {
       sets = Array.isArray(step.dose.sets) ? step.dose.sets[1] : step.dose.sets;
     }
-    const firstSet = measures.find(
-      (m) => m.placement.type === 'replace_first_set' && m.placement.trackId === block.trackId,
-    );
+    // Shoulder 3: the step-2 dose comes first in the same block; only the hold progresses (P17).
+    if (step.with) {
+      const companion = getStep(program, step.with);
+      const companionRange = workRange(companion.dose);
+      blocks.push({
+        ...base,
+        blockId: `${block.id}.with`,
+        stepId: companion.id,
+        sets,
+        target: companionRange?.max ?? 0,
+        unit: companionRange?.unit ?? 'reps',
+        per: 'per' in companion.dose ? companion.dose.per : undefined,
+      });
+    }
     blocks.push({
       ...base,
       stepId: step.id,
       sets: firstSet ? Math.max(1, sets - 1) : sets,
-      target: track.progression === 'neck' ? (range?.min ?? 0) : t.target,
+      target: track.progression === 'neck' || capped ? (range?.min ?? 0) : t.target,
       unit: range?.unit ?? 'reps',
       per,
       load: track.progression === 'load' || t.load > 0 ? t.load : undefined,
@@ -491,7 +550,18 @@ export function sessionPlan(
   if (kind === 'motor') {
     const planned = motorSession(week, measures);
     const intervals = planned.variant === 'intervals' || planned.variant === 'fight';
-    if (intervals && (tomorrow || calmBase)) {
+    if (tomorrow && !intervals) {
+      // The day before an event the motor is a calm base: no strides, no Cooper test (S-EVENT-02).
+      motor =
+        planned.variant === 'base' || planned.variant === 'base_check'
+          ? {
+              ...planned,
+              title: `Rolig base, ${planned.minutes} min`,
+              phases: planned.phases.filter((p) => p.kind !== 'strides'),
+            }
+          : calmBaseSession();
+      calmBase = true;
+    } else if (intervals && (tomorrow || calmBase)) {
       motor = calmBaseSession();
       calmBase = true;
     } else if (intervals && options.hardYesterday) {
