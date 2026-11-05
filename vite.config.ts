@@ -1,4 +1,5 @@
 import preact from '@preact/preset-vite';
+import { execSync } from 'node:child_process';
 import { defineConfig, type Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import tokens from './src/ui/design-tokens.json' with { type: 'json' };
@@ -46,8 +47,21 @@ function designTokens(base: string): Plugin {
   };
 }
 
+/** "2026-11-05 · 0dc24a8": the commit's date and short hash (docs/SPEC.md 2: version under Om). */
+function appVersion(): string {
+  try {
+    const [date, hash] = execSync('git log -1 --format="%cd %h" --date=short', { encoding: 'utf8' })
+      .trim()
+      .split(' ');
+    return `${date} · ${hash}`;
+  } catch {
+    return 'ukendt';
+  }
+}
+
 export default defineConfig({
   base: '/comeback/',
+  define: { __APP_VERSION__: JSON.stringify(appVersion()) },
   plugins: [
     preact(),
     designTokens('/comeback/'),

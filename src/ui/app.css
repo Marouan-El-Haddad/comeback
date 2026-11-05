@@ -1,0 +1,763 @@
+/* App screens (docs/SPEC.md 3 and 5). Colours only from the --c-* tokens. */
+
+/* App shell: content above a fixed tab bar; one hand, everything important in the lower half. */
+.app {
+  min-height: 100vh;
+  padding-bottom: 72px;
+}
+
+.screen {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+  display: grid;
+  gap: 16px;
+}
+
+.stack {
+  display: grid;
+  gap: 12px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.grow {
+  flex: 1 1 0;
+}
+
+.lead {
+  font-size: 18px;
+}
+
+.hint {
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--c-blueTint);
+  color: var(--c-navy);
+  font-weight: 600;
+}
+
+.flag {
+  padding: 8px 12px;
+  border-left: 6px solid var(--c-gold);
+  border-radius: 12px;
+  background: var(--c-goldTint);
+  color: var(--c-ink);
+  font-weight: 600;
+}
+
+.error-text {
+  color: var(--c-redDark);
+  font-weight: 600;
+}
+
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--c-line);
+  background: var(--c-paper);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tab {
+  min-height: 64px;
+  border: 0;
+  background: var(--c-paper);
+  color: var(--c-muted);
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.tab.active {
+  color: var(--c-navy);
+  box-shadow: inset 0 3px 0 var(--c-red);
+}
+
+.banner {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-weight: 700;
+  color: var(--c-paper);
+  background: var(--c-navy);
+}
+
+.banner span {
+  flex: 1;
+}
+
+.banner.sim {
+  background: var(--c-red);
+}
+
+.banner.error {
+  background: var(--c-redDark);
+}
+
+.banner .btn {
+  border-color: var(--c-paper);
+  background: transparent;
+  color: var(--c-paper);
+}
+
+.btn.small {
+  min-height: 48px;
+  min-width: 48px;
+  padding: 0 12px;
+  font-size: 16px;
+}
+
+.btn.red-outline {
+  border-color: var(--c-red);
+  color: var(--c-redDark);
+  font-size: 16px;
+}
+
+.btn.primary.yellow {
+  border-color: var(--c-amber);
+  background: var(--c-amber);
+  color: var(--c-ink);
+}
+
+/* I dag */
+.today-head .date {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.today-head .week {
+  color: var(--c-muted);
+  font-weight: 600;
+}
+
+.main-card {
+  display: grid;
+  gap: 12px;
+  border-width: 2px;
+  border-color: var(--c-navy);
+}
+
+.main-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.block-lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+}
+
+.block-lines li,
+.block-line {
+  font-weight: 600;
+}
+
+.main-card.done {
+  border-color: var(--c-green);
+}
+
+.missed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.os-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-left: 6px solid var(--c-gold);
+}
+
+.os-title {
+  font-weight: 700;
+}
+
+.tomorrow {
+  font-weight: 600;
+}
+
+.rest-of-week summary {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rest-of-week ul {
+  margin: 0;
+  padding: 0 0 0 4px;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.backup-line {
+  min-height: 56px;
+  border: 1px solid var(--c-line);
+  border-radius: 12px;
+  background: var(--c-panel);
+  color: var(--c-navy);
+  font-weight: 600;
+  text-align: left;
+  padding: 8px 12px;
+}
+
+/* Guided session: full screen over the tabs; the primary action sits in the same place. */
+.session {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--c-paper);
+  font-size: 18px;
+}
+
+.session-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--c-line);
+  background: var(--c-paper);
+}
+
+.session-title {
+  flex: 1;
+  font-weight: 700;
+}
+
+.session-body {
+  flex: 1;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.session-actions {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 12px 16px 16px;
+  display: grid;
+  gap: 8px;
+  background: var(--c-paper);
+  border-top: 1px solid var(--c-line);
+}
+
+.step-kicker {
+  color: var(--c-muted);
+  font-weight: 600;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.set-name {
+  font-size: 24px;
+}
+
+.set-info {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.set-count {
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.big-number {
+  display: grid;
+  justify-items: center;
+  line-height: 1;
+}
+
+.big-number .number {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 96px;
+  color: var(--c-navy);
+}
+
+.big-number .unit {
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--c-muted);
+}
+
+.cue {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+.why summary::before,
+.rest-of-week summary::before {
+  content: '▸';
+  margin-right: 8px;
+}
+
+.why[open] summary::before,
+.rest-of-week[open] summary::before {
+  content: '▾';
+}
+
+.why summary {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.why p {
+  margin-top: 8px;
+}
+
+.adjust {
+  justify-content: space-between;
+}
+
+.adjust .btn {
+  flex: 1 1 0;
+  font-size: 22px;
+}
+
+.adjust-value,
+.adjust-label {
+  flex: 1 1 0;
+  text-align: center;
+  font-weight: 700;
+}
+
+.pain {
+  display: grid;
+  gap: 8px;
+}
+
+.small-print {
+  font-size: 16px;
+}
+
+.yesno {
+  display: grid;
+  gap: 8px;
+}
+
+.yesno-label {
+  font-weight: 700;
+  font-size: 19px;
+}
+
+.yesno .btn {
+  flex: 1 1 0;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  font-weight: 600;
+}
+
+.check input {
+  width: 28px;
+  height: 28px;
+}
+
+.countdown {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 0 auto;
+}
+
+.countdown.big {
+  width: 260px;
+  height: 260px;
+}
+
+.ring {
+  width: 100%;
+  height: 100%;
+}
+
+.ring-track {
+  fill: none;
+  stroke: var(--c-line);
+  stroke-width: 6;
+}
+
+.ring-fill {
+  fill: none;
+  stroke: var(--c-red);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.countdown-text {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+}
+
+.countdown-number {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 72px;
+  line-height: 1;
+  color: var(--c-navy);
+}
+
+.countdown-label {
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--c-muted);
+}
+
+.stopwatch {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+}
+
+.rest {
+  display: grid;
+  gap: 16px;
+}
+
+.next-up .next-title {
+  font-weight: 700;
+}
+
+.phase-runner {
+  display: grid;
+  gap: 12px;
+}
+
+.phase-count {
+  color: var(--c-muted);
+  font-weight: 600;
+}
+
+.phase-label {
+  font-size: 28px;
+}
+
+.confirm {
+  margin: 8px 16px 0;
+  padding: 12px;
+  border: 2px solid var(--c-navy);
+  border-radius: 12px;
+  background: var(--c-panel);
+  display: grid;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.decisions,
+.logged {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 8px;
+}
+
+.decisions li {
+  font-weight: 600;
+}
+
+.field {
+  display: grid;
+  gap: 4px;
+  font-weight: 600;
+}
+
+.field.inline {
+  flex: 1 1 140px;
+}
+
+.field input,
+.stepper-field input {
+  min-height: 56px;
+  padding: 0 12px;
+  border: 2px solid var(--c-navy);
+  border-radius: 12px;
+  font: inherit;
+  font-size: 20px;
+  color: var(--c-navy);
+  background: var(--c-paper);
+}
+
+.stepper-field {
+  flex: 1 1 0;
+  display: grid;
+}
+
+.stepper-field input {
+  text-align: center;
+  width: 100%;
+}
+
+.sr-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.file-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.file-button input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Onboarding */
+.onboarding {
+  padding-bottom: 104px;
+}
+
+.bottom-actions {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--c-line);
+  background: var(--c-paper);
+}
+
+.step-choice {
+  display: grid;
+  gap: 8px;
+}
+
+.step-choice-track {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.step-choice-row {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.step-choice-name {
+  font-weight: 600;
+}
+
+.week-choice {
+  display: grid;
+  gap: 8px;
+}
+
+/* Uge, Stiger, Mere */
+.week-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 12px;
+  margin: 0;
+}
+
+.week-facts dt {
+  color: var(--c-muted);
+}
+
+.week-facts dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.week-days {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.week-day {
+  padding: 12px;
+  border: 1px solid var(--c-line);
+  border-radius: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.week-day.today {
+  border: 2px solid var(--c-navy);
+}
+
+.week-day-name {
+  font-weight: 700;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  padding: 4px 10px;
+  border: 1px solid var(--c-line);
+  border-radius: 8px;
+  background: var(--c-panel);
+  font-weight: 600;
+}
+
+.chip.club {
+  border-color: var(--c-red);
+  background: var(--c-redTint);
+}
+
+.chip.status {
+  background: var(--c-paper);
+  border-color: var(--c-navy);
+}
+
+.ladder-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.ladder-row {
+  width: 100%;
+  min-height: 88px;
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid var(--c-line);
+  border-radius: 12px;
+  background: var(--c-paper);
+  color: var(--c-navy);
+  text-align: left;
+}
+
+.ladder-text {
+  display: grid;
+  gap: 2px;
+}
+
+.ladder-name {
+  font-weight: 700;
+}
+
+.prog-step.mine {
+  border-top: 2px solid var(--c-red);
+}
+
+.mine-label {
+  margin-top: 8px;
+  font-weight: 700;
+  color: var(--c-red);
+}
+
+.confirm-inline {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.version {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.facts {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+
+.facts div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--c-line);
+}
+
+.facts dt {
+  color: var(--c-muted);
+}
+
+.facts dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.os-list {
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+}
+
+/* In a session all text keeps at least 7:1 contrast (docs/SPEC.md 6): no grey text there. */
+.session .muted,
+.session .step-kicker,
+.session .countdown-label,
+.session .big-number .unit,
+.session .phase-count {
+  color: var(--c-ink);
+}
