@@ -1,9 +1,31 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig, type Project } from '@playwright/test';
 
-// Pixel 9a in portrait. Firefox is the default engine because the phone runs Gecko (IronFox).
+// The phone as measured in milestone 0 (probe/RESULTS.md): IronFox 159 on a Pixel 9a, installed
+// as a PWA. Viewport 414 × 847 CSS px at devicePixelRatio 2, locale spoofed to en-US, time zone
+// Europe/Copenhagen, JIT disabled. Firefox is the default engine because the phone runs Gecko.
 // Playwright rejects isMobile in Firefox; set PW_ENGINE=chromium to fall back to Chromium with
 // isMobile: true when Firefox cannot be installed (docs/DECISIONS.md D10).
 const chromium = process.env.PW_ENGINE === 'chromium';
+
+/** IronFox' hardening turns the JavaScript JIT off; these prefs do the same in Firefox. */
+export const IRONFOX_PREFS: Record<string, boolean> = {
+  'javascript.options.baselinejit': false,
+  'javascript.options.ion': false,
+  'javascript.options.native_regexp': false,
+  'javascript.options.asmjs': false,
+  'javascript.options.wasm_baselinejit': false,
+  'javascript.options.wasm_optimizingjit': false,
+};
+
+const phone: Project['use'] = {
+  browserName: chromium ? 'chromium' : 'firefox',
+  viewport: { width: 414, height: 847 },
+  deviceScaleFactor: 2,
+  hasTouch: true,
+  locale: 'en-US',
+  timezoneId: 'Europe/Copenhagen',
+  ...(chromium ? { isMobile: true } : { launchOptions: { firefoxUserPrefs: IRONFOX_PREFS } }),
+};
 
 export default defineConfig({
   testDir: 'e2e',
@@ -11,25 +33,19 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:4173',
+    baseURL: 'http://127.0.0.1:4173',
     trace: 'retain-on-failure',
   },
   webServer: {
     command: 'npm run build && npm run preview',
-    url: 'http://localhost:4173/comeback/',
+    url: 'http://127.0.0.1:4173/comeback/',
     reuseExistingServer: false,
     timeout: 180_000,
   },
   projects: [
-    {
-      name: 'pixel9a',
-      use: {
-        browserName: chromium ? 'chromium' : 'firefox',
-        viewport: { width: 412, height: 915 },
-        deviceScaleFactor: 2.625,
-        hasTouch: true,
-        ...(chromium ? { isMobile: true } : {}),
-      },
-    },
+    { name: 'pixel9a', use: phone },
+    // Date logic must not depend on the browser's time zone (docs/SPEC.md section 8): the tests
+    // tagged @date run once more with the clock in UTC, as IronFox can be set to spoof it.
+    { name: 'pixel9a-utc', grep: /@date/, use: { ...phone, timezoneId: 'UTC' } },
   ],
 });
