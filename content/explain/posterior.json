@@ -1,0 +1,146 @@
+{
+  "format": 1,
+  "subject": "posterior",
+  "why": [
+    "Baller og baglår giver kraft i spark og sprint: de strækker hoften og driver den frem. Stigen går fra hoftebro over glidende leg curl til Nordic, hvor du står på knæ og sænker overkroppen frem mod gulvet, mens baglårene bremser.",
+    "Nordic-øvelsen er blandt de bedst undersøgte måder at forebygge baglårsskader på: programmer med den har cirka halveret dem, men en ny analyse af de samme tal kalder effekten mere usikker.",
+    "Den første uge med Nordic giver ømme baglår, så start i bunden af intervallet. Ømme muskler er i orden; skarp smerte eller smerte i et led betyder stop og et trin ned."
+  ],
+  "items": [
+    {
+      "id": "posterior.1",
+      "trains": "Baller og baglår, der strækker hoften med kraft, som når du driver hoften frem i et knæspark.",
+      "start": "Lig på ryggen med armene langs siden og den ene fod fladt i gulvet, så tæt på bagdelen, at underbenet bliver lodret i toppen. Stræk det andet ben, så knæene er i samme højde.",
+      "steps": [
+        "Pres hælen i gulvet, og løft hoften i ét roligt stræk.",
+        "Hold 2 sek i toppen med ribbenene nede, så det er ballen, der arbejder, ikke lænden.",
+        "Sænk hoften på 3 sek, til bagdelen lige rører gulvet.",
+        "Tag alle gentagelser med samme ben, og skift så."
+      ],
+      "tempo": "Op i ét roligt stræk, 2 sek i toppen og 3 sek ned.",
+      "breathing": "Pust ud på vej op, og træk vejret ind på vej ned.",
+      "cues": ["2 sek i toppen", "Ribben nede, ballen arbejder", "Pres gennem hælen"],
+      "mistakes": [
+        {
+          "mistake": "Du svajer i lænden i toppen.",
+          "fix": "Hold ribbenene nede, og stop, når skulder, hofte og knæ er på en lige linje."
+        },
+        {
+          "mistake": "Hoften tipper ned i siden med det frie ben.",
+          "fix": "Hold begge hofteknogler i samme højde, og spænd maven."
+        },
+        {
+          "mistake": "Baglåret får krampe, eller du mærker det mest der.",
+          "fix": "Ryk foden lidt tættere på bagdelen, og tænk på at løfte med ballen."
+        }
+      ],
+      "easier": "Hoftebro på begge ben med begge fødder i gulvet og samme tempo.",
+      "harder": "Trin 2: glidende leg curl med hælene på et håndklæde.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, og læg dig på ryggen med knæene bøjet.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Liggende på ryggen med hoved, skuldre og arme i gulvet, armene langs siden. Bagdelen rører gulvet, og arbejdsbenets fod står fladt med knæet godt bøjet. Det frie ben er strakt i forlængelse af det andet lår.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "hip", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "forearm", "on": "floor" },
+                { "part": "hand", "on": "floor" },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Hoften løftet, så skuldre, hofte og knæ er på en lige linje. Arbejdsbenets knæ er bøjet ca. 90° med underbenet lodret og hele foden i gulvet. Det frie ben er strakt i samme linje, og hoved, skuldre og arme ligger i gulvet.",
+              "contacts": [
+                { "part": "shoulders", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "forearm", "on": "floor" },
+                { "part": "hand", "on": "floor" },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "top", "seconds": 1.5, "label": "Op" },
+            { "to": "top", "seconds": 2, "label": "2 sek i toppen" },
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "posterior.2",
+      "trains": "Baglår og baller på én gang: de holder hoften oppe og trækker hælene ind, til kraft i spark og sprint.",
+      "start": "Lig på ryggen på et glat gulv med armene langs siden, knæene bøjet og hælene på et håndklæde. Løft hoften, så skuldre, hofte og knæ er på en lige linje.",
+      "steps": [
+        "Glid hælene ud på 3 sek, til benene er næsten strakte, mens hoften bliver oppe.",
+        "Hold 1 sek stille med hoften stadig løftet fra gulvet.",
+        "Træk hælene ind mod bagdelen i ét roligt stræk, til du er tilbage i hoftebroen.",
+        "Hold hoften oppe hele sættet, og sænk den først, når du er færdig."
+      ],
+      "tempo": "3 sek ud, 1 sek stille, og ind i ét roligt stræk.",
+      "breathing": "Træk vejret ind, mens hælene glider ud, og pust ud, når du trækker dem ind.",
+      "cues": ["3 sek ud, 1 sek stille", "Hoften oppe hele vejen", "Træk hælene ind"],
+      "mistakes": [
+        {
+          "mistake": "Hoften falder ned i gulvet, når benene bliver strakte.",
+          "fix": "Stop lidt før benene er strakte, og klem ballerne, så hoften bliver oppe."
+        },
+        {
+          "mistake": "Du svajer i lænden for at holde hoften oppe.",
+          "fix": "Hold ribbenene nede, og løft hoften med ballerne."
+        },
+        {
+          "mistake": "Håndklædet sidder fast, så hælene hakker.",
+          "fix": "Brug et glat gulv som parket eller fliser, ikke et tæppe."
+        }
+      ],
+      "easier": "Trin 1: etbens hoftebro. Eller glid kun hælene halvt ud, til du kan styre hele vejen.",
+      "harder": "Trin 3: glidende leg curl på ét ben, langsomt ud og hurtigt ind.",
+      "equipment": ["towel"],
+      "getReady": "Find et glat gulv, og læg et håndklæde, hvor hælene skal være, når du ligger på ryggen.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "in",
+              "name": "Inde",
+              "text": "Liggende på ryggen med hoved, skuldre og arme i gulvet. Hoften løftet, så skuldre, hofte og knæ er på en lige linje. Knæene er bøjet ca. 90°, og hælene står på håndklædet med tæerne op.",
+              "contacts": [
+                { "part": "shoulders", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "forearm", "on": "floor" },
+                { "part": "hand", "on": "floor" },
+                { "part": "heel", "on": "towel" }
+              ]
+            },
+            {
+              "id": "out",
+              "name": "Ude",
+              "text": "Benene er næsten strakte med hælene langt ude på håndklædet. Hoften er stadig løftet en håndsbredde fra gulvet, og hoved, skuldre og arme ligger i gulvet.",
+              "contacts": [
+                { "part": "shoulders", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "forearm", "on": "floor" },
+                { "part": "hand", "on": "floor" },
+                { "part": "heel", "on": "towel" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "out", "seconds": 3, "label": "3 sek ud" },
+            { "to": "out", "seconds": 1, "label": "1 sek stille" },
+            { "to": "in", "seconds": 1.5, "label": "Træk ind" }
+          ]
+        }
+      ]
+    }
+  ]
+}

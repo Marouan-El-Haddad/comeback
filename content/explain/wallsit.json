@@ -1,0 +1,149 @@
+{
+  "format": 1,
+  "subject": "wallsit",
+  "why": [
+    "Wall sit bygger lårenes udholdenhed – præcis det, klubben tester med wall sit og squats. Lår, der kan holde længe, giver dig overskud til fodarbejde og spark sidst i runden.",
+    "Isometrisk træning, hvor du holder en stilling uden at bevæge dig, sænkede hvileblodtrykket mest af alle træningsformer i en stor samlet analyse, og wall sit var den bedste enkeltøvelse.",
+    "Holder du alle sæt med den planlagte reserve, lægger appen 5 sek til næste gang, op til toppen af intervallet. Brændende lår er i orden; skarp smerte eller smerte i knæet betyder stop og et trin ned."
+  ],
+  "items": [
+    {
+      "id": "wallsit.W1",
+      "trains": "Lårenes udholdenhed, så benene holder til fodarbejde og spark sidst i runden.",
+      "start": "Stå med ryggen mod væggen, og gå fødderne ca. to fodlængder frem i hoftebredde. Kryds armene over brystet.",
+      "steps": [
+        "Glid ned ad væggen, til lårene er vandrette og knæene er lige over anklerne.",
+        "Hold ryggen flad mod væggen og vægten på hælene.",
+        "Hold stillingen helt stille, til tiden er gået.",
+        "Glid op ad væggen igen, og gå fødderne ind under dig."
+      ],
+      "tempo": "Glid roligt ned, hold stillingen helt stille, og glid roligt op.",
+      "breathing": "Træk vejret roligt og jævnt, også når lårene begynder at brænde.",
+      "cues": ["Ryggen flad mod væggen", "Lårene vandrette", "Knæene over anklerne"],
+      "mistakes": [
+        {
+          "mistake": "Hoften glider op, så lårene ikke er vandrette.",
+          "fix": "Glid ned til vandret igen; kan du ikke holde det, er sættet slut."
+        },
+        {
+          "mistake": "Knæene står foran tæerne.",
+          "fix": "Gå fødderne lidt længere frem, så knæene er lige over anklerne."
+        },
+        {
+          "mistake": "Du presser hænderne mod lårene.",
+          "fix": "Kryds armene over brystet, så benene gør hele arbejdet."
+        }
+      ],
+      "easier": "Sæt dig højere op ad væggen, så knæene er mindre bøjede end 90°.",
+      "harder": "Trin W2: samme wall sit med garde og rolige lige slag.",
+      "equipment": ["wall"],
+      "getReady": "Find et stykke fri væg, og stil dig med ryggen mod den.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "stand",
+              "name": "Stående",
+              "text": "Stående med ryggen mod væggen og fødderne i hoftebredde ca. to fodlængder fra den, så kroppen læner sig let bagud mod væggen. Benene er strakte, og armene er krydset over brystet.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "sit",
+              "name": "Wall sit",
+              "text": "Ryggen flad mod væggen og hoften i knæhøjde, så lårene er vandrette og knæene bøjet 90°. Knæene lige over anklerne, fødderne fladt i gulvet i hoftebredde og armene krydset over brystet.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "sit", "seconds": 2, "label": "Glid ned" },
+            { "to": "sit", "seconds": "dose", "label": "Hold" },
+            { "to": "stand", "seconds": 2, "label": "Glid op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wallsit.W2",
+      "trains": "Lårene holder stillingen, mens skuldre og arme arbejder i garden, som sidst i en hård runde.",
+      "start": "Sæt dig i wall sit med ryggen flad mod væggen, lårene vandrette og knæene over anklerne. Løft hænderne op i garde foran ansigtet med albuerne ind mod kroppen.",
+      "steps": [
+        "Hold garden med hænderne foran ansigtet, albuerne ind og hagen lidt ned.",
+        "Slå et roligt lige slag, og træk hånden hurtigt tilbage i garden.",
+        "Skift arm fra slag til slag, og pust ud på hvert slag.",
+        "Bliv i wall sit med ryggen mod væggen, til tiden er gået."
+      ],
+      "tempo": "Hold wall sit stille hele tiden, og slå rolige lige slag i en jævn rytme.",
+      "breathing": "Pust kort ud på hvert slag, og træk vejret ind, når hånden er tilbage i garden.",
+      "cues": ["Ryggen mod væggen", "Hånden tilbage i garden", "Pust ud på hvert slag"],
+      "mistakes": [
+        {
+          "mistake": "Hoften glider op ad væggen, når du slår.",
+          "fix": "Slå kun med armen og en lille drejning i skulderen, og hold lårene vandrette."
+        },
+        {
+          "mistake": "Den anden hånd falder ned fra garden.",
+          "fix": "Hold den hånd, der ikke slår, oppe ved ansigtet hele tiden."
+        },
+        {
+          "mistake": "Du holder vejret og slår hårdere og hårdere.",
+          "fix": "Slå roligt, og pust kort ud på hvert slag."
+        }
+      ],
+      "easier": "Trin W1: wall sit, 90°, med armene krydset over brystet.",
+      "harder": "Trin W3: wall sit til squats, 45 sek wall sit og direkte 20 kontrollerede squats.",
+      "equipment": ["wall"],
+      "getReady": "Find et stykke fri væg, og stil dig med ryggen mod den, klar til at glide ned.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "guard",
+              "name": "Garde",
+              "text": "Wall sit med ryggen flad mod væggen, lårene vandrette og knæene lige over anklerne. Hænderne er i garde foran ansigtet med albuerne ind mod kroppen og hagen lidt ned.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "left",
+              "name": "Venstre lige",
+              "text": "Wall sit som i garde, men venstre arm er strakt lige frem i skulderhøjde med næven vendt nedad. Højre hånd bliver ved ansigtet, og ryggen er mod væggen.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "right",
+              "name": "Højre lige",
+              "text": "Wall sit som i garde, men højre arm er strakt lige frem i skulderhøjde med næven vendt nedad. Venstre hånd bliver ved ansigtet, og ryggen er mod væggen.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "guard", "seconds": "dose", "label": "Hold garden" },
+            { "to": "left", "seconds": 0.6, "label": "Venstre lige" },
+            { "to": "guard", "seconds": 0.6, "label": "Tilbage i garde" },
+            { "to": "right", "seconds": 0.6, "label": "Højre lige" },
+            { "to": "guard", "seconds": 0.6, "label": "Tilbage i garde" }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "format": 1,
+  "subject": "legs",
+  "why": [
+    "I Muay Thai står du tit på ét ben: når du sparker, giver knæ og skifter stilling. Stigen bygger styrke i ét ben ad gangen, så standbenet holder, og fodarbejdet bliver stærkere. Den går fra split squat til pistol squat helt ned og op på ét ben.",
+    "Tjek anklen med knæ-til-væg: stil tæerne 10 cm fra væggen, og før knæet frem mod den. Når knæet væggen, uden at hælen letter? Ellers: 2 × 10 ankel-vip først (knæet frem over tæerne med hælen i gulvet) og en tynd bog under hælen i trin 4–6.",
+    "Knæet må gerne gå frem over tæerne, så længe hælen bliver i gulvet. Let ømhed i lårene er i orden; skarp smerte eller smerte i knæet betyder stop og et trin ned."
+  ],
+  "items": [
+    {
+      "id": "legs.1",
+      "trains": "Lår og baller på ét ben ad gangen, så standbenet holder, når du sparker og giver knæ.",
+      "start": "Stå i et langt skridt med fødderne i hoftebredde, som på to skinner, og en pude på gulvet under bagerste knæ. Forreste fod står fladt, bagerste hæl er løftet, og hænderne er på hofterne.",
+      "steps": [
+        "Spænd maven, og hold overkroppen rank med vægten mest på forreste ben.",
+        "Sænk dig lige ned på 3 sek, til bagerste knæ rører puden let.",
+        "Hold 1 sek stille med forreste hæl i gulvet, uden at hvile på puden.",
+        "Pres dig op gennem forreste hæl. Tag alle gentagelser, og skift så ben."
+      ],
+      "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
+      "breathing": "Træk vejret ind på vej ned, og pust ud på vej op.",
+      "cues": ["3 sek ned, 1 sek stille", "Knæet rører puden let", "Forreste hæl i gulvet"],
+      "mistakes": [
+        {
+          "mistake": "Forreste hæl letter, og vægten ryger ud på tæerne.",
+          "fix": "Tag et lidt længere skridt, og pres gennem hælen hele vejen op."
+        },
+        {
+          "mistake": "Forreste knæ falder ind mod det andet ben.",
+          "fix": "Hold knæet over midten af foden, så det peger samme vej som tæerne."
+        },
+        {
+          "mistake": "Du sætter dig på puden og hviler.",
+          "fix": "Lad knæet røre puden let, og hold spændingen i begge ben, mens du holder stille."
+        }
+      ],
+      "easier": "Hold let i en stoleryg for balancen, eller læg en pude mere ovenpå, så vejen ned bliver kortere.",
+      "harder": "Trin 2: bulgarsk split squat med bagerste fod oppe på sofaen.",
+      "equipment": ["pillow"],
+      "getReady": "Læg en pude på gulvet, knæl på den med begge knæ i 90°, og rejs dig uden at flytte fødderne.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Stående i et langt skridt med fødderne i hoftebredde. Forreste fod fladt i gulvet, bagerste på tæerne med hælen løftet. Begge knæ let bøjede, hoften midt mellem fødderne, overkroppen lodret og hænderne på hofterne.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Bagerste knæ rører puden let lige under hoften, og begge knæ er bøjet ca. 90°. Forreste underben er lodret eller lidt skråt frem med hælen i gulvet, bagerste fod på tæerne. Overkroppen lodret, hænderne på hofterne.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor", "count": 1 },
+                { "part": "knee", "on": "pillow", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1.5, "label": "Kontrolleret op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "legs.2",
+      "trains": "Mere af vægten på ét ben, så lår, baller og balance bliver stærkere til spark og knæ.",
+      "start": "Stå med ryggen til sofaen, et stort skridt foran den, og læg vristen af bagerste fod på sofakanten. Forreste fod står fladt i gulvet, og hænderne er på hofterne.",
+      "steps": [
+        "Hold ryggen lang, og læn overkroppen en smule frem.",
+        "Sænk dig på 3 sek, til bagerste knæ er en håndsbredde over gulvet.",
+        "Hold 1 sek stille. Forreste knæ må gerne gå frem over tæerne, men hælen bliver i gulvet.",
+        "Pres dig op gennem hele forreste fod. Tag alle gentagelser, og skift så ben."
+      ],
+      "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
+      "breathing": "Træk vejret ind på vej ned, og pust ud på vej op.",
+      "cues": [
+        "3 sek ned, 1 sek stille",
+        "Knæet må gerne frem over tæerne",
+        "Forreste hæl i gulvet"
+      ],
+      "mistakes": [
+        {
+          "mistake": "Du skubber dig op med bagerste ben.",
+          "fix": "Lad bagerste fod bare hvile på sofaen, så forreste ben gør arbejdet."
+        },
+        {
+          "mistake": "Forreste hæl letter i bunden.",
+          "fix": "Flyt forreste fod lidt længere væk fra sofaen, og pres gennem hælen."
+        },
+        {
+          "mistake": "Forreste knæ falder ind mod midten.",
+          "fix": "Hold knæet over midten af foden, så det peger samme vej som tæerne."
+        }
+      ],
+      "easier": "Trin 1: split squat med begge fødder i gulvet og bagerste knæ ned til en pude.",
+      "harder": "Trin 3: bulgarsk split squat med rygsæk, eller med 3 sek pause i bunden.",
+      "equipment": ["sofa"],
+      "getReady": "Stil dig med ryggen til sofaen, et stort skridt foran kanten, så du kan lægge vristen op på den.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Forreste fod fladt i gulvet et stort skridt foran sofaen, vristen af bagerste fod på sofakanten. Forreste ben næsten strakt, bagerste knæ let bøjet og pegende mod gulvet. Overkroppen lidt frem, hænderne på hofterne.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "sofa", "count": 1 }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Forreste lår vandret med knæet lidt frem over tæerne og hælen i gulvet. Bagerste knæ bøjet og en håndsbredde over gulvet, lidt bag hoften. Overkroppen hælder lidt frem med lang ryg, hænderne på hofterne.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "sofa", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1.5, "label": "Kontrolleret op" }
+          ]
+        }
+      ]
+    }
+  ]
+}

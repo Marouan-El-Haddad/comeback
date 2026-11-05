@@ -1,0 +1,69 @@
+{
+  "format": 1,
+  "subject": "sl_rdl",
+  "why": [
+    "Etbens RDL er et rumænsk dødløft på ét ben: du bøjer frem i hoften med lang ryg, mens det frie ben går bagud. Det træner baglår og baller i den lange stilling og balancen på standbenet, som du står på, hver gang du sparker.",
+    "Sporet har kun ét trin. Rammer du toppen i alle sæt med 2 i reserve to pas i træk, beder appen dig lægge 2 kg i rygsækken, og du starter forfra i bunden af intervallet."
+  ],
+  "items": [
+    {
+      "id": "sl_rdl.1",
+      "trains": "Baglår, baller og balance på ét ben, så du står sikkert på standbenet, når du sparker.",
+      "start": "Stå på ét ben med knæet let bøjet og armene hængende ned foran lårene. Det frie ben er strakt med foden lidt over gulvet lige bag standbenet.",
+      "steps": [
+        "Skub hoften bagud på 3 sek med lang ryg, og lad det frie ben følge overkroppen bagud.",
+        "Stop, når overkroppen er næsten vandret, eller før ryggen bliver rund, og hold 1 sek stille.",
+        "Rejs dig kontrolleret ved at skubbe hoften frem, og klem ballen i toppen.",
+        "Tag alle gentagelser på samme ben, og skift så."
+      ],
+      "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
+      "breathing": "Træk vejret ind på vej ned, og pust ud på vej op.",
+      "cues": [
+        "Hoften bagud, lang ryg",
+        "Det frie ben følger med",
+        "Begge hofter peger mod gulvet"
+      ],
+      "mistakes": [
+        {
+          "mistake": "Ryggen bliver rund i bunden.",
+          "fix": "Stop højere oppe, og tænk på at skubbe hoften bagud i stedet for at sænke brystet."
+        },
+        {
+          "mistake": "Hoften drejer op i siden med det frie ben.",
+          "fix": "Hold begge hofteknogler pegende mod gulvet, og lad tæerne på det frie ben pege ned."
+        },
+        {
+          "mistake": "Standbenets knæ låser eller bøjer meget.",
+          "fix": "Hold knæet let bøjet og stille hele vejen; bevægelsen sker i hoften."
+        }
+      ],
+      "easier": "Hold let i en stoleryg med den ene hånd, eller lad tæerne på det frie ben røre gulvet let bag dig.",
+      "harder": "Med rygsæk i hånden på det frie bens side: rammer du toppen i alle sæt med 2 i reserve to pas i træk, beder appen dig lægge 2 kg i.",
+      "equipment": ["backpack"],
+      "getReady": "Find en fri plads, og læg rygsækken klar, hvis passet viser vægt til den.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Stående på ét ben med knæet let bøjet og overkroppen lodret. Det frie ben er strakt med foden lidt over gulvet lige bag standbenet, og armene hænger ned foran lårene.",
+              "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Hoften skubbet bagud, så overkroppen er næsten vandret med lang ryg. Det frie ben er strakt bagud i linje med overkroppen med tæerne mod gulvet. Standbenets knæ er let bøjet, og armene hænger lodret under skuldrene.",
+              "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1.5, "label": "Kontrolleret op" }
+          ]
+        }
+      ]
+    }
+  ]
+}
