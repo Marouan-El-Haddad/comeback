@@ -106,6 +106,7 @@ describe('SK10: ingen henvisninger til PDF, sidetal eller kilder', () => {
     // innerText separates table cells with a tab: »pr. side⇥40« is not a page.
     expect(findSourceRef('Sideplanke pr. side\t40 sek\n4 dage')).toBeNull();
     expect(findSourceRef('se side 47')).not.toBeNull();
+    expect(findSourceRef(`se side${String.fromCharCode(0xa0)}47`)).not.toBeNull();
     expect(findSourceRef('Kilderne står i programmets side 54.')).not.toBeNull();
   });
 });
