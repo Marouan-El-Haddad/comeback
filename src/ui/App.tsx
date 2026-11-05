@@ -4,18 +4,24 @@ import { useEffect, useState } from 'preact/hooks';
 import { formatLong } from '../engine/index.ts';
 import type { SessionKind } from '../engine/types.ts';
 import { useModel } from './hooks.ts';
+import { lazy } from './lazy.tsx';
 import type { Model } from './model.ts';
 import { Ladders } from './screens/Ladders.tsx';
 import { More, type MorePage } from './screens/More.tsx';
 import { Onboarding } from './screens/Onboarding.tsx';
 import { Today } from './screens/Today.tsx';
 import { WeekView } from './screens/Week.tsx';
-import { OpenStrong } from './session/OpenStrong.tsx';
-import { resumableRun, Runner, type RunRequest } from './session/Runner.tsx';
+import { resumableRun, type RunRequest } from './session/resume.ts';
 import { noteScreen } from './startup.ts';
 import { applyUpdate, onSwChange, swStatus } from './sw.ts';
 
 type Tab = 'today' | 'week' | 'ladders' | 'more';
+
+// The guided session and Open & Strong are not needed for the first screen: their code is fetched
+// in the background once I dag is up, or on the first tap (docs/SPEC.md 7, DECISIONS D35).
+const Runner = lazy(() => import('./session/Runner.tsx').then((m) => m.Runner));
+const OpenStrong = lazy(() => import('./session/OpenStrong.tsx').then((m) => m.OpenStrong));
+const PRELOAD_AFTER_MS = 1000;
 
 const TABS: Array<[Tab, string]> = [
   ['today', 'I dag'],
@@ -36,6 +42,13 @@ export function App({ model }: { model: Model }) {
   noteScreen(!model.state.onboarded ? 'onboarding' : run ? 'session' : os ? 'os' : tab);
 
   useEffect(() => onSwChange(() => setSw((n) => n + 1)), []);
+  useEffect(() => {
+    const id = setTimeout(() => {
+      void Runner.preload().catch(() => undefined);
+      void OpenStrong.preload().catch(() => undefined);
+    }, PRELOAD_AFTER_MS);
+    return () => clearTimeout(id);
+  }, []);
   useEffect(() => {
     // A new day (midnight, or the app reopened the next morning) writes its catch-up events.
     const check = () => {
@@ -134,8 +147,12 @@ export function App({ model }: { model: Model }) {
     );
   }
 
-  const start = (kind: SessionKind, short: boolean, calmBase: boolean) =>
-    setRun({ date: model.today, kind, short, calmBase });
+  // The session opens once its code is there, so the tap never shows an empty screen.
+  const start = (kind: SessionKind, short: boolean, calmBase: boolean) => {
+    const request = { date: model.today, kind, short, calmBase };
+    const open = () => setRun(request);
+    void Runner.preload().then(open, open);
+  };
 
   return (
     <div class="app">
@@ -158,7 +175,10 @@ export function App({ model }: { model: Model }) {
           <Today
             model={model}
             onStart={start}
-            onOpenAndStrong={() => setOs(true)}
+            onOpenAndStrong={() => {
+              const open = () => setOs(true);
+              void OpenStrong.preload().then(open, open);
+            }}
             onBackup={() => {
               setTab('more');
               setMorePage('backup');

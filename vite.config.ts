@@ -62,6 +62,21 @@ function appVersion(): string {
 export default defineConfig({
   base: '/comeback/',
   define: { __APP_VERSION__: JSON.stringify(appVersion()) },
+  build: {
+    rolldownOptions: {
+      output: {
+        // The start-up code in two files of similar size, which Firefox parses in parallel: the
+        // engine with the programme data, and the rest of the app ('app' becomes the entry
+        // chunk). Code loaded later (the guided session) gets its own files (docs/SPEC.md 7, D35).
+        codeSplitting: {
+          groups: [
+            { name: 'engine', test: /[\\/](src[\\/]engine|program)[\\/]/, priority: 2 },
+            { name: 'app', tags: ['$initial'], priority: 1 },
+          ],
+        },
+      },
+    },
+  },
   plugins: [
     preact(),
     designTokens('/comeback/'),

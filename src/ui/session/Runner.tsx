@@ -18,15 +18,7 @@ import {
   type BlockPlan,
   type SessionPlan,
 } from '../../engine/index.ts';
-import type {
-  ISODate,
-  Light,
-  Pain,
-  Rir,
-  SessionKind,
-  SessionSummary,
-  Side,
-} from '../../engine/types.ts';
+import type { Light, Pain, Rir, SessionSummary, Side } from '../../engine/types.ts';
 import { audioState, enableAudio, play } from '../audio.ts';
 import { Picto } from '../components/Picto.tsx';
 import { readLocal, useModel, writeLocal } from '../hooks.ts';
@@ -37,41 +29,11 @@ import { keepAwake, onWakeState, releaseAwake, wakeState } from '../wakelock.ts'
 import { buildSteps, setCount, type Step } from './steps.ts';
 import { Countdown, PhaseRunner, type Phase } from './timers.tsx';
 import { MeasureInput } from './MeasureInput.tsx';
+import { RUN_KEY, type RunRequest, type RunState } from './resume.ts';
 import { Summary } from './Summary.tsx';
 
-export interface RunRequest {
-  date: ISODate;
-  kind: SessionKind;
-  short?: boolean;
-  calmBase?: boolean;
-}
-
-interface RunState extends RunRequest {
-  phase: 'light' | 'pre' | 'run' | 'summary';
-  answers: [boolean, boolean, boolean];
-  red: boolean;
-  preIndex: number;
-  stepIndex: number;
-  sessionId: string | null;
-  intervalsAnyway: boolean;
-  sim: boolean;
-}
-
-const RUN_KEY = 'comeback.run';
 /** »Skru op for medielyden« is shown at the first session only (SPEC 5, Lyd). */
 const SOUND_KEY = 'comeback.soundNoted';
-
-/** A session left half-way today is resumed at the same step after the app was closed. */
-export function resumableRun(model: Model): RunRequest | null {
-  const saved = readLocal<RunState>(RUN_KEY);
-  if (!saved || saved.date !== model.today || saved.sim !== (model.sim !== null)) return null;
-  if (saved.phase === 'summary') return null;
-  if (saved.sessionId) {
-    const session = model.state.sessions.find((s) => s.sessionId === saved.sessionId);
-    if (!session || session.completed) return null;
-  }
-  return saved;
-}
 
 const WARMUP = PROGRAM.routines.find((r) => r.id === 'warmup');
 
