@@ -9,9 +9,10 @@ permissions:
   pages: write
   id-token: write
 
+# A newer push cancels a run that is still building or stuck in deployment (NAT-1 suggestion 4).
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
