@@ -1,0 +1,60 @@
+{
+  "_note": "Visuel identitet fra PDF'en. Thai-flagets rød og navy, 'røde og blå hjørne' som i en boksering.",
+  "color": {
+    "red": "#A51931",
+    "redTint": "#FBE8EB",
+    "redDark": "#7E1022",
+    "navy": "#2D2A4A",
+    "navyDark": "#211F38",
+    "ink": "#26242F",
+    "muted": "#6B6878",
+    "blue": "#1F4FA3",
+    "blueTint": "#E7EEFA",
+    "gold": "#D99A1E",
+    "goldTint": "#FFF3D6",
+    "goldDark": "#8A5B00",
+    "panel": "#F3F2F7",
+    "line": "#E3E1EA",
+    "paper": "#FFFFFF",
+    "green": "#1E8E5A",
+    "amber": "#E3A008"
+  },
+  "level": {
+    "Basis": "#8C88A6",
+    "Stærk": "#1F4FA3",
+    "Imponerende": "#A51931",
+    "Boss": "#D99A1E"
+  },
+  "semantic": {
+    "muayThai": "red",
+    "strength": "navy",
+    "motor": "blue",
+    "openAndStrong": "gold/goldTint",
+    "coachCallout": "red (rødt hjørne)",
+    "fysioCallout": "blue (blåt hjørne)",
+    "evidensCallout": "gold",
+    "trafficGreen": "green",
+    "trafficYellow": "amber",
+    "trafficRed": "red"
+  },
+  "font": {
+    "display": "Kanit (600 overskrifter, 900 italic til plakat-titler)",
+    "body": "Bai Jamjuree (400 brødtekst, 600 fremhævning)",
+    "thai": "Kanit thai-subset (kun til ordet มวยไทย)",
+    "pdfScalePx": {
+      "h1": 25,
+      "h2": 15.5,
+      "body": 13.6,
+      "small": 12.2,
+      "table": 12,
+      "label": 11
+    }
+  },
+  "pictogram": {
+    "near": "#2D2A4A",
+    "far": "#A7A3BE",
+    "highlight": "#A51931",
+    "ghost": "#DCD9E6",
+    "rule": "Figurer står på en gulvlinje; rød markerer den arbejdende kropsdel; lys grå er startpositionen."
+  }
+}

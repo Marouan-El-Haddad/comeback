@@ -1,0 +1,27 @@
+# Dependencies and build output
+node_modules/
+dist/
+dev-dist/
+coverage/
+*.tsbuildinfo
+.vite/
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Personal data: never commit the programme PDF or backups
+*.pdf
+Comeback_Muay_Thai_sekundaertraening.pdf
+comeback-backup-*.json
+*.backup.json
+comeback-probe-*.json
+
+# Local environment
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db

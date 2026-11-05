@@ -1,0 +1,42 @@
+{
+  "name": "comeback",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Offline PWA for a 12-week training programme",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/bundle-size.ts",
+    "preview": "vite preview --port 4173 --strictPort",
+    "test": "vitest run --passWithNoTests",
+    "test:e2e": "playwright test",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "check": "npm test && npm run typecheck && npm run lint && npm run build",
+    "simulate": "node scripts/simulate.ts"
+  },
+  "dependencies": {
+    "preact": "^11.1.1",
+    "workbox-window": "^7.4.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.1",
+    "@preact/preset-vite": "^2.10.6",
+    "@types/node": "^24.19.2",
+    "eslint": "^10.14.0",
+    "eslint-config-prettier": "^10.1.8",
+    "fake-indexeddb": "^6.2.7",
+    "globals": "^17.14.0",
+    "prettier": "^3.9.10",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.1",
+    "vite": "^8.3.6",
+    "vite-plugin-pwa": "^2.0.0",
+    "vitest": "^5.1.0"
+  }
+}
