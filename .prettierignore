@@ -8,6 +8,7 @@ package-lock.json
 
 # Source documents and imported assets are kept exactly as delivered
 CLAUDE.md
+.claude/
 docs/
 public/
 tools/
