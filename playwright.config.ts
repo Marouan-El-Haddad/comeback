@@ -27,6 +27,9 @@ const phone: Project['use'] = {
   ...(chromium ? { isMobile: true } : { launchOptions: { firefoxUserPrefs: IRONFOX_PREFS } }),
 };
 
+// E2E_PORT lets a second checkout (a review worktree) run the suite at the same time.
+const port = Number(process.env.E2E_PORT ?? 4173);
+
 export default defineConfig({
   testDir: 'e2e',
   outputDir: 'test-results',
@@ -36,12 +39,12 @@ export default defineConfig({
   retries: 1,
   reporter: 'list',
   use: {
-    baseURL: 'http://127.0.0.1:4173',
+    baseURL: `http://127.0.0.1:${port}`,
     trace: 'retain-on-failure',
   },
   webServer: {
-    command: 'npm run build && npm run preview',
-    url: 'http://127.0.0.1:4173/comeback/',
+    command: `npm run build && npx vite preview --host 127.0.0.1 --port ${port} --strictPort`,
+    url: `http://127.0.0.1:${port}/comeback/`,
     reuseExistingServer: false,
     timeout: 180_000,
   },
