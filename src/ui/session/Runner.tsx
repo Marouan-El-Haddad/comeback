@@ -19,9 +19,9 @@ import {
   type SessionPlan,
 } from '../../engine/index.ts';
 import type { Light, Pain, Rir, SessionSummary, Side } from '../../engine/types.ts';
-import { withoutSources } from '../../content/refs.ts';
 import { audioState, enableAudio, play } from '../audio.ts';
 import { Picto } from '../components/Picto.tsx';
+import { WhyText } from '../components/Why.tsx';
 import { readLocal, useModel, writeLocal } from '../hooks.ts';
 import { ulid } from '../ids.ts';
 import type { Model } from '../model.ts';
@@ -1007,9 +1007,7 @@ function SetStep(props: {
       <details class="why">
         <summary>Hvorfor</summary>
         <p>{stepData.execution}</p>
-        {getTrack(PROGRAM, block.trackId).why?.map((w) => (
-          <p key={w.text}>{withoutSources(w.text)}</p>
-        ))}
+        <WhyText trackId={block.trackId} />
       </details>
     </div>
   );

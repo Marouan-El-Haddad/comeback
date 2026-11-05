@@ -103,10 +103,12 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // Everything the app needs offline: code, styles, the first-screen fonts, pictograms and
-        // the Wake Lock fallback video. The probe is a separate app with its own service worker.
+        // Everything the app needs offline: code, styles, the first-screen fonts, pictograms, the
+        // explanations and figures (content/ as JSON files, docs/SPEC.md 7) and the Wake Lock
+        // fallback video. The probe is a separate app with its own service worker.
         globPatterns: [
           '**/*.{js,css,html,webm,png}',
+          'assets/*.json',
           'fonts/kanit-latin-{600,700}-normal.woff2',
           'fonts/bai-jamjuree-latin-{400,600}-normal.woff2',
           'pictos/**/*.svg',
