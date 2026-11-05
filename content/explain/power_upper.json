@@ -1,0 +1,153 @@
+{
+  "format": 1,
+  "subject": "power_upper",
+  "why": [
+    "Eksplosive push-ups lærer bryst, skuldre og triceps at give kraften fra sig på et splitsekund, som når et lige slag skal ramme hårdt. Her tæller kvalitet, ikke mængde.",
+    "Hver gentagelse skal være lige hurtig og lige høj. Bliver en gentagelse tydeligt langsommere, stopper du sættet og tager den fulde pause.",
+    "Eksplosive push-ups belaster senerne mest, så antallet holdes nede. Land med bløde albuer, gerne på et tæppe. Let ømhed er i orden, men skarp smerte eller smerte i et led betyder stop og et trin ned."
+  ],
+  "items": [
+    {
+      "id": "power_upper.1",
+      "trains": "Fart i bryst, skuldre og triceps, så kraften fra presset går hurtigt ud i slagene.",
+      "start": "Planke på strakte arme med hænderne lidt bredere end skuldrene og fingrene frem. Kroppen er lige fra hæl til hoved.",
+      "steps": [
+        "Spænd mave og baller, så kroppen er som én planke.",
+        "Sænk dig kontrolleret, til brystet er lige over gulvet.",
+        "Pres dig op så hurtigt og hårdt du kan, men lad hænderne blive i gulvet.",
+        "Stop kort i toppen med strakte arme, før næste gentagelse."
+      ],
+      "tempo": "Kontrolleret ned, eksplosivt op og et kort stop i toppen.",
+      "breathing": "Ånd ind på vej ned, og pust kort og hårdt ud på vej op, som når du slår.",
+      "cues": [
+        "Kontrolleret ned, eksplosivt op",
+        "Hænderne bliver i gulvet",
+        "Kroppen som en planke"
+      ],
+      "mistakes": [
+        {
+          "mistake": "Hoften hænger eller kommer op før brystet.",
+          "fix": "Spænd mave og baller, så hele kroppen løfter sig på én gang."
+        },
+        {
+          "mistake": "Albuerne peger lige ud til siden.",
+          "fix": "Peg albuerne skråt bagud, ca. 45° fra kroppen."
+        },
+        {
+          "mistake": "Farten falder i de sidste gentagelser.",
+          "fix": "Stop sættet der. Hver gentagelse skal være lige hurtig."
+        }
+      ],
+      "easier": "Hænderne på sofaen, hvis du ikke kan presse dig hurtigt op fra gulvet.",
+      "harder": "Trin 2: plyo push-up på skrå, hvor hænderne slipper sofaen.",
+      "equipment": [],
+      "getReady": "Find en fri plads, gerne på et tæppe, og læg dig i planke på strakte arme.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Strakte arme med hænderne under skuldrene, lidt bredere end skulderbredde og fingrene frem. Kroppen er lige fra hæl til hoved, og tæerne er i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Brystet lige over gulvet, albuerne bøjede og skråt bagud, ca. 45° fra kroppen. Kroppen er stadig lige, og hænderne er samme sted.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 1.5, "label": "Kontrolleret ned" },
+            { "to": "top", "seconds": 0.4, "label": "Eksplosivt op" },
+            { "to": "top", "seconds": 0.5, "label": "Kort stop" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "power_upper.2",
+      "trains": "Eksplosivt pres, hvor hænderne slipper, så du lærer at sende kraften hurtigt ud som i et slag, med mindre vægt end fra gulvet.",
+      "start": "Hænderne på sofaens forkant lidt bredere end skuldrene og fødderne i gulvet bag dig. Kroppen er lige og skrå fra hæl til hoved.",
+      "steps": [
+        "Sænk brystet kontrolleret mod sofakanten med albuerne skråt bagud.",
+        "Pres eksplosivt op fra bunden, så hænderne slipper sofaen.",
+        "Tag imod med hænderne samme sted og bløde, let bøjede albuer.",
+        "Stræk armene, find planken, og lav næste gentagelse."
+      ],
+      "tempo": "Kontrolleret ned, eksplosivt op, så hænderne slipper, og en blød landing.",
+      "breathing": "Ånd ind på vej ned, og pust kort og hårdt ud, når du skubber dig fri.",
+      "cues": ["Skub dig fri", "Land med bløde albuer", "Kroppen som en planke"],
+      "mistakes": [
+        {
+          "mistake": "Du lander med strakte, låste arme.",
+          "fix": "Tag imod med let bøjede albuer, og lad dem give efter som en fjeder."
+        },
+        {
+          "mistake": "Hoften hænger, eller numsen stikker op.",
+          "fix": "Spænd mave og baller, så kroppen letter og lander som én planke."
+        },
+        {
+          "mistake": "Hænderne slipper ikke sofaen.",
+          "fix": "Pres op med det samme fra bunden, så hurtigt og hårdt du kan."
+        }
+      ],
+      "easier": "Trin 1: hurtig push-up, hvor hænderne bliver i gulvet.",
+      "harder": "Trin 3: plyo push-up fra gulvet, hvor hænderne letter.",
+      "equipment": ["sofa"],
+      "getReady": "Tjek, at sofaen står fast og ikke kan glide, og stil dig foran den.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Strakte arme med hænderne på sofaens forkant under skuldrene. Fødderne i gulvet bag dig, og kroppen er lige og skrå, ca. 40° fra gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "sofa" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Brystet lige over sofakanten, albuerne bøjede og skråt bagud, ca. 45° fra kroppen. Kroppen er stadig lige, og hænderne er samme sted.",
+              "contacts": [
+                { "part": "hand", "on": "sofa" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "air",
+              "name": "Hænderne fri",
+              "text": "Armene næsten strakte og hænderne en håndsbredde over sofaen. Kroppen er lige som en planke, og kun tæerne rører gulvet.",
+              "contacts": [{ "part": "toes", "on": "floor" }]
+            },
+            {
+              "id": "land",
+              "name": "Landing",
+              "text": "Hænderne er landet samme sted på sofaen, og albuerne er let bøjede for at tage imod. Kroppen er lige, og tæerne er i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "sofa" },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 1.5, "label": "Kontrolleret ned" },
+            { "to": "air", "seconds": 0.35, "label": "Skub dig fri" },
+            { "to": "land", "seconds": 0.3, "label": "Land med bløde albuer" },
+            { "to": "top", "seconds": 0.6, "label": "Stræk armene" }
+          ]
+        }
+      ]
+    }
+  ]
+}

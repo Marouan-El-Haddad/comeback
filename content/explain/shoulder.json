@@ -1,0 +1,133 @@
+{
+  "format": 1,
+  "subject": "shoulder",
+  "why": [
+    "Stigen gør dine skulder-push-ups til en vej mod håndstands-push-ups. Du presser over hovedet, og for hvert trin ligger mere af kropsvægten over skuldrene.",
+    "Stærke skuldre gør det lettere at holde garden oppe hele omgangen og at stå imod i clinchen.",
+    "Når du når til håndstand, lander hovedet altid blødt, aldrig med vægt eller med et vrid. Lær at komme ned ved at dreje ud til siden, før du øver væk fra væggen."
+  ],
+  "items": [
+    {
+      "id": "shoulder.1",
+      "trains": "Skuldre og armenes bagside, når du presser over hovedet: styrke til en garde, der bliver oppe, og første trin mod håndstand.",
+      "start": "Start i push-up-stilling med hænderne i skulderbredde. Gå fødderne ind mod hænderne, til hoften er højt, og kroppen danner et omvendt V med strakte arme og ben.",
+      "steps": [
+        "Hold hoften højt hele vejen.",
+        "Bøj albuerne skråt bagud, og sænk hovedet på 3 sek mod et punkt foran fingrene.",
+        "Hold 1 sek stille med hovedet lige over gulvet, så hoved og hænder danner en trekant.",
+        "Pres gulvet væk, til armene er strakte, og hovedet er mellem armene igen."
+      ],
+      "tempo": "3 sek ned, 1 sek stille med hovedet lige over gulvet, op i ét roligt stræk.",
+      "breathing": "Ånd ind på vej ned, og pust ud, når du presser op.",
+      "cues": ["Hoften højt", "Hoved og hænder i en trekant", "Albuerne skråt bagud"],
+      "mistakes": [
+        {
+          "mistake": "Hoften falder, og øvelsen bliver en almindelig push-up.",
+          "fix": "Gå fødderne tættere på hænderne. Er baglårene stramme, så bøj knæene lidt, og skyd hoften op."
+        },
+        {
+          "mistake": "Hovedet går ned mellem hænderne eller rammer gulvet hårdt.",
+          "fix": "Før hovedet frem mod et punkt foran fingrene, og stop lige over gulvet."
+        },
+        {
+          "mistake": "Albuerne peger lige ud til siden.",
+          "fix": "Bøj albuerne skråt bagud mod fødderne, ca. 45° ud fra kroppen."
+        }
+      ],
+      "easier": "Gå fødderne lidt længere ud, så overkroppen er mindre stejl, og gå kun så dybt, du kan styre.",
+      "harder": "Trin 2: fødderne på en stol, så hoften kommer over skuldrene.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet med plads til en push-up.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Omvendt V: hænderne i gulvet i skulderbredde, armene strakte og hovedet mellem dem. Hænder, skuldre og hofte på én lige linje. Hoften højest med ca. 70° mellem overkrop og lår, benene strakte og tæerne i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Albuerne bøjet ca. 90° og skråt bagud. Hovedet er lige over gulvet foran fingerspidserne, så hoved og hænder danner en trekant. Hoften er stadig højt over skuldrene, og benene er strakte med tæerne i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1, "label": "Op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shoulder.2",
+      "trains": "Mere af vægten over skuldrene end på trin 1: styrke til en garde, der bliver oppe, og til håndstand.",
+      "start": "Stå på alle fire med ryggen til stolen, og sæt tæerne op på sædet én fod ad gangen. Gå hænderne ind mod stolen, til hoften er lige over skuldrene.",
+      "steps": [
+        "Spænd maven, og hold hoften lige over skuldrene og hovedet mellem armene.",
+        "Bøj albuerne skråt bagud, og sænk hovedet på 3 sek mod et punkt foran fingrene.",
+        "Hold 1 sek stille med hovedet lige over gulvet.",
+        "Pres gulvet væk til strakte arme. Gå fødderne ned én ad gangen, når sættet er slut."
+      ],
+      "tempo": "3 sek ned, 1 sek stille med hovedet lige over gulvet, op i ét roligt stræk.",
+      "breathing": "Ånd ind på vej ned, og pust ud, når du presser op. Bliver du svimmel, så kom ned.",
+      "cues": ["Hoften over skuldrene", "Hoved og hænder i en trekant", "Albuerne skråt bagud"],
+      "mistakes": [
+        {
+          "mistake": "Hænderne står for langt fra stolen, så det bliver en skrå push-up.",
+          "fix": "Gå hænderne ind mod stolen, til hoften er lige over skuldrene."
+        },
+        {
+          "mistake": "Hovedet går ned mellem hænderne eller rammer gulvet hårdt.",
+          "fix": "Før hovedet frem mod et punkt foran fingrene, og stop lige over gulvet."
+        },
+        {
+          "mistake": "Stolen glider eller vipper.",
+          "fix": "Stil stolen med ryggen mod en væg, og sæt tæerne midt på sædet."
+        }
+      ],
+      "easier": "Sæt fødderne lavere, fx på et trappetrin, eller gå tilbage til trin 1: pike push-up.",
+      "harder": "Trin 3: du laver stadig dette trin og lægger håndstand med maven mod væggen til.",
+      "equipment": ["chair", "wall"],
+      "getReady": "Stil en solid stol med ryggen mod en væg, så den ikke kan glide.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Hænderne i gulvet i skulderbredde og armene strakte. Hoften er lige over skuldrene, så overkroppen er næsten lodret med hovedet mellem armene. Tæerne på stolesædet og benene næsten strakte, ca. 45° mellem overkrop og lår.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "chair" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Albuerne bøjet ca. 90° og skråt bagud. Toppen af hovedet er lige over gulvet foran fingerspidserne, så hoved og hænder danner en trekant. Hoften er stadig over skuldrene, og tæerne er på stolen.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "chair" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1, "label": "Op" }
+          ]
+        }
+      ]
+    }
+  ]
+}

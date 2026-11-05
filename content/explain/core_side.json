@@ -1,0 +1,136 @@
+{
+  "format": 1,
+  "subject": "core_side",
+  "why": [
+    "Siden af maven og hoften holder dig oprejst og stabil, når du står på ét ben for at sparke eller checke et spark, og når du bliver trukket fra side til side i clinchen.",
+    "Stigen bygger op mod stjerne-teep, hvor du fra sideplanken trækker knæet til brystet og sparker ud som en teep. I passet skifter du mellem sidestigen og rotationsstigen."
+  ],
+  "items": [
+    {
+      "id": "core_side.S1",
+      "trains": "Siden af maven og hoften, som holder dig stabil på ét ben, når du sparker eller checker et spark.",
+      "start": "Lig på siden med albuen lige under skulderen og underarmen i gulvet pegende frem. Benene strakte og fødderne oven på hinanden.",
+      "steps": [
+        "Spænd maven og ballerne, og løft hoften fra gulvet.",
+        "Skub gulvet væk med albuen, så hoved, hofte og fødder er på én linje.",
+        "Hold stillingen, og sænk hoften roligt, når tiden er gået.",
+        "Tag næste sæt på den anden side."
+      ],
+      "tempo": "Løft hoften roligt, og hold stillingen stille hele tiden.",
+      "breathing": "Træk vejret roligt og jævnt gennem hele holdet.",
+      "cues": [
+        "Hoved, hofte og fødder på linje",
+        "Skub gulvet væk med albuen",
+        "Hoften frem, ikke bagud"
+      ],
+      "mistakes": [
+        {
+          "mistake": "Hoften synker mod gulvet.",
+          "fix": "Løft den tilbage på linje. Synker den igen, er sættet slut."
+        },
+        {
+          "mistake": "Hoften skyder bagud, så kroppen knækker.",
+          "fix": "Skub hoften frem, så hoved, hofte og fødder er på én lige linje."
+        },
+        {
+          "mistake": "Skulderen kryber op mod øret.",
+          "fix": "Skub gulvet væk med albuen, og hold albuen lige under skulderen."
+        }
+      ],
+      "easier": "Sæt den øverste fod i gulvet lige foran den nederste, så du står mere stabilt.",
+      "harder": "Trin S2: med benløft.",
+      "equipment": [],
+      "getReady": "Find en fri plads, og læg dig på siden med albuen under skulderen.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "down",
+              "name": "Nede",
+              "text": "Liggende på siden med underarmen i gulvet, albuen lige under skulderen og underarmen pegende frem. Benene strakte og fødderne oven på hinanden. Den øverste hånd på hoften, og hoften hviler i gulvet.",
+              "contacts": [
+                { "part": "side", "on": "floor" },
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "up",
+              "name": "Oppe",
+              "text": "Hoften løftet, så hoved, hofte og fødder er på én lige linje. Albuen lige under skulderen og den øverste hånd på hoften. Kun underarmen og den nederste fods yderside rører gulvet.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "up", "seconds": 2, "label": "Løft hoften" },
+            { "to": "up", "seconds": "dose", "label": "Hold" },
+            { "to": "down", "seconds": 2, "label": "Ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_side.S2",
+      "trains": "Siden af maven og ydersiden af hoften, som holder bækkenet vandret, når du står på ét ben og sparker.",
+      "start": "Sideplanke på albuen: underarmen i gulvet med albuen under skulderen, hoften løftet og hoved, hofte og fødder på én linje.",
+      "steps": [
+        "Læg dig på venstre side, og løft hoften op i sideplanke på albuen.",
+        "Løft det øverste ben strakt op på 2 sek med tæerne pegende frem.",
+        "Sænk det på 2 sek, til fødderne mødes, og hold hoften oppe hele sættet.",
+        "Lav alle gentagelser på venstre side, og skift så til højre uden pause."
+      ],
+      "tempo": "Langsomt: ca. 2 sek op og 2 sek ned. Hoften bliver oppe hele sættet.",
+      "breathing": "Pust ud, når benet løftes, og træk vejret ind, når det sænkes.",
+      "cues": ["Hoften oppe hele sættet", "Tæerne peger frem", "2 sek op, 2 sek ned"],
+      "mistakes": [
+        {
+          "mistake": "Hoften synker, når benet løftes.",
+          "fix": "Løft benet lidt lavere, og skub gulvet væk med albuen."
+        },
+        {
+          "mistake": "Benet glider frem foran kroppen.",
+          "fix": "Før benet lige op ud til siden, gerne en anelse bagud, med tæerne pegende frem."
+        },
+        {
+          "mistake": "Benet svinger op og falder ned.",
+          "fix": "Tæl 2 sek op og 2 sek ned, så siden arbejder hele vejen."
+        }
+      ],
+      "easier": "Trin S1: sideplanke på albuen.",
+      "harder": "Trin S3: stjerne-sideplanke.",
+      "equipment": [],
+      "getReady": "Find en fri plads, og læg dig på venstre side med albuen under skulderen.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "plank",
+              "name": "Sideplanke",
+              "text": "Sideplanke på albuen: underarmen i gulvet med albuen lige under skulderen, hoften løftet og hoved, hofte og fødder på én linje. Fødderne oven på hinanden og den øverste hånd på hoften.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "leg_up",
+              "name": "Benet løftet",
+              "text": "Som sideplanken, men det øverste ben er løftet strakt ca. 30° ud til siden med tæerne pegende frem. Det nederste ben, hoften og overkroppen står stille på linje.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "leg_up", "seconds": 2, "label": "2 sek op" },
+            { "to": "plank", "seconds": 2, "label": "2 sek ned" }
+          ]
+        }
+      ]
+    }
+  ]
+}

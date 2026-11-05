@@ -1,0 +1,137 @@
+{
+  "format": 1,
+  "subject": "core_situp",
+  "why": [
+    "Sit-up-stigen giver dynamisk mavestyrke til klubbens sit-ups og fører videre til dragon flag, hvor hele kroppen løftes og sænkes som én planke.",
+    "Når trin 3 sidder, kan du tage klubbens paradenummer med i klassen: sit-up med albuer, hvor du i toppen af hver sit-up slår 2 albuer og 2 lige slag og går ned på 3 sek."
+  ],
+  "items": [
+    {
+      "id": "core_situp.1",
+      "trains": "Den nederste del af maven og kontrol over bækkenet, som du bruger, når du trækker knæet op til knæspark og teep.",
+      "start": "Lig på ryggen med armene langs siden og håndfladerne i gulvet. Løft benene, så hofte og knæ er bøjet ca. 90° med knæene over hoften.",
+      "steps": [
+        "Hold vinklen i knæene, og lad armene ligge let i gulvet.",
+        "Rul hoften op fra gulvet, så knæene kommer ind mod brystet.",
+        "Sænk hoften langsomt på 3 sek, til bagdelen rører gulvet.",
+        "Hold 1 sek stille med knæene over hoften, og rul op igen."
+      ],
+      "tempo": "Rul op roligt uden sving, 3 sek ned og 1 sek stille i bunden.",
+      "breathing": "Pust ud, når du ruller op, og træk vejret ind på vej ned.",
+      "cues": ["Rul op uden sving", "3 sek ned, 1 sek stille", "Knæene bliver bøjede"],
+      "mistakes": [
+        {
+          "mistake": "Du svinger benene op.",
+          "fix": "Hold vinklen i knæene, og lad maven rulle hoften op. En kort vej er nok."
+        },
+        {
+          "mistake": "Benene falder ned mod gulvet i bunden.",
+          "fix": "Stop, når bagdelen rører gulvet, med knæene stadig over hoften."
+        },
+        {
+          "mistake": "Du skubber dig op med armene.",
+          "fix": "Lad armene ligge let i gulvet. De holder balancen, og maven gør arbejdet."
+        }
+      ],
+      "easier": "Det er stigens første trin. Rul hoften en kortere vej op, og sænk den stadig langsomt.",
+      "harder": "Trin 2: strikt sit-up.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, og læg dig på ryggen med armene langs siden.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "start",
+              "name": "Start",
+              "text": "Liggende på ryggen med hoved, ryg og bagdel i gulvet og armene langs siden med håndfladerne nedad. Hofte og knæ bøjet ca. 90°: lårene lodrette og skinnebenene vandrette.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "hip", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "top",
+              "name": "Hoften oppe",
+              "text": "Hoften og den nederste del af lænden rullet op fra gulvet, så knæene er trukket ind over brystet med samme vinkel i knæene. Skulderblade, hoved og arme bliver i gulvet.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "top", "seconds": 1.5, "label": "Rul op" },
+            { "to": "start", "seconds": 3, "label": "3 sek ned" },
+            { "to": "start", "seconds": 1, "label": "1 sek stille" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_situp.2",
+      "trains": "Hele maven gennem en fuld sit-up uden hjælp fra fødderne eller sving: styrken bag klubbens sit-ups.",
+      "start": "Lig på ryggen med knæene bøjet ca. 90° og fødderne fladt i gulvet i hoftebredde. Kryds armene over brystet med hænderne på skuldrene.",
+      "steps": [
+        "Spænd maven, og rul op: først hovedet, så skuldrene og til sidst ryggen.",
+        "Kom op, til overkroppen er næsten lodret, uden at fødderne løfter sig.",
+        "Sænk dig på 3 sek, til skulderbladene rører gulvet.",
+        "Hold 1 sek stille, og rul op igen uden sving."
+      ],
+      "tempo": "Op i ét roligt stræk, 3 sek ned og 1 sek stille i bunden.",
+      "breathing": "Pust ud på vej op, og træk vejret ind på vej ned.",
+      "cues": ["Armene krydset, 3 sek ned", "Fødderne bliver i gulvet", "Rul op uden sving"],
+      "mistakes": [
+        {
+          "mistake": "Fødderne løfter sig fra gulvet.",
+          "fix": "Pres hælene ned, og rul langsommere op. Sæt ikke fødderne fast under et møbel."
+        },
+        {
+          "mistake": "Du kaster overkroppen op med et sving.",
+          "fix": "Rul op hvirvel for hvirvel, og hold armene krydset over brystet."
+        },
+        {
+          "mistake": "Du falder ned i stedet for at sænke dig.",
+          "fix": "Tæl 3 sek ned, og stop 1 sek, når skulderbladene rører gulvet."
+        }
+      ],
+      "easier": "Trin 1: omvendt crunch.",
+      "harder": "Trin 3: hollow rocks.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, og sæt dig med bøjede knæ og fødderne i gulvet.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "down",
+              "name": "Nede",
+              "text": "Liggende på ryggen med hoved, skulderblade og bagdel i gulvet. Knæene bøjet ca. 90° og fødderne fladt i gulvet i hoftebredde. Armene krydset over brystet med hænderne på skuldrene.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "hip", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "up",
+              "name": "Oppe",
+              "text": "Siddende med overkroppen næsten lodret over hoften og armene stadig krydset over brystet. Knæene bøjet ca. 90° og fødderne fladt i gulvet uden at blive holdt.",
+              "contacts": [
+                { "part": "hip", "on": "floor" },
+                { "part": "foot", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "up", "seconds": 1.5, "label": "Op" },
+            { "to": "down", "seconds": 3, "label": "3 sek ned" },
+            { "to": "down", "seconds": 1, "label": "1 sek stille" }
+          ]
+        }
+      ]
+    }
+  ]
+}

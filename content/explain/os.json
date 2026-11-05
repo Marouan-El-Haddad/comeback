@@ -1,0 +1,420 @@
+{
+  "format": 1,
+  "subject": "os",
+  "why": [
+    "Open & Strong åbner den øvre ryg og brystet, styrker skulderbladene og nakken og åbner hofterne efter stolen og kampstillingen. Seks rolige minutter, som kan ligge når som helst, også som en pause fra skærmen.",
+    "En dag på stolen og mange runder i garden trækker skuldrene frem og hovedet ned. En smidig øvre ryg, stærke skulderblade og en stabil nakke holder dig rank i clinchen, og åbne hofter giver plads til at strække helt ud i spark og knæ.",
+    "Holdning handler mindre om at stå rigtigt hele tiden og mere om at have styrken til en lige position og at skifte stilling ofte. Derfor er halvdelen af øvelserne styrke. Rutinen koster næsten ingen energi og bliver også på en rød dag."
+  ],
+  "items": [
+    {
+      "id": "os.1",
+      "trains": "Bøjer den øvre ryg bagover efter en dag foroverbøjet, så du lettere står rank i garden og i clinchen.",
+      "start": "Lig på ryggen med bøjede knæ og fødderne i gulvet. Håndklædet ligger på tværs under ryggen ved de nederste spidser af skulderbladene, og hænderne holder om baghovedet.",
+      "steps": [
+        "Ånd dybt ind gennem næsen, så ribbenene udvider sig.",
+        "Pust langsomt ud, og lad hovedet og albuerne synke bagud over håndklædet.",
+        "Tag 3 vejrtrækninger, løft så hoften lidt, og ryk dig en håndsbredde mod fødderne.",
+        "Gør det samme med håndklædet under midten og under toppen af skulderbladene."
+      ],
+      "tempo": "Bliv i hver position i 3 dybe vejrtrækninger, og ryk så videre.",
+      "breathing": "Ånd dybt ind gennem næsen, og pust langsomt ud gennem munden, cirka dobbelt så længe.",
+      "cues": ["Lang udånding, synk ned", "Hoften bliver i gulvet", "Ribbenene ned mod hoften"],
+      "mistakes": [
+        {
+          "mistake": "Håndklædet ligger under lænden.",
+          "fix": "Læg det højere. Det skal ligge under skulderbladene og aldrig under lænden."
+        },
+        {
+          "mistake": "Lænden svajer, og ribbenene stritter op.",
+          "fix": "Pust helt ud, og lad ribbenene synke, så det er den øvre ryg, der bøjer bagover."
+        },
+        {
+          "mistake": "Nakken strammer, fordi hovedet hænger.",
+          "fix": "Lad hænderne bære hovedet, så nakken kan slappe af."
+        }
+      ],
+      "easier": "Fold håndklædet fladt i stedet for at rulle det, så buen bliver mindre.",
+      "harder": "Stræk armene over hovedet mod gulvet bag dig, og hold ribbenene nede.",
+      "equipment": ["towel"],
+      "getReady": "Rul et håndklæde stramt sammen til en fast rulle, og læg det på tværs på gulvet.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "low",
+              "name": "Nederst",
+              "text": "På ryggen med hoften i gulvet, knæene bøjet ca. 90° og fødderne i gulvet i hoftebredde. Håndklædet på tværs under ryggen ved de nederste spidser af skulderbladene. Hænderne holder om baghovedet og hviler på gulvet.",
+              "contacts": [
+                { "part": "hip", "on": "floor" },
+                { "part": "foot", "on": "floor" },
+                { "part": "back", "on": "towel" },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "mid",
+              "name": "Midt",
+              "text": "Som nederst, men kroppen er rykket en håndsbredde mod fødderne, så håndklædet ligger under midten af skulderbladene. Fødderne står samme sted, så knæene er lidt mere bøjede.",
+              "contacts": [
+                { "part": "hip", "on": "floor" },
+                { "part": "foot", "on": "floor" },
+                { "part": "back", "on": "towel" },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "high",
+              "name": "Øverst",
+              "text": "Kroppen er rykket endnu en håndsbredde mod fødderne, så håndklædet ligger under toppen af skulderbladene, et stykke fra nakken. Fødderne står samme sted, og knæene er bøjet lidt mere.",
+              "contacts": [
+                { "part": "hip", "on": "floor" },
+                { "part": "foot", "on": "floor" },
+                { "part": "back", "on": "towel" },
+                { "part": "hand", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "low", "seconds": "dose", "label": "3 dybe vejrtrækninger" },
+            { "to": "mid", "seconds": 2, "label": "Ryk en håndsbredde" },
+            { "to": "mid", "seconds": "dose", "label": "3 dybe vejrtrækninger" },
+            { "to": "high", "seconds": 2, "label": "Ryk en håndsbredde" },
+            { "to": "high", "seconds": "dose", "label": "3 dybe vejrtrækninger" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "os.2",
+      "trains": "Giver den øvre ryg den drejning, du bruger i hvert slag, hvert spark og hver vending i clinchen.",
+      "start": "Lig på siden med hofter og knæ bøjet ca. 90° og knæene samlet foran dig. Hovedet hviler på håndklædet, og armene er strakt frem i skulderhøjde med håndfladerne mod hinanden.",
+      "steps": [
+        "Hold knæene samlet mod gulvet hele tiden.",
+        "Før den øverste arm strakt i en bue op og over til den anden side, og følg hånden med blikket.",
+        "Pust ud, mens brystet drejer mod loftet, og før armen samme vej tilbage.",
+        "Tag 5, rul om på den anden side, og gentag."
+      ],
+      "tempo": "Åbn på 2 sek, og luk på 2 sek. Efter 5 skifter du side.",
+      "breathing": "Pust ud, mens du åbner, og ånd ind, mens du lukker.",
+      "cues": ["Knæene bliver samlet", "Følg hånden med blikket", "Pust ud, når du åbner"],
+      "mistakes": [
+        {
+          "mistake": "Det øverste knæ glider bagud, når armen åbner.",
+          "fix": "Pres knæene sammen, og åbn kun så langt, at de kan blive liggende."
+        },
+        {
+          "mistake": "Du kaster armen over i et ryk.",
+          "fix": "Før armen langsomt og strakt i en stor bue, og lad udåndingen tage dig det sidste stykke."
+        },
+        {
+          "mistake": "Hovedet bliver liggende, mens armen drejer.",
+          "fix": "Drej hovedet med, og følg hånden med blikket hele vejen."
+        }
+      ],
+      "easier": "Bøj armen, og hold hånden på brystet, mens du drejer. Så er det kun ryggen, der skal give efter.",
+      "harder": "Hold det øverste knæ nede med den nederste hånd, så hoften slet ikke kan følge med.",
+      "equipment": ["towel"],
+      "getReady": "Læg dig på siden med knæene bøjet, og læg det sammenrullede håndklæde under hovedet.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "closed",
+              "name": "Lukket",
+              "text": "På siden med hofter og knæ bøjet ca. 90° og knæene samlet foran hoften. Hovedet på håndklædet. Begge arme strakt frem langs gulvet i skulderhøjde, den øverste hånd oven på den nederste.",
+              "contacts": [
+                { "part": "side", "on": "floor" },
+                { "part": "knee", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "hand", "on": "floor", "count": 1 },
+                { "part": "head", "on": "towel" }
+              ]
+            },
+            {
+              "id": "open",
+              "name": "Åben",
+              "text": "Den øverste arm er ført strakt i en bue over til den anden side, så brystet vender mod loftet og hånden er så tæt på gulvet, som knæene tillader. Hovedet er drejet med, og knæene ligger samlet.",
+              "contacts": [
+                { "part": "side", "on": "floor" },
+                { "part": "knee", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "hand", "on": "floor", "count": 1 },
+                { "part": "head", "on": "towel" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "open", "seconds": 2, "label": "Åbn" },
+            { "to": "closed", "seconds": 2, "label": "Luk" },
+            { "to": "open", "seconds": 2, "label": "Åbn" },
+            { "to": "closed", "seconds": 2, "label": "Luk" },
+            { "to": "open", "seconds": 2, "label": "Åbn" },
+            { "to": "closed", "seconds": 2, "label": "Luk" },
+            { "to": "open", "seconds": 2, "label": "Åbn" },
+            { "to": "closed", "seconds": 2, "label": "Luk" },
+            { "to": "open", "seconds": 2, "label": "Åbn" },
+            { "to": "closed", "seconds": 2, "label": "Luk" },
+            { "to": "closed", "seconds": 5, "label": "Skift side" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "os.3",
+      "trains": "Styrker musklerne under skulderbladene, så skuldrene bliver nede og tilbage, mens du holder garden oppe.",
+      "start": "Lig på maven med strakte ben og panden mod gulvet. Stræk armene skråt frem over hovedet i et Y med tommelfingrene op mod loftet.",
+      "steps": [
+        "Træk skulderbladene ned mod lommerne, og løft de strakte arme en håndsbredde fra gulvet.",
+        "Hold 2 sek, uden at panden slipper gulvet.",
+        "Sænk armene roligt.",
+        "Tag 8, hvil et par vejrtrækninger, og tag 8 til."
+      ],
+      "tempo": "Løft på 1 sek, hold 2 sek, og sænk roligt på 1 sek.",
+      "breathing": "Pust ud, når du løfter, og ånd ind, når du sænker.",
+      "cues": ["Tommelfingrene op", "Skulderbladene ned mod lommerne", "Panden bliver i gulvet"],
+      "mistakes": [
+        {
+          "mistake": "Du løfter hovedet og brystet for at få armene højere op.",
+          "fix": "Hold panden mod gulvet. Det er kun armene, der løfter, og en håndsbredde er nok."
+        },
+        {
+          "mistake": "Skuldrene kryber op mod ørerne.",
+          "fix": "Træk skulderbladene ned mod lommerne, før du løfter."
+        },
+        {
+          "mistake": "Albuerne bøjer.",
+          "fix": "Hold armene lange og strakte, som om nogen trækker i fingrene."
+        }
+      ],
+      "easier": "Løft én arm ad gangen, og lad den anden hvile i gulvet.",
+      "harder": "Efter 4 gennemførte uger med Open & Strong: hold en lille vandflaske i hver hånd.",
+      "equipment": [],
+      "getReady": "Læg håndklædet til side, og læg dig på maven med armene i et Y.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "down",
+              "name": "Nede",
+              "text": "På maven med strakte ben, vristene i gulvet og panden mod gulvet. Armene strakt skråt frem over hovedet i et Y med ca. 90° mellem armene og tommelfingrene op. Armene hviler i gulvet.",
+              "contacts": [
+                { "part": "belly", "on": "floor" },
+                { "part": "chest", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "knee", "on": "floor" },
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "up",
+              "name": "Løftet",
+              "text": "Armene er løftet en håndsbredde fra gulvet, stadig strakte i Y'et med tommelfingrene op, og skulderbladene er trukket ned og sammen. Panden, brystet, maven og benene bliver i gulvet.",
+              "contacts": [
+                { "part": "belly", "on": "floor" },
+                { "part": "chest", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "knee", "on": "floor" },
+                { "part": "foot", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "up", "seconds": 1, "label": "Løft" },
+            { "to": "up", "seconds": 2, "label": "Hold 2 sek" },
+            { "to": "down", "seconds": 1, "label": "Sænk" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "os.4",
+      "trains": "Lærer skulderbladene at følge med og skuldrene at blive nede, når armene går op, som i garden og i clinchen.",
+      "start": "Stå med front mod væggen og fødderne en fodlængde fra den. Sæt underarmene lodret mod væggen i skulderbredde med albuerne i skulderhøjde.",
+      "steps": [
+        "Glid langsomt op ad væggen til et Y, mens underarmene bliver mod væggen.",
+        "Løft hænder og underarme 2 cm ud fra væggen, og sæt dem tilbage.",
+        "Glid roligt ned til start med skuldrene væk fra ørerne."
+      ],
+      "tempo": "Glid op på 2 sek, løft armene fra væggen i 1 sek, og glid roligt ned igen.",
+      "breathing": "Pust ud på vej op, så ribbenene bliver nede, og ånd ind på vej ned.",
+      "cues": ["Skuldrene væk fra ørerne", "Ribbenene nede", "Kun 2 cm fra væggen"],
+      "mistakes": [
+        {
+          "mistake": "Skuldrene trækkes op mod ørerne.",
+          "fix": "Tænk skulderbladene ned mod lommerne, mens armene glider op."
+        },
+        {
+          "mistake": "Lænden svajer, når armene kommer op.",
+          "fix": "Spænd maven let, og hold ribbenene nede. Stop dér, hvor lænden begynder at svaje."
+        },
+        {
+          "mistake": "Du læner dig bagud for at få armene fri af væggen.",
+          "fix": "Stå stille, og løft kun armene. Det er skulderbladene, der gør arbejdet."
+        }
+      ],
+      "easier": "Glid kun så højt, at skuldrene kan blive nede, og løft armene derfra.",
+      "harder": "Hold løftet lidt længere i toppen, uden at skuldrene kryber op eller lænden svajer.",
+      "equipment": ["wall"],
+      "getReady": "Rejs dig, og stil dig med front mod en fri væg.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "start",
+              "name": "Start",
+              "text": "Stående med front mod væggen og fødderne i hoftebredde en fodlængde fra den. Underarmene lodret mod væggen i skulderbredde, albuerne bøjet ca. 90° i skulderhøjde og lillefingersiden mod væggen.",
+              "contacts": [
+                { "part": "foot", "on": "floor" },
+                { "part": "forearm", "on": "wall" },
+                { "part": "hand", "on": "wall" }
+              ]
+            },
+            {
+              "id": "y",
+              "name": "Y",
+              "text": "Armene er glidet op og lidt ud i et Y over hovedet og er næsten strakte. Underarme og hænder er stadig mod væggen, og skuldrene er væk fra ørerne. Fødderne står samme sted.",
+              "contacts": [
+                { "part": "foot", "on": "floor" },
+                { "part": "forearm", "on": "wall" },
+                { "part": "hand", "on": "wall" }
+              ]
+            },
+            {
+              "id": "lift",
+              "name": "Løftet",
+              "text": "Som i Y, men hænder og underarme er løftet ca. 2 cm ud fra væggen, fordi skulderbladene trækkes ned og sammen. Kroppen og fødderne står stille, og ribbenene er nede.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "y", "seconds": 2, "label": "Glid op" },
+            { "to": "lift", "seconds": 1, "label": "Løft 2 cm" },
+            { "to": "y", "seconds": 0.5, "label": "Tilbage på væggen" },
+            { "to": "start", "seconds": 1.5, "label": "Glid ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "os.5",
+      "trains": "Træner de dybe nakkemuskler, der holder hovedet over skuldrene og stabilt i clinchen.",
+      "start": "Stå rank med fødderne i hoftebredde og armene ned langs siden. Skuldrene er afslappede, og blikket er vandret.",
+      "steps": [
+        "Skub hagen og hovedet lige bagud, som om du laver en dobbelthage.",
+        "Hold 5 sek med blikket vandret, og mærk strækket bag i nakken.",
+        "Slip roligt, og gentag."
+      ],
+      "tempo": "Træk hagen ind på 1 sek, hold 5 sek, og slip på 1 sek.",
+      "breathing": "Træk vejret roligt gennem næsen, også mens du holder.",
+      "cues": ["Hagen lige bagud", "Blikket vandret", "Skuldrene står stille"],
+      "mistakes": [
+        {
+          "mistake": "Du kigger ned og nikker i stedet for at trække hagen bagud.",
+          "fix": "Hold blikket vandret, og skub hagen lige bagud, som på en skinne."
+        },
+        {
+          "mistake": "Skuldrene eller overkroppen går bagud med.",
+          "fix": "Lad skuldrene hænge, og flyt kun hovedet."
+        },
+        {
+          "mistake": "Du fortsætter, selv om det snurrer i armen, eller du bliver svimmel.",
+          "fix": "Stop ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+        }
+      ],
+      "easier": "Stå med ryggen mod en væg, og træk hovedet bagud mod den. Væggen viser dig retningen.",
+      "harder": "Som nakke-stigens trin N2: lig på ryggen, træk hagen ind, og løft hovedet 2 cm fra gulvet.",
+      "equipment": [],
+      "getReady": "Bliv stående, og ret dig op med armene ned langs siden.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "neutral",
+              "name": "Neutral",
+              "text": "Stående rank med fødderne i hoftebredde og armene ned langs siden. Hovedet i sin vante stilling over skuldrene, blikket vandret og skuldrene afslappede.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "tucked",
+              "name": "Hagen ind",
+              "text": "Hagen og hele hovedet er skubbet 2–3 cm lige bagud, så der kommer en dobbelthage. Blikket er stadig vandret, nakken er lang bagtil, og skuldrene står, hvor de stod.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "tucked", "seconds": 1, "label": "Hagen ind" },
+            { "to": "tucked", "seconds": 5, "label": "Hold 5 sek" },
+            { "to": "neutral", "seconds": 1, "label": "Slip" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "os.6",
+      "trains": "Strækker forsiden af hoften og låret, så hoften kan strække helt ud i spark og knæ efter stol og kampstilling.",
+      "start": "Knæl foran sofaen med ryggen til den. Det bagerste knæ står på det foldede håndklæde helt inde ved sofaen, og skinnebenet går op ad sofaens forkant.",
+      "steps": [
+        "Sæt den forreste fod frem, så knæet står over anklen, og læg hænderne på knæet.",
+        "Rejs overkroppen langsomt op, og klem ballen på det bagerste ben.",
+        "Hold, og træk vejret roligt.",
+        "Skift ben, og gentag."
+      ],
+      "tempo": "Rejs dig roligt op i strækket, og hold 45 sek pr. side.",
+      "breathing": "Træk vejret dybt og roligt. Hold ballen klemt, og lad strækket blive lidt dybere på hver udånding.",
+      "cues": ["Klem ballen", "Halebenet ind under dig", "Overkroppen rank"],
+      "mistakes": [
+        {
+          "mistake": "Lænden svajer, og strækket forsvinder fra hoften.",
+          "fix": "Klem ballen, og træk halebenet ind under dig. Så flytter strækket op foran på hoften."
+        },
+        {
+          "mistake": "Det gør ondt i knæet, der står på gulvet.",
+          "fix": "Læg mere blødt under, eller flyt knæet lidt væk fra sofaen. Ved skarp smerte i knæet: stop, og brug den lettere udgave."
+        },
+        {
+          "mistake": "Hoften drejer ud til siden.",
+          "fix": "Hold begge hofter pegende lige frem, som to forlygter."
+        }
+      ],
+      "easier": "Flyt knæet en håndsbredde væk fra sofaen, og hold overkroppen lænet frem med hænderne på det forreste knæ.",
+      "harder": "Ret overkroppen helt op, og løft armen på samme side som det bagerste ben op over hovedet.",
+      "equipment": ["sofa", "towel"],
+      "getReady": "Fold håndklædet dobbelt, og læg det på gulvet helt inde ved sofaens forkant.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "setup",
+              "name": "Klar",
+              "text": "Bagerste knæ på håndklædet helt inde ved sofaen, skinnebenet lodret op ad sofaens forkant og tæerne opad. Forreste fod i gulvet med knæet bøjet ca. 90° over anklen. Overkroppen lænet frem, hænderne på det forreste knæ.",
+              "contacts": [
+                { "part": "knee", "on": "towel", "count": 1 },
+                { "part": "shin", "on": "sofa", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "stretch",
+              "name": "Strækket",
+              "text": "Overkroppen er rejst lodret over hoften, og ballen på det bagerste ben er klemt, så hoften skubbes lidt frem. Hænderne hviler på det forreste lår. Knæ, skinneben og forreste fod står som før.",
+              "contacts": [
+                { "part": "knee", "on": "towel", "count": 1 },
+                { "part": "shin", "on": "sofa", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "stretch", "seconds": 2, "label": "Rejs dig op" },
+            { "to": "stretch", "seconds": "dose", "label": "Hold 45 sek" },
+            { "to": "setup", "seconds": 3, "label": "Ud, og skift ben" },
+            { "to": "stretch", "seconds": 2, "label": "Rejs dig op" },
+            { "to": "stretch", "seconds": "dose", "label": "Hold 45 sek" }
+          ]
+        }
+      ]
+    }
+  ]
+}

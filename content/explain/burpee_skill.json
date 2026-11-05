@@ -1,0 +1,499 @@
+{
+  "format": 1,
+  "subject": "burpee_skill",
+  "why": [
+    "Burpees er en færdighed: først teknik, så rytme, så fart. En ren teknik kræver færre kræfter pr. gentagelse, så du kan lave flere, og den holder, når du er træt sidst i en runde.",
+    "Varianterne gør burpeen til kamptræning: du laver en sprawl, hvor benene skydes bagud og hoften presses mod gulvet, kommer hurtigt op i garde, giver knæ med høj puls og holder balancen på ét ben.",
+    "Teknik-burpeen gælder altid. Den næste variant kan du vælge, når du er på trin E6 eller højere i EMOM'en, og du øver den i EMOM'ens 2 sidste minutter eller i kamp-runderne."
+  ],
+  "items": [
+    {
+      "id": "burpee_skill.V1",
+      "trains": "Ben, bryst, arme og mave i én bevægelse og en teknik, der holder, når du er træt sidst i en runde.",
+      "start": "Stå oprejst med fødderne i hoftebredde, vægten midt på fødderne og armene langs siden.",
+      "steps": [
+        "Gå ned på hug, og sæt hænderne i gulvet lige foran fødderne.",
+        "Hop fødderne tilbage, og sænk brystet til gulvet i én glidende bevægelse med stram mave.",
+        "Pres dig op til strakte arme, og spring fødderne flade og brede ind tæt på hænderne.",
+        "Rejs dig med et hofteskub, og hop med strakt hofte og hænderne over hovedet."
+      ],
+      "tempo": "Først teknik, så rytme, så fart. Find et tempo, du kan holde uden at sjuske.",
+      "breathing": "Pust ud på vej ned, og ånd ind på vej op.",
+      "cues": [
+        "Hænderne lige foran fødderne",
+        "Brystet i gulvet, stram mave",
+        "Hop med strakt hofte"
+      ],
+      "mistakes": [
+        {
+          "mistake": "Brystet når ikke helt ned til gulvet.",
+          "fix": "Sænk dig hele vejen, til brystet rører gulvet, i hver gentagelse."
+        },
+        {
+          "mistake": "Hoften falder først, og lænden svajer.",
+          "fix": "Spænd maven, før fødderne lander bagud, og sænk kroppen samlet som en planke."
+        },
+        {
+          "mistake": "Du rejser dig med rund ryg, fordi fødderne lander langt fra hænderne.",
+          "fix": "Spring fødderne flade og brede ind tæt på hænderne, og rejs dig med et hofteskub."
+        }
+      ],
+      "easier": "Det er første trin. Er hoppene for hårde, så træd fødderne tilbage og ind ét ad gangen, og hold brystet til gulvet.",
+      "harder": "Trin 2: sprawl til garde. Den kan du vælge, når du er på trin E6 eller højere i EMOM'en.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, hvor du kan ligge strakt ud bag dig.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "stand",
+              "name": "Stående",
+              "text": "Oprejst med fødderne i hoftebredde og flade i gulvet. Knæ og hofte er strakte, armene hænger langs siden, og blikket er frem.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "squat",
+              "name": "Hænder i gulvet",
+              "text": "På hug med fødderne flade, lidt bredere end hofterne, knæene dybt bøjede og hoften i knæhøjde. Overkroppen hælder ca. 45° frem, hovedet følger ryggen, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
+              "contacts": [
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "chest",
+              "name": "Brystet i gulvet",
+              "text": "Kroppen er lige og stram fra hæl til hoved. Brystet rører gulvet, hoften er lige over gulvet, og hovedet er i forlængelse af kroppen. Hænderne står under brystet med albuerne skråt bagud, og tæerne er i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" },
+                { "part": "chest", "on": "floor" }
+              ]
+            },
+            {
+              "id": "plank",
+              "name": "Planke",
+              "text": "Strakte arme med hænderne under skuldrene, lidt bredere end dem. Kroppen er lige fra hæl til hoved med spændt mave, hovedet i forlængelse af ryggen og tæerne i gulvet i hoftebredde.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "jump",
+              "name": "Hop",
+              "text": "I luften med strakt hofte og strakte knæ, så kroppen er lodret. Armene er strakt op over hovedet, og fødderne er en håndsbredde over gulvet med tæerne pegende ned.",
+              "contacts": []
+            }
+          ],
+          "phases": [
+            { "to": "squat", "seconds": 0.6, "label": "Hænderne ned" },
+            { "to": "chest", "seconds": 0.8, "label": "Brystet til gulvet" },
+            { "to": "plank", "seconds": 0.5, "label": "Pres op" },
+            { "to": "squat", "seconds": 0.5, "label": "Fødderne ind" },
+            { "to": "jump", "seconds": 0.5, "label": "Hop med strakt hofte" },
+            { "to": "stand", "seconds": 0.4, "label": "Land blødt" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "burpee_skill.V2",
+      "trains": "Sprawlen, hvor du skyder benene bagud og presser hoften mod gulvet, og vanen at komme lige op i garde, klar til at slå.",
+      "start": "Stå i kampstilling med den ene fod et halvt skridt foran, let bøjede knæ og hænderne knyttet foran ansigtet.",
+      "steps": [
+        "Sæt hænderne i gulvet foran fødderne, og skyd begge ben bagud i ét hurtigt ryk.",
+        "Pres hoften ned mod gulvet, til lårene næsten rører, og løft brystet og blikket.",
+        "Spring fødderne ind under hoften, og rejs dig direkte op i kampstilling uden hop i toppen.",
+        "Få hænderne op i garde, så snart de slipper gulvet."
+      ],
+      "tempo": "Først teknik, så rytme, så fart: ned i ét hurtigt ryk og op i garde i samme rytme hver gang.",
+      "breathing": "Pust ud, når benene skyder bagud, og ånd ind på vej op.",
+      "cues": ["Hoften ned mod gulvet", "Brystet op, blikket frem", "Op i garde uden hop"],
+      "mistakes": [
+        {
+          "mistake": "Hoften bliver oppe i luften.",
+          "fix": "Pres hoften ned mod gulvet, til lårene næsten rører, og hold brystet løftet."
+        },
+        {
+          "mistake": "Du kommer op med hænderne nede.",
+          "fix": "Få hænderne op i garde, så snart de slipper gulvet, og hold hagen nede."
+        },
+        {
+          "mistake": "Du rejser dig med rund ryg, fordi fødderne lander langt bag hænderne.",
+          "fix": "Spring fødderne helt ind under hoften, og rejs dig med et hofteskub."
+        }
+      ],
+      "easier": "Trin 1: teknik-burpee.",
+      "harder": "Trin 3: Muay Thai-burpee. Sprawl med teep i imponer-kataloget kan du vælge fra dette trin.",
+      "equipment": [],
+      "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig i kampstilling.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "guard",
+              "name": "Garde",
+              "text": "Kampstilling: fødderne lidt bredere end hofterne, den ene et halvt skridt foran den anden. Forreste fod er flad, bageste hæl let løftet og knæene let bøjede. Hænderne er knyttet foran ansigtet, albuerne inde og hagen nede.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "sprawl",
+              "name": "Sprawl",
+              "text": "Benene er strakt bagud og lidt spredt med tæerne i gulvet. Hoften er presset ned, så lårene næsten rører gulvet. Hænderne står under skuldrene med let bøjede arme, og brystet og blikket er løftet frem.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "crouch",
+              "name": "Fødderne inde",
+              "text": "På hug med fødderne flade, lidt bredere end hofterne og lige bag hænderne. Hænderne er stadig i gulvet, knæene er dybt bøjede, og hoften er i knæhøjde.",
+              "contacts": [
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "sprawl", "seconds": 0.5, "label": "Sprawl" },
+            { "to": "crouch", "seconds": 0.5, "label": "Fødderne ind" },
+            { "to": "guard", "seconds": 0.6, "label": "Op i garde" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "burpee_skill.V3",
+      "trains": "En hel burpee, der ender i garde med to knæ, så du lærer at slå hårdt og præcist, selv når pulsen er høj.",
+      "start": "Stå i kampstilling med den ene fod et halvt skridt foran, let bøjede knæ og hænderne knyttet foran ansigtet.",
+      "steps": [
+        "Gå ned på hug med hænderne lige foran fødderne, hop tilbage, og sænk brystet til gulvet.",
+        "Pres op, spring fødderne ind, og hop med strakt hofte og hænderne over hovedet.",
+        "Land blødt i kampstilling med hænderne oppe i garde.",
+        "Giv 2 knæ med det bageste ben: hoften frem og hænderne trukket ned som i clinchen."
+      ],
+      "tempo": "Først teknik, så rytme, så fart. Burpeen i jævn rytme og knæene hurtige og skarpe.",
+      "breathing": "Pust ud på vej ned og på hvert knæ, og ånd ind på vej op.",
+      "cues": ["Land i garde", "Hoften frem i knæet", "Pust ud på hvert knæ"],
+      "mistakes": [
+        {
+          "mistake": "Du lander med hænderne nede.",
+          "fix": "Før hænderne ned foran ansigtet allerede i luften, så du lander i garde."
+        },
+        {
+          "mistake": "Knæet går op, men hoften bliver bagude, og du falder forover.",
+          "fix": "Skub hoften frem, læn overkroppen lidt bagud, og driv knæet op og frem."
+        },
+        {
+          "mistake": "Burpeen bliver sjusket, fordi du har travlt med knæene.",
+          "fix": "Hold brystet til gulvet og hoppet med strakt hofte i hver gentagelse."
+        }
+      ],
+      "easier": "Trin 2: sprawl til garde.",
+      "harder": "Trin 4: burpee med tuck jump eller klap push-up. Burpee med switch kick i imponer-kataloget kan du vælge fra dette trin.",
+      "equipment": [],
+      "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig i kampstilling med garden oppe.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "guard",
+              "name": "Garde",
+              "text": "Kampstilling: fødderne lidt bredere end hofterne, den ene et halvt skridt foran den anden. Forreste fod er flad, bageste hæl let løftet og knæene let bøjede. Hænderne er knyttet foran ansigtet, albuerne inde og hagen nede.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "squat",
+              "name": "Hænder i gulvet",
+              "text": "På hug med fødderne flade, lidt bredere end hofterne, knæene dybt bøjede og hoften i knæhøjde. Overkroppen hælder ca. 45° frem, hovedet følger ryggen, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
+              "contacts": [
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "chest",
+              "name": "Brystet i gulvet",
+              "text": "Kroppen er lige og stram fra hæl til hoved. Brystet rører gulvet, hoften er lige over gulvet, og hovedet er i forlængelse af kroppen. Hænderne står under brystet med albuerne skråt bagud, og tæerne er i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" },
+                { "part": "chest", "on": "floor" }
+              ]
+            },
+            {
+              "id": "plank",
+              "name": "Planke",
+              "text": "Strakte arme med hænderne under skuldrene, lidt bredere end dem. Kroppen er lige fra hæl til hoved med spændt mave, hovedet i forlængelse af ryggen og tæerne i gulvet i hoftebredde.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "jump",
+              "name": "Hop",
+              "text": "I luften med strakt hofte og strakte knæ, så kroppen er lodret. Armene er strakt op over hovedet, og fødderne er en håndsbredde over gulvet, klar til at lande i kampstilling.",
+              "contacts": []
+            },
+            {
+              "id": "knee",
+              "name": "Knæ",
+              "text": "På forfoden af det forreste ben med let bøjet knæ. Det bageste knæ er drevet op og frem over hoftehøjde, tæerne peger ned, hoften er skudt frem, overkroppen læner lidt bagud, og hænderne trækker ned foran brystet.",
+              "contacts": [{ "part": "toes", "on": "floor", "count": 1 }]
+            }
+          ],
+          "phases": [
+            { "to": "squat", "seconds": 0.6, "label": "Hænderne ned" },
+            { "to": "chest", "seconds": 0.8, "label": "Brystet til gulvet" },
+            { "to": "plank", "seconds": 0.5, "label": "Pres op" },
+            { "to": "squat", "seconds": 0.5, "label": "Fødderne ind" },
+            { "to": "jump", "seconds": 0.5, "label": "Hop" },
+            { "to": "guard", "seconds": 0.4, "label": "Land i garde" },
+            { "to": "knee", "seconds": 0.4, "label": "Knæ 1" },
+            { "to": "guard", "seconds": 0.3, "label": "Foden tilbage" },
+            { "to": "knee", "seconds": 0.4, "label": "Knæ 2" },
+            { "to": "guard", "seconds": 0.4, "label": "Tilbage i garde" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "burpee_skill.V4",
+      "trains": "Eksplosiv kraft i ben eller arme midt i en hård serie, så du stadig har fart i spark, knæ og slag, når du er træt.",
+      "start": "Stå oprejst med fødderne i hoftebredde, vægten midt på fødderne og armene langs siden.",
+      "steps": [
+        "Gå ned på hug med hænderne lige foran fødderne, hop tilbage, og sænk brystet til gulvet.",
+        "Pres op, spring fødderne ind tæt på hænderne, og rejs dig med et hofteskub.",
+        "Hop højt, og træk knæene op mod brystet i luften (tuck jump). Land blødt på forfødderne.",
+        "Eller: pres dig fri af gulvet i bunden, klap, og land med bløde albuer. Toppen er så et almindeligt hop."
+      ],
+      "tempo": "Samme rytme som en teknik-burpee. Først teknik, så rytme, så fart.",
+      "breathing": "Pust ud på vej ned, og ånd ind på vej op.",
+      "cues": ["Knæene op mod brystet", "Land stille som en kat", "Samme rytme hele sættet"],
+      "mistakes": [
+        {
+          "mistake": "Du bøjer overkroppen ned mod knæene i stedet for at løfte dem.",
+          "fix": "Hold overkroppen oprejst, og træk knæene op mod brystet."
+        },
+        {
+          "mistake": "Du lander tungt med strakte ben.",
+          "fix": "Stræk benene ud under dig igen i luften, og land på forfødderne med bløde knæ."
+        },
+        {
+          "mistake": "Du lander på strakte arme efter klappet.",
+          "fix": "Land med bløde albuer, gerne på et tæppe, og hold kroppen lige."
+        }
+      ],
+      "easier": "Trin 3: Muay Thai-burpee.",
+      "harder": "Trin 5: etbens burpee.",
+      "equipment": [],
+      "getReady": "Find en fri plads, gerne på et tæppe, hvor du kan ligge strakt ud og hoppe højt.",
+      "movements": [
+        {
+          "id": "tuck",
+          "name": "Med tuck jump",
+          "positions": [
+            {
+              "id": "stand",
+              "name": "Stående",
+              "text": "Oprejst med fødderne i hoftebredde og flade i gulvet. Knæ og hofte er strakte, armene hænger langs siden, og blikket er frem.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "squat",
+              "name": "Hænder i gulvet",
+              "text": "På hug med fødderne flade, lidt bredere end hofterne, knæene dybt bøjede og hoften i knæhøjde. Overkroppen hælder ca. 45° frem, hovedet følger ryggen, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
+              "contacts": [
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "chest",
+              "name": "Brystet i gulvet",
+              "text": "Kroppen er lige og stram fra hæl til hoved. Brystet rører gulvet, hoften er lige over gulvet, og hovedet er i forlængelse af kroppen. Hænderne står under brystet med albuerne skråt bagud, og tæerne er i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" },
+                { "part": "chest", "on": "floor" }
+              ]
+            },
+            {
+              "id": "plank",
+              "name": "Planke",
+              "text": "Strakte arme med hænderne under skuldrene, lidt bredere end dem. Kroppen er lige fra hæl til hoved med spændt mave, hovedet i forlængelse af ryggen og tæerne i gulvet i hoftebredde.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "tuck",
+              "name": "Tuck jump",
+              "text": "I luften med knæene trukket op mod brystet, så lårene er vandrette eller højere. Overkroppen er oprejst, hænderne rækker frem mod knæene, og fødderne er under hoften.",
+              "contacts": []
+            }
+          ],
+          "phases": [
+            { "to": "squat", "seconds": 0.6, "label": "Hænderne ned" },
+            { "to": "chest", "seconds": 0.8, "label": "Brystet til gulvet" },
+            { "to": "plank", "seconds": 0.5, "label": "Pres op" },
+            { "to": "squat", "seconds": 0.5, "label": "Fødderne ind" },
+            { "to": "tuck", "seconds": 0.5, "label": "Knæene op" },
+            { "to": "stand", "seconds": 0.4, "label": "Land blødt" }
+          ]
+        },
+        {
+          "id": "clap",
+          "name": "Med klap push-up",
+          "positions": [
+            {
+              "id": "stand",
+              "name": "Stående",
+              "text": "Oprejst med fødderne i hoftebredde og flade i gulvet. Knæ og hofte er strakte, armene hænger langs siden, og blikket er frem.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "squat",
+              "name": "Hænder i gulvet",
+              "text": "På hug med fødderne flade, lidt bredere end hofterne, knæene dybt bøjede og hoften i knæhøjde. Overkroppen hælder ca. 45° frem, hovedet følger ryggen, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
+              "contacts": [
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "chest",
+              "name": "Brystet i gulvet",
+              "text": "Kroppen er lige og stram fra hæl til hoved. Brystet rører gulvet, hoften er lige over gulvet, og hovedet er i forlængelse af kroppen. Hænderne står under brystet med albuerne skråt bagud, og tæerne er i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" },
+                { "part": "chest", "on": "floor" }
+              ]
+            },
+            {
+              "id": "clap",
+              "name": "Klap",
+              "text": "Kroppen er lige fra hæl til hoved og presset fri af gulvet. Kun tæerne rører gulvet, og hænderne klapper sammen under brystet en håndsbredde over gulvet.",
+              "contacts": [{ "part": "toes", "on": "floor" }]
+            },
+            {
+              "id": "catch",
+              "name": "Landing",
+              "text": "Landet i planke med hænderne under skuldrene og let bøjede albuer. Kroppen er lige fra hæl til hoved med spændt mave, og tæerne er i gulvet i hoftebredde.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "jump",
+              "name": "Hop",
+              "text": "I luften med strakt hofte og strakte knæ, så kroppen er lodret. Armene er strakt op over hovedet, og fødderne er en håndsbredde over gulvet med tæerne pegende ned.",
+              "contacts": []
+            }
+          ],
+          "phases": [
+            { "to": "squat", "seconds": 0.6, "label": "Hænderne ned" },
+            { "to": "chest", "seconds": 0.8, "label": "Brystet til gulvet" },
+            { "to": "clap", "seconds": 0.3, "label": "Pres fri og klap" },
+            { "to": "catch", "seconds": 0.3, "label": "Land med bløde albuer" },
+            { "to": "squat", "seconds": 0.5, "label": "Fødderne ind" },
+            { "to": "jump", "seconds": 0.5, "label": "Hop" },
+            { "to": "stand", "seconds": 0.4, "label": "Land blødt" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "burpee_skill.V5",
+      "trains": "Styrke og balance på ét ben, som når du sparker og giver knæ, og en stiv krop i planke og push-up.",
+      "start": "Stå på ét ben, standbenet, med let bøjet knæ, og løft den anden fod en håndsbredde fra gulvet bag dig. Armene hænger langs siden.",
+      "steps": [
+        "Gå ned på hug på standbenet, og sæt hænderne i gulvet lige foran foden.",
+        "Hop foden bagud til en planke på én fod, og hold det frie ben løftet.",
+        "Lav en push-up med brystet til gulvet, og pres dig op til strakte arme.",
+        "Hop foden ind tæt på hænderne, og rejs dig helt op på samme ben. Tag alle gentagelser, før du skifter ben."
+      ],
+      "tempo": "Først teknik, så rytme, så fart. Tag det roligt nok til, at den frie fod bliver i luften.",
+      "breathing": "Pust ud på vej ned, og ånd ind på vej op.",
+      "cues": ["Den frie fod i luften", "Brystet til gulvet", "Op på samme ben"],
+      "mistakes": [
+        {
+          "mistake": "Den frie fod sætter sig i gulvet for at holde balancen.",
+          "fix": "Sænk farten, spænd maven, og hold foden løftet hele vejen."
+        },
+        {
+          "mistake": "Knæet på standbenet falder ind, når du rejser dig.",
+          "fix": "Pres knæet ud over tæerne, og rejs dig med et hofteskub."
+        },
+        {
+          "mistake": "Hoften drejer eller hænger i planken på én fod.",
+          "fix": "Hold hoften lige mod gulvet, og spænd maven, så kroppen er lige fra hæl til hoved."
+        }
+      ],
+      "easier": "Trin 4: burpee med tuck jump eller klap push-up.",
+      "harder": "Det er sidste trin. Næste udfordring er SEAL-burpeen i imponer-kataloget, når du har 50 på burpee-testen.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, og bestem, hvilket ben du starter på.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "stand",
+              "name": "På ét ben",
+              "text": "Står på ét ben med strakt hofte og let bøjet knæ, foden flad i gulvet. Den frie fod er løftet en håndsbredde over gulvet bag dig med bøjet knæ, og armene hænger langs siden.",
+              "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
+            },
+            {
+              "id": "squat",
+              "name": "Hænder i gulvet",
+              "text": "På hug på standbenet med foden flad og knæet dybt bøjet ud over tæerne. Overkroppen hælder frem, hænderne står i skulderbredde i gulvet lige foran foden, og den frie fod er løftet bag dig.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "plank",
+              "name": "Etbens planke",
+              "text": "Strakte arme med hænderne under skuldrene og kroppen lige fra hæl til hoved. Kun tæerne på standbenet rører gulvet, og det frie ben er strakt og løftet en håndsbredde over gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Brystet i gulvet",
+              "text": "Bunden af push-uppen: brystet rører gulvet, albuerne er bøjet skråt bagud, og kroppen er stadig lige. Tæerne på standbenet er i gulvet, og det frie ben er løftet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor", "count": 1 },
+                { "part": "chest", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "squat", "seconds": 0.8, "label": "Ned på ét ben" },
+            { "to": "plank", "seconds": 0.6, "label": "Foden bagud" },
+            { "to": "bottom", "seconds": 0.8, "label": "Brystet til gulvet" },
+            { "to": "plank", "seconds": 0.6, "label": "Pres op" },
+            { "to": "squat", "seconds": 0.6, "label": "Foden ind" },
+            { "to": "stand", "seconds": 0.8, "label": "Op på samme ben" }
+          ]
+        }
+      ]
+    }
+  ]
+}

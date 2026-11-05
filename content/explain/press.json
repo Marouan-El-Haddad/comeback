@@ -1,0 +1,133 @@
+{
+  "format": 1,
+  "subject": "press",
+  "why": [
+    "Push-ups bygger bryst, skuldre og armenes bagside til slag og garde. De lærer også kroppen at holde sig stiv som en planke, så den ikke giver efter, når du slår eller bliver skubbet.",
+    "Stigen gør klubbens push-ups lette og fører dig mod etarms push-up. Jo stærkere du bliver, jo mindre koster de mange push-ups i klassen, og jo mere overskud har du til teknikken.",
+    "Push-ups, der er tunge nok, giver samme styrke og muskler som let bænkpres. Derfor bliver de tungere trin for trin i stedet for bare flere."
+  ],
+  "items": [
+    {
+      "id": "press.1",
+      "trains": "Bryst, skuldre og armenes bagside til slag og garde, og en krop, der holder sig stiv som en planke.",
+      "start": "Hænderne i gulvet lidt bredere end skuldrene med fingrene frem. Fødderne samlet bag dig på tæerne, så kroppen er lige fra hæl til hoved.",
+      "steps": [
+        "Spænd maven, og klem ballerne, så kroppen er én planke.",
+        "Sænk dig på 3 sek med albuerne ca. 45° ud fra kroppen.",
+        "Hold 1 sek stille med brystet lige over gulvet.",
+        "Pres gulvet væk, og kom op i ét roligt stræk til strakte arme."
+      ],
+      "tempo": "3 sek ned, 1 sek stille lige over gulvet, op i ét roligt stræk.",
+      "breathing": "Ånd ind på vej ned, og pust ud på vej op. Hold ikke vejret i bunden.",
+      "cues": ["3 sek ned, 1 sek stille", "Albuerne 45° ud", "Kroppen som én planke"],
+      "mistakes": [
+        {
+          "mistake": "Hoften hænger, eller den stikker op.",
+          "fix": "Klem ballerne, og træk navlen ind, så hoften er på linje med skuldre og hæle."
+        },
+        {
+          "mistake": "Albuerne peger lige ud til siden.",
+          "fix": "Hold albuerne ca. 45° ud fra kroppen, så du set oppefra ligner en pil og ikke et T."
+        },
+        {
+          "mistake": "Hovedet skyder frem mod gulvet.",
+          "fix": "Kig på gulvet lige foran hænderne, og lad brystet nå ned først."
+        }
+      ],
+      "easier": "Sæt hænderne på sofaen, hvis du ikke kan lave 6 gentagelser i alle sæt. Gør håndleddet ondt, så lav dem på knoerne med lige håndled.",
+      "harder": "Trin 2: fødderne på en stol, så mere af vægten kommer på armene.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, hvor du kan ligge i hele din længde.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Strakte arme med hænderne lige under skuldrene, lidt bredere end dem. Kroppen er én lige linje fra hælene over hoften til hovedet, og blikket er i gulvet. Kun hænder og tæer rører gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Brystet et par cm over gulvet, albuerne bøjet ca. 90° og ca. 45° ud fra kroppen. Kroppen er stadig én lige linje fra hæl til hoved, og hænder og fødder står samme sted.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1, "label": "Op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "press.2",
+      "trains": "Mere af vægten på bryst, skuldre og arme end på trin 1, så du bygger styrke til slag, garde og klubbens push-ups.",
+      "start": "Stå på alle fire med ryggen til stolen, og sæt tæerne op på sædet én fod ad gangen. Gå hænderne frem, til kroppen er lige fra hæl til hoved, med hænderne lidt bredere end skuldrene.",
+      "steps": [
+        "Spænd maven og ballerne, så hoften er i niveau med skuldre og hæle.",
+        "Sænk dig på 3 sek med albuerne ca. 45° ud fra kroppen.",
+        "Hold 1 sek stille med brystet lige over gulvet.",
+        "Pres dig op i ét roligt stræk til strakte arme."
+      ],
+      "tempo": "3 sek ned, 1 sek stille lige over gulvet, op i ét roligt stræk.",
+      "breathing": "Ånd ind på vej ned, og pust ud på vej op. Hold ikke vejret i bunden.",
+      "cues": ["Samme planke", "Hoften i niveau", "3 sek ned, 1 sek stille"],
+      "mistakes": [
+        {
+          "mistake": "Hoften knækker op eller hænger ned.",
+          "fix": "Klem ballerne, og hold hoften i niveau med skuldre og hæle hele vejen."
+        },
+        {
+          "mistake": "Albuerne peger lige ud til siden.",
+          "fix": "Hold albuerne ca. 45° ud fra kroppen som på trin 1."
+        },
+        {
+          "mistake": "Stolen glider eller vipper.",
+          "fix": "Stil stolen med ryggen mod en væg, og sæt tæerne midt på sædet."
+        }
+      ],
+      "easier": "Trin 1: push-up med tempo med fødderne i gulvet.",
+      "harder": "Trin 3: skæv push-up med den ene hånd på 3–4 bøger og den anden i gulvet.",
+      "equipment": ["chair", "wall"],
+      "getReady": "Stil en solid stol med ryggen mod en væg, så den ikke kan glide.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Strakte arme med hænderne i gulvet lige under skuldrene, lidt bredere end dem. Tæerne på stolesædet. Kroppen er én lige linje fra hæl til hoved og næsten vandret, og blikket er i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "chair" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Brystet et par cm over gulvet, albuerne bøjet ca. 90° og ca. 45° ud fra kroppen. Kroppen er stadig lige og skråner nu ned fra fødderne på stolen til hovedet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "chair" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1, "label": "Op" }
+          ]
+        }
+      ]
+    }
+  ]
+}

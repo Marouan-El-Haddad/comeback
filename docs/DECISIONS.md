@@ -132,6 +132,7 @@ Kort log over beslutninger, der former appen. Nye rækker tilføjes nederst i hv
 | P48 | Trafiklys før motoren (SPEC 3.3) | Motoren har ingen opvarmning med trin 4, så alle tre spørgsmål stilles før start. Ved styrkepas kommer spørgsmål 3 efter opvarmningens trin 4, og `session_started` skrives først da |
 | P49 | Timere uden fast længde i kilden (SPEC 3.2) | Klubsekvensen: 5 sek klar, holdene 3 sek, mikro-pumps 8 sek, »helt ned og helt op« 4 sek, 2 min pause mellem sæt. Nakke-stigen: 10 sek pause mellem hold; »pr. retning« = fire retninger efter tur. Stigningsløb har ingen længde i kilden: brugeren trykker »Videre«. Open & Strong: 60, 45, 80, 40, 56 og 95 sek. Max-tid (hollow, sideplanke, wall sit, balance) måles med et stopur |
 | P50 | Målinger i pas (5.6) | En måling, der erstatter første sæt, vises som eget skridt med forrige værdi og Målbrættets niveau og kan springes over; så tæller de planlagte arbejdssæt alene |
+| P51 | Sideplanke på albuen (core_side.S1) | »2 × 20–45 sek« uden »pr. side« laves som ét sæt pr. side: sæt 1 på venstre side, sæt 2 på højre. Alternativet var 2 sæt pr. side. Konsekvens: forklaringen i content/explain/core_side.json siger det; programdata og motor er uændrede. | Dosis i programdata er 2 sæt, og forklaringerne må ikke ændre dosis; den forsigtigste læsning giver mindst volumen. |
 
 ## 5. Åbne punkter (afgøres af M0 eller senere)
 

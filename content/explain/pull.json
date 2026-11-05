@@ -1,0 +1,133 @@
+{
+  "format": 1,
+  "subject": "pull",
+  "why": [
+    "Træk åbner den øvre ryg og holder skuldrene tilbage. Samtidig giver det styrke i clinchen, hvor du trækker og styrer modstanderens hoved og arme.",
+    "Slag, push-ups og pike presser alle fremad. Derfor laver du mindst lige så mange træk-sæt som pres-sæt.",
+    "Til bord-row skal du bruge et tungt spisebord, ikke et klapbord. Lig under langsiden, og træk først let. Vipper bordet det mindste, så bliv på rygsæk-row."
+  ],
+  "items": [
+    {
+      "id": "pull.1",
+      "trains": "De brede rygmuskler og musklerne mellem skulderbladene, som trækker i clinchen og holder skuldrene tilbage.",
+      "start": "Støt den ene hånd på stolesædet, og sæt foden på samme side frem og den anden et skridt bagud. Bøj i hoften med lige ryg og let bøjede knæ, og hold rygsækken i håndtaget med den frie hånd.",
+      "steps": [
+        "Spænd maven, så ryggen er lige og næsten vandret og ikke drejer.",
+        "Træk albuen op mod hoften tæt langs kroppen, til rygsækken når hoften.",
+        "Hold 1 sek stop i toppen med skulderbladet trukket ind mod rygsøjlen.",
+        "Sænk rygsækken på 3 sek til strakt arm. Tag alle gentagelser, og skift så side."
+      ],
+      "tempo": "Træk op i ét roligt træk, 1 sek stop i toppen, og sænk på 3 sek.",
+      "breathing": "Pust ud, når du trækker op, og ånd ind på vej ned.",
+      "cues": ["Træk albuen mod hoften", "1 sek stop i toppen", "Ryggen stille, ingen vrid"],
+      "mistakes": [
+        {
+          "mistake": "Du vrider overkroppen op for at få rygsækken højere.",
+          "fix": "Hold skuldrene i samme højde, og lad armen og skulderbladet gøre arbejdet."
+        },
+        {
+          "mistake": "Du trækker mod brystet med albuen ude til siden.",
+          "fix": "Træk albuen tæt langs kroppen bagud mod hoften."
+        },
+        {
+          "mistake": "Ryggen bliver rund.",
+          "fix": "Skub hoften bagud, og løft brystet lidt, så ryggen er lige fra hoften til nakken."
+        }
+      ],
+      "easier": "Tag noget ud af rygsækken, hvis du ikke kan lave 8 gode gentagelser med 1 sek stop i toppen.",
+      "harder": "Trin 2: bord-row med bøjede knæ under et tungt spisebord.",
+      "equipment": ["backpack", "chair"],
+      "getReady": "Pak rygsækken med bøger eller vandflasker, og stil den ved siden af en solid stol.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "bottom",
+              "name": "Strakt arm",
+              "text": "Den ene hånd på stolesædet med strakt arm. Foden på samme side står fremme ved stolen, den anden et skridt bagud, og knæene er let bøjede. Ryggen og hovedet på linje, næsten vandret. Den frie arm hænger lodret med rygsækken.",
+              "contacts": [
+                { "part": "hand", "on": "chair", "count": 1 },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "top",
+              "name": "Trukket op",
+              "text": "Albuen er trukket op tæt langs kroppen og peger mod loftet, og rygsækken er ved hoften. Skulderbladet er trukket ind mod rygsøjlen. Ryggen, støttearmen og benene er som før, uden vrid.",
+              "contacts": [
+                { "part": "hand", "on": "chair", "count": 1 },
+                { "part": "foot", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "top", "seconds": 1, "label": "Træk op" },
+            { "to": "top", "seconds": 1, "label": "1 sek stop" },
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pull.2",
+      "trains": "Ryggen og armene trækker din egen kropsvægt op, så du bliver stærkere til at trække og styre i clinchen.",
+      "start": "Lig på ryggen under langsiden af et tungt bord med brystet lige under kanten. Grib kanten i skulderbredde med fingrene ind over bordpladen, og sæt fødderne fladt i gulvet med bøjede knæ.",
+      "steps": [
+        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop, og lav rygsæk-row.",
+        "Løft hoften, så knæ, hofte og skuldre er på én lige linje, og hæng i strakte arme.",
+        "Træk brystet op mod kanten med albuerne tæt langs siden, og hold 1 sek pause.",
+        "Sænk dig på 3 sek til strakte arme uden at lade hoften falde."
+      ],
+      "tempo": "Træk op i ét roligt træk, 1 sek pause med brystet ved kanten, og sænk på 3 sek.",
+      "breathing": "Pust ud, når du trækker op, og ånd ind på vej ned.",
+      "cues": ["Brystet mod kanten", "1 sek pause i toppen", "Hoften oppe hele vejen"],
+      "mistakes": [
+        {
+          "mistake": "Hoften hænger ned mod gulvet.",
+          "fix": "Klem ballerne, og hold knæ, hofte og skuldre på én lige linje hele vejen."
+        },
+        {
+          "mistake": "Du rækker hagen frem mod bordet.",
+          "fix": "Hold nakken lang, og træk, til det er brystet, der når kanten."
+        },
+        {
+          "mistake": "Bordet vipper eller flytter sig.",
+          "fix": "Stop, og lav rygsæk-row i stedet. Brug kun et tungt spisebord, og lig under langsiden."
+        }
+      ],
+      "easier": "Trin 1: rygsæk-row med én arm. Lav også den, hvis bordet vipper det mindste.",
+      "harder": "Trin 3: bord-row med strakte ben, så kroppen er en planke fra hæl til hoved.",
+      "equipment": ["table"],
+      "getReady": "Find et tungt spisebord, ikke et klapbord, og gør plads på gulvet ved langsiden.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "På ryggen med hovedet under bordet og hænderne om kanten i skulderbredde. Armene er strakte og lodrette, fødderne fladt i gulvet og knæene bøjede. Knæ, hofte og skuldre er på én lige linje; kun fødderne rører gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "table" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Brystet oppe ved bordkanten, albuerne bøjet og tæt langs siden, og skulderbladene samlet. Knæene står over fødderne, bøjet ca. 90°, og knæ, hofte og skuldre er på én lige linje, næsten vandret.",
+              "contacts": [
+                { "part": "hand", "on": "table" },
+                { "part": "foot", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "top", "seconds": 1, "label": "Træk op" },
+            { "to": "top", "seconds": 1, "label": "1 sek pause" },
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" }
+          ]
+        }
+      ]
+    }
+  ]
+}

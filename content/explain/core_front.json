@@ -1,0 +1,184 @@
+{
+  "format": 1,
+  "subject": "core_front",
+  "why": [
+    "Mave 1 træner evnen til at holde ribben og bækken stille, mens arme og ben strækkes. Det er den evne, der beskytter lænden, når du sparker, og når du bliver ramt.",
+    "Formen kommer før tid og gentagelser: slipper lænden gulvet, eller svajer den, er sættet slut. Stigen går fra dead bug på ryggen til rollouts, hvor hele kroppen er strakt."
+  ],
+  "items": [
+    {
+      "id": "core_front.1",
+      "trains": "Kontrol over ribben og bækken, mens arme og ben bevæger sig, så lænden holder, når du sparker og bliver ramt.",
+      "start": "Lig på ryggen med armene strakt lodret op over skuldrene. Løft benene, så hofte og knæ er bøjet 90° med knæene lige over hoften.",
+      "steps": [
+        "Pres lænden mod gulvet, og hold den der hele sættet.",
+        "Stræk højre arm bagud over hovedet og venstre ben ud på 3 sek, mens du puster helt ud.",
+        "Hold 1 sek, når arm og ben er lige over gulvet, og før dem roligt tilbage.",
+        "Gør det samme med venstre arm og højre ben, og skift side hver gang."
+      ],
+      "tempo": "3 sek ud, 1 sek stille, roligt tilbage. Skift side hver gang.",
+      "breathing": "Pust helt ud, mens arm og ben strækkes, og træk vejret ind på vej tilbage.",
+      "cues": ["Lænden presset mod gulvet", "Pust helt ud i strækket", "3 sek ud, 1 sek stille"],
+      "mistakes": [
+        {
+          "mistake": "Lænden slipper gulvet, når benet strækkes.",
+          "fix": "Stræk benet en kortere vej ud, eller hold det højere, og pust mere luft ud."
+        },
+        {
+          "mistake": "Du holder vejret.",
+          "fix": "Pust helt ud, mens du strækker, så ribbenene sænker sig. Træk vejret ind på vej tilbage."
+        },
+        {
+          "mistake": "Arm og ben skyder ud i et hurtigt ryk.",
+          "fix": "Tæl 3 sek ud og 1 sek stille, før du fører dem tilbage."
+        }
+      ],
+      "easier": "Det er stigens første trin. Stræk benet en kortere vej ud, så lænden kan blive presset mod gulvet.",
+      "harder": "Trin 2: hollow hold.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, hvor du kan ligge med strakte arme og ben.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "start",
+              "name": "Start",
+              "text": "Liggende på ryggen med hoved, ryg og bagdel i gulvet. Armene strakt lodret op med hænderne over skuldrene. Hofte og knæ bøjet 90°: lårene lodrette og skinnebenene vandrette. Lænden presset mod gulvet.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "hip", "on": "floor" },
+                { "part": "head", "on": "floor" }
+              ]
+            },
+            {
+              "id": "right_arm",
+              "name": "Højre arm ude",
+              "text": "Højre arm strakt bagud over hovedet og venstre ben strakt ud, begge en håndsbredde over gulvet. Venstre arm peger stadig lodret op, og højre knæ er stadig over hoften. Lænden presset mod gulvet.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "hip", "on": "floor" },
+                { "part": "head", "on": "floor" }
+              ]
+            },
+            {
+              "id": "left_arm",
+              "name": "Venstre arm ude",
+              "text": "Venstre arm strakt bagud over hovedet og højre ben strakt ud, begge en håndsbredde over gulvet. Højre arm peger stadig lodret op, og venstre knæ er stadig over hoften. Lænden presset mod gulvet.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "hip", "on": "floor" },
+                { "part": "head", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "right_arm", "seconds": 3, "label": "3 sek ud" },
+            { "to": "right_arm", "seconds": 1, "label": "1 sek stille" },
+            { "to": "start", "seconds": 2, "label": "Tilbage" },
+            { "to": "left_arm", "seconds": 3, "label": "3 sek ud" },
+            { "to": "left_arm", "seconds": 1, "label": "1 sek stille" },
+            { "to": "start", "seconds": 2, "label": "Tilbage" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_front.2",
+      "trains": "Spænding i hele forsiden af kroppen, så du holder dig samlet, når du tager imod slag og spark mod maven.",
+      "start": "Lig på ryggen med armene strakt bagud over hovedet, knæene bøjede og fødderne i gulvet.",
+      "steps": [
+        "Pres lænden mod gulvet, og træk ribbenene ned mod hoften.",
+        "Løft skulderbladene, armene og fødderne fra gulvet med knæene bøjet over hoften.",
+        "Hold stillingen med lænden presset mod gulvet hele tiden.",
+        "Stræk benene, når 45 sek er let med bøjede knæ. Jo lavere benene er, jo sværere er det."
+      ],
+      "tempo": "Løft dig roligt op, og hold stillingen stille hele tiden.",
+      "breathing": "Pust ud, når du løfter dig op, og træk så vejret kort og roligt.",
+      "cues": ["Lænden presset mod gulvet", "Ribbenene ned mod hoften", "Kort, rolig vejrtrækning"],
+      "mistakes": [
+        {
+          "mistake": "Lænden slipper gulvet.",
+          "fix": "Bøj knæene mere, eller løft benene højere. Slipper den igen, er sættet slut."
+        },
+        {
+          "mistake": "Nakken gør arbejdet, og hagen trykkes mod brystet.",
+          "fix": "Løft med maven, og hold en knytnæves plads mellem hage og bryst."
+        },
+        {
+          "mistake": "Du holder vejret.",
+          "fix": "Træk vejret kort og roligt gennem hele holdet."
+        }
+      ],
+      "easier": "Bøjede knæ er den lette udgave. Er den for svær, så gå et trin ned til dead bug, langsom.",
+      "harder": "Strakte ben, når 45 sek er let med bøjede knæ. Næste trin er RKC-planke.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, hvor du kan ligge med armene strakt over hovedet.",
+      "movements": [
+        {
+          "id": "bent",
+          "name": "Med bøjede knæ",
+          "positions": [
+            {
+              "id": "rest",
+              "name": "Liggende",
+              "text": "Liggende på ryggen med hoved, ryg og bagdel i gulvet. Armene strakt bagud over hovedet med hænderne i gulvet. Knæene bøjede og fødderne fladt i gulvet.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "hip", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "hand", "on": "floor" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "hold",
+              "name": "Hollow",
+              "text": "Skulderbladene, hovedet og armene løftet fra gulvet med armene strakt bagud ved ørerne. Hofte og knæ bøjet 90° med knæene over hoften og skinnebenene vandrette. Kun lænden og bagdelen rører gulvet.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "hip", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "hold", "seconds": 2, "label": "Løft op" },
+            { "to": "hold", "seconds": "dose", "label": "Hold" },
+            { "to": "rest", "seconds": 2, "label": "Ned" }
+          ]
+        },
+        {
+          "id": "straight",
+          "name": "Med strakte ben",
+          "positions": [
+            {
+              "id": "rest",
+              "name": "Liggende",
+              "text": "Liggende helt strakt på ryggen med hoved, ryg og bagdel i gulvet. Armene strakt bagud over hovedet med hænderne i gulvet. Benene samlede med hælene i gulvet.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "hip", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "hand", "on": "floor" },
+                { "part": "heel", "on": "floor" }
+              ]
+            },
+            {
+              "id": "hold",
+              "name": "Hollow",
+              "text": "Skulderbladene, hovedet og armene løftet fra gulvet med armene strakt bagud ved ørerne. Benene strakte og samlede med hælene ca. 20 cm over gulvet. Kun lænden og bagdelen rører gulvet.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "hip", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "hold", "seconds": 2, "label": "Løft op" },
+            { "to": "hold", "seconds": "dose", "label": "Hold" },
+            { "to": "rest", "seconds": 2, "label": "Ned" }
+          ]
+        }
+      ]
+    }
+  ]
+}

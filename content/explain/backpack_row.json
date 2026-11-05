@@ -1,0 +1,71 @@
+{
+  "format": 1,
+  "subject": "backpack_row",
+  "why": [
+    "I Styrke B er rygsæk-row din faste træk-øvelse. Sammen med push-ups og pike sørger den for, at du trækker mindst lige så meget, som du presser.",
+    "Træk åbner den øvre ryg og giver styrke i clinchen. Øvelsen er den samme hver gang. Det, der stiger, er vægten i rygsækken, 2 kg ad gangen."
+  ],
+  "items": [
+    {
+      "id": "backpack_row.1",
+      "trains": "Den øvre ryg og de brede rygmuskler, som trækker i clinchen og holder igen mod alt presset fra push-ups og slag.",
+      "start": "Støt den ene hånd på stolesædet, og sæt foden på samme side frem og den anden et skridt bagud. Bøj i hoften med lige ryg og let bøjede knæ, og hold rygsækken i håndtaget med den frie hånd.",
+      "steps": [
+        "Spænd maven, så ryggen er lige og næsten vandret og ikke drejer.",
+        "Træk albuen op mod hoften tæt langs kroppen, til rygsækken når hoften.",
+        "Hold 1 sek stop i toppen med skulderbladet trukket ind mod rygsøjlen.",
+        "Sænk rygsækken på 3 sek til strakt arm. Tag alle gentagelser, og skift så side."
+      ],
+      "tempo": "Træk op i ét roligt træk, 1 sek stop i toppen, og sænk på 3 sek.",
+      "breathing": "Pust ud, når du trækker op, og ånd ind på vej ned.",
+      "cues": ["Træk albuen mod hoften", "1 sek stop i toppen", "Ryggen stille, ingen vrid"],
+      "mistakes": [
+        {
+          "mistake": "Du vrider overkroppen op for at få rygsækken højere.",
+          "fix": "Hold skuldrene i samme højde, og lad armen og skulderbladet gøre arbejdet."
+        },
+        {
+          "mistake": "Du rykker rygsækken op med fart.",
+          "fix": "Start hver gentagelse fra stilstand med strakt arm, og træk roligt op."
+        },
+        {
+          "mistake": "Ryggen bliver rund.",
+          "fix": "Skub hoften bagud, og løft brystet lidt, så ryggen er lige fra hoften til nakken."
+        }
+      ],
+      "easier": "Tag noget ud af rygsækken, hvis du ikke kan lave 8 gode gentagelser med 1 sek stop i toppen.",
+      "harder": "Læg 2 kg mere i rygsækken, når appen siger til: når du har ramt 15 i alle sæt med 2 i reserve to pas i træk.",
+      "equipment": ["backpack", "chair"],
+      "getReady": "Pak rygsækken til dagens vægt, fx med vandflasker, hvor 1 liter vejer 1 kg, og stil den ved en solid stol.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "bottom",
+              "name": "Strakt arm",
+              "text": "Den ene hånd på stolesædet med strakt arm. Foden på samme side står fremme ved stolen, den anden et skridt bagud, og knæene er let bøjede. Ryggen og hovedet på linje, næsten vandret. Den frie arm hænger lodret med rygsækken.",
+              "contacts": [
+                { "part": "hand", "on": "chair", "count": 1 },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "top",
+              "name": "Trukket op",
+              "text": "Albuen er trukket op tæt langs kroppen og peger mod loftet, og rygsækken er ved hoften. Skulderbladet er trukket ind mod rygsøjlen. Ryggen, støttearmen og benene er som før, uden vrid.",
+              "contacts": [
+                { "part": "hand", "on": "chair", "count": 1 },
+                { "part": "foot", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "top", "seconds": 1, "label": "Træk op" },
+            { "to": "top", "seconds": 1, "label": "1 sek stop" },
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" }
+          ]
+        }
+      ]
+    }
+  ]
+}

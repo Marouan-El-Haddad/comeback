@@ -1,0 +1,183 @@
+{
+  "format": 1,
+  "subject": "burpee_emom",
+  "why": [
+    "EMOM betyder hvert minut: du starter et nyt sæt, når et nyt minut begynder, og resten af minuttet er pause. Et minut er rent, når alle burpees har brystet i gulvet og et hop med strakt hofte.",
+    "Burpees bygger den kondition, du skal bruge i en hel kamp: hele kroppen arbejder hårdt i korte stød, og du lærer at få vejret igen i pausen, før næste minut går i gang.",
+    "Du rykker højst ét trin op om ugen og aldrig over ugens loft, det højeste trin ugen tillader. Er alle minutter rene, og har du mindst 20 sek pause i det sidste minut, får du næste trin i næste uges pas. Ellers bliver du på trinnet."
+  ],
+  "items": [
+    {
+      "id": "burpee_emom.E1",
+      "trains": "Kondition til en hel kamp: hele kroppen arbejder hårdt i korte stød, og du lærer at få vejret igen i pausen.",
+      "start": "Stå oprejst med fødderne i hoftebredde og armene langs siden, klar til at starte, når et nyt minut begynder.",
+      "steps": [
+        "Start, når et nyt minut begynder, og lav minuttets burpees i en jævn rytme.",
+        "Gå ned på hug med hænderne lige foran fødderne, hop tilbage, og sænk brystet til gulvet.",
+        "Pres op, spring fødderne ind tæt på hænderne, og hop med strakt hofte og hænderne over hovedet.",
+        "Hvil resten af minuttet, og start igen, når næste minut begynder."
+      ],
+      "tempo": "Find et tempo, du kan holde i alle minutter, og sæt farten op i det sidste minut.",
+      "breathing": "Pust ud på vej ned, og ånd ind på vej op. I pausen: lange udåndinger, fx 2 sek ind og 4 sek ud.",
+      "cues": ["Brystet i gulvet hver gang", "Hop med strakt hofte", "Jævn rytme, lang udånding"],
+      "mistakes": [
+        {
+          "mistake": "Du starter for hurtigt og har ingen pause tilbage i de sidste minutter.",
+          "fix": "Find en rytme, du kan holde i alle minutter, og sæt først farten op i det sidste."
+        },
+        {
+          "mistake": "Brystet når ikke gulvet, eller hoppet bliver lavt, når du bliver træt.",
+          "fix": "Et minut er kun rent, når hver burpee har brystet i gulvet og et hop med strakt hofte."
+        },
+        {
+          "mistake": "Hoften hænger, når fødderne lander bagud.",
+          "fix": "Spænd maven, før fødderne lander, og sænk kroppen samlet som en planke."
+        }
+      ],
+      "easier": "Det er første trin. Er hoppene for hårde, så træd fødderne tilbage og ind ét ad gangen. Skarp smerte eller smerte i et led betyder stop.",
+      "harder": "Trin E2: når alle minutter var rene, og du havde mindst 20 sek pause i det sidste minut, rykker du op i næste uges pas, højst til ugens loft.",
+      "equipment": [],
+      "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig klar til første minut.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "stand",
+              "name": "Stående",
+              "text": "Oprejst med fødderne i hoftebredde og flade i gulvet. Knæ og hofte er strakte, armene hænger langs siden, og blikket er frem.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "squat",
+              "name": "Hænder i gulvet",
+              "text": "På hug med fødderne flade, lidt bredere end hofterne, knæene dybt bøjede og hoften i knæhøjde. Overkroppen hælder ca. 45° frem, hovedet følger ryggen, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
+              "contacts": [
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "chest",
+              "name": "Brystet i gulvet",
+              "text": "Kroppen er lige og stram fra hæl til hoved. Brystet rører gulvet, hoften er lige over gulvet, og hovedet er i forlængelse af kroppen. Hænderne står under brystet med albuerne skråt bagud, og tæerne er i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" },
+                { "part": "chest", "on": "floor" }
+              ]
+            },
+            {
+              "id": "plank",
+              "name": "Planke",
+              "text": "Strakte arme med hænderne under skuldrene, lidt bredere end dem. Kroppen er lige fra hæl til hoved med spændt mave, hovedet i forlængelse af ryggen og tæerne i gulvet i hoftebredde.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "jump",
+              "name": "Hop",
+              "text": "I luften med strakt hofte og strakte knæ, så kroppen er lodret. Armene er strakt op over hovedet, og fødderne er en håndsbredde over gulvet med tæerne pegende ned.",
+              "contacts": []
+            }
+          ],
+          "phases": [
+            { "to": "squat", "seconds": 0.6, "label": "Hænderne ned" },
+            { "to": "chest", "seconds": 0.8, "label": "Brystet til gulvet" },
+            { "to": "plank", "seconds": 0.5, "label": "Pres op" },
+            { "to": "squat", "seconds": 0.5, "label": "Fødderne ind" },
+            { "to": "jump", "seconds": 0.5, "label": "Hop med strakt hofte" },
+            { "to": "stand", "seconds": 0.4, "label": "Land blødt" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "burpee_emom.E2",
+      "trains": "Kondition til en hel kamp med lidt mere arbejde og lidt kortere pause i hvert minut, som når en runde strammer til.",
+      "start": "Stå oprejst med fødderne i hoftebredde og armene langs siden, klar til at starte, når et nyt minut begynder.",
+      "steps": [
+        "Start, når et nyt minut begynder, og lav minuttets burpees i en jævn rytme.",
+        "Gå ned på hug med hænderne lige foran fødderne, hop tilbage, og sænk brystet til gulvet.",
+        "Pres op, spring fødderne ind tæt på hænderne, og hop med strakt hofte og hænderne over hovedet.",
+        "Hvil resten af minuttet, og start igen, når næste minut begynder."
+      ],
+      "tempo": "Find et tempo, du kan holde i alle minutter, og sæt farten op i det sidste minut.",
+      "breathing": "Pust ud på vej ned, og ånd ind på vej op. I pausen: lange udåndinger, fx 2 sek ind og 4 sek ud.",
+      "cues": ["Brystet i gulvet hver gang", "Hop med strakt hofte", "Pust ud på vej ned"],
+      "mistakes": [
+        {
+          "mistake": "Brystet når ikke gulvet, eller hoppet bliver lavt, når du bliver træt.",
+          "fix": "Et minut er kun rent, når hver burpee har brystet i gulvet og et hop med strakt hofte."
+        },
+        {
+          "mistake": "Du holder vejret, mens du arbejder.",
+          "fix": "Pust ud hver gang, du går ned, og ånd ind på vej op. Hold aldrig vejret under belastning."
+        },
+        {
+          "mistake": "Du starter for hurtigt og har ingen pause tilbage i de sidste minutter.",
+          "fix": "Find en rytme, du kan holde i alle minutter, og sæt først farten op i det sidste."
+        }
+      ],
+      "easier": "Trin E1. Skarp smerte eller smerte i et led betyder stop og et trin ned i en uge.",
+      "harder": "Trin E3: når alle minutter var rene, og du havde mindst 20 sek pause i det sidste minut, rykker du op i næste uges pas, højst til ugens loft.",
+      "equipment": [],
+      "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig klar til første minut.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "stand",
+              "name": "Stående",
+              "text": "Oprejst med fødderne i hoftebredde og flade i gulvet. Knæ og hofte er strakte, armene hænger langs siden, og blikket er frem.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "squat",
+              "name": "Hænder i gulvet",
+              "text": "På hug med fødderne flade, lidt bredere end hofterne, knæene dybt bøjede og hoften i knæhøjde. Overkroppen hælder ca. 45° frem, hovedet følger ryggen, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
+              "contacts": [
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "chest",
+              "name": "Brystet i gulvet",
+              "text": "Kroppen er lige og stram fra hæl til hoved. Brystet rører gulvet, hoften er lige over gulvet, og hovedet er i forlængelse af kroppen. Hænderne står under brystet med albuerne skråt bagud, og tæerne er i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" },
+                { "part": "chest", "on": "floor" }
+              ]
+            },
+            {
+              "id": "plank",
+              "name": "Planke",
+              "text": "Strakte arme med hænderne under skuldrene, lidt bredere end dem. Kroppen er lige fra hæl til hoved med spændt mave, hovedet i forlængelse af ryggen og tæerne i gulvet i hoftebredde.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "jump",
+              "name": "Hop",
+              "text": "I luften med strakt hofte og strakte knæ, så kroppen er lodret. Armene er strakt op over hovedet, og fødderne er en håndsbredde over gulvet med tæerne pegende ned.",
+              "contacts": []
+            }
+          ],
+          "phases": [
+            { "to": "squat", "seconds": 0.6, "label": "Hænderne ned" },
+            { "to": "chest", "seconds": 0.8, "label": "Brystet til gulvet" },
+            { "to": "plank", "seconds": 0.5, "label": "Pres op" },
+            { "to": "squat", "seconds": 0.5, "label": "Fødderne ind" },
+            { "to": "jump", "seconds": 0.5, "label": "Hop med strakt hofte" },
+            { "to": "stand", "seconds": 0.4, "label": "Land blødt" }
+          ]
+        }
+      ]
+    }
+  ]
+}

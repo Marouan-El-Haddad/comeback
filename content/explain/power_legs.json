@@ -1,0 +1,163 @@
+{
+  "format": 1,
+  "subject": "power_legs",
+  "why": [
+    "Få, hurtige hop med fuld pause giver benene fart, og det er den fart, der gør spark, knæ og fodarbejde hurtigere. Power ligger først i passet, mens benene er friske.",
+    "Et lavere eller langsommere hop træner ikke fart. Derfor stopper du sættet, så snart højden eller farten falder. Det giver mere springkraft med færre hop end at køre sættet ud.",
+    "Hop belaster senerne mest. Land stille som en kat, og hold antallet nede. Let ømhed er i orden, men skarp smerte eller smerte i et led betyder stop og et trin ned."
+  ],
+  "items": [
+    {
+      "id": "power_legs.1",
+      "trains": "Eksplosiv kraft i hofter, knæ og ankler, så spark, knæ og fodarbejde får mere fart.",
+      "start": "Stå med fødderne i hoftebredde og tæerne let udad. Armene hænger løst langs siden, og blikket er frem.",
+      "steps": [
+        "Sæt dig hurtigt ned, til knæene er bøjet ca. 90°, og sving armene bagud.",
+        "Spring eksplosivt så højt du kan, og sving armene frem og op.",
+        "Land blødt på forfoden og videre ned på hele foden med bøjede knæ, og frys 2 sek.",
+        "Rejs dig, find balancen, og spring igen."
+      ],
+      "tempo": "Hurtigt ned og eksplosivt op. Frys 2 sek på landingen, og rejs dig roligt.",
+      "breathing": "Ånd ind, før du sætter dig ned, og pust ud, når du lander.",
+      "cues": ["Maks højde", "Land stille, og frys 2 sek", "Knæene peger over tæerne"],
+      "mistakes": [
+        {
+          "mistake": "Knæene falder ind mod hinanden, når du lander.",
+          "fix": "Pres knæene lidt ud, så de peger samme vej som tæerne."
+        },
+        {
+          "mistake": "Du lander tungt med strakte ben eller på hælene.",
+          "fix": "Land på forfoden, og lad ankler, knæ og hofte bøje sig, så landingen bliver stille."
+        },
+        {
+          "mistake": "Hoppene bliver lavere hen ad sættet.",
+          "fix": "Stop sættet, så snart højden eller farten falder. Et træt hop træner ikke fart."
+        }
+      ],
+      "easier": "Hop lavere og i halv fart, som i opvarmningen, til du kan lande stille hver gang.",
+      "harder": "Trin 2: længdespring.",
+      "equipment": [],
+      "getReady": "Stil dig, hvor hænderne ikke kan ramme loft eller lampe, og hop på bare fødder eller i sko.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "stand",
+              "name": "Klar",
+              "text": "Stående med fødderne i hoftebredde og tæerne let udad. Benene er næsten strakte, armene hænger langs siden, og blikket er frem.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "dip",
+              "name": "Nede",
+              "text": "Knæene bøjet ca. 90° og pegende over tæerne, hoften skubbet bagud og overkroppen lænet ca. 30° frem. Armene strakt bagud forbi hofterne, hele foden i gulvet.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "takeoff",
+              "name": "Afsæt",
+              "text": "Hofte, knæ og ankler strakte, så kroppen er en lige linje. Hælene er løftet, så kun tæerne er i gulvet, og armene er svinget frem og op over hovedet.",
+              "contacts": [{ "part": "toes", "on": "floor" }]
+            },
+            {
+              "id": "air",
+              "name": "I luften",
+              "text": "Kroppen lodret og strakt med armene over hovedet. Fødderne er strakte med tæerne pegende ned, ca. 20–30 cm over gulvet. Intet rører gulvet.",
+              "contacts": []
+            },
+            {
+              "id": "land",
+              "name": "Landing",
+              "text": "Hele foden i gulvet i hoftebredde. Knæene halvt bøjede over tæerne med lårene ca. 45° på skrå, hoften bagud og hænderne foran brystet som i garden.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "dip", "seconds": 0.5, "label": "Hurtigt ned" },
+            { "to": "takeoff", "seconds": 0.2, "label": "Spring op" },
+            { "to": "air", "seconds": 0.3, "label": "I luften" },
+            { "to": "land", "seconds": 0.3, "label": "Land blødt" },
+            { "to": "land", "seconds": 2, "label": "Frys 2 sek" },
+            { "to": "stand", "seconds": 1, "label": "Rejs dig" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "power_legs.2",
+      "trains": "Eksplosiv kraft fremad fra hofter og ben, så du kommer hurtigere ind i afstand og ud igen.",
+      "start": "Stå med fødderne i hoftebredde og tæerne ved en streg eller kant på gulvet. Foran dig er der mindst 3 meter fri plads.",
+      "steps": [
+        "Skub hoften bagud, til knæene er bøjet ca. 90°, og sving armene bagud.",
+        "Sving armene frem, og spring så langt frem du kan.",
+        "Land blødt på hele foden med bøjede knæ, og stå stille uden at tage et skridt.",
+        "Rejs dig, gå tilbage til stregen, og spring igen."
+      ],
+      "tempo": "Hurtigt ned og eksplosivt frem. Stå stille på landingen, før du går tilbage.",
+      "breathing": "Ånd ind, når du svinger armene bagud, og pust ud, når du lander.",
+      "cues": ["Så langt du kan", "Sving armene med", "Land stille uden ekstra skridt"],
+      "mistakes": [
+        {
+          "mistake": "Du tager et ekstra skridt eller vakler på landingen.",
+          "fix": "Spring lidt kortere, til du kan lande og stå stille hver gang."
+        },
+        {
+          "mistake": "Du lander med strakte ben.",
+          "fix": "Bøj knæ og hofte, så snart fødderne rammer, og lad benene tage imod som fjedre."
+        },
+        {
+          "mistake": "Knæene falder ind mod hinanden, når du lander.",
+          "fix": "Pres knæene lidt ud, så de peger samme vej som tæerne."
+        }
+      ],
+      "easier": "Trin 1: squat jump.",
+      "harder": "Trin 3: skater-hop.",
+      "equipment": [],
+      "getReady": "Find mindst 3 meter fri plads, og hop på bare fødder eller i sko, ikke i strømper.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "start",
+              "name": "Klar",
+              "text": "Stående med fødderne i hoftebredde og tæerne ved stregen. Benene er næsten strakte, og armene hænger langs siden.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "load",
+              "name": "Sving",
+              "text": "Knæene bøjet ca. 90° over tæerne, hoften skubbet bagud og overkroppen lænet ca. 45° frem. Armene strakt bagud forbi hofterne, hele foden i gulvet.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "takeoff",
+              "name": "Afsæt",
+              "text": "Kroppen strakt i en skrå linje ca. 45° frem fra tæerne til hænderne, og armene strakt frem og op. Hælene er løftet, så kun tæerne er i gulvet.",
+              "contacts": [{ "part": "toes", "on": "floor" }]
+            },
+            {
+              "id": "air",
+              "name": "I luften",
+              "text": "Midt i springet, ca. 30 cm over gulvet. Knæene er trukket frem mod brystet, fødderne er foran hoften, og armene er strakt frem. Intet rører gulvet.",
+              "contacts": []
+            },
+            {
+              "id": "land",
+              "name": "Landing",
+              "text": "Ca. 1,5–2 m foran stregen. Hele foden i gulvet i hoftebredde, knæene bøjet ca. 90° over tæerne, hoften bagud og armene strakt frem i skulderhøjde.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "load", "seconds": 0.6, "label": "Sving armene bagud" },
+            { "to": "takeoff", "seconds": 0.25, "label": "Spring frem" },
+            { "to": "air", "seconds": 0.35, "label": "I luften" },
+            { "to": "land", "seconds": 0.3, "label": "Land blødt" },
+            { "to": "land", "seconds": 1, "label": "Stå stille" },
+            { "to": "start", "seconds": 1.5, "label": "Gå tilbage" }
+          ]
+        }
+      ]
+    }
+  ]
+}
