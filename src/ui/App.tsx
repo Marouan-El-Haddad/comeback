@@ -12,6 +12,7 @@ import { Today } from './screens/Today.tsx';
 import { WeekView } from './screens/Week.tsx';
 import { OpenStrong } from './session/OpenStrong.tsx';
 import { resumableRun, Runner, type RunRequest } from './session/Runner.tsx';
+import { noteScreen } from './startup.ts';
 import { applyUpdate, onSwChange, swStatus } from './sw.ts';
 
 type Tab = 'today' | 'week' | 'ladders' | 'more';
@@ -31,6 +32,8 @@ export function App({ model }: { model: Model }) {
   const [os, setOs] = useState(false);
   const [, setSw] = useState(0);
   const [mirrorNote, setMirrorNote] = useState(model.restoredFromMirror);
+  // Diagnose counts a start only when I dag is the first screen (docs/SPEC.md 7).
+  noteScreen(!model.state.onboarded ? 'onboarding' : run ? 'session' : os ? 'os' : tab);
 
   useEffect(() => onSwChange(() => setSw((n) => n + 1)), []);
   useEffect(() => {

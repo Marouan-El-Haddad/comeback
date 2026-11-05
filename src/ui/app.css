@@ -865,3 +865,30 @@
   grid-template-columns: 1fr;
   min-height: 72px;
 }
+
+/* Diagnose: start-up times from the icon, latest and median (docs/SPEC.md 7). */
+.startup-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.startup-table th,
+.startup-table td {
+  padding: 8px 0 8px 12px;
+  border-top: 1px solid var(--c-line);
+  text-align: right;
+  font-weight: 600;
+}
+
+.startup-table thead th,
+.startup-table thead td {
+  border-top: 0;
+  color: var(--c-muted);
+}
+
+.startup-table tbody th {
+  padding-left: 0;
+  text-align: left;
+  font-weight: 400;
+  color: var(--c-muted);
+}

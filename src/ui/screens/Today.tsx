@@ -21,6 +21,7 @@ import {
 import type { SessionKind } from '../../engine/types.ts';
 import { sessionMinutes } from '../format.ts';
 import type { Model } from '../model.ts';
+import { markTodayVisible } from '../startup.ts';
 
 const PHASE: Record<string, string> = {
   fundament: 'Fundament',
@@ -89,16 +90,8 @@ export function Today(props: {
   const plan = planFor(PROGRAM, state, today);
   const tomorrow = planFor(PROGRAM, state, addDays(today, 1));
 
-  useEffect(() => {
-    // SK1: the plan of the day is on screen (with its fonts) – measured for Diagnose.
-    if (performance.getEntriesByName('cb-today').length === 0) {
-      requestAnimationFrame(() => {
-        void document.fonts.ready.then(() => {
-          if (performance.getEntriesByName('cb-today').length === 0) performance.mark('cb-today');
-        });
-      });
-    }
-  }, []);
+  // SK1: the plan of the day is on screen (with its fonts) – measured for Diagnose (SPEC 7).
+  useEffect(() => markTodayVisible(), []);
 
   const week = plan.beforeStart
     ? null

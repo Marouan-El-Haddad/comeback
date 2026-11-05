@@ -4,6 +4,7 @@ import { addDays, catchUp, deriveState, PROGRAM, todayIn, type Ctx } from '../en
 import type { AppEvent, ISODate, State } from '../engine/types.ts';
 import { MemoryStore, type EventStore } from '../storage/store.ts';
 import { eventFactory } from './ids.ts';
+import { noteTimeMachine } from './startup.ts';
 
 export interface Simulation {
   /** The simulated date. */
@@ -102,6 +103,7 @@ export class Model {
 
   /** The time machine: a copy of the log in memory, the real store read-only. */
   async startSimulation(date: ISODate): Promise<void> {
+    noteTimeMachine();
     if (this.sim) this.real.readOnly = false;
     const copy = new MemoryStore(this.realEvents ?? this.events);
     this.realEvents ??= this.events;

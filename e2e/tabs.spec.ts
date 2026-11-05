@@ -2,7 +2,8 @@ import { expect, test } from '@playwright/test';
 import { onboard, openApp } from './helpers.ts';
 
 // The tabs besides I dag: Uge (view), Stiger (view and »vælg selv et trin«), Mere → Backup,
-// Om → Diagnose (Tilføjelse T6). Screenshots for the design review.
+// Om → Diagnose (Tilføjelse T6; its start-up times in diagnose.spec.ts). Screenshots for the
+// design review.
 test('Uge, Stiger, Mere og Diagnose', async ({ page }) => {
   await openApp(page, '2026-11-17');
   await page.screenshot({ path: 'screenshots/onboarding.png', scale: 'css' });
@@ -39,6 +40,7 @@ test('Uge, Stiger, Mere og Diagnose', async ({ page }) => {
   for (const label of [
     'Version',
     'Service worker',
+    'Spejl',
     'Varigt lager',
     'Lagerplads',
     'Wake Lock',
@@ -46,12 +48,10 @@ test('Uge, Stiger, Mere og Diagnose', async ({ page }) => {
     'Viewport',
     'Tidszone',
     'Sprog',
-    'Første tegning',
-    'I dag synlig',
   ]) {
     await expect(diagnose.getByText(label, { exact: true })).toBeVisible();
   }
   await expect(page.getByTestId('diag-Viewport')).toContainText('414 × 847');
   await expect(page.getByTestId('diag-Tidszone')).toHaveText('Europe/Copenhagen');
-  await page.screenshot({ path: 'screenshots/diagnose.png', scale: 'css', fullPage: true });
+  await expect(page.getByRole('heading', { name: 'Opstart fra ikonet' })).toBeVisible();
 });

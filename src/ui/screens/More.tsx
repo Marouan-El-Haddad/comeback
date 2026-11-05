@@ -1,5 +1,5 @@
 // Mere (docs/SPEC.md 3.6): Backup (export, import with preview, last backup, persist status) and
-// Om (version, programme version, sources, Diagnose – T6 – and the hidden time machine, 3.7).
+// Om (version, programme version, sources, Diagnose – T6, D34 – and the hidden time machine, 3.7).
 import { useEffect, useRef, useState } from 'preact/hooks';
 import {
   addDays,
@@ -11,11 +11,15 @@ import {
   parseImport,
   PROGRAM,
   serializeExport,
+  TIME_ZONE,
+  todayIn,
   type ImportResult,
 } from '../../engine/index.ts';
 import { estimate, isPersisted } from '../../storage/persist.ts';
+import type { MirrorStatus } from '../../storage/store.ts';
 import { audioState, type AudioState } from '../audio.ts';
 import type { Model } from '../model.ts';
+import { median, readStartupTimes, thisStart } from '../startup.ts';
 import { swStatus } from '../sw.ts';
 import { History } from './History.tsx';
 import { wakeLockSupported, wakeState, type WakeState } from '../wakelock.ts';
@@ -51,7 +55,7 @@ export function More({
   if (page === 'history') return <History model={model} onBack={() => onPage('menu')} />;
   if (page === 'backup') return <Backup model={model} onBack={() => onPage('menu')} />;
   if (page === 'about') return <About model={model} onPage={onPage} />;
-  if (page === 'diagnose') return <Diagnose onBack={() => onPage('about')} />;
+  if (page === 'diagnose') return <Diagnose model={model} onBack={() => onPage('about')} />;
   if (page === 'timemachine') return <TimeMachine model={model} onBack={() => onPage('about')} />;
   return (
     <div class="screen more" data-testid="more">
@@ -264,8 +268,37 @@ interface DiagnoseInfo {
   usage: string;
 }
 
-function Diagnose({ onBack }: { onBack: () => void }) {
+/** "21.40" or "21.40.18" in Danish time, built from parts like formatDay. */
+function clockTime(at: string, seconds = false): string {
+  const parts = new Intl.DateTimeFormat('da-DK', {
+    timeZone: TIME_ZONE,
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+    ...(seconds ? { second: '2-digit' } : {}),
+  }).formatToParts(Date.parse(at));
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((p) => p.type === type)?.value;
+  return [part('hour'), part('minute'), seconds ? part('second') : undefined]
+    .filter((p) => p !== undefined)
+    .join('.');
+}
+
+/** "3.833 ms" */
+function ms(value: number | null): string {
+  return value === null ? 'ukendt' : `${Math.round(value).toLocaleString('da-DK')} ms`;
+}
+
+function mirrorText(status: MirrorStatus): string {
+  if (!status.ok) return status.error ?? 'fejl';
+  if (status.pending) return 'venter på at blive gemt';
+  if (!status.savedAt) return 'intet gemt endnu';
+  const events = `${status.events.toLocaleString('da-DK')} ${status.events === 1 ? 'hændelse' : 'hændelser'}`;
+  return `${events} · gemt kl. ${clockTime(status.savedAt, true)}`;
+}
+
+function Diagnose({ model, onBack }: { model: Model; onBack: () => void }) {
   const [info, setInfo] = useState<DiagnoseInfo>({ persisted: null, usage: '…' });
+  const [, setTick] = useState(0);
   useEffect(() => {
     void Promise.all([isPersisted(), estimate()]).then(([persisted, est]) =>
       setInfo({
@@ -275,11 +308,10 @@ function Diagnose({ onBack }: { onBack: () => void }) {
           : 'ukendt',
       }),
     );
+    // The mirror, Wake Lock, sound and this start change while the page is open.
+    const id = setInterval(() => setTick((n) => n + 1), 1000);
+    return () => clearInterval(id);
   }, []);
-  const paint = performance
-    .getEntriesByType('paint')
-    .find((p) => p.name === 'first-contentful-paint');
-  const today = performance.getEntriesByName('cb-today')[0];
   const controller =
     navigator.serviceWorker?.controller?.scriptURL.split('/').pop() ?? 'ikke aktiv endnu';
   const rows: Array<[string, string]> = [
@@ -289,6 +321,7 @@ function Diagnose({ onBack }: { onBack: () => void }) {
       'Service worker',
       `${controller}${swStatus.offlineReady ? ' · klar til offline' : ''}${swStatus.needRefresh ? ' · ny version venter' : ''}${swStatus.error ? ` · fejl: ${swStatus.error}` : ''}`,
     ],
+    ['Spejl', mirrorText(model.real.mirrorStatus)],
     ['Varigt lager', info.persisted === null ? 'ukendt' : info.persisted ? 'ja' : 'nej'],
     ['Lagerplads', info.usage],
     [
@@ -299,8 +332,6 @@ function Diagnose({ onBack }: { onBack: () => void }) {
     ['Viewport', `${window.innerWidth} × ${window.innerHeight}, DPR ${window.devicePixelRatio}`],
     ['Tidszone', Intl.DateTimeFormat().resolvedOptions().timeZone],
     ['Sprog', navigator.language],
-    ['Første tegning', paint ? `${Math.round(paint.startTime)} ms` : 'ukendt'],
-    ['I dag synlig', today ? `${Math.round(today.startTime)} ms` : 'ukendt'],
   ];
   return (
     <div class="screen diagnose" data-testid="diagnose">
@@ -317,7 +348,63 @@ function Diagnose({ onBack }: { onBack: () => void }) {
           </div>
         ))}
       </dl>
+      <StartupTimes />
     </div>
+  );
+}
+
+/** Only clean starts from the icon (docs/SPEC.md 7, D34): the latest and the median. */
+function StartupTimes() {
+  const times = readStartupTimes();
+  const last = times[times.length - 1];
+  const verdict = thisStart();
+  return (
+    <section class="stack" data-testid="startup">
+      <h2>Opstart fra ikonet</h2>
+      {last ? (
+        <>
+          <table class="startup-table">
+            <thead>
+              <tr>
+                <td />
+                <th scope="col">Seneste</th>
+                <th scope="col" data-testid="startup-median">
+                  Median af {times.length}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Første tegning</th>
+                <td data-testid="startup-paint-last">{ms(last.paint)}</td>
+                <td data-testid="startup-paint-median">
+                  {ms(median(times.flatMap((t) => (t.paint === null ? [] : [t.paint]))))}
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">I dag synlig</th>
+                <td data-testid="startup-today-last">{ms(last.today)}</td>
+                <td data-testid="startup-today-median">{ms(median(times.map((t) => t.today)))}</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="muted" data-testid="startup-when">
+            Seneste: {formatDay(todayIn(Date.parse(last.at)))} kl. {clockTime(last.at)}
+          </p>
+        </>
+      ) : (
+        <p class="hint" data-testid="startup-none">
+          Ingen måling endnu. Luk appen helt, og åbn den fra ikonet.
+        </p>
+      )}
+      <p class="muted" data-testid="startup-this">
+        {verdict === undefined
+          ? 'Denne opstart er ikke målt endnu.'
+          : verdict === null
+            ? 'Denne opstart er talt med.'
+            : `Denne opstart tæller ikke: ${verdict}.`}
+      </p>
+    </section>
   );
 }
 
