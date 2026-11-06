@@ -39,6 +39,11 @@
   box-sizing: border-box;
 }
 
+/* A screen hidden under the exercise card stays mounted (its timers run), whatever its display. */
+[hidden] {
+  display: none !important;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;

@@ -1,5 +1,6 @@
 // Stiger (docs/SPEC.md 3.5): the ten ladders and three power tracks with your step, its level and
-// the distance to the next step; a ladder opens with all steps and »Vælg selv et andet trin«.
+// the distance to the next step; a ladder opens with all steps and »Vælg selv et andet trin«, and a
+// tap on a step opens its exercise card (3.8).
 import { useState } from 'preact/hooks';
 import {
   chooseStep,
@@ -13,6 +14,7 @@ import {
   workRange,
 } from '../../engine/index.ts';
 import type { Track, TrackState } from '../../engine/types.ts';
+import { ExerciseCard, useCard } from '../card.tsx';
 import { Picto } from '../components/Picto.tsx';
 import type { Model } from '../model.ts';
 import { LevelBadge } from './ProgramPage.tsx';
@@ -53,8 +55,24 @@ export function distanceText(track: Track, t: TrackState, pendingUp: boolean): s
 
 export function Ladders({ model }: { model: Model }) {
   const [open, setOpen] = useState<string | null>(null);
+  const card = useCard();
+  if (!open) return <LadderList model={model} onOpen={setOpen} />;
+  return (
+    <>
+      <LadderDetail
+        model={model}
+        trackId={open}
+        onBack={() => setOpen(null)}
+        onCard={card.open}
+        hidden={card.id !== null}
+      />
+      {card.id !== null && <ExerciseCard id={card.id} back="Tilbage" onClose={card.close} />}
+    </>
+  );
+}
+
+function LadderList({ model, onOpen }: { model: Model; onOpen: (trackId: string) => void }) {
   const state = model.state;
-  if (open) return <LadderDetail model={model} trackId={open} onBack={() => setOpen(null)} />;
   return (
     <div class="screen ladders" data-testid="ladders">
       <h1>Stiger</h1>
@@ -65,7 +83,7 @@ export function Ladders({ model }: { model: Model }) {
           const step = getStep(PROGRAM, t.stepId);
           return (
             <li key={track.id}>
-              <button type="button" class="ladder-row" onClick={() => setOpen(track.id)}>
+              <button type="button" class="ladder-row" onClick={() => onOpen(track.id)}>
                 <Picto stepId={t.stepId} small />
                 <span class="ladder-text">
                   <span class="ladder-name">
@@ -89,10 +107,16 @@ function LadderDetail({
   model,
   trackId,
   onBack,
+  onCard,
+  hidden,
 }: {
   model: Model;
   trackId: string;
   onBack: () => void;
+  /** Opens a step's exercise card (SPEC 3.5: a tap on a step). */
+  onCard: (stepId: string) => void;
+  /** The card is open in its place; the list keeps its state under it. */
+  hidden: boolean;
 }) {
   const track = getTrack(PROGRAM, trackId);
   const t = model.state.tracks[trackId];
@@ -105,7 +129,7 @@ function LadderDetail({
     setPick(null);
   };
   return (
-    <div class="screen ladder-detail">
+    <div class="screen ladder-detail" hidden={hidden}>
       <button type="button" class="btn" onClick={onBack}>
         Tilbage
       </button>
@@ -116,17 +140,22 @@ function LadderDetail({
           const mine = step.id === t.stepId;
           const up = i > currentIndex;
           return (
-            <li key={step.id} class={mine ? 'prog-step mine' : 'prog-step'}>
-              <Picto stepId={step.id} small />
-              <div>
-                <p class="prog-step-head">
-                  <strong>
-                    {step.key}. {step.name}
-                  </strong>{' '}
-                  <LevelBadge level={step.level} />
-                </p>
-                <p class="prog-dose">{formatDose(step.dose)}</p>
-                <p>{step.execution}</p>
+            <li key={step.id} class={mine ? 'prog-step step-row mine' : 'prog-step step-row'}>
+              <button type="button" class="step-open" onClick={() => onCard(step.id)}>
+                <Picto stepId={step.id} small />
+                <span class="step-open-text">
+                  <span class="prog-step-head">
+                    <strong>
+                      {step.key}. {step.name}
+                    </strong>{' '}
+                    <LevelBadge level={step.level} />
+                  </span>
+                  <span class="prog-dose">{formatDose(step.dose)}</span>
+                  <span>{step.execution}</span>
+                  <span class="step-open-how">Sådan gør du</span>
+                </span>
+              </button>
+              <div class="step-row-choice">
                 {mine ? (
                   <p class="mine-label">
                     Dit trin

@@ -3,6 +3,7 @@
 import { useState } from 'preact/hooks';
 import { measureLevel, PROGRAM } from '../../engine/index.ts';
 import type { Level, State } from '../../engine/types.ts';
+import { HowButton } from '../card.tsx';
 import { Countdown, Stopwatch } from './timers.tsx';
 
 const LEVEL: Record<Level, string> = {
@@ -21,6 +22,8 @@ export function MeasureInput(props: {
   onSkip: () => void;
   /** The measurement takes the place of the first set of this exercise (page 40). */
   firstSetOf?: string;
+  /** Opens the exercise card of that exercise (»Sådan gør du«, docs/SPEC.md 3.8). */
+  onCard?: () => void;
 }) {
   const measure = PROGRAM.measures.find((m) => m.id === props.measureId);
   const [value, setValue] = useState<number | null>(null);
@@ -44,6 +47,7 @@ export function MeasureInput(props: {
       </p>
       <h1>{measure.name}</h1>
       <p class="cue">{measure.how}</p>
+      {props.onCard && <HowButton onClick={props.onCard} />}
       {previous && (
         <p class="muted">
           Forrige: {previous.value} {UNIT[measure.unit]}

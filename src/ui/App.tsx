@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { formatLong } from '../engine/index.ts';
 import type { SessionKind } from '../engine/types.ts';
+import { ExerciseCard } from './card.tsx';
 import { useModel } from './hooks.ts';
 import { lazy } from './lazy.tsx';
 import type { Model } from './model.ts';
@@ -17,8 +18,8 @@ import { applyUpdate, onSwChange, swStatus } from './sw.ts';
 
 type Tab = 'today' | 'week' | 'ladders' | 'more';
 
-// The guided session and Open & Strong are not needed for the first screen: their code is fetched
-// in the background once I dag is up, or on the first tap (docs/SPEC.md 7, DECISIONS D35).
+// The guided session, Open & Strong and the exercise card are not needed for the first screen: their
+// code is fetched in the background once I dag is up, or on the first tap (docs/SPEC.md 7, D35).
 const Runner = lazy(() => import('./session/Runner.tsx').then((m) => m.Runner));
 const OpenStrong = lazy(() => import('./session/OpenStrong.tsx').then((m) => m.OpenStrong));
 const PRELOAD_AFTER_MS = 1000;
@@ -46,6 +47,7 @@ export function App({ model }: { model: Model }) {
     const id = setTimeout(() => {
       void Runner.preload().catch(() => undefined);
       void OpenStrong.preload().catch(() => undefined);
+      void ExerciseCard.preload().catch(() => undefined);
     }, PRELOAD_AFTER_MS);
     return () => clearTimeout(id);
   }, []);

@@ -892,3 +892,269 @@
   font-weight: 400;
   color: var(--c-muted);
 }
+
+/* Stiger: a tap on a step opens its exercise card (docs/SPEC.md 3.5). */
+.prog-step.step-row {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.step-open {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 12px;
+  align-items: start;
+  width: 100%;
+  min-height: 56px;
+  margin: 0;
+  padding: 8px 0;
+  border: 0;
+  border-radius: 12px;
+  background: var(--c-paper);
+  color: var(--c-navy);
+  text-align: left;
+  cursor: pointer;
+}
+
+.step-open:active {
+  background: var(--c-panel);
+}
+
+.step-open-text {
+  display: grid;
+  gap: 4px;
+}
+
+.step-open-how {
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  color: var(--c-blue);
+  font-weight: 600;
+}
+
+.step-row-choice {
+  padding-left: 84px;
+}
+
+/* The exercise card (docs/SPEC.md 3.8): read in the middle of a session too, so every text is at
+   least 18 px with 7:1 contrast as in the session (SPEC 6), and no grey text. */
+.exercise-card {
+  gap: 18px;
+  padding-bottom: 32px;
+  font-size: 18px;
+  line-height: 1.35;
+  color: var(--c-ink);
+}
+
+.exercise-card .step-kicker {
+  font-size: 18px;
+  color: var(--c-ink);
+}
+
+.card-top {
+  display: flex;
+}
+
+.card-head {
+  display: grid;
+  gap: 4px;
+}
+
+.card-title:focus {
+  outline: none;
+}
+
+.card-dose {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 12px;
+  margin-top: 4px;
+}
+
+.card-dose-value {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.1;
+  color: var(--c-red);
+}
+
+.card-dose-legend {
+  font-weight: 600;
+}
+
+.card-figure {
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.card-picto {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+}
+
+.card-caption {
+  display: grid;
+  gap: 8px;
+}
+
+.card-phases {
+  margin: 0;
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--c-navy);
+  text-align: center;
+}
+
+ul.card-phases {
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  text-align: left;
+}
+
+.card-move-name {
+  display: block;
+  font-family: 'Bai Jamjuree', system-ui, sans-serif;
+  font-size: 18px;
+  color: var(--c-ink);
+}
+
+.card-move-phases {
+  display: block;
+}
+
+.card-similar {
+  text-align: center;
+  font-weight: 600;
+}
+
+.card-section {
+  display: grid;
+  gap: 8px;
+}
+
+.card-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: card-step;
+  display: grid;
+  gap: 10px;
+}
+
+.card-steps li {
+  counter-increment: card-step;
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.card-steps li::before {
+  content: counter(card-step);
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--c-red);
+}
+
+.card-round {
+  font-weight: 600;
+}
+
+.card-cues {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.card-cues li {
+  padding: 4px 12px;
+  border-left: 6px solid var(--c-red);
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--c-navy);
+}
+
+.card-folds {
+  display: grid;
+  border-bottom: 1px solid var(--c-line);
+}
+
+.card-fold {
+  border-top: 1px solid var(--c-line);
+}
+
+.card-fold summary {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--c-navy);
+  cursor: pointer;
+  list-style: none;
+}
+
+.card-fold summary::-webkit-details-marker {
+  display: none;
+}
+
+.card-fold summary::before {
+  content: '▸';
+}
+
+.card-fold[open] summary::before {
+  content: '▾';
+}
+
+.card-fold-body {
+  display: grid;
+  gap: 10px;
+  padding: 0 0 16px;
+}
+
+.card-facts {
+  margin: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.card-facts dt {
+  font-weight: 600;
+  color: var(--c-navy);
+}
+
+.card-facts dd {
+  margin: 0 0 8px;
+}
+
+.card-mistakes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 14px;
+}
+
+.card-mistake {
+  font-weight: 600;
+  color: var(--c-navy);
+}
+
+.card-back {
+  min-height: 64px;
+}

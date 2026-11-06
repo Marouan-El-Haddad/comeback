@@ -20,6 +20,7 @@ import {
 } from '../../engine/index.ts';
 import type { Light, Pain, Rir, SessionSummary, Side } from '../../engine/types.ts';
 import { audioState, enableAudio, play } from '../audio.ts';
+import { ExerciseCard, HowButton, useCard } from '../card.tsx';
 import { Picto } from '../components/Picto.tsx';
 import { WhyText } from '../components/Why.tsx';
 import { readLocal, useModel, writeLocal } from '../hooks.ts';
@@ -123,6 +124,17 @@ export function Runner({
   const soundNoted = () => writeLocal(true, SOUND_KEY);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [finished, setFinished] = useState<SessionSummary | null>(null);
+  // »Sådan gør du« opens the exercise card in place of the session, which keeps running under it
+  // (docs/SPEC.md 3.8, DECISIONS.md D43).
+  const card = useCard();
+  const withCard = (view: preact.JSX.Element) => (
+    <>
+      {view}
+      {card.id !== null && (
+        <ExerciseCard id={card.id} back="Tilbage til passet" onClose={card.close} />
+      )}
+    </>
+  );
 
   useEffect(() => {
     writeLocal(run, RUN_KEY);
@@ -275,8 +287,8 @@ export function Runner({
         ]
       : ['Sovet mindst 6 timer?', 'Fri for ledsmerter, kun let øm?'];
     const now: Light = lightFor(motor ? run.answers : [run.answers[0], run.answers[1], true]);
-    return (
-      <div class={sessionClass}>
+    return withCard(
+      <div class={sessionClass} hidden={card.id !== null}>
         <SessionHeader title={plan.name} onClose={close} />
         <div class="session-body">
           <h1>Før du starter – 10 sekunder</h1>
@@ -342,7 +354,7 @@ export function Runner({
                 : 'GUL – start opvarmningen'}
           </button>
         </div>
-      </div>
+      </div>,
     );
   }
 
@@ -356,8 +368,8 @@ export function Runner({
     const nextPre = () => setRun((r) => ({ ...r, preIndex: r.preIndex + 1 }));
     if (index < measureFirst.length && measureFirst[0]) {
       const block = measureFirst[0];
-      return (
-        <div class={sessionClass}>
+      return withCard(
+        <div class={sessionClass} hidden={card.id !== null}>
           <SessionHeader
             title="Måling før opvarmning"
             paused={paused}
@@ -386,15 +398,15 @@ export function Runner({
               onSkip={nextPre}
             />
           </div>
-        </div>
+        </div>,
       );
     }
     const itemIndex = index - measureFirst.length;
     const item = items[itemIndex];
     if (item) {
       const power = plan.blocks.find((b) => b.role === 'power');
-      return (
-        <div class={sessionClass}>
+      return withCard(
+        <div class={sessionClass} hidden={card.id !== null}>
           <SessionHeader
             title={`Opvarmning · ${itemIndex + 1}/${items.length}`}
             paused={paused}
@@ -405,6 +417,7 @@ export function Runner({
             <p class="step-kicker">{item.dose}</p>
             <h1>{item.name}</h1>
             <p class="cue">{item.execution}</p>
+            <HowButton onClick={() => card.open(`${WARMUP?.id ?? 'warmup'}.${item.key}`)} />
             {item.key === '4' && power && (
               <p class="hint">Dagens første power-øvelse: {getStep(PROGRAM, power.stepId).name}</p>
             )}
@@ -419,13 +432,14 @@ export function Runner({
               Videre
             </button>
           </div>
-        </div>
+        </div>,
       );
     }
     // Question 3 after warm-up step 4; then the session starts (session_started).
     const q1q2Yellow = !run.answers[0] || !run.answers[1];
-    return (
-      <div class={sessionClass}>
+    // The warm-up's last timer can end while a card is open: the card stays until it is closed.
+    return withCard(
+      <div class={sessionClass} hidden={card.id !== null}>
         <SessionHeader title="Trafiklys" onClose={close} />
         <div class="session-body">
           <h1>Spørgsmål 3</h1>
@@ -448,7 +462,7 @@ export function Runner({
             {light === 'green' ? 'GRØN – kør passet' : 'GUL – minimumsdosis'}
           </button>
         </div>
-      </div>
+      </div>,
     );
   }
 
@@ -510,6 +524,7 @@ export function Runner({
             measureId={measureId}
             state={state}
             firstSetOf={`${trackName(step.block.trackId)} · ${getStep(PROGRAM, step.block.stepId).name}`}
+            onCard={() => card.open(step.block.stepId)}
             onSave={async (value) => {
               await model.commit([
                 logSet(ctx, {
@@ -543,6 +558,7 @@ export function Runner({
           key={`${step.block.blockId}-${step.setIndex}-${step.side ?? ''}`}
           step={step}
           paused={paused}
+          onCard={card.open}
           onLog={async (value, rir, pain) => {
             const measureId = step.measure ? step.block.measureId : undefined;
             const events = [
@@ -603,6 +619,7 @@ export function Runner({
                 {next.side ? ` · ${sideWord(next.side, next.block)}` : ''} ·{' '}
                 {next.measure ? 'måling: max' : `mål ${next.block.target} ${unitWord(next.block)}`}
               </p>
+              <HowButton onClick={() => card.open(next.block.stepId)} />
             </div>
           )}
           <div class="fixed-actions">
@@ -630,6 +647,7 @@ export function Runner({
           block={step.block}
           paused={paused}
           onDone={advance}
+          onCard={card.open}
         />
       );
       break;
@@ -646,6 +664,7 @@ export function Runner({
           set={step.set}
           paused={paused}
           onDone={advance}
+          onCard={card.open}
         />
       );
       break;
@@ -657,6 +676,7 @@ export function Runner({
           round={step.round}
           paused={paused}
           onDone={advance}
+          onCard={card.open}
         />
       );
       break;
@@ -685,6 +705,7 @@ export function Runner({
           block={step.block}
           paused={paused}
           onDone={advance}
+          onCard={card.open}
           onStop={async () => {
             await model.commit([
               logSet(ctx, {
@@ -795,14 +816,14 @@ export function Runner({
       </div>
     ) : null;
 
-  return (
-    <div class={sessionClass}>
+  return withCard(
+    <div class={sessionClass} hidden={card.id !== null}>
       {header}
       {endBar}
       <DeviceNotices />
       <div class="session-body">{body}</div>
       {actions}
-    </div>
+    </div>,
   );
 }
 
@@ -940,6 +961,8 @@ function EmomQuestions({ onSave }: { onSave: (clean: boolean, rest20: boolean) =
 function SetStep(props: {
   step: Extract<Step, { type: 'set' }>;
   paused: boolean;
+  /** Opens the exercise card of the step (»Sådan gør du«). */
+  onCard: (stepId: string) => void;
   onLog: (value: number | undefined, rir: Rir | undefined, pain: Pain | undefined) => Promise<void>;
 }) {
   const { step } = props;
@@ -994,6 +1017,7 @@ function SetStep(props: {
           </p>
         )}
         {block.load ? <p class="muted">Rygsæk: {block.load} kg</p> : null}
+        <HowButton onClick={() => props.onCard(block.stepId)} />
       </div>
     </div>
   );
@@ -1161,7 +1185,12 @@ function HoldTimer(props: { seconds: number; paused: boolean; onDone: () => void
   );
 }
 
-function EmomStep(props: { block: BlockPlan; paused: boolean; onDone: () => void }) {
+function EmomStep(props: {
+  block: BlockPlan;
+  paused: boolean;
+  onDone: () => void;
+  onCard: (stepId: string) => void;
+}) {
   const [started, setStarted] = useState(false);
   const emom = props.block.emom;
   if (!emom) return null;
@@ -1180,6 +1209,7 @@ function EmomStep(props: { block: BlockPlan; paused: boolean; onDone: () => void
       <h1>
         {emom.minutes} × {emom.reps} burpees
       </h1>
+      <HowButton onClick={() => props.onCard(emom.stepId)} />
       {!started ? (
         <>
           <p class="cue">Start et nyt sæt i starten af hvert minut. Resten af minuttet er pause.</p>
@@ -1209,7 +1239,13 @@ function EmomStep(props: { block: BlockPlan; paused: boolean; onDone: () => void
 }
 
 /** The club sequence: the round's five timed parts from the data, once per round. */
-function ClubStep(props: { block: BlockPlan; set: number; paused: boolean; onDone: () => void }) {
+function ClubStep(props: {
+  block: BlockPlan;
+  set: number;
+  paused: boolean;
+  onDone: () => void;
+  onCard: (stepId: string) => void;
+}) {
   const rounds = props.block.rounds ?? 1;
   const parts = getStep(PROGRAM, props.block.stepId).round ?? [];
   const phases: Phase[] = [{ label: 'Klar', seconds: 5 }];
@@ -1224,6 +1260,7 @@ function ClubStep(props: { block: BlockPlan; set: number; paused: boolean; onDon
         Klubsekvensen · trin {getStep(PROGRAM, props.block.stepId).key} · sæt {props.set} af{' '}
         {props.block.sets}
       </p>
+      <HowButton onClick={() => props.onCard(props.block.stepId)} />
       <PhaseRunner phases={phases} paused={props.paused} onDone={props.onDone} />
     </div>
   );
@@ -1235,6 +1272,7 @@ function RoundStep(props: {
   round: number;
   paused: boolean;
   onDone: () => void;
+  onCard: (stepId: string) => void;
 }) {
   const step = getStep(PROGRAM, props.block.stepId);
   const phases: Phase[] = [
@@ -1249,6 +1287,7 @@ function RoundStep(props: {
       </p>
       <h1>{step.name}</h1>
       <p class="cue">{step.execution}</p>
+      <HowButton onClick={() => props.onCard(props.block.stepId)} />
       <PhaseRunner phases={phases} paused={props.paused} onDone={props.onDone} />
     </div>
   );
@@ -1258,6 +1297,7 @@ function NeckStep(props: {
   block: BlockPlan;
   paused: boolean;
   onDone: () => void;
+  onCard: (stepId: string) => void;
   onStop: () => Promise<void>;
 }) {
   const step = getStep(PROGRAM, props.block.stepId);
@@ -1289,6 +1329,7 @@ function NeckStep(props: {
       <p class="step-kicker">Nakke · trin {step.key}</p>
       <h1>{step.name}</h1>
       <p class="cue">{step.execution}</p>
+      <HowButton onClick={() => props.onCard(props.block.stepId)} />
       <PhaseRunner phases={phases} paused={props.paused} onDone={props.onDone} />
       <button type="button" class="btn block" onClick={() => void props.onStop()}>
         Stop: snurren, svimmelhed eller smerte ud i armen
