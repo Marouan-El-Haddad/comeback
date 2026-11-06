@@ -101,16 +101,16 @@ Samme probe køres i Vanadium, hvis punkt 1, 2 eller 4 fejler i IronFox.
 
 **Med:**
 - Kilderne og datamodellen (`SPEC.md` 9.1): `content/explain/` og `content/figures/`, typer, validering og `node scripts/check-explain.ts <fil>`. Ingen henvisninger til PDF'en, sidetal eller kilder i appen (A2).
-- Forklaringer for alle trin og rutinepunkter (`SPEC.md` 3.8): først trin 1 og 2 i alle spor, burpee-teknik, nakke, opvarmningen og Open & Strong; derefter resten.
+- Forklaringer for alle trin, rutinepunkter og målinger (`SPEC.md` 3.8 og 9.1): først trin 1 og 2 i alle spor, burpee-teknik, nakke, opvarmningen og Open & Strong; derefter målingerne i passene (Væg-testen, Hollow hold, Balance, Burpees 3 min og de øvrige i `program/measures.json`) og resten.
 - Figursystemet: en TypeScript-udgave af `tools/pictos/`, der tegner figurerne som SVG og animerer mellem keyframes i øvelsens tempo, med faserne som tekst, slowmotion ved tryk og stillbilleder ved reduceret bevægelse; et kontaktark (PNG) pr. spor til review.
 - Figurer for alle trin i samme rækkefølge som forklaringerne.
 - Passet: »Dagens pas«, »Nu og næste«, den næste øvelse i pausen og introkortet (`SPEC.md` 3.2).
-- Designløftet og sproget (`SPEC.md` 5 og 6, rykket frem fra M5).
+- Designløftet og sproget (`SPEC.md` 5, 6 og 8, rykket frem fra M5).
 - »Sådan virker programmet« (`SPEC.md` 3.9).
 
 **Ikke med:** nye øvelser og ændrede navne, doser, tempo eller regler; forklaringerne er et lag ovenpå programmet.
 
-**Acceptkriterier:** SK10 og SK11; alle filer i `content/` består valideringen; figursystemets tests er grønne (led bøjer den rigtige vej, kontakten med gulv, væg og stol passer, fasernes varighed svarer til tempoet i dosis); Playwright-flows: øvelseskortet fra Stiger og fra passet; figuren animerer, et tryk giver slowmotion, og reduceret bevægelse giver stillbilleder; Styrke A, Styrke B, motor og Open & Strong gennem tidsmaskinen med »Nu«, »Næste«, pause og introkort; et pas uden berøring, hvor SK3 lover det; »Sådan virker programmet« fra Mere og fra indfasningen. JavaScript under 150 kB gz, og opstarten er ikke blevet langsommere (`e2e/perf.spec.ts`).
+**Acceptkriterier:** SK10 og SK11; alle filer i `content/` består valideringen; figursystemets tests er grønne (led bøjer den rigtige vej, kontakten med gulv, væg og stol passer, fasernes varighed svarer til tempoet i dosis); Playwright-flows: øvelseskortet fra Stiger og fra passet; figuren animerer, et tryk giver slowmotion, og reduceret bevægelse giver stillbilleder; Styrke A, Styrke B, motor og Open & Strong gennem tidsmaskinen med »Nu«, »Næste«, pause og introkort (introkortet kun i styrkepassene, og det lukker af sig selv, når pausen slutter, D44); et pas uden berøring, hvor SK3 lover det; »Sådan virker programmet« fra Mere og fra indfasningen. JavaScript under 150 kB gz, og opstarten er ikke blevet langsommere (`e2e/perf.spec.ts`).
 
 **Automatiske tests:** Vitest for indholdet og figurerne; Playwright som ovenfor i `pixel9a` (og `pixel9a-utc`, hvor datoer indgår); skærmbilleder af kortene og kontaktarkene i `screenshots/`.
 

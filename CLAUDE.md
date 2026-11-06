@@ -42,7 +42,7 @@ node scripts/check-explain.ts <fil>   # tjekker én forklarings- eller figurfil 
 ```
 docs/                 specifikationer og kilder (se ovenfor)
 program/              programdata som json: tracks/, sessions/, weeks.json, measures.json, overlays.json, impress.json, heroes.json, bosses.json, pictos.json
-content/              forklaringer (explain/) og figurer (figures/), én fil pr. spor og pr. rutine (docs/SPEC.md 9.1)
+content/              forklaringer (explain/) og figurer (figures/), én fil pr. spor, pr. rutine og for målingerne (docs/SPEC.md 9.1)
 src/engine/           ren TypeScript uden DOM: types, derive, plan, progression, regression, weeks, moves, layout, simulate, migrations/
 src/engine/__tests__/ ét testnavn pr. scenarie-ID fra docs/ENGINE.md afsnit 8
 src/content/          typer, validering og indlæsning af content/, og refs.ts (henvisninger til PDF, sider og kilder)

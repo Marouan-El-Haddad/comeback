@@ -589,4 +589,4 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 | 49 | Log | Historik (SPEC 3.6), eksport | S-DATA-02 |
 | 51–54 | Bag om programmet, kilder | »Hvorfor« i appens egne ord (`content/explain/`, `SPEC.md` 9.1); appen viser ingen kilder (`DECISIONS.md` A2) | – |
 
-Afvigelser og tilføjelser: A1 (begivenheder i stedet for sparring), T1 (klublog), T2 (indfasning), T3 (gendannelse efter smerte-uge), T4 (rejsepas tæller ugen). Alle Præciseringer er markeret i teksten og samlet i `DECISIONS.md`.
+Afvigelser og tilføjelser: A1 (begivenheder i stedet for sparring), A2 (ingen henvisninger til PDF'en, sidetal eller kilder i appen, heller ikke i motorens forklaringer), T1 (klublog), T2 (indfasning), T3 (gendannelse efter smerte-uge), T4 (rejsepas tæller ugen). Alle Præciseringer er markeret i teksten og samlet i `DECISIONS.md`.

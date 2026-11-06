@@ -22,7 +22,7 @@ Appen forklarer sig selv og står på egne ben: hver øvelse har et øvelseskort
 | SK8 | Eksport + import genskaber hele tilstanden byte for byte | Motor-test `S-DATA-02` |
 | SK9 | Hele appen vejer under 150 kB komprimeret JavaScript | Build-rapport |
 | SK10 | Ingen tekst i appen henviser til PDF'en, sidetal eller kilder | Vitest (`no-source-refs.test.ts`: kildekoden og programdata; `content.test.ts`: forklaringerne) og Playwright (`no-source-refs.spec.ts`: de viste skærme) |
-| SK11 | Hvert trin og hvert rutinepunkt har en forklaring og en animeret figur, der består valideringen (9.1) | `node scripts/check-explain.ts` (dækning) og Vitest (`content.test.ts`) |
+| SK11 | Hvert trin, hvert rutinepunkt og hver måling har en forklaring og en animeret figur, der består valideringen (9.1) | `node scripts/check-explain.ts` (dækning) og Vitest (`content.test.ts`) |
 
 ## 2. Platform
 
@@ -102,7 +102,7 @@ Skitsen viser opbygningen fra milepæl 2; »Nu og næste« herunder lægges ind 
   - **Dagens pas** på ét blik, før passet starter: blokkene i rækkefølge med navy skillere og store røde tal, øvelserne med figur, sæt × gentagelser (eller tid), pauser, udstyr og forventet tid. Skærmen åbnes fra I dag-kortet, og »Start passet« står nederst.
   - **Nu og næste:** under hele passet er »Nu« (figur, mål og 2 cues) og »Næste« (figur, navn og mål) synlige, og det samme er fremdriften i passet (fx »Blok 3 af 7«).
   - **Pausen** viser den næste øvelse stort med animation og dens »Gør klar«-tekst.
-  - **Introkort:** første gang en øvelse kommer i passet (dens første sæt), vises et kort introkort med animation og trin, før timeren går. Et tryk lukker det. Ved hold og EMOM starter nedtællingen først, når kortet er lukket, så holdet selv kører uden berøring (SK3). Open & Strong og motorens faser har intet introkort (`DECISIONS.md` D41).
+  - **Introkort** (`DECISIONS.md` D44): første gang en øvelse kommer i et styrkepas (før dens første sæt), vises et kort introkort med animation og trin i pausen før øvelsen. Det lukker ved et tryk eller af sig selv, når pausen slutter, så hold, klubsekvens og nakke stadig starter uden berøring (SK3). Er der ingen pause før øvelsen (den første efter opvarmningen og spørgsmål 3), har kortet sin egen »Gør klar«-nedtælling på 10 sek og lukker af sig selv. EMOM'ens kort lukkes med »Start EMOM«. Opvarmningen får ét kort for hele opvarmningen (de fire punkter med navn og figur), som står i 10 sek efter »Start opvarmningen« og lukker af sig selv, før den første timer går. Open & Strong og motorens faser har intet introkort.
   - Bevægelse i brugerfladen bruges kun, hvor den viser, hvad der ændrede sig (afsnit 5).
 - **Logning:** »Som planlagt« logger målet og den planlagte reserve. Afvigelser rettes med −/+ og reserveknapperne, før man trykker. Smerte-knappen åbner tre valg: »Let (≤3)«, »Skarp eller i et led«, »Stop øvelsen«.
 - **Pausetimer** starter af sig selv, når et sæt er logget, med stor nedtælling, lyd ved 3-2-1 og en markant slutlyd. Næste sæt vises under timeren, så man kan læse, mens man hviler.
@@ -166,7 +166,7 @@ Vælg en dato (standard i morgen). Appen genstarter i simuleret tilstand med et 
 
 ### 3.8 Øvelseskortet
 
-Ét kort pr. trin og pr. rutinepunkt (opvarmning og Open & Strong), som åbnes fra Stiger, fra »Dagens pas« og fra passet (»Nu« og pausen) (`DECISIONS.md` T7). Navn og dosis kommer fra programmet; resten fra `content/explain/` og `content/figures/` (9.1). En, der aldrig har set øvelsen, skal kunne lave den rigtigt ud fra kortet og figuren.
+Ét kort pr. trin, pr. rutinepunkt (opvarmning og Open & Strong) og pr. måling (`DECISIONS.md` D45), som åbnes fra Stiger, fra »Dagens pas« og fra passet (»Nu«, pausen og målingerne) (`DECISIONS.md` T7). Navn og dosis kommer fra programmet; resten fra `content/explain/` og `content/figures/` (9.1). En, der aldrig har set øvelsen, skal kunne lave den rigtigt ud fra kortet og figuren.
 
 - **Åbnes** (`DECISIONS.md` D43): i Stiger med et tryk på et trin; i passet med »Sådan gør du« ved den aktuelle øvelse (sæt, hold, en måling som første sæt, EMOM, klubsekvensen, runder, nakke og opvarmningens punkter) og ved »Næste« i pausen; i Open & Strong ved det aktuelle punkt. Kortet vises i stedet for skærmen, det blev åbnet fra. Skærmen under bliver stående, så et pas kører videre med sine timere, og intet sættes på pause. »Tilbage« står øverst og nederst og fører tilbage til samme sted (i passet »Tilbage til passet«).
 - **Øverst:** navn, dosis fra programmet (fx »3 × 6–12«) med en forklaring af tallene (»sæt × gentagelser«, »sæt × sekunder«, »minutter × gentagelser i starten af hvert minut«) og den animerede figur. Under figuren står faserne som tekst (»3 sek ned · 1 sek stille · Op«), og den, der kører, er fremhævet. Har punktet flere bevægelser, står hver bevægelses navn over dens faser.
@@ -174,7 +174,8 @@ Vælg en dato (standard i morgen). Appen genstarter i simuleret tilstand med et 
 - **Foldet sammen** (ét tryk åbner hver): tempo og vejrtrækning, typiske fejl med rettelse, lettere og sværere variant, udstyr og sporets »Hvorfor«. Udstyret står i foldens overskrift (»Udstyr: Stol og væg«, »Udstyr: Kun gulvet«), og folden viser »Gør klar«.
 - **Tekst:** kortet læses også midt i et pas, så al tekst på kortet er mindst 18 px med kontrast mindst 7:1, også når det åbnes fra Stiger (afsnit 6).
 - **Figuren** animerer mellem positionerne i øvelsens tempo, fx push-up: 3 sek ned, 1 sek stille, op. Et tryk på figuren skifter til slowmotion (halv fart) og tilbage. Ved `prefers-reduced-motion: reduce` vises positionerne som stillbilleder side om side med deres navn. Figuren har et tekstalternativ, der beskriver positionerne og faserne.
-- Har et trin flere bevægelser (fx opvarmningens »Mobilisér«), har hver sin figur med navn.
+- Har et trin flere bevægelser (fx opvarmningens »Mobilisér«), har hver sin figur med navn. I et pas viser opvarmningens »Potensér« passets første power-øvelse under dens navn (power ben i Styrke A, power overkrop i Styrke B) og pogo-hop kun i Styrke A; uden for et pas står navnene alene.
+- **En måling** (fx Væg-testen, Hollow hold, Balance, Burpees 3 min) har sit eget kort med »Måling« over navnet og det, der måles, i stedet for dosis (»Afstand i cm«, »Så længe du kan«). En måling, der afløser første sæt, åbner målingens kort, ikke trinnets: en max-test er en almindelig push-up, uanset trinnet.
 - Mangler forklaringen eller figuren, viser kortet programmets udførelse og piktogrammet. Uden forklaring: programmets udførelse uden sidetal og kilder under »Sådan gør du« (udeladt, hvis den kun gentager dosis), rundens dele i rækkefølge, de cues, der ikke gentager udførelsen, og sporets »Hvorfor«; ingen tomme overskrifter. Er piktogrammet lånt fra stigens nærmeste trin, står der »Tegningen viser en lignende øvelse.«
 
 ### 3.9 Sådan virker programmet
@@ -196,7 +197,7 @@ Pas for pas bagud udfyldes ikke; kan tilføjes i Historik → »Tilføj pas bagu
 
 ### 4.2 Normalt styrkepas
 
-Start passet → trafiklys → opvarmning (fire trin som timer, 8 min) → spørgsmål 3 → power → par 1 → par 2 → tri-sæt/par 3 → finisher (EMOM eller klubsekvens) → nakke → opsummering. Opsummeringen viser: logget vs. planlagt, motorens beslutninger med forklaring (»Pres: 1 pas mere med 2 × 12 → trin 2«), smerte-flag og én knap »Færdig«. Passet gemmes løbende; lukkes appen midt i et pas, fortsætter den samme sted ved næste åbning (samme dag).
+Dagens pas (3.2) → »Start passet« → trafiklys → opvarmning (fire trin som timer, 8 min) → spørgsmål 3 → power → par 1 → par 2 → tri-sæt/par 3 → finisher (EMOM eller klubsekvens) → nakke → opsummering. Opsummeringen viser: logget vs. planlagt, motorens beslutninger med forklaring (»Pres: 1 pas mere med 2 × 12 → trin 2«), smerte-flag og én knap »Færdig«. Passet gemmes løbende; lukkes appen midt i et pas, fortsætter den samme sted ved næste åbning (samme dag).
 
 ### 4.3 Gult og rødt pas
 
@@ -308,6 +309,10 @@ Kravene er skærpet efter brugerens første test (`DECISIONS.md` D39) og tjekkes
 - Alle datoer gemmes som `YYYY-MM-DD` i Europe/Copenhagen; »i dag« beregnes med `Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Copenhagen' })`, aldrig med `new Date().getDate()`. Ugen starter mandag. Et pas hører til den dato, det blev startet.
 - Visning med `da-DK` eksplicit (»tirsdag 10. nov«, »1.500«, »3 × 6–12«), uanset browserens locale.
 - UI-tekst på dansk, »du«; korte sætninger; ingen udråbstegn i instruktioner.
+- **Konkret og kort:** sig, hvad du skal gøre, og hvor kroppen skal være (»Hænderne under skuldrene«), ikke hvad øvelsen »fokuserer på«. Ét budskab pr. sætning.
+- **Samme ord for det samme overalt** (UI, forklaringer og motorens forklaringer): *pas* (et træningspas: Styrke A, Styrke B, motor), *blok* (en øvelse i passet med sine sæt), *sæt*, *gentagelser* (ikke »reps« i tekst; »reps« kun som enhed ved tal), *trin* (et trin på en stige), *stige*, *reserve* (gentagelser, du kunne have lavet mere), *hold* (en stilling, du holder i en tid), *pause* (mellem sæt), *måling* og *let uge*.
+- **Ingen fagudtryk uden forklaring:** første gang et fagudtryk står på en skærm, forklares det med få ord (»EMOM: hvert minut starter du et nyt sæt«). Udtryk, der står i programmets navne (power, wall sit, hollow), bruges som navne.
+- Ingen henvisning til PDF'en, sidetal eller kilder (`DECISIONS.md` A2, D46).
 
 ## 9. Data og backup
 
@@ -320,20 +325,20 @@ Kravene er skærpet efter brugerens første test (`DECISIONS.md` D39) og tjekkes
 
 ### 9.1 Forklaringer og figurer (`content/`)
 
-Forklaringerne og figurerne er et lag ovenpå programmet (`DECISIONS.md` D37). De ligger i egne filer, så `program/*.json` stadig kan sammenlignes ord for ord med kilden, og de ændrer aldrig navne, doser, tempo eller regler. Typerne står i `src/content/types.ts`, og valideringen i `src/content/validate.ts` håndhæver reglerne herunder.
+Forklaringerne og figurerne er et lag ovenpå programmet (`DECISIONS.md` D37, D45). De ligger i egne filer, så `program/*.json` stadig kan sammenlignes ord for ord med kilden, og de ændrer aldrig navne, doser, tempo eller regler. Typerne står i `src/content/types.ts`, og valideringen i `src/content/validate.ts` håndhæver reglerne herunder.
 
-**Filer.** Én forklaringsfil og én figurfil pr. spor (`program/tracks/<id>.json`) og pr. rutine (`warmup` og `os` i `program/routines.json`), så flere indholdsagenter kan skrive samtidig uden at røre hinandens filer:
+**Filer.** Én forklaringsfil og én figurfil pr. spor (`program/tracks/<id>.json`), pr. rutine (`warmup` og `os` i `program/routines.json`) og for målingerne i passene (`measures`, `program/measures.json`), så flere indholdsagenter kan skrive samtidig uden at røre hinandens filer:
 
 | Fil | Indhold |
 |---|---|
-| `content/explain/<id>.json` | Sporets eller rutinens »Hvorfor« og én forklaring pr. trin eller rutinepunkt med positionerne i ord og faserne |
-| `content/figures/<id>.json` | Keyframes til figuren for hvert forklaret trin: én pose pr. position i forklaringen |
+| `content/explain/<id>.json` | Sporets, rutinens eller målingernes »Hvorfor« og én forklaring pr. trin, rutinepunkt eller måling med positionerne i ord og faserne |
+| `content/figures/<id>.json` | Keyframes til figuren for hvert forklaret punkt: én pose pr. position i forklaringen |
 
-`<id>` er sporets eller rutinens ID (`press`, `warmup`). Et trin har sit ID fra programmet (`press.1`, `wallsit.W3`); et rutinepunkt får rutinens ID og punktets nummer (`warmup.1` … `warmup.4`, `os.1` … `os.6`). Trin, der ikke er skrevet endnu, udelades; filen må gerne vokse trin for trin.
+`<id>` er sporets eller rutinens ID (`press`, `warmup`) eller `measures`. Et trin har sit ID fra programmet (`press.1`, `wallsit.W3`); et rutinepunkt får rutinens ID og punktets nummer (`warmup.1` … `warmup.4`, `os.1` … `os.6`); en måling får `measures.` og sit ID fra `program/measures.json` (`measures.wall_test`, `measures.hollow`, `measures.burpee_3min`). Punkter, der ikke er skrevet endnu, udelades; filen må gerne vokse punkt for punkt.
 
-**Tjek.** `node scripts/check-explain.ts <fil>` tjekker én forklarings- eller figurfil og skriver korte danske fejlbeskeder med sted (fx `press.1 › cues[1]: højst 6 ord (har 8)`); en figurfil tjekkes mod forklaringen med samme navn. Uden fil tjekkes alle filer i `content/`, og dækningen udskrives. Kommandoen fejler også, hvis prettier ville ændre filen. Vitest (`src/content/__tests__/content.test.ts`) validerer alle filerne ved hver `npm run check`.
+**Tjek.** `node scripts/check-explain.ts <fil>` tjekker én forklarings- eller figurfil og skriver korte danske fejlbeskeder med sted (fx `press.1 › cues[1]: højst 6 ord (har 8)`); en figurfil tjekkes mod forklaringen med samme navn. Uden fil tjekkes alle filer i `content/`, og dækningen udskrives. En `like` til en anden fil slås op i den. Kommandoen fejler også, hvis prettier ville ændre filen. Vitest (`src/content/__tests__/content.test.ts`) validerer alle filerne ved hver `npm run check`.
 
-**Forklaringsfilen** (`ExplainFile`): `format` (1), `subject` (filens navn), `why` og `items` i programmets rækkefølge. Et punkt i `items` er enten en fuld forklaring eller `{ "id": "burpee_emom.E2", "like": "burpee_emom.E1" }`, når trinnet forklares og tegnes præcis som et andet trin i filen.
+**Forklaringsfilen** (`ExplainFile`): `format` (1), `subject` (filens navn), `why` og `items` i programmets rækkefølge. Et punkt i `items` er enten en fuld forklaring eller `{ "id": "burpee_emom.E2", "like": "burpee_emom.E1" }`, når punktet forklares og tegnes præcis som et andet: i samme fil eller i en anden (en måling som sit trin: `{ "id": "measures.hollow", "like": "core_front.2" }`). `like` bruges kun, når alle felter passer ordret til begge, så »Lettere« og »Sværere« nævner intet trin (»trin 2«, »E3«); ellers forklares punktet for sig.
 
 | Felt | Kortet viser | Regel |
 |---|---|---|
@@ -353,25 +358,28 @@ Forklaringerne og figurerne er et lag ovenpå programmet (`DECISIONS.md` D37). D
 **Bevægelser, positioner og faser** – det, figursystemet bygger på:
 
 - En bevægelse har `positions` (1–6, typisk 2–4) og `phases` (1–12). Har et punkt flere bevægelser (opvarmningens »Mobilisér«), får hver et `id` og et `name`.
+- **Kun i rutiner:** `"sessions": ["A"]` gør en bevægelse til en del af de pas alene (pogo-hop i Styrke A), og `{ "id", "name", "from": "power" }` er passets første power-trin (opvarmningens »Potensér«) uden egne positioner og faser: kortet og figuren viser trinnets navn, positioner og faser, og uden power-blok (rejsepasset) udelades bevægelsen. Højst én bevægelse pr. punkt har `from`, og den har ingen figur. Pas: `A`, `B`, `motor`, `os` og `travel`.
 - En position har `id` (små bogstaver, tal og `_`, fx `top`, `bottom`), `name` (højst 3 ord, fx »Oppe«), `text` (positionen i ord: hvor hænder, fødder, knæ, hofte og hoved er, vinklerne, og hvad der rører hvad; højst 240 tegn) og `contacts`.
 - En kontakt er `{ "part", "on", "count"? }`. Kropsdele, der er to af: `hand`, `forearm`, `elbow`, `knee`, `shin`, `foot`, `toes`, `heel` (`count` 1 = den ene, 2 = begge, standard 2). Andre: `hip` (siddefladen), `back`, `belly`, `side` (liggende på den), `shoulders`, `chest`, `head`. Flader: `floor`, `wall`, `chair`, `sofa`, `bed`, `table`, `step`, `books`, `pillow`, `towel`; alt andet end gulvet skal også stå i `equipment`. Ingen kontakter = i luften (et hop).
-- En fase er `{ "to", "seconds", "label" }`: figuren bevæger sig til positionen `to` (samme position som før = en pause eller et hold) på `seconds` sekunder (0,2–10) og viser `label` under figuren (højst 5 ord, fx »3 sek ned«). Bevægelsen starter i den første position, og hver position nås af en fase.
-- `"seconds": "dose"` betyder »så længe dosis siger«: selve holdet i en hold-øvelse (påkrævet), en del af en runde eller en rutines tid. Øvelser med gentagelser og power bruger kun sekunder.
-- En gentagelse slutter, hvor den startede: i øvelser med gentagelser (ikke power, hold og runder) går sidste fase til den første position.
-- **Tempoet i dosis:** hver tid, programmet nævner for trinnet (»3 sek ned, 1 sek pause«, »på 4–5 sek«), skal findes som en fase med den varighed; en tid over 10 sek (et hold på 45 sek) er `"dose"`-fasen.
+- En fase er `{ "to", "seconds", "label", "repeat"? }`: figuren bevæger sig til positionen `to` (samme position som før = en pause eller et hold) på `seconds` sekunder (0,2–10) og viser `label` under figuren (højst 5 ord, fx »3 sek ned«). Bevægelsen starter i den første position, og hver position nås af en fase.
+- **`repeat`** gentager en delbevægelse: frem til `to` og tilbage til positionen før, N gange (2–30), eller `"dose"`: så længe dosis varer (slagene under en wall sit). `seconds` er så tiden for én gang frem og tilbage, og fasen slutter, hvor den startede (klubsekvensens »10 mikro-pumps«: `{ "to": "pump", "seconds": 0.8, "repeat": 10 }`). `to` skal være en anden position end den før.
+- `"seconds": "dose"` betyder »så længe dosis siger«: selve holdet i en hold-øvelse (påkrævet: `"seconds": "dose"` eller `"repeat": "dose"`), en del af en runde eller en rutines eller målings tid. Øvelser med gentagelser og power bruger kun sekunder. **I kortets animation** varer en `"dose"`-fase 2 sek, og `"repeat": "dose"` gentages 3 gange; i passet følger figuren timeren.
+- En gentagelse slutter, hvor den startede: i øvelser med gentagelser (ikke power, hold og runder) slutter sidste fase i den første position.
+- **Tempoet i dosis:** hver tid, programmet nævner for punktet – i udførelsen, cues, rundens dele og en rutines dosis (»3 sek ned, 1 sek pause«, »på 4–5 sek«, »8 × 5 sek«) – skal findes som en fase med den varighed (én gang eller alle gentagelser); en tid over 10 sek (et hold på 45 sek) er `"dose"`-fasen.
+- **En label med »N sek«** skal passe med fasens tid: »Hold 3 sek« på en fase på 3 sek (eller alle gentagelser tilsammen). En `"dose"`-fase kan kun have en tid over 10 sek i sin label (»Hold 45 sek«).
 
-**Tekstregler for alle felter:** dansk du-form, konkret og kort; prosa slutter med punktum, cues, navne og labels gør ikke; ingen udråbstegn, emojis, linjeskift eller dobbelte mellemrum; ingen henvisning til PDF'en, sidetal eller kilder (A2); i et spors trin ingen dosis som »3 × 8« (dosis står på kortet fra programmet).
+**Tekstregler for alle felter:** dansk du-form, konkret og kort med ordene fra afsnit 8; prosa slutter med punktum, cues, navne og labels gør ikke; ingen udråbstegn, emojis, linjeskift eller dobbelte mellemrum; ingen henvisning til PDF'en, sidetal eller kilder (A2), ingen årstal (19xx og 20xx; skriv tusinder som »2.000«) og ingen henvisning til studier eller forskning (metaanalyse, studie, forskning, forsker, evidens) (D46); i et spors trin ingen dosis som »3 × 8« (dosis står på kortet fra programmet).
 
 **Figurfilen** (`FigureFile`): `format` (1), `subject` og `figures`. Formatet er Python-motorens (`tools/pictos/picto.py`) som data, og figursystemet i milepæl 6 tegner og animerer det:
 
 - Koordinater i figurenheder: x til højre, y op, gulvet i y = 0. Led og længder som piktogrammerne (`BODY`: skinneben 23, lår 24, overkrop 30, overarm 16, underarm 15, hals 11, hoved med radius 6,4).
-- En figur har `id` (trinnet), `movement` (kun ved flere bevægelser), `view` (`side`, `front` eller `top`), `facing` (sidebillede: 1, når brystet vender mod højre, efter at figuren er drejet op at stå uden at spejle den; en push-up eller planke med hovedet til højre og liggende på ryggen med hovedet til venstre er 1, en håndstand med brystet mod højre er −1), `props`, `highlight` (de røde segmenter: `torso`, `near.thigh`, `far.forearm` …) og `keyframes` med én pose pr. position i forklaringen. En figur kan også være `{ "id", "like" }`, når den tegnes som en anden figur i filen.
+- En figur har `id` (punktet), `movement` (kun ved flere bevægelser), `view` (`side`, `front` eller `top`), `facing` (påkrævet i sidebilledet: 1, når brystet vender mod højre, efter at figuren er drejet op at stå uden at spejle den; en push-up eller planke med hovedet til højre og liggende på ryggen med hovedet til venstre er 1, en håndstand med brystet mod højre er −1), `props`, `highlight` (de røde segmenter: `torso`, `neck` (mellem skuldrene og hovedet), `near.thigh`, `far.forearm` …) og `keyframes` med én pose pr. position i forklaringen. En figur kan også være `{ "id", "like" }`, når den tegnes som en anden figur i filen.
 - En pose har `hip` (punkt), `torso` (vinkel i grader fra hoften til skuldrene: 90 = lodret op), `head` (hovedets vinkel til overkroppen, standard 0), i frontbilledet `width` (skuldre og hofter, standard 22 og 12) og `arms` og `legs` med `near` og `far`.
 - Et lem er enten `{ "to", "bend"?, "tip"?, "upper"?, "lower"? }`, hvor hånden eller anklen når punktet `to` med to-leds invers kinematik, eller `{ "joint", "end", "tip"? }` med leddene givet (underarme i gulvet i en planke), eller `null` (skjult i alle keyframes). I sidebilledet bøjer albuer og knæ selv den anatomiske vej ud fra `facing`, så `bend` udelades; forfra og ovenfra vælger `bend` (1 eller −1) siden. `tip` er fod eller hånd ud over anklen eller håndleddet (et punkt eller en vinkel); `upper` og `lower` forkorter et led, der peger mod beskueren.
 - Rekvisitter: `wall` (`x`, `side`), `chair`, `bed`, `table`, `step` og `sofa` (`x`, `width`, `height` og for sofaen `back` og `backSide`), `books`, `pillow`, `towel` og `backpack` med `at` (nederste venstre hjørne), og `towel`, `backpack` og `bottles` med `attach` (`near.hand`, `far.hand`, `near.foot`, `far.foot`, `back`), så de følger hånden eller foden. Hver rekvisit skal stå i forklaringens udstyr, og hver flade, en position rører, skal være en rekvisit.
-- Figursystemets egne tests (milepæl 6) tjekker geometrien: knæ og albuer bøjer den rigtige vej, kontakterne i forklaringen passer med gulv, væg og stol i figuren, og fasernes varighed svarer til tempoet i dosis. Hænder og fødder, der står fast, har samme punkt i alle keyframes, så de ikke glider.
+- Figursystemets egne tests (milepæl 6) tjekker geometrien: knæ og albuer bøjer den rigtige vej, kontakterne i forklaringen passer med gulv, væg og stol i figuren, og fasernes varighed svarer til tempoet i dosis. Hænder og fødder, der står fast, har samme punkt i alle keyframes, så de ikke glider. Kontaktarket viser brystets retning (`facing`) med en lille pil.
 
-**Indlæsning:** se afsnit 7. Filerne hentes som JSON efter start og precaches af service workeren.
+**Indlæsning:** se afsnit 7. Filerne hentes som JSON efter start og precaches af service workeren. Kode i `src/` må ikke importere `content/explain/` eller `content/figures/` direkte (eslint, D46); kun `src/content/load.ts` når dem.
 
 ## 10. Ikke med i v1
 
