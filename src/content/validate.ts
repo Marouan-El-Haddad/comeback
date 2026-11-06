@@ -134,7 +134,7 @@ const YEAR = /\b(?:19|20)\d{2}\b/u;
 const RESEARCH =
   /\b(?:meta-?analyse\p{L}*|studie(?:r|t|rne|ts|rnes)?|forskning\p{L}*|forsker\p{L}*|evidens\p{L}*)(?!\p{L})/iu;
 /** A step named in »Lettere« or »Sværere«: »trin 2«, »E3«. */
-const STEP_NAME = /\btrin\s+[A-Z]?\d+\b|\b[A-Z]\d\b/iu;
+const STEP_NAME = /\b[Tt]rin\s+[A-Z]?\d+\b|\b[A-Z]\d\b/u;
 
 // ---------------------------------------------------------------------------------------------
 // A small reader for untyped JSON that collects problems with their place in the file
