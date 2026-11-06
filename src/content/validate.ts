@@ -461,7 +461,7 @@ function checkMovement(r: Report, where: string, value: unknown, ctx: MovementCo
           words: ph.labelWords,
         })
       ) {
-        checkLabel(r, at(w, 'label'), phase as unknown as Phase);
+        checkLabel(r, at(w, 'label'), phase as unknown as Phase, ctx.item);
       }
     });
   }
@@ -470,15 +470,37 @@ function checkMovement(r: Report, where: string, value: unknown, ctx: MovementCo
   }
 }
 
-/** A label that says »N sek« says how long the phase lasts (all its repeats). */
-function checkLabel(r: Report, where: string, phase: Phase): void {
+const seconds = (v: number) => (Math.round(v * 10) / 10).toString().replace('.', ',');
+
+/**
+ * A label that says »N sek« says how long the phase lasts: one way, or with `repeat` one time out and
+ * back or all of them (»Et slag hver 2 sek«, »0,8 sek pr. pump«). On a "dose" phase it is the hold's
+ * time from the dose (»Hold 10 sek«, »Hold 10–30 sek«) or a time over 10 sek (docs/SPEC.md 9.1, L7).
+ */
+function checkLabel(r: Report, where: string, phase: Phase, item: SubjectItem): void {
+  const once = finite(phase.seconds) ? phase.seconds : null;
   const total = phaseTotal(phase);
+  const hold = item.dose?.kind === 'hold' ? item.dose.seconds : null;
+  const within = (v: number | null, min: number, max: number) =>
+    v !== null && v >= min - 1e-9 && v <= max + 1e-9;
   for (const [min, max] of statedSeconds([phase.label])) {
-    const said = `»${phase.label}« siger ${min === max ? min : `${min}–${max}`} sek`;
-    if (total === null) {
-      if (min <= longest) r.add(where, `${said}, men fasen er "dose"; giv den "seconds": ${min}`);
-    } else if (total < min - 1e-9 || total > max + 1e-9) {
-      r.add(where, `${said}, men fasen varer ${Math.round(total * 10) / 10} sek`);
+    const said = `»${phase.label}« siger ${min === max ? seconds(min) : `${seconds(min)}–${seconds(max)}`} sek`;
+    if (within(once, min, max) || within(total, min, max)) continue;
+    if (lastsDose(phase) && min > longest) continue; // the dose's own time, as »Hold 45 sek«
+    if (once === null) {
+      // The hold itself: its time is the dose's.
+      if (hold && min >= hold[0] - 1e-9 && max <= hold[1] + 1e-9) continue;
+      r.add(
+        where,
+        hold
+          ? `${said}, men holdet varer som dosis (${hold[0] === hold[1] ? hold[0] : `${hold[0]}–${hold[1]}`} sek): skriv dosisens tid, eller fjern tiden fra labelen`
+          : `${said}, men fasen er "dose"; giv den "seconds": ${seconds(min)}, eller fjern tiden fra labelen`,
+      );
+    } else if (phase.repeat !== undefined) {
+      const all = total === null ? '' : ` og alle gange ${seconds(total)} sek`;
+      r.add(where, `${said}, men én gang frem og tilbage varer ${seconds(once)} sek${all}`);
+    } else {
+      r.add(where, `${said}, men fasen varer ${seconds(total ?? once)} sek`);
     }
   }
 }

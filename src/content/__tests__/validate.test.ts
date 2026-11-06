@@ -602,3 +602,54 @@ describe('kilder i forklaringerne (L2)', () => {
     expect(explainProblems(fine, 'press')).toEqual([]);
   });
 });
+
+describe('labels med tid på hold og gentagelser (L7)', () => {
+  /** A neck hold (N1: 10 sek, N2: 10–30 sek) whose hold phase has the given label. */
+  const neck = (id: string, label: string): ExplainFile => {
+    const item = structuredClone(WALLSIT.items[0]) as ExplainItem;
+    item.id = id;
+    item.equipment = [];
+    const head = [{ part: 'head' as const, on: 'floor' as const }];
+    item.movements = [
+      {
+        positions: [
+          { id: 'rest', name: 'Hvile', text: 'Hovedet hviler i gulvet.', contacts: head },
+          { id: 'press', name: 'Pres', text: 'Hagen trukket ind.', contacts: head },
+        ],
+        phases: [
+          { to: 'press', seconds: 1, label: 'Hagen ind' },
+          { to: 'press', seconds: 'dose', label },
+          { to: 'rest', seconds: 1, label: 'Slip' },
+        ],
+      },
+    ];
+    return { format: 1, subject: 'neck', why: ['Nakken holder hovedet stille.'], items: [item] };
+  };
+
+  test('»Hold 10 sek« i N1 og »Hold 10–30 sek« i N2 er holdets tid fra dosis', () => {
+    expect(explainProblems(neck('neck.N1', 'Hold 10 sek'), 'neck')).toEqual([]);
+    expect(explainProblems(neck('neck.N2', 'Hold 10–30 sek'), 'neck')).toEqual([]);
+  });
+
+  test('en anden tid end dosis på holdet afvises med et råd, der kan følges', () => {
+    expect(explainProblems(neck('neck.N2', 'Hold 5 sek'), 'neck').join('\n')).toContain(
+      '»Hold 5 sek« siger 5 sek, men holdet varer som dosis (10–30 sek): skriv dosisens tid, eller fjern tiden fra labelen',
+    );
+  });
+
+  test('tiden for én gentagelse eller alle gentagelser i en »repeat«-fase', () => {
+    const wallsit = structuredClone(WALLSIT);
+    own(wallsit.items[0] as ExplainItem).phases[0]!.label = 'Et slag hver 1,5 sek';
+    expect(explainProblems(wallsit, 'wallsit')).toEqual([]);
+    for (const label of ['0,8 sek pr. pump', '10 pumps på 8 sek']) {
+      const club = structuredClone(CLUB);
+      own(club.items[0] as ExplainItem).phases[6]!.label = label;
+      expect(explainProblems(club, 'club_sequence'), label).toEqual([]);
+    }
+    const club = structuredClone(CLUB);
+    own(club.items[0] as ExplainItem).phases[6]!.label = '2 sek pr. pump';
+    expect(explainProblems(club, 'club_sequence').join('\n')).toContain(
+      '»2 sek pr. pump« siger 2 sek, men én gang frem og tilbage varer 0,8 sek og alle gange 8 sek',
+    );
+  });
+});
