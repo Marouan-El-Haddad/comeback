@@ -225,7 +225,7 @@ Fire felter: timer søvn i snit (tal), lørdagskarakteren (udfyldt hvis logget),
 
 ### 4.8 Lette uger og målinger
 
-I uge 4, 8 og 12 (programuger) viser I dag »Let uge – målinger«. Målingerne er indbygget i passene som første sæt af den relevante øvelse: tirsdag væg-test, push-ups max, bord-rows max, burpee-test 3 min (erstatter EMOM); torsdag Cooper (valgfri) eller base-check; fredag pike max, hollow max, sideplanke max pr. side, wall sit max, balance. Hver måling viser forrige værdi og Målbrættets niveau. Uge 1 har samme målinger som nulpunkt. Efter ugens sidste pas: »Ryk op«-oversigt for stiger, der nåede toppen.
+I uge 4, 8 og 12 (programuger) viser I dag »Let uge – målinger«. Målingerne er indbygget i passene som første sæt af den relevante øvelse: tirsdag væg-test, push-ups max, bord-rows max, burpee-test 3 min (erstatter EMOM); torsdag Cooper (valgfri) eller base-check; fredag pike max, hollow max, sideplanke max pr. side, wall sit max, balance. Hver måling viser forrige værdi og Målbrættets niveau. **Sideplanke og balance måles pr. side** (`DECISIONS.md` P59, D49): målingen tager tiden på venstre side og derefter på højre (»Venstre side« og »Højre side«, ved balance »Venstre ben« og »Højre ben«). Hvert ur starter først ved »Start uret«, begge tider vises og kan rettes, og appen gemmer selv den korteste (»Den korteste tid gemmes: 35 sek«). Hver måling gemmer stadig ét tal, så hændelserne og skemaet er uændrede. Uge 1 har samme målinger som nulpunkt. Efter ugens sidste pas: »Ryk op«-oversigt for stiger, der nåede toppen.
 
 ### 4.9 Hero-tavlen og imponer-kataloget
 
