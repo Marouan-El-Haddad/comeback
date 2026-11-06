@@ -111,8 +111,12 @@ test('øvelseskortet fra Stiger: kan skimmes, foldes ud og lukkes med »Tilbage�
   await expect(c.locator('.card-dose')).toContainText('3 × 6–12');
   await expect(c.locator('.card-dose')).toContainText('sæt × gentagelser');
   await expect(c.locator('.card-status')).toHaveCount(0);
-  // Until the figure system (P3) the figure is the pictogram, with the phases under it.
-  await expect(c.locator('img.card-picto')).toHaveAttribute('alt', /^Oppe: Strakte arme/);
+  // The animated figure (P3, D48) with its text alternative and the phases under it.
+  await expect(c.locator('img.card-picto')).toHaveCount(0);
+  await expect(c.locator('.figure-stage')).toHaveAttribute(
+    'aria-label',
+    /^Push-up med tempo. Oppe: Strakte arme/,
+  );
   await expect(c.locator('.card-phases')).toHaveText('3 sek ned · 1 sek stille · Op');
   await expect(c.locator('.card-similar')).toHaveCount(0);
   // Visible without unfolding, in this order: cues, »Sådan gør du« (start position first), Træner.
@@ -460,6 +464,13 @@ test('øvelseskortet virker uden net: koden og forklaringen kommer fra service w
   const c = card(page);
   await expect(c.getByRole('heading', { name: 'Træner', exact: true })).toBeVisible();
   await expect(c.locator('.card-steps li').first()).toBeVisible();
+  // The figure: the card's code with the figure system and content/figures/pull.json.
+  await expect(c.locator('.figure-stage [data-k="torso"]')).toHaveCount(1);
+  await expect(c.locator('.figure-phase')).toHaveText(['Træk op', '1 sek stop', '3 sek ned']);
+  // A step without a figure still has its pictogram from the cache.
+  await c.getByRole('button', { name: 'Tilbage', exact: true }).first().click();
+  await page.locator('.step-open').nth(1).click();
+  await expect(c.locator('.figure-stage')).toHaveCount(0);
   expect(
     await c.locator('img.card-picto').evaluate((img: HTMLImageElement) => img.naturalWidth),
   ).toBeGreaterThan(0);
