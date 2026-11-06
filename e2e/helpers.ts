@@ -25,6 +25,21 @@ export async function onboard(page: Page): Promise<void> {
   await expect(page.getByTestId('today')).toBeVisible();
 }
 
+/** The time machine (SPEC 3.7): a long press on the version under Om, then the simulated date. */
+export async function startSimulation(page: Page, date: string): Promise<void> {
+  await page.getByRole('button', { name: 'Mere', exact: true }).click();
+  await page.getByRole('button', { name: 'Om' }).click();
+  await page.getByTestId('version').hover();
+  await page.mouse.down();
+  await page.clock.runFor(2_100);
+  await page.mouse.up();
+  await expect(page.getByTestId('timemachine')).toBeVisible();
+  await page.getByTestId('sim-date').fill(date);
+  await page.getByTestId('sim-start').click();
+  await expect(page.locator('.banner.sim')).toBeVisible();
+  await page.getByRole('button', { name: 'I dag', exact: true }).click();
+}
+
 /** Number of events stored in IndexedDB (database 'comeback', store 'events'). */
 export async function storedEventCount(page: Page): Promise<number> {
   return page.evaluate(

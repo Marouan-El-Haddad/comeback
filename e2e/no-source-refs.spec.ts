@@ -1,10 +1,12 @@
 import { expect, test, type Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 import { findSourceRef } from '../src/content/refs.ts';
 import { onboard, openApp } from './helpers.ts';
 
 // SK10 (docs/SPEC.md 1, docs/DECISIONS.md A2): no screen refers to the PDF, a page number or a
 // source outside the app – I dag, Uge, every ladder, Mere, Om, Diagnose, the data page /program/
-// and »Hvorfor« in a session, whose programme text cites a study (power legs).
+// and »Hvorfor« in a session, where the track's own words replace the programme's evidence box,
+// which cites a study (power legs).
 
 test.describe.configure({ timeout: 180_000 });
 
@@ -32,7 +34,8 @@ test('ingen skærm henviser til PDF, sidetal eller kilder (SK10)', async ({ page
     await rows.nth(i).click();
     await expect(page.locator('.ladder-detail')).toBeVisible();
     await expectNoRefs(page, `Stiger → ${name}`);
-    await page.getByRole('button', { name: 'Tilbage' }).click();
+    // Exact: a step is a button too, and its execution can contain »tilbage«.
+    await page.getByRole('button', { name: 'Tilbage', exact: true }).click();
   }
 
   await page.getByRole('button', { name: 'Mere', exact: true }).click();
@@ -50,7 +53,8 @@ test('ingen skærm henviser til PDF, sidetal eller kilder (SK10)', async ({ page
   await expect(page.getByTestId('diagnose')).toBeVisible();
   await expectNoRefs(page, 'Diagnose');
 
-  // A session: the first set is power legs, whose »Hvorfor« is the programme's evidence box.
+  // A session: the first set is power legs. Its »Hvorfor« comes from content/explain and replaces
+  // the programme's evidence box and its citation (SPEC 3.2).
   await page.getByRole('button', { name: 'I dag', exact: true }).click();
   await page.getByTestId('start-session').click();
   await expectNoRefs(page, 'Trafiklyset');
@@ -61,7 +65,11 @@ test('ingen skærm henviser til PDF, sidetal eller kilder (SK10)', async ({ page
   await expect(page.getByTestId('as-planned')).toBeVisible();
   await page.locator('details.why summary').click();
   const why = page.locator('details.why');
-  await expect(why).toContainText('At stoppe ved ca. 20 % fartfald');
+  const own = JSON.parse(readFileSync('content/explain/power_legs.json', 'utf8')) as {
+    why: string[];
+  };
+  await expect(why).toContainText(own.why[0] ?? '');
+  await expect(why).not.toContainText('At stoppe ved ca. 20 % fartfald');
   await expect(why).not.toContainText('Pareja-Blanco');
   await expect(why).not.toContainText('PDF');
   await expectNoRefs(page, 'Hvorfor i passet');
