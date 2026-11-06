@@ -33,7 +33,7 @@
           "fix": "Stræk altid modsat arm og ben: venstre arm med højre ben, højre arm med venstre ben."
         }
       ],
-      "easier": "Det er stigens første trin. Stræk benet en kortere vej ud, så lænden kan blive presset mod gulvet.",
+      "easier": "Stræk benet en kortere vej ud, så lænden kan blive presset mod gulvet.",
       "harder": "Trin 2: hollow hold.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, hvor du kan ligge med strakte arme og ben.",
@@ -297,7 +297,7 @@
       "start": "Knæl på et glat gulv med knæene i hoftebredde og hænderne på et håndklæde lige under skuldrene. Armene strakte og kroppen lige fra knæ til hoved.",
       "steps": [
         "Spænd maven, og klem ballerne, så kroppen er lige fra knæ til hoved.",
-        "Lad håndklædet glide frem på 3 sek, så langt du kan uden svaj, gerne til armene er strakt over hovedet.",
+        "Lad håndklædet glide frem på 3 sek, så langt du kan uden svaj, gerne til armene er strakt langt frem foran hovedet.",
         "Hold 1 sek stille, og træk dig tilbage i ét roligt stræk, til hænderne er under skuldrene.",
         "Hold kroppen lige hele vejen tilbage, så hoften ikke kommer først."
       ],
@@ -311,7 +311,7 @@
         },
         {
           "mistake": "Hoften bliver tilbage, så kun armene bevæger sig.",
-          "fix": "Skub hoften frem med ballerne, så kroppen er lige fra knæ til hænder."
+          "fix": "Skub hoften frem med ballerne, så kroppen er lige fra knæ til skuldre."
         },
         {
           "mistake": "Håndklædet sidder fast, så hænderne hakker.",
@@ -338,7 +338,7 @@
             {
               "id": "out",
               "name": "Ude",
-              "text": "Armene strakt frem over hovedet med hænderne langt fremme på håndklædet. Kroppen lige fra knæ til hænder og lige over gulvet uden svaj i lænden. Knæ og tæer bliver, hvor de var.",
+              "text": "Kroppen lige fra knæ til skuldre og ca. 15° over gulvet uden svaj i lænden. Armene strakt frem foran hovedet og skråt ned til hænderne langt fremme på håndklædet. Knæ og tæer bliver, hvor de var.",
               "contacts": [
                 { "part": "knee", "on": "floor" },
                 { "part": "toes", "on": "floor" },
@@ -400,7 +400,7 @@
             {
               "id": "out",
               "name": "Ved væggen",
-              "text": "Kroppen lige fra hæl til hænder og ca. 30° over gulvet med armene strakt over hovedet. Håndklædet er stoppet af væggen, og fingrene rører den. Tæerne i gulvet.",
+              "text": "Kroppen lige fra hæl til skuldre og ca. 15° over gulvet. Armene er strakt frem og skråt ned til håndklædet ved væggen, og fingrene rører væggen. Tæerne i gulvet.",
               "contacts": [
                 { "part": "toes", "on": "floor" },
                 { "part": "hand", "on": "towel" },
@@ -422,7 +422,7 @@
       "start": "Stå på et glat gulv med fødderne i hoftebredde og god plads foran dig. Bøj i hoften, og sæt hænderne på et håndklæde lige foran fødderne.",
       "steps": [
         "Spænd maven, og klem ballerne, før du starter.",
-        "Lad håndklædet glide frem på 3 sek, til kroppen er strakt lige over gulvet med armene over hovedet.",
+        "Lad håndklædet glide frem på 3 sek, til kroppen er næsten vandret lige over gulvet og armene er strakt langt frem.",
         "Hold 1 sek stille, og træk dig tilbage i ét roligt stræk, til hænderne er ved fødderne.",
         "Svajer lænden, eller knækker formen, så stop sættet."
       ],
@@ -444,7 +444,7 @@
         }
       ],
       "easier": "Trin 6: stående rollout mod væg.",
-      "harder": "Det er stigens sidste trin: gør hver gentagelse lige så ren som den første.",
+      "harder": "Det er stigens sidste trin. Gør hver gentagelse lige så ren som den første.",
       "equipment": ["towel"],
       "getReady": "Find et glat gulv med god plads foran dig, og læg et håndklæde lige foran fødderne.",
       "movements": [
@@ -462,7 +462,7 @@
             {
               "id": "out",
               "name": "Ude",
-              "text": "Kroppen strakt lige fra hæl til hænder og lige over gulvet med armene strakt over hovedet og hænderne langt fremme på håndklædet. Kun tæerne rører gulvet, og lænden svajer ikke.",
+              "text": "Kroppen lige fra hæl til skuldre og næsten vandret, ca. 10° over gulvet. Armene strakt frem foran hovedet og skråt ned til hænderne langt fremme på håndklædet. Kun tæerne rører gulvet.",
               "contacts": [
                 { "part": "toes", "on": "floor" },
                 { "part": "hand", "on": "towel" }

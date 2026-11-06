@@ -33,7 +33,7 @@
           "fix": "Lad armene ligge let i gulvet. De holder balancen, og maven gør arbejdet."
         }
       ],
-      "easier": "Det er stigens første trin. Rul hoften en kortere vej op, og sænk den stadig langsomt.",
+      "easier": "Rul hoften en kortere vej op, og sænk den stadig langsomt.",
       "harder": "Trin 2: strikt sit-up.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, og læg dig på ryggen med armene langs siden.",
@@ -174,13 +174,13 @@
             {
               "id": "back",
               "name": "Gynget bagud",
-              "text": "Hollow-positionen gynget bagud: ryggen rører gulvet midt på, og skulderbladene er lige over gulvet. Benene strakte og samlede ca. 35° op fra gulvet. Armene strakt bagud ved ørerne og fri af gulvet med hovedet imellem.",
+              "text": "Hollow-positionen gynget bagud: den øverste del af ryggen rører gulvet, og bagdelen er løftet lidt. Benene strakte og samlede ca. 35° op fra gulvet. Armene strakt bagud ved ørerne, vandret lige over gulvet, og hovedet løftet imellem.",
               "contacts": [{ "part": "back", "on": "floor" }]
             },
             {
               "id": "front",
               "name": "Gynget frem",
-              "text": "Samme bue gynget frem: bagdelen rører gulvet, og overkroppen er ca. 35° op fra gulvet med armene strakt bagud ved ørerne. De strakte, samlede ben er lige over gulvet med hælene fri.",
+              "text": "Samme bue gynget frem: bagdelen rører gulvet, og overkroppen er ca. 25° op fra gulvet med armene strakt bagud ved ørerne. Benene strakte og samlede ca. 5° op, så hælene er lige over gulvet.",
               "contacts": [{ "part": "hip", "on": "floor" }]
             }
           ],
@@ -244,7 +244,7 @@
             {
               "id": "up",
               "name": "Oppe",
-              "text": "Balancerende på bagdelen med overkroppen og de strakte, samlede ben løftet mod hinanden, begge ca. 65° fra gulvet, så kroppen danner et smalt V. Armene strakt frem, og hænderne rører tæerne.",
+              "text": "Balancerende på bagdelen med overkroppen og de strakte, samlede ben løftet mod hinanden, begge ca. 70° fra gulvet, så kroppen danner et smalt V. Armene strakt frem, og hænderne rører tæerne.",
               "contacts": [{ "part": "hip", "on": "floor" }]
             }
           ],
@@ -263,7 +263,7 @@
       "steps": [
         "Træk knæene ind til brystet, og rul hoften op, til vægten hviler på skulderbladene.",
         "Stræk hofte og ben, til kroppen er næsten lodret over skulderbladene og ikke over nakken.",
-        "Spænd mave og baller, og sænk den strakte krop på 5 sek, til den er lige over gulvet.",
+        "Spænd mave og baller, og sænk den strakte krop på 5 sek, til hoften er en håndsbredde over gulvet.",
         "Bøj knæene, sæt fødderne i gulvet, og rul op igen til næste gentagelse."
       ],
       "tempo": "Rul op roligt med bøjede knæ, og sænk den strakte krop på 5 sek.",
@@ -325,7 +325,7 @@
             {
               "id": "low",
               "name": "Nede",
-              "text": "Kroppen stadig strakt fra skuldre til tæer, men sænket, til den er næsten vandret med hælene lige over gulvet. Kun skulderblade og baghoved rører gulvet. Albuerne bøjede og hænderne om sofaen.",
+              "text": "Kroppen stadig strakt fra skuldre til tæer, men sænket til ca. 10° fra gulvet, så hoften er en håndsbredde over gulvet. Kun skulderblade og baghoved rører gulvet. Albuerne bøjede og hænderne om sofaen.",
               "contacts": [
                 { "part": "shoulders", "on": "floor" },
                 { "part": "head", "on": "floor" },
@@ -348,7 +348,7 @@
       "start": "Lig på ryggen med hovedet en håndsbredde fra en tung sofa, og grib om sofaens ben eller nederste kant bag hovedet. Rul op med bøjede knæ, og stræk kroppen næsten lodret op.",
       "steps": [
         "Spænd mave og baller, så kroppen er én stiv planke fra skuldre til tæer.",
-        "Sænk den strakte krop på 3 sek, til den er lige over gulvet.",
+        "Sænk den strakte krop på 3 sek, til hoften er en håndsbredde over gulvet.",
         "Løft den op igen i ét roligt stræk uden at bøje i hoften.",
         "Stop, når kroppen er næsten lodret, så vægten bliver på skulderbladene og ikke på nakken."
       ],
@@ -389,7 +389,7 @@
             {
               "id": "low",
               "name": "Nede",
-              "text": "Kroppen stadig strakt fra skuldre til tæer, men sænket, til den er næsten vandret med hælene lige over gulvet. Kun skulderblade og baghoved rører gulvet. Albuerne bøjede og hænderne om sofaen.",
+              "text": "Kroppen stadig strakt fra skuldre til tæer, men sænket til ca. 10° fra gulvet, så hoften er en håndsbredde over gulvet. Kun skulderblade og baghoved rører gulvet. Albuerne bøjede og hænderne om sofaen.",
               "contacts": [
                 { "part": "shoulders", "on": "floor" },
                 { "part": "head", "on": "floor" },
@@ -411,7 +411,7 @@
       "steps": [
         "Spænd mave og baller, så kroppen er én stiv planke fra skuldre til tæer.",
         "Sænk den strakte krop langsomt til halvvejs, og hold 3 sek stille.",
-        "Sænk dig langsomt resten af vejen, til kroppen er lige over gulvet.",
+        "Sænk dig langsomt resten af vejen, til hoften er en håndsbredde over gulvet.",
         "Løft den op igen i ét roligt stræk, til den er næsten lodret over skulderbladene."
       ],
       "tempo": "Langsomt ned med 3 sek pause halvvejs, og op igen i ét roligt stræk.",
@@ -461,7 +461,7 @@
             {
               "id": "low",
               "name": "Nede",
-              "text": "Kroppen stadig strakt fra skuldre til tæer, men sænket, til den er næsten vandret med hælene lige over gulvet. Kun skulderblade og baghoved rører gulvet. Albuerne bøjede og hænderne om sofaen.",
+              "text": "Kroppen stadig strakt fra skuldre til tæer, men sænket til ca. 10° fra gulvet, så hoften er en håndsbredde over gulvet. Kun skulderblade og baghoved rører gulvet. Albuerne bøjede og hænderne om sofaen.",
               "contacts": [
                 { "part": "shoulders", "on": "floor" },
                 { "part": "head", "on": "floor" },

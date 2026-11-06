@@ -206,10 +206,10 @@
       "trains": "Bygger styrke i skuldre og triceps i den langsomme vej ned, hvor du kan styre mere, end du kan presse op.",
       "start": "Stå med front mod væggen, og sæt hænderne i gulvet i skulderbredde en håndsbredde fra den. Puden ligger på gulvet mellem hænderne og dig.",
       "steps": [
-        "Spark op til håndstand, så du har ryggen mod væggen, og hælene lander på den.",
+        "Træd den ene fod frem, og spark roligt det andet ben strakt op. Det første ben følger, og hælene lander blødt på væggen.",
         "Stram kroppen, og sænk dig på 4–5 sek, til toppen af hovedet rører puden blødt.",
         "Bøj i hoften, og træd fødderne ned i gulvet én ad gangen uden at presse op.",
-        "Rejs dig, og spark op igen til næste gentagelse."
+        "Rejs dig, og spark op igen til næste gentagelse. Falder du tilbage, så spark lidt hårdere."
       ],
       "tempo": "Sænk dig på 4–5 sek, og træd ned uden at presse op.",
       "breathing": "Ånd ind, før du sænker dig, og pust langsomt ud på vej ned.",
@@ -224,8 +224,8 @@
           "fix": "Hold albuerne ca. 45° ud fra kroppen, så skuldre og arme bærer sammen."
         },
         {
-          "mistake": "Du ved ikke, hvordan du kommer ned, hvis armene giver efter.",
-          "fix": "Øv dig først i at dreje ud til siden og sætte fødderne i gulvet, så du altid har en vej ud."
+          "mistake": "Du ved ikke, hvordan du kommer ud, hvis noget går galt.",
+          "fix": "Mister du balancen, så drej ud til siden, og træd ned. Giver armene efter, så lad hovedet lande blødt på puden uden vrid."
         }
       ],
       "easier": "Trin 3: håndstand med maven mod væggen. Eller sænk dig til en tykkere pude.",
@@ -238,10 +238,11 @@
             {
               "id": "ready",
               "name": "Klar",
-              "text": "Front mod væggen med hænderne i gulvet i skulderbredde en håndsbredde fra den og puden mellem hænderne og fødderne. Fødderne et skridt væk, hoften højt og armene strakte som et omvendt V.",
+              "text": "Front mod væggen med hænderne i gulvet i skulderbredde en håndsbredde fra den og puden mellem hænderne og fødderne. Den ene fod er trådt frem med bøjet knæ, og det andet ben er strakt bagud.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
-                { "part": "foot", "on": "floor" }
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor", "count": 1 }
               ]
             },
             {
@@ -278,10 +279,10 @@
       "trains": "Skuldre og triceps presser hele kroppen op fra puden: styrken til fuld HSPU og til en garde, der bliver oppe.",
       "start": "Håndstand med ryggen mod væggen og hælene mod den. Hænderne står i skulderbredde en håndsbredde fra væggen, og puden ligger lige foran dem, væk fra væggen.",
       "steps": [
-        "Spark op til håndstand med ryggen mod væggen, og stram kroppen.",
+        "Træd den ene fod frem, og spark roligt det andet ben strakt op, så hælene lander blødt på væggen.",
         "Sænk dig på 3 sek, til toppen af hovedet rører puden let, og hold 1 sek stille.",
         "Pres dig op til strakte arme uden vægt på hovedet i bunden, og gentag.",
-        "Træd ned, når sættet er slut. Gør puden lidt tyndere hver uge."
+        "Træd ned ét ben ad gangen, når sættet er slut. Gør puden lidt tyndere hver uge."
       ],
       "tempo": "3 sek ned, 1 sek stille med hovedet let mod puden, op i ét roligt stræk.",
       "breathing": "Ånd ind på vej ned, og pust ud, når du presser op.",
@@ -296,8 +297,8 @@
           "fix": "Hold albuerne ca. 45° ud fra kroppen, og pres lige op."
         },
         {
-          "mistake": "Lænden svajer, når du presser op.",
-          "fix": "Træk ribbenene ned, og spænd ballerne, så kroppen er lige fra hænder til hæle."
+          "mistake": "Du ved ikke, hvordan du kommer ud, hvis noget går galt.",
+          "fix": "Mister du balancen, så drej ud til siden, og træd ned. Giver armene efter, så lad hovedet lande blødt på puden uden vrid."
         }
       ],
       "easier": "Trin 4: HSPU-negativer, hvor du kun sænker dig og træder ned. Eller brug en tykkere pude.",
@@ -340,10 +341,10 @@
       "trains": "Hele kropsvægten presset op over hovedet: skuldre, der holder garden oppe og står imod i clinchen.",
       "start": "Håndstand med ryggen mod væggen og hælene mod den. Hænderne står i skulderbredde en håndsbredde fra væggen.",
       "steps": [
-        "Spark op til håndstand med ryggen mod væggen, og stram kroppen.",
+        "Træd den ene fod frem, og spark roligt det andet ben strakt op, så hælene lander blødt på væggen.",
         "Sænk dig på 3 sek, til toppen af hovedet rører gulvet blødt, og hold 1 sek stille.",
         "Pres dig op til strakte arme uden at lægge vægt på hovedet, og gentag.",
-        "Træd ned, når sættet er slut."
+        "Træd ned ét ben ad gangen, når sættet er slut."
       ],
       "tempo": "3 sek ned, 1 sek stille med hovedet let mod gulvet, op i ét roligt stræk.",
       "breathing": "Ånd ind på vej ned, og pust ud, når du presser op.",
@@ -354,12 +355,12 @@
           "fix": "Sænk dig langsomt hele vejen, og lad hovedet kun røre gulvet blødt."
         },
         {
-          "mistake": "Albuerne peger lige ud til siden.",
-          "fix": "Hold albuerne ca. 45° ud fra kroppen, og pres lige op."
-        },
-        {
           "mistake": "Benene sparker for at hjælpe dig op.",
           "fix": "Hold benene samlet og stille mod væggen. Det er armene, der presser."
+        },
+        {
+          "mistake": "Du ved ikke, hvordan du kommer ud, hvis noget går galt.",
+          "fix": "Mister du balancen, så drej ud til siden, og træd ned. Kan du ikke presse op, så lad hovedet lande blødt, og træd ned uden vrid."
         }
       ],
       "easier": "Trin 5: HSPU til en pude.",
@@ -402,10 +403,10 @@
       "trains": "Hovedet går under hænderne, så skuldrene skal presse længere end fra gulvet: stigens sværeste pres over hovedet.",
       "start": "Byg to lige høje stakke af store, flade bøger i skulderbredde en håndsbredde fra væggen. Hænderne står på stakkene.",
       "steps": [
-        "Prøv stakkene med hænderne, og spark op til håndstand med ryggen mod væggen.",
+        "Prøv stakkene, træd den ene fod frem, og spark roligt det andet ben strakt op, så hælene lander blødt på væggen.",
         "Sænk dig på 3 sek, til hovedet går ned mellem stakkene og rører gulvet blødt.",
         "Hold 1 sek stille uden vægt på hovedet, og pres dig op til strakte arme.",
-        "Træd ned, når sættet er slut."
+        "Træd ned ét ben ad gangen, når sættet er slut."
       ],
       "tempo": "3 sek ned, 1 sek stille med hovedet under håndhøjde, op i ét roligt stræk.",
       "breathing": "Ånd ind på vej ned, og pust ud, når du presser op.",
@@ -420,8 +421,8 @@
           "fix": "Sænk dig langsomt hele vejen, og lad hovedet kun røre gulvet blødt."
         },
         {
-          "mistake": "Albuerne peger lige ud til siden.",
-          "fix": "Hold albuerne ca. 45° ud fra kroppen, så skuldrene kan bære hele vejen ned."
+          "mistake": "Du ved ikke, hvordan du kommer ud, hvis noget går galt.",
+          "fix": "Mister du balancen, så drej ud til siden, og træd ned. Kan du ikke presse op, så lad hovedet lande blødt, og træd ned uden vrid."
         }
       ],
       "easier": "Trin 6: fuld HSPU mod væggen med hænderne i gulvet.",

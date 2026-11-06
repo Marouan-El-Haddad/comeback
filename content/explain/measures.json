@@ -14,8 +14,8 @@
       "steps": [
         "Stå naturligt rank uden at svaje i lænden, og hold blikket ligeud.",
         "Lad hovedet blive, hvor det er. Løft ikke hagen for at nå væggen.",
-        "Mål vandret fra baghoved til væg med en lineal, eller sæt fingrene fladt ind imellem: én finger er ca. 2 cm.",
-        "Rører baghovedet væggen med hagen vandret, er tallet 0. Lavere er bedre."
+        "Mål vandret fra baghoved til væg med en lineal, eller sæt fingrene fladt ind imellem: ca. 2 cm pr. finger.",
+        "Rører baghovedet væggen med hagen vandret, er tallet 0, og lavere er bedre. Mål på samme måde hver gang."
       ],
       "tempo": "Ingen tid. Stå stille, mens du måler.",
       "breathing": "Træk vejret normalt, og lad skuldrene falde ned. Hold ikke vejret for at strække dig.",
@@ -103,7 +103,7 @@
           "fix": "Bliv i planken. Lægger du dig ned, er sættet slut."
         }
       ],
-      "easier": "Gør push-ups ondt i håndleddet, så tag målingen på knoerne med lige håndled.",
+      "easier": "Gør push-ups ondt i håndleddet, så tag målingen på knoerne med lige håndled. Vælg knoer eller flade hænder, og tag den sådan hver gang.",
       "harder": "Ingen sværere udgave. Målingen er altid almindelige push-ups, så tallene kan sammenlignes.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, hvor du kan ligge i hele din længde.",
@@ -285,7 +285,7 @@
     {
       "id": "measures.base_check",
       "trains": "Måler din grundkondition: hvor langt du kommer på 30 min i tale-tempo, den motor, der lader dig op mellem runderne.",
-      "start": "Løb, cykl eller gå rask op ad bakke. Start dit ur, eller vælg en rute, hvor du kender længden.",
+      "start": "Løb, cykl eller gå rask op ad bakke. Start dit løbeur eller en app, der måler distancen, eller vælg en rute, hvor du kender længden.",
       "steps": [
         "Bevæg dig i 30 min i tale-tempo, så du kan tale i hele sætninger hele vejen.",
         "Hold samme rolige fart fra start til slut. Det er ikke et kapløb.",
@@ -301,7 +301,7 @@
         },
         {
           "mistake": "Du glemmer at måle distancen.",
-          "fix": "Start dit ur, før du går i gang, eller vælg en rute, du kender længden af."
+          "fix": "Start dit løbeur eller en app, der måler distancen, før du går i gang, eller vælg en rute, du kender længden af."
         },
         {
           "mistake": "Du skriver distancen i km.",
@@ -311,7 +311,7 @@
       "easier": "Ingen lettere udgave. Tale-tempo passer sig selv: kan du tale i hele sætninger, er farten rigtig.",
       "harder": "Ingen sværere udgave. Går det hurtigere, er det ikke længere tale-tempo.",
       "equipment": [],
-      "getReady": "Tag løbetøj på, og gør dit ur klar, eller find en rute, hvor du kender længden.",
+      "getReady": "Tag løbetøj på, og gør dit løbeur eller en app, der måler distancen, klar, eller find en rute, du kender længden af.",
       "movements": [
         {
           "positions": [
@@ -456,7 +456,7 @@
         "Pres lænden mod gulvet, tryk »Start uret«, og løft straks skuldre, arme og ben.",
         "Hold benene strakte med hælene ca. 20 cm over gulvet og lænden presset ned.",
         "Løfter lænden sig, og kan du ikke presse den ned igen, så læg dig ned, og tryk »Stop«.",
-        "Gem tiden. Målingen er altid med strakte ben, så tallene kan sammenlignes."
+        "Tryk »Gem målingen«. Målingen er altid med strakte ben, så tallene kan sammenlignes."
       ],
       "tempo": "Løft dig roligt op, og hold stillingen stille, til lænden løfter sig.",
       "breathing": "Træk vejret kort og roligt gennem hele holdet. Hold ikke vejret.",
@@ -521,9 +521,9 @@
       "trains": "Måler, hvor længe siden af maven og hoften holder dig på linje: den stabilitet, du står på, når du sparker.",
       "start": "Lig på venstre side med albuen lige under skulderen og underarmen pegende frem. Benene strakte og fødderne oven på hinanden.",
       "steps": [
-        "Tryk »Start uret«, løft hoften, og hold hoved, hofte og fødder på én linje.",
+        "Start uret, når du løfter hoften på venstre side, og hold hoved, hofte og fødder på én linje.",
         "Stop uret, når hoften synker, og du ikke kan løfte den tilbage på linje.",
-        "Tag derefter højre side, og gem den korteste af de to tider."
+        "Gør det samme på højre side. Appen gemmer selv den korteste af de to tider."
       ],
       "tempo": "Løft hoften roligt, og hold stillingen stille, til hoften synker.",
       "breathing": "Træk vejret roligt og jævnt gennem hele holdet.",
@@ -589,7 +589,7 @@
         "Tryk »Start uret«, og glid ned ad væggen, til lårene er vandrette og knæene over anklerne.",
         "Hold ryggen flad mod væggen og lårene vandrette så længe, du kan.",
         "Stop uret, når hoften glider op, og du ikke kan holde lårene vandrette.",
-        "Gem tiden. Målingen er altid på begge ben og uden slag."
+        "Tryk »Gem målingen«. Målingen er altid på begge ben og uden slag."
       ],
       "tempo": "Glid roligt ned, og hold stillingen stille, så længe lårene kan holde vandret.",
       "breathing": "Træk vejret roligt og jævnt hele vejen. Hold ikke vejret.",
@@ -649,10 +649,10 @@
       "trains": "Måler balancen på ét ben uden hjælp fra øjnene: den kontrol, du står på, når du sparker og checker et spark.",
       "start": "Stå tæt ved en væg med fødderne samlet og hænderne på hofterne. Ryd pladsen omkring dig.",
       "steps": [
-        "Tryk »Start uret«, løft højre fod en håndsbredde over gulvet, og luk øjnene.",
+        "Stå på venstre ben først: start uret, løft højre fod en håndsbredde over gulvet, og luk øjnene.",
         "Stå så stille, du kan, og tæl roligt til 60 i tankerne.",
         "Flytter standfoden sig, eller rører den løftede fod gulvet, så åbn øjnene, og stop uret. Gør det også ved 60.",
-        "Tag derefter det andet ben, og gem den korteste tid, højst 60."
+        "Gør det samme på højre ben. Appen gemmer selv den korteste af de to tider."
       ],
       "tempo": "Hold stillingen, til foden flytter sig, dog højst 60 sek pr. ben.",
       "breathing": "Træk vejret roligt, og lad skuldrene hænge.",
@@ -660,7 +660,7 @@
       "mistakes": [
         {
           "mistake": "Du åbner øjnene eller tager fat i væggen.",
-          "fix": "Så er målingen slut. Stop uret med det samme, og skriv tiden."
+          "fix": "Så er målingen slut på det ben. Stop uret med det samme."
         },
         {
           "mistake": "Den løftede fod hviler mod standbenet.",
@@ -668,7 +668,7 @@
         },
         {
           "mistake": "Du står længere end 60 sek.",
-          "fix": "Skriv højst 60. Målingen stopper ved 60 sek pr. ben."
+          "fix": "Stop uret ved 60. Målingen stopper ved 60 sek pr. ben."
         }
       ],
       "easier": "Ingen lettere udgave. Målingen er altid med lukkede øjne, så tallene kan sammenlignes.",
@@ -702,12 +702,12 @@
     {
       "id": "measures.nordic_depth",
       "trains": "Måler, hvor langt baglårene kan bremse dig ned i Nordic, når de arbejder strakt som i spark og sprint.",
-      "start": "Målingen er dine Nordic-gentagelser lige før: på knæ på en pude med fødderne under sofaen og kroppen lige fra knæ til hoved.",
+      "start": "Målingen er dine Nordic-gentagelser lige før: på knæ på puden med hælene låst fast under sofaens kant og kroppen lige fra knæ til hoved.",
       "steps": [
         "Tænk på gentagelserne lige før: hvor langt kunne du styre dig ned, før du tog fra med hænderne?",
         "Kvart vej: kroppen er ca. 20° foroverlænet. Halvvejs: ca. 45°, midt mellem lodret og gulvet.",
         "Helt ned: du styrer hele vejen, til brystet er lige over gulvet, og tager kun fra til sidst.",
-        "Vælg det, der passer, og gem målingen. Kun det stykke, du styrede, tæller."
+        "Vælg det højeste, du nåede helt, og tryk »Gem målingen«. Nåede du ikke kvart vej, så tryk »Spring målingen over«."
       ],
       "tempo": "Ingen tid. Du svarer ud fra de gentagelser, du lige har lavet.",
       "breathing": "Hold aldrig vejret under belastning: pust roligt ud på vej ned i gentagelserne.",
@@ -740,10 +740,11 @@
             {
               "id": "oprejst",
               "name": "Oprejst",
-              "text": "Knælende oprejst på en pude med skinnebenene i gulvet og fødderne under sofaen, så hælene holdes fast. Kroppen lige fra knæ til hoved og hænderne foran brystet.",
+              "text": "Knæene på puden, skinnebenene og vristene i gulvet og hælene låst fast under sofaens kant. Kroppen er lodret og lige fra knæ til hoved, hoften strakt og hænderne foran brystet.",
               "contacts": [
                 { "part": "knee", "on": "pillow" },
                 { "part": "shin", "on": "floor" },
+                { "part": "foot", "on": "floor" },
                 { "part": "heel", "on": "sofa" }
               ]
             },
@@ -754,6 +755,7 @@
               "contacts": [
                 { "part": "knee", "on": "pillow" },
                 { "part": "shin", "on": "floor" },
+                { "part": "foot", "on": "floor" },
                 { "part": "heel", "on": "sofa" }
               ]
             },
@@ -764,16 +766,18 @@
               "contacts": [
                 { "part": "knee", "on": "pillow" },
                 { "part": "shin", "on": "floor" },
+                { "part": "foot", "on": "floor" },
                 { "part": "heel", "on": "sofa" }
               ]
             },
             {
               "id": "helt",
               "name": "Helt ned",
-              "text": "Kroppen er næsten vandret med brystet lige over gulvet, og hænderne tager fra i gulvet under skuldrene. Knæ, skinneben og fødder er på plads.",
+              "text": "Kroppen er næsten vandret med brystet lige over gulvet, og hænderne tager fra i gulvet under skuldrene. Knæene på puden, skinneben og vrister i gulvet og hælene låst under sofaen.",
               "contacts": [
                 { "part": "knee", "on": "pillow" },
                 { "part": "shin", "on": "floor" },
+                { "part": "foot", "on": "floor" },
                 { "part": "heel", "on": "sofa" },
                 { "part": "hand", "on": "floor" }
               ]

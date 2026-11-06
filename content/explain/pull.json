@@ -73,7 +73,7 @@
       "trains": "Ryggen og armene trækker din egen kropsvægt op, så du bliver stærkere til at trække og styre i clinchen.",
       "start": "Lig på ryggen under langsiden af et tungt bord med brystet lige under kanten. Grib kanten i skulderbredde med fingrene ind over bordpladen, og sæt fødderne fladt i gulvet med bøjede knæ.",
       "steps": [
-        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop, og vælg trin 1 under Stiger efter passet.",
+        "Træk først let. Vipper bordet det mindste, så stop, og tag resten af dagens træk-sæt som rygsæk-row.",
         "Løft hoften, så knæ, hofte og skuldre er på én lige linje, og hæng i strakte arme.",
         "Træk brystet op mod kanten med albuerne tæt langs siden, og hold 1 sek pause.",
         "Sænk dig på 3 sek til strakte arme uden at lade hoften falde."
@@ -92,7 +92,7 @@
         },
         {
           "mistake": "Bordet vipper eller flytter sig.",
-          "fix": "Stop, og vælg trin 1, rygsæk-row, under Stiger efter passet. Brug kun et tungt spisebord, og lig under langsiden."
+          "fix": "Stop, og ret hvert bord-row-sæt til 0 med − i stedet for at trykke »Smerte«. Vælg trin 1 under Stiger efter passet."
         }
       ],
       "easier": "Trin 1: rygsæk-row med én arm. Vælg det under Stiger, hvis bordet vipper det mindste.",
@@ -134,7 +134,7 @@
       "trains": "Hele kropsvægten hænger i armene, mens kroppen holder sig stiv som en planke: trækstyrke til clinchen.",
       "start": "Lig på ryggen under langsiden af det tunge bord med brystet lige under kanten, og grib kanten i skulderbredde. Stræk benene, så kun hælene står i gulvet.",
       "steps": [
-        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop.",
+        "Træk først let. Vipper bordet det mindste, så stop, og tag resten af dagens træk-sæt som rygsæk-row.",
         "Løft hoften, så kroppen er en planke fra hæl til hoved, og hæng i strakte arme.",
         "Træk brystet op mod kanten med albuerne tæt langs siden, og hold 1 sek pause.",
         "Sænk dig på 3 sek til strakte arme uden at lade hoften falde."
@@ -153,7 +153,7 @@
         },
         {
           "mistake": "Bordet vipper eller flytter sig.",
-          "fix": "Stop, og vælg trin 1, rygsæk-row, under Stiger efter passet. Brug kun et tungt spisebord."
+          "fix": "Stop, og ret hvert bord-row-sæt til 0 med − i stedet for at trykke »Smerte«. Vælg trin 1 under Stiger efter passet."
         }
       ],
       "easier": "Trin 2: bord-row med bøjede knæ.",
@@ -195,7 +195,7 @@
       "trains": "Kroppen vandret, så næsten hele vægten skal trækkes af ryg og arme: mere trækstyrke til clinchen.",
       "start": "Lig under langsiden af det tunge bord som i trin 3, og læg hælene på sædet af en solid stol. Grib kanten i skulderbredde.",
       "steps": [
-        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop.",
+        "Træk først let. Vipper bordet det mindste, så stop, og tag resten af dagens træk-sæt som rygsæk-row.",
         "Løft hoften, så kroppen er en lige planke fra hælene på stolen til hovedet.",
         "Træk brystet op mod kanten med albuerne tæt langs siden, og hold 1 sek pause.",
         "Sænk dig på 3 sek til strakte arme uden at lade hoften falde."
@@ -213,14 +213,14 @@
           "fix": "Hold nakken lang, og træk, til det er brystet, der når kanten."
         },
         {
-          "mistake": "Stolen eller bordet flytter sig.",
-          "fix": "Stop. Brug en solid stol, der står fast. Vipper bordet, så vælg trin 1 under Stiger efter passet."
+          "mistake": "Bordet vipper eller flytter sig.",
+          "fix": "Stop, og ret hvert bord-row-sæt til 0 med − i stedet for at trykke »Smerte«. Vælg trin 1 under Stiger efter passet."
         }
       ],
       "easier": "Trin 3: bord-row med strakte ben og hælene i gulvet.",
       "harder": "Trin 5: archer bord-row med bredt greb, hvor den ene arm trækker.",
       "equipment": ["chair", "table"],
-      "getReady": "Stil en solid stol en kropslængde fra bordets langside, så hælene kan ligge på sædet.",
+      "getReady": "Stil en solid stol, der står fast, en kropslængde fra bordets langside, så hælene kan ligge på sædet.",
       "movements": [
         {
           "positions": [
@@ -256,7 +256,7 @@
       "trains": "Den ene arm trækker næsten alene: trækstyrke på hver side til clinchen og vejen mod etarms bord-row.",
       "start": "Lig under langsiden af det tunge bord med kroppen som en planke og hælene i gulvet som i trin 3. Grib kanten bredt, ca. dobbelt skulderbredde.",
       "steps": [
-        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop.",
+        "Træk først let. Vipper bordet det mindste, så stop, og tag resten af dagens træk-sæt som rygsæk-row.",
         "Træk brystet op mod den ene hånd med albuen tæt langs siden. Den anden arm bliver næsten strakt.",
         "Hold 1 sek pause i toppen, og sænk dig på 3 sek til strakte arme.",
         "I sættet »Venstre side« trækker du mod venstre hånd hver gang. I »Højre side« mod højre."
@@ -275,7 +275,7 @@
         },
         {
           "mistake": "Bordet vipper eller flytter sig.",
-          "fix": "Stop, og vælg trin 1, rygsæk-row, under Stiger efter passet. Brug kun et tungt spisebord."
+          "fix": "Stop, og ret hvert bord-row-sæt til 0 med − i stedet for at trykke »Smerte«. Vælg trin 1 under Stiger efter passet."
         }
       ],
       "easier": "Trin 4: bord-row med fødderne på en stol og begge arme.",
@@ -317,7 +317,7 @@
       "trains": "Én arm trækker hele vægten, mens maven holder hoften fra at dreje: fuld trækstyrke på hver side til clinchen.",
       "start": "Lig under langsiden af det tunge bord med kroppen som en planke og hælene i gulvet. Grib kanten med den ene hånd lige over skulderen, og læg den frie arm langs siden.",
       "steps": [
-        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop.",
+        "Træk først let. Vipper bordet det mindste, så stop, og tag resten af dagens træk-sæt som rygsæk-row.",
         "Spænd maven og ballerne, og træk brystet op mod kanten med albuen tæt langs siden.",
         "Hold 1 sek pause i toppen uden at dreje hoften, og sænk dig på 3 sek.",
         "I sættet »Venstre side« trækker venstre hånd, og højre arm ligger langs siden. I »Højre side« bytter du."
@@ -336,7 +336,7 @@
         },
         {
           "mistake": "Bordet vipper eller flytter sig.",
-          "fix": "Stop, og vælg trin 1, rygsæk-row, under Stiger efter passet. Brug kun et tungt spisebord."
+          "fix": "Stop, og ret hvert bord-row-sæt til 0 med − i stedet for at trykke »Smerte«. Vælg trin 1 under Stiger efter passet."
         }
       ],
       "easier": "Trin 5: archer bord-row, hvor den anden arm hjælper lidt.",
@@ -378,7 +378,7 @@
       "trains": "Etarms bord-row med et langt hold i toppen: styrke til at holde fast, når du har grebet i clinchen.",
       "start": "Som trin 6: under bordet med kroppen som en planke og hælene i gulvet, den ene hånd om kanten lige over skulderen og den frie arm langs siden.",
       "steps": [
-        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop.",
+        "Træk først let. Vipper bordet det mindste, så stop, og tag resten af dagens træk-sæt som rygsæk-row.",
         "Træk brystet op mod kanten med albuen tæt langs siden.",
         "Hold brystet ved kanten i 3 sek uden at dreje hoften, og sænk dig på 3 sek.",
         "I sættet »Venstre side« trækker venstre hånd, og højre arm ligger langs siden. I »Højre side« bytter du."
@@ -397,11 +397,11 @@
         },
         {
           "mistake": "Bordet vipper eller flytter sig.",
-          "fix": "Stop, og vælg trin 1, rygsæk-row, under Stiger efter passet. Brug kun et tungt spisebord."
+          "fix": "Stop, og ret hvert bord-row-sæt til 0 med − i stedet for at trykke »Smerte«. Vælg trin 1 under Stiger efter passet."
         }
       ],
       "easier": "Trin 6: etarms bord-row med 1 sek pause i toppen.",
-      "harder": "Der er intet trin over dette. Gør hvert hold renere: brystet ved kanten og ingen drejning.",
+      "harder": "Det er stigens sidste trin. Gør hvert hold renere: brystet ved kanten og ingen drejning.",
       "equipment": ["table"],
       "getReady": "Læg dig under langsiden af det tunge spisebord, og træk først let for at mærke, at det står fast.",
       "movements": [

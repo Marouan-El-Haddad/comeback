@@ -15,7 +15,7 @@
         "Pres hælen i gulvet, og løft hoften kontrolleret.",
         "Hold 2 sek i toppen med ribbenene nede, så det er ballen, der arbejder, ikke lænden.",
         "Sænk hoften på 3 sek, til bagdelen lige rører gulvet.",
-        "Tag alle gentagelser med samme ben, og skift så."
+        "I »Venstre ben« står venstre fod i gulvet, og højre ben er strakt; i »Højre ben« omvendt."
       ],
       "tempo": "Kontrolleret op, 2 sek i toppen og 3 sek ned.",
       "breathing": "Pust ud på vej op, og træk vejret ind på vej ned.",
@@ -149,10 +149,10 @@
       "steps": [
         "Løft hoften, så skuldre, hofte og knæ er på en lige linje.",
         "Glid hælen langsomt ud på 3 sek, til benet er næsten strakt, mens hoften bliver oppe.",
-        "Træk hælen hurtigt ind igen, og hold hoften oppe hele sættet.",
-        "Tag alle gentagelser med samme ben, og skift så."
+        "Hold 1 sek stille, træk så hælen hurtigt ind igen, og hold hoften oppe hele sættet.",
+        "I »Venstre ben« er venstre hæl på håndklædet og højre knæ over hoften; i »Højre ben« omvendt."
       ],
-      "tempo": "Langsomt ud på 3 sek og hurtigt ind.",
+      "tempo": "Langsomt ud på 3 sek, 1 sek stille og hurtigt ind.",
       "breathing": "Træk vejret ind, mens hælen glider ud, og pust ud, når du trækker den ind.",
       "cues": ["Langsomt ud, hurtigt ind", "Hoften oppe hele vejen", "Hofterne i samme højde"],
       "mistakes": [
@@ -203,6 +203,7 @@
           ],
           "phases": [
             { "to": "out", "seconds": 3, "label": "3 sek ud" },
+            { "to": "out", "seconds": 1, "label": "1 sek stille" },
             { "to": "in", "seconds": 0.6, "label": "Hurtigt ind" }
           ]
         }
@@ -211,7 +212,7 @@
     {
       "id": "posterior.4",
       "trains": "Baglårene bremser hele kroppens vægt og bliver stærke i den lange stilling, hvor de arbejder i spark og sprint.",
-      "start": "Knæl på en pude foran sofaen med ryggen til den, og skub hælene ind under sofaens kant. Ret kroppen op, så den er lige fra knæ til hoved.",
+      "start": "Knæl med knæene på en pude og ryggen til sofaen, så skinneben og vrister ligger i gulvet. Skub hælene ind under sofaens kant, så de er låst fast, og ret kroppen op fra knæ til hoved.",
       "steps": [
         "Spænd baller og mave, og hold hænderne foran brystet.",
         "Sænk dig langsomt frem med lige hofter, så langt du kan styre.",
@@ -245,9 +246,10 @@
             {
               "id": "up",
               "name": "Oppe",
-              "text": "På knæ på puden med vristene i gulvet og hælene inde under sofaens kant. Kroppen er lodret og lige fra knæ til hoved, hoften strakt og hænderne foran brystet.",
+              "text": "Knæene på puden, skinnebenene og vristene i gulvet og hælene låst fast under sofaens kant. Kroppen er lodret og lige fra knæ til hoved, hoften strakt og hænderne foran brystet.",
               "contacts": [
                 { "part": "knee", "on": "pillow" },
+                { "part": "shin", "on": "floor" },
                 { "part": "foot", "on": "floor" },
                 { "part": "heel", "on": "sofa" }
               ]
@@ -255,9 +257,10 @@
             {
               "id": "low",
               "name": "Lænet frem",
-              "text": "Kroppen er stadig lige fra knæ til hoved og lænet ca. 45° frem, så langt du kan styre. Knæene på puden, hælene under sofaen og hænderne foran brystet.",
+              "text": "Kroppen er lige fra knæ til hoved og lænet ca. 45° frem, så langt du kan styre. Knæene på puden, skinneben og vrister i gulvet, hælene låst under sofaen og hænderne foran brystet.",
               "contacts": [
                 { "part": "knee", "on": "pillow" },
+                { "part": "shin", "on": "floor" },
                 { "part": "foot", "on": "floor" },
                 { "part": "heel", "on": "sofa" }
               ]
@@ -265,9 +268,10 @@
             {
               "id": "catch",
               "name": "Tag fra",
-              "text": "Hænderne tager fra i gulvet under skuldrene med bøjede albuer, og brystet er lige over gulvet. Kroppen er stadig lige fra knæ til hoved, knæene på puden og hælene under sofaen.",
+              "text": "Hænderne tager fra i gulvet under skuldrene med bøjede albuer, og brystet er lige over gulvet. Kroppen er lige fra knæ til hoved, knæene på puden, skinneben og vrister i gulvet og hælene låst under sofaen.",
               "contacts": [
                 { "part": "knee", "on": "pillow" },
+                { "part": "shin", "on": "floor" },
                 { "part": "foot", "on": "floor" },
                 { "part": "heel", "on": "sofa" },
                 { "part": "hand", "on": "floor" }
@@ -285,7 +289,7 @@
     {
       "id": "posterior.5",
       "trains": "Baglårene bremser kroppen hele vejen ned og bliver stærke i hele bevægelsen, som de bruger i spark og sprint.",
-      "start": "Knæl på en pude foran sofaen med ryggen til den, og skub hælene ind under sofaens kant. Ret kroppen op, så den er lige fra knæ til hoved.",
+      "start": "Knæl med knæene på en pude og ryggen til sofaen, så skinneben og vrister ligger i gulvet. Skub hælene ind under sofaens kant, så de er låst fast, og ret kroppen op fra knæ til hoved.",
       "steps": [
         "Spænd baller og mave, og hold hænderne foran brystet.",
         "Sænk dig frem på 5 sek med kroppen lige hele vejen ned.",
@@ -319,9 +323,10 @@
             {
               "id": "up",
               "name": "Oppe",
-              "text": "På knæ på puden med vristene i gulvet og hælene inde under sofaens kant. Kroppen er lodret og lige fra knæ til hoved, hoften strakt og hænderne foran brystet.",
+              "text": "Knæene på puden, skinnebenene og vristene i gulvet og hælene låst fast under sofaens kant. Kroppen er lodret og lige fra knæ til hoved, hoften strakt og hænderne foran brystet.",
               "contacts": [
                 { "part": "knee", "on": "pillow" },
+                { "part": "shin", "on": "floor" },
                 { "part": "foot", "on": "floor" },
                 { "part": "heel", "on": "sofa" }
               ]
@@ -329,9 +334,10 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Kroppen er lige fra knæ til hoved og næsten vandret med brystet lige over gulvet. Hænderne tager fra i gulvet under skuldrene med bøjede albuer, knæene på puden og hælene under sofaen.",
+              "text": "Kroppen er lige fra knæ til hoved og næsten vandret med brystet lige over gulvet. Hænderne tager fra i gulvet under skuldrene, knæene på puden, skinneben og vrister i gulvet og hælene låst under sofaen.",
               "contacts": [
                 { "part": "knee", "on": "pillow" },
+                { "part": "shin", "on": "floor" },
                 { "part": "foot", "on": "floor" },
                 { "part": "heel", "on": "sofa" },
                 { "part": "hand", "on": "floor" }
@@ -348,7 +354,7 @@
     {
       "id": "posterior.6",
       "trains": "Baglårene både bremser og løfter hele kroppen, den fulde styrke, der giver kraft i spark og sprint.",
-      "start": "Knæl på en pude foran sofaen med ryggen til den, og skub hælene ind under sofaens kant. Ret kroppen op, så den er lige fra knæ til hoved.",
+      "start": "Knæl med knæene på en pude og ryggen til sofaen, så skinneben og vrister ligger i gulvet. Skub hælene ind under sofaens kant, så de er låst fast, og ret kroppen op fra knæ til hoved.",
       "steps": [
         "Sænk dig kontrolleret hele vejen ned med kroppen lige, og tag fra med hænderne i bunden.",
         "Giv et lille skub fra hænderne, og træk dig op med baglårene.",
@@ -381,9 +387,10 @@
             {
               "id": "up",
               "name": "Oppe",
-              "text": "På knæ på puden med vristene i gulvet og hælene inde under sofaens kant. Kroppen er lodret og lige fra knæ til hoved, hoften strakt og hænderne foran brystet.",
+              "text": "Knæene på puden, skinnebenene og vristene i gulvet og hælene låst fast under sofaens kant. Kroppen er lodret og lige fra knæ til hoved, hoften strakt og hænderne foran brystet.",
               "contacts": [
                 { "part": "knee", "on": "pillow" },
+                { "part": "shin", "on": "floor" },
                 { "part": "foot", "on": "floor" },
                 { "part": "heel", "on": "sofa" }
               ]
@@ -391,9 +398,10 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Kroppen er lige fra knæ til hoved og næsten vandret med brystet lige over gulvet. Hænderne tager fra i gulvet under skuldrene med bøjede albuer, knæene på puden og hælene under sofaen.",
+              "text": "Kroppen er lige fra knæ til hoved og næsten vandret med brystet lige over gulvet. Hænderne tager fra i gulvet under skuldrene, knæene på puden, skinneben og vrister i gulvet og hælene låst under sofaen.",
               "contacts": [
                 { "part": "knee", "on": "pillow" },
+                { "part": "shin", "on": "floor" },
                 { "part": "foot", "on": "floor" },
                 { "part": "heel", "on": "sofa" },
                 { "part": "hand", "on": "floor" }
@@ -402,9 +410,10 @@
             {
               "id": "push",
               "name": "Skub",
-              "text": "Hænderne har lige skubbet fra, og kroppen er løftet ca. 30° fra vandret, stadig lige fra knæ til hoved. Knæene på puden, hælene under sofaen og hænderne foran brystet.",
+              "text": "Hænderne har lige skubbet fra, og kroppen er løftet ca. 30° fra vandret, stadig lige fra knæ til hoved. Knæene på puden, skinneben og vrister i gulvet og hælene låst under sofaen.",
               "contacts": [
                 { "part": "knee", "on": "pillow" },
+                { "part": "shin", "on": "floor" },
                 { "part": "foot", "on": "floor" },
                 { "part": "heel", "on": "sofa" }
               ]

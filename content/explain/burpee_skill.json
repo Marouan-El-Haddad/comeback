@@ -54,7 +54,7 @@
             {
               "id": "squat",
               "name": "Hænder i gulvet",
-              "text": "På hug med fødderne flade, lidt bredere end hofterne, knæene dybt bøjede og hoften i knæhøjde. Overkroppen hælder ca. 45° frem, hovedet følger ryggen, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
+              "text": "På hug med fødderne flade, lidt bredere end hofterne, og hoften lidt under knæhøjde. Overkroppen er næsten vandret (ca. 25°) med hovedet i forlængelse, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
               "contacts": [
                 { "part": "foot", "on": "floor" },
                 { "part": "hand", "on": "floor" }
@@ -152,7 +152,7 @@
             {
               "id": "crouch",
               "name": "Fødderne inde",
-              "text": "På hug med fødderne flade, lidt bredere end hofterne og lige bag hænderne. Hænderne er stadig i gulvet, knæene er dybt bøjede, og hoften er i knæhøjde.",
+              "text": "På hug med fødderne flade, lidt bredere end hofterne og lige bag hænderne. Hænderne er stadig i gulvet med strakte arme, hoften er lidt under knæhøjde, og overkroppen er næsten vandret.",
               "contacts": [
                 { "part": "foot", "on": "floor" },
                 { "part": "hand", "on": "floor" }
@@ -213,7 +213,7 @@
             {
               "id": "squat",
               "name": "Hænder i gulvet",
-              "text": "På hug med fødderne flade, lidt bredere end hofterne, knæene dybt bøjede og hoften i knæhøjde. Overkroppen hælder ca. 45° frem, hovedet følger ryggen, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
+              "text": "På hug med fødderne flade, lidt bredere end hofterne, og hoften lidt under knæhøjde. Overkroppen er næsten vandret (ca. 25°) med hovedet i forlængelse, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
               "contacts": [
                 { "part": "foot", "on": "floor" },
                 { "part": "hand", "on": "floor" }
@@ -311,7 +311,7 @@
             {
               "id": "squat",
               "name": "Hænder i gulvet",
-              "text": "På hug med fødderne flade, lidt bredere end hofterne, knæene dybt bøjede og hoften i knæhøjde. Overkroppen hælder ca. 45° frem, hovedet følger ryggen, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
+              "text": "På hug med fødderne flade, lidt bredere end hofterne, og hoften lidt under knæhøjde. Overkroppen er næsten vandret (ca. 25°) med hovedet i forlængelse, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
               "contacts": [
                 { "part": "foot", "on": "floor" },
                 { "part": "hand", "on": "floor" }
@@ -365,7 +365,7 @@
             {
               "id": "squat",
               "name": "Hænder i gulvet",
-              "text": "På hug med fødderne flade, lidt bredere end hofterne, knæene dybt bøjede og hoften i knæhøjde. Overkroppen hælder ca. 45° frem, hovedet følger ryggen, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
+              "text": "På hug med fødderne flade, lidt bredere end hofterne, og hoften lidt under knæhøjde. Overkroppen er næsten vandret (ca. 25°) med hovedet i forlængelse, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
               "contacts": [
                 { "part": "foot", "on": "floor" },
                 { "part": "hand", "on": "floor" }
@@ -443,7 +443,7 @@
         }
       ],
       "easier": "Trin 4: burpee med tuck jump eller klap push-up.",
-      "harder": "Det er sidste trin. SEAL-burpeen er en imponer-variant, som kræver 50 på burpee-testen.",
+      "harder": "Det er stigens sidste trin. SEAL-burpeen er en imponer-variant, som kræver 50 på burpee-testen.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, og bestem, hvilket ben du starter på.",
       "movements": [
@@ -458,7 +458,7 @@
             {
               "id": "squat",
               "name": "Hænder i gulvet",
-              "text": "På hug på standbenet med foden flad og knæet dybt bøjet ud over tæerne. Overkroppen hælder frem, hænderne står i skulderbredde i gulvet lige foran foden, og den frie fod er løftet bag dig.",
+              "text": "På hug på standbenet med foden flad, knæet dybt bøjet ud over tæerne og hoften lidt under knæhøjde. Overkroppen er næsten vandret, hænderne står i skulderbredde i gulvet lige foran foden, og den frie fod er løftet bag dig.",
               "contacts": [
                 { "part": "foot", "on": "floor", "count": 1 },
                 { "part": "hand", "on": "floor" }

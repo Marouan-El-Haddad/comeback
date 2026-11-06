@@ -220,7 +220,7 @@
         }
       ],
       "easier": "Trin 3: skæv push-up med den ene hånd på 3–4 bøger.",
-      "harder": "Trin 5: etarms push-up på skrå med hånden på et bord.",
+      "harder": "Trin 5: etarms push-up på skrå med hånden på et bord, en sofa, en stol eller et trappetrin.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, der er bred nok til dine arme strakt ud til siderne.",
       "movements": [
@@ -256,12 +256,12 @@
     {
       "id": "press.5",
       "trains": "Én arm bærer, mens maven holder hoften i ro: vejen til etarms push-up og styrke til slag med én hånd.",
-      "start": "Den ene hånd på kanten af et tungt bord ud for brystet og den frie hånd på lænden. Fødderne bredt på forfødderne, og kroppen lige og på skrå fra hæl til hoved.",
+      "start": "Den ene hånd på kanten af din flade ud for brystet og den frie hånd på lænden. Fødderne bredt på forfødderne, og kroppen lige og på skrå fra hæl til hoved.",
       "steps": [
-        "Spænd maven og ballerne, og hold hoften i niveau, så den ikke drejer.",
-        "Sænk brystet mod bordkanten på 3 sek med albuen tæt ind til kroppen.",
-        "Hold 1 sek stille lige over kanten, og pres dig op i ét roligt stræk.",
-        "I sættet »Venstre side« er venstre hånd på bordet. I »Højre side« er det højre."
+        "Brug samme flade hele trinnet: den laveste af bord, sofa, stol og trappetrin, hvor du kan lave 3 gentagelser pr. side med 2–3 i reserve.",
+        "Spænd maven og ballerne, og sænk brystet mod kanten på 3 sek med albuen tæt ind til kroppen.",
+        "Hold 1 sek stille lige over kanten, og pres dig op i ét roligt stræk uden at dreje hoften.",
+        "I sættet »Venstre side« er venstre hånd på fladen. I »Højre side« er det højre."
       ],
       "tempo": "3 sek ned, 1 sek stille lige over kanten, op i ét roligt stræk.",
       "breathing": "Ånd ind på vej ned, og pust ud på vej op. Hold ikke vejret i bunden.",
@@ -272,18 +272,18 @@
           "fix": "Spænd maven og ballerne, og hold begge hofter i samme højde."
         },
         {
-          "mistake": "Albuen flyver ud til siden.",
-          "fix": "Hold albuen tæt ind til kroppen, så den peger skråt bagud."
+          "mistake": "Du skifter flade undervejs i trinnet.",
+          "fix": "Bliv på samme flade, til appen flytter dig. Ellers kan dine tal ikke sammenlignes fra pas til pas."
         },
         {
-          "mistake": "Bordet flytter sig eller vipper.",
-          "fix": "Brug et tungt bord, og pres først let for at mærke, at det står fast."
+          "mistake": "Fladen flytter sig eller vipper.",
+          "fix": "Brug noget tungt, der står fast, og pres først let for at mærke det."
         }
       ],
-      "easier": "En højere flade, fx køkkenbordet, eller trin 4: archer push-up.",
-      "harder": "Når du rammer 8 pr. side i alle sæt med 2 i reserve, så sænk hånden: sofa, stol og til sidst trappetrin. Derefter trin 6.",
+      "easier": "Trin 4: archer push-up med hænderne i dobbelt skulderbredde.",
+      "harder": "Trin 6: etarms push-up i gulvet med brede fødder.",
       "equipment": ["table"],
-      "getReady": "Find et tungt bord, der står fast, eller den lavere flade, du er nået til.",
+      "getReady": "Find den flade, du bruger på dette trin, og pres let på den for at mærke, at den står fast.",
       "movements": [
         {
           "positions": [
@@ -341,7 +341,7 @@
           "fix": "Spred fødderne mere end skulderbredde, før du starter."
         }
       ],
-      "easier": "Trin 5: etarms push-up på skrå med hånden på et trappetrin.",
+      "easier": "Trin 5: etarms push-up på skrå med hånden på et bord, en sofa, en stol eller et trappetrin.",
       "harder": "Trin 7: etarms push-up med fødderne i hoftebredde.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, hvor du kan stå i planke med brede fødder.",
@@ -403,7 +403,7 @@
         }
       ],
       "easier": "Trin 6: etarms push-up med brede fødder.",
-      "harder": "Der er intet trin over dette. Gør hver gentagelse renere: helt ned, 1 sek stille og ingen vridning.",
+      "harder": "Det er stigens sidste trin. Gør hver gentagelse renere: helt ned, 1 sek stille og ingen vridning.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, og stil fødderne i hoftebredde.",
       "movements": [

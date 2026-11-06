@@ -14,8 +14,8 @@
       "steps": [
         "Spænd maven, og hold overkroppen rank med vægten mest på forreste ben.",
         "Sænk dig lige ned på 3 sek, til bagerste knæ rører puden let.",
-        "Hold 1 sek stille med forreste hæl i gulvet, uden at hvile på puden.",
-        "Pres dig op gennem forreste hæl. Tag alle gentagelser, og skift så ben."
+        "Hold 1 sek stille uden at hvile på puden, og pres dig op gennem forreste hæl.",
+        "I »Venstre ben« står venstre fod forrest og højre bagerst; i »Højre ben« omvendt."
       ],
       "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
       "breathing": "Træk vejret ind på vej ned, og pust ud på vej op.",
@@ -75,9 +75,9 @@
       "start": "Stå med ryggen til sofaen, et stort skridt foran den, og læg vristen af bagerste fod på sofakanten. Forreste fod står fladt i gulvet, og hænderne er på hofterne.",
       "steps": [
         "Hold ryggen lang, og læn overkroppen en smule frem.",
-        "Sænk dig på 3 sek, til bagerste knæ er en håndsbredde over gulvet.",
-        "Hold 1 sek stille. Forreste knæ må gerne gå frem over tæerne, men hælen bliver i gulvet.",
-        "Pres dig op gennem hele forreste fod. Tag alle gentagelser, og skift så ben."
+        "Sænk dig på 3 sek, til bagerste knæ er en håndsbredde over gulvet, og hold 1 sek stille.",
+        "Pres dig op gennem hele forreste fod. Knæet må gerne gå frem over tæerne, men hælen bliver i gulvet.",
+        "I »Venstre ben« står venstre fod i gulvet og højre vrist på sofaen; i »Højre ben« omvendt."
       ],
       "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
       "breathing": "Træk vejret ind på vej ned, og pust ud på vej op.",
@@ -139,10 +139,10 @@
       "trains": "Mere belastning på ét ben ad gangen, så lår og baller får mere kraft til spark og knæ.",
       "start": "Stil dig med ryggen til sofaen, et stort skridt foran den, med rygsækken på ryggen. Læg vristen af bagerste fod på sofakanten, og hold i stropperne.",
       "steps": [
-        "Spænd maven, og læn overkroppen lidt frem med lang ryg.",
-        "Sænk dig dybt på 3 sek, til bagerste knæ er lige over gulvet.",
-        "Hold 1 sek stille, og pres dig op gennem hele forreste fod. Tag alle gentagelser, og skift så ben.",
-        "Uden rygsæk: hænderne på hofterne og 3 sek pause i bunden i stedet for 1 sek."
+        "Læn overkroppen lidt frem med lang ryg, og sænk dig dybt på 3 sek, til bagerste knæ er lige over gulvet.",
+        "Hold 1 sek stille, og pres dig op gennem hele forreste fod.",
+        "Uden rygsæk: hænderne på hofterne og 3 sek pause i bunden i stedet for 1 sek.",
+        "I »Venstre ben« står venstre fod i gulvet og højre vrist på sofaen; i »Højre ben« omvendt."
       ],
       "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op. Uden rygsæk: 3 sek pause i bunden.",
       "breathing": "Træk vejret ind på vej ned, hold ikke vejret i bunden, og pust ud på vej op.",
@@ -233,7 +233,7 @@
       "steps": [
         "Læn overkroppen frem, og rejs dig på ét ben med armene frem som modvægt.",
         "Sæt dig igen på 3 sek, til bagdelen rører stolen let, og hold 1 sek stille uden at slappe af.",
-        "Rejs dig kontrolleret igen. Tag alle gentagelser på samme ben, og skift så.",
+        "Rejs dig kontrolleret igen. I »Venstre ben« står du på venstre ben med højre strakt frem; i »Højre ben« omvendt.",
         "Sænk sædet gradvist: er stolen for lav, så læg puder på sædet, og fjern dem én ad gangen, efterhånden som det går."
       ],
       "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
@@ -255,7 +255,7 @@
       ],
       "easier": "Trin 3: bulgarsk split squat med rygsæk eller med 3 sek pause i bunden.",
       "harder": "Trin 5: pistol-negativer, hvor du sænker dig på ét ben uden stol og rejser dig på to.",
-      "equipment": ["chair", "wall"],
+      "equipment": ["chair", "wall", "pillow"],
       "getReady": "Stil en solid stol med ryggen mod en væg, så den ikke kan glide.",
       "movements": [
         {
@@ -292,7 +292,7 @@
         "Sænk dig på 5 sek helt ned på ét ben, så bagdelen kommer tæt på hælen.",
         "Hold hele foden i gulvet, og lad knæet gå frem over tæerne.",
         "Sæt den frie fod ned i bunden, og rejs dig kontrolleret på to ben.",
-        "Løft det frie ben frem igen. Tag alle gentagelser på samme ben, og skift så."
+        "Løft det frie ben frem igen. I »Venstre ben« står du på venstre ben med højre strakt frem; i »Højre ben« omvendt."
       ],
       "tempo": "5 sek ned på ét ben, og rejs dig kontrolleret på to.",
       "breathing": "Træk vejret roligt på vej ned, og pust ud, når du rejser dig.",
@@ -360,7 +360,7 @@
         "Sænk dig på 3 sek helt ned på ét ben, så bagdelen kommer tæt på hælen.",
         "Hold 1 sek stille med hele foden i gulvet og det frie ben over gulvet.",
         "Pres dig op på samme ben uden at sætte den frie fod ned.",
-        "Tag alle gentagelser på samme ben, og skift så."
+        "I »Venstre ben« står du på venstre ben med højre strakt frem; i »Højre ben« omvendt."
       ],
       "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
       "breathing": "Træk vejret ind på vej ned, og pust ud på vej op.",
@@ -415,7 +415,7 @@
         "Sænk dig på 3 sek helt ned på ét ben med hele foden i gulvet.",
         "Hold 2 sek pause i bunden, og bliv spændt i hele benet.",
         "Rejs dig på samme ben, og driv det frie knæ op mod hænderne i et knæspark.",
-        "Stræk benet frem igen til næste gentagelse. Tag alle gentagelser på samme ben, og skift så."
+        "Stræk benet frem igen. I »Venstre ben« står du på venstre ben og giver knæ med højre; i »Højre ben« omvendt."
       ],
       "tempo": "3 sek ned, 2 sek pause i bunden, kontrolleret op, og driv så knæet op.",
       "breathing": "Træk vejret ind på vej ned, og pust kraftigt ud i knæsparket.",

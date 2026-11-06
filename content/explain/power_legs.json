@@ -162,7 +162,7 @@
     {
       "id": "power_legs.3",
       "trains": "Kraft sidelæns og balance på ét ben, så du hurtigt kan træde ud til siden og stå stabilt efter et spark.",
-      "start": "Stå på højre ben med let bøjet knæ og venstre fod løftet bag højre ankel. Overkroppen er lænet lidt frem, og armene hænger foran dig.",
+      "start": "Stå på højre ben med let bøjet knæ, venstre fod løftet bag højre ankel og overkroppen lænet lidt frem. Hop på bare fødder eller i sko, ikke i strømper.",
       "steps": [
         "Bøj højre knæ og hofte, og spring så langt til venstre du kan.",
         "Land på venstre ben med bøjet knæ og hofte, og frys på landingen.",
@@ -171,7 +171,11 @@
       ],
       "tempo": "Eksplosivt sidelæns og en stille landing, hvor du fryser på hvert ben.",
       "breathing": "Pust ud, når du lander, og træk vejret, før du springer igen.",
-      "cues": ["Så langt til siden du kan", "Frys på hver landing", "Knæet peger over tæerne"],
+      "cues": [
+        "Skiftevis: målet på hvert ben",
+        "Langt til siden, og frys",
+        "Knæet peger over tæerne"
+      ],
       "mistakes": [
         {
           "mistake": "Knæet falder ind, når du lander.",
@@ -189,7 +193,7 @@
       "easier": "Trin 2: længdespring.",
       "harder": "Trin 4: split jumps.",
       "equipment": [],
-      "getReady": "Find 3 meter fri plads til siden, og hop på bare fødder eller i sko, ikke i strømper.",
+      "getReady": "Find 3 meter fri plads til siden, og tryk »Som planlagt« to gange efter sættet: venstre, så straks højre.",
       "movements": [
         {
           "positions": [
@@ -232,7 +236,7 @@
     {
       "id": "power_legs.4",
       "trains": "Hurtige skift mellem benene i balance, som giver fart i stillingsskift, fodarbejde og switch kick.",
-      "start": "Stå i et udfald med venstre fod foran og højre fod et langt skridt bagud på tæerne. Begge knæ er let bøjede, overkroppen er oprejst, og hænderne er i garden.",
+      "start": "Stå i et udfald med venstre fod foran og højre fod et langt skridt bagud på tæerne, på bare fødder eller i sko. Begge knæ er let bøjede, overkroppen er oprejst, og hænderne er i garden.",
       "steps": [
         "Hop op, kun lige højt nok til at skifte ben, og byt ben i luften.",
         "Land blødt og i balance med højre fod foran, og hop straks igen til venstre fod foran.",
@@ -241,7 +245,11 @@
       ],
       "tempo": "Lavt, hurtigt og i balance: hop straks igen, når du lander.",
       "breathing": "Pust kort ud ved hver landing, og hold rytmen.",
-      "cues": ["Lavt, hurtigt og i balance", "Hænderne oppe i garden", "Forreste knæ over foden"],
+      "cues": [
+        "Skiftevis: målet med hvert ben foran",
+        "Lavt, hurtigt og i balance",
+        "Hænderne oppe i garden"
+      ],
       "mistakes": [
         {
           "mistake": "Du hopper højt og lander tungt.",
@@ -259,7 +267,7 @@
       "easier": "Trin 3: skater-hop.",
       "harder": "Trin 5: tuck jumps.",
       "equipment": [],
-      "getReady": "Stil dig i et udfald med venstre fod foran og hænderne i garden, på bare fødder eller i sko.",
+      "getReady": "Stil dig i et udfald med venstre fod foran, og tryk »Som planlagt« to gange efter sættet: venstre, så straks højre.",
       "movements": [
         {
           "positions": [
@@ -400,7 +408,7 @@
         }
       ],
       "easier": "Trin 5: tuck jumps.",
-      "harder": "Dette er sporets sidste trin. Gør hvert spring lige langt, og land lige stille.",
+      "harder": "Det er stigens sidste trin. Gør hvert spring lige langt, og land lige stille.",
       "equipment": ["step"],
       "getReady": "Find ca. 6 meter fri plads eller et trappetrin, og hop på bare fødder eller i sko.",
       "movements": [

@@ -301,7 +301,7 @@
       "steps": [
         "Hold garden, og slå rolige lige slag i 2 min. Skift arm fra slag til slag.",
         "Ved »Ét ben, venstre« står du på venstre ben og strækker højre ben frem, mens du slår videre.",
-        "Ved »Ét ben, højre« skifter du ben uden at rejse dig, og slår videre.",
+        "Ved »Ét ben, højre« står du på højre ben og strækker venstre ben frem uden at rejse dig, og slår videre.",
         "Svar ja til »Rene runder?«, når du holdt hele runden med lårene vandrette og garden oppe."
       ],
       "tempo": "2 min på begge ben og 30 sek på hvert ben, med rolige lige slag hele vejen.",
@@ -333,19 +333,9 @@
         {
           "positions": [
             {
-              "id": "guard",
-              "name": "Garde",
-              "text": "Wall sit med ryggen flad mod væggen, lårene vandrette og knæene over anklerne. Hænderne i garde foran ansigtet med albuerne ind og hagen lidt ned.",
-              "contacts": [
-                { "part": "back", "on": "wall" },
-                { "part": "hip", "on": "wall" },
-                { "part": "foot", "on": "floor" }
-              ]
-            },
-            {
               "id": "left",
               "name": "Venstre lige",
-              "text": "Wall sit som i garde, men venstre arm er strakt lige frem i skulderhøjde. Højre hånd bliver ved ansigtet.",
+              "text": "Wall sit med ryggen flad mod væggen, lårene vandrette og knæene over anklerne. Venstre arm er strakt lige frem i skulderhøjde, og højre hånd er i garde ved ansigtet.",
               "contacts": [
                 { "part": "back", "on": "wall" },
                 { "part": "hip", "on": "wall" },
@@ -355,7 +345,7 @@
             {
               "id": "right",
               "name": "Højre lige",
-              "text": "Wall sit som i garde, men højre arm er strakt lige frem i skulderhøjde. Venstre hånd bliver ved ansigtet.",
+              "text": "Som venstre lige, men højre arm er strakt lige frem i skulderhøjde, og venstre hånd er i garde ved ansigtet.",
               "contacts": [
                 { "part": "back", "on": "wall" },
                 { "part": "hip", "on": "wall" },
@@ -363,9 +353,9 @@
               ]
             },
             {
-              "id": "one_left",
-              "name": "Etbens venstre lige",
-              "text": "Wall sit på ét ben med det andet ben strakt lige frem i hoftehøjde og hoften i niveau. Venstre arm strakt frem i skulderhøjde og højre hånd ved ansigtet.",
+              "id": "left_leg",
+              "name": "Venstre ben, garde",
+              "text": "Wall sit, hvor du står på venstre ben: højre ben er strakt lige frem i hoftehøjde, hoften i niveau og venstre knæ over anklen. Begge hænder i garde ved ansigtet.",
               "contacts": [
                 { "part": "back", "on": "wall" },
                 { "part": "hip", "on": "wall" },
@@ -373,9 +363,29 @@
               ]
             },
             {
-              "id": "one_right",
-              "name": "Etbens højre lige",
-              "text": "Som etbens venstre lige, men højre arm er strakt frem i skulderhøjde og venstre hånd ved ansigtet.",
+              "id": "left_leg_punch",
+              "name": "Venstre ben, slag",
+              "text": "Som venstre ben, garde: du står på venstre ben med højre ben strakt frem. Venstre arm er strakt lige frem i skulderhøjde, og højre hånd er ved ansigtet.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "right_leg",
+              "name": "Højre ben, garde",
+              "text": "Wall sit, hvor du står på højre ben: venstre ben er strakt lige frem i hoftehøjde, hoften i niveau og højre knæ over anklen. Begge hænder i garde ved ansigtet.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "right_leg_punch",
+              "name": "Højre ben, slag",
+              "text": "Som højre ben, garde: du står på højre ben med venstre ben strakt frem. Højre arm er strakt lige frem i skulderhøjde, og venstre hånd er ved ansigtet.",
               "contacts": [
                 { "part": "back", "on": "wall" },
                 { "part": "hip", "on": "wall" },
@@ -384,12 +394,21 @@
             }
           ],
           "phases": [
-            { "to": "left", "seconds": 0.6, "label": "Venstre lige" },
             { "to": "right", "seconds": 2, "repeat": "dose", "label": "2 min garde og slag" },
-            { "to": "one_left", "seconds": 2, "label": "Højre ben frem" },
-            { "to": "one_right", "seconds": 2, "repeat": "dose", "label": "30 sek på venstre ben" },
-            { "to": "one_left", "seconds": 2, "label": "Skift ben" },
-            { "to": "one_right", "seconds": 2, "repeat": "dose", "label": "30 sek på højre ben" }
+            { "to": "left_leg", "seconds": 2, "label": "Højre ben frem" },
+            {
+              "to": "left_leg_punch",
+              "seconds": 1,
+              "repeat": "dose",
+              "label": "30 sek på venstre ben"
+            },
+            { "to": "right_leg", "seconds": 2, "label": "Skift ben" },
+            {
+              "to": "right_leg_punch",
+              "seconds": 1,
+              "repeat": "dose",
+              "label": "30 sek på højre ben"
+            }
           ]
         }
       ]
