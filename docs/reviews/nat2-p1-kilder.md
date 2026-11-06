@@ -180,3 +180,44 @@ Pakken rører hverken `src/storage/`, hændelsestyperne eller `program/`. Indlæ
 
 - Tre af piktogrammerne, som appen viser i dag, har albuer, der bøjer bagud: `squat_jump` (power ben trin 1, 2 og 5), `bulgarian` (ben trin 2–3) og `chin_tuck` (alle nakketrin og hage-ind). `poses.py` giver armene `bend=+1`, hvor en figur, der vender mod højre, skal have −1 (`screenshots/review-p1-piktogrammer-albuer.png`). Reglen i SPEC 9.1 om bøjning ud fra `facing` retter det i figurerne, men P4 må ikke kopiere piktogrammernes `bend`, og piktogrammerne vises, indtil trinnet har sin figur.
 - `week1.spec.ts:96` (W3) er flaky: `runSessionToSummary` læser overskriften »Rene runder?« og prøver at klikke »Ja«, efter at skærmen er gået videre til »Alt er logget«. Testen bestod ved gentagelsen.
+
+## Opfølgning
+
+2026-11-06 · rettelserne 5fa5852, 5687a4f, 95f8453, 11e2fce, 231a78f og 833c54f (D44–D46 og R15), tjekket på 972f292.
+
+Kørt i worktreen:
+
+- `npx vitest run`: 472 bestået (22 filer). `npx tsc --noEmit`, `npx eslint .` og `npx prettier --check .`: rene.
+- `node scripts/check-explain.ts`: alle 22 filer er i orden; forklaret 54 af 129 trin, rutinepunkter og målinger.
+- `E2E_PORT=4185 npx playwright test`: 38 bestået, heraf 3 i `pixel9a-utc`, på 8,5 min. Ingen er flaky, og ingen er sprunget over. Skærmbillederne, som suiten skrev igen, er sat tilbage til de committede.
+- Bygget: JS 67,6 kB gz. »Content JSON 50.4 kB (22 files)«, og startfilerne indeholder intet indhold.
+- Scratch-tests uden for worktreen (ikke committet): valideringen mod nye eksempler, `check-explain` med en målingsfil og en eslint-mutation i en kopi af 972f292.
+
+| Fund | Status | Gjort og prøvet |
+| ---- | ------ | --------------- |
+| M1 | Rettet | D44, SPEC 3.2 og PLAN M6: introkortet står i pausen før øvelsens første sæt og lukker ved et tryk eller af sig selv, når pausen slutter. Uden pause har det en »Gør klar«-nedtælling på 10 sek, EMOM'ens kort lukkes med »Start EMOM«, og opvarmningen får ét kort, der lukker af sig selv. Hold, klubsekvens og nakke starter stadig af sig selv, så SK3 holder uden rettelse. Selve kortet bygges i P6. |
+| M2 | Rettet i modellen | `repeat` (2–30 eller `"dose"`) og en `"dose"`-fase på 2 sek i kortet. Scratch: klubsekvensen med `"repeat": 10` à 0,8 sek, W2 med slagene som `"repeat": "dose"` og W3 med 45 sek og 20 squats består. Indholdet bruger det ikke endnu: C1–C2 viser én pump, og W2 holder stille, før den slår (også nævnt i P2-reviewet). |
+| M3 | Rettet | Rutinernes dosis læses: hage-ind med 2 sek hold afvises (»programmet siger »5 sek««). En label med »N sek« skal passe med fasen: »3 sek ned« på 1 sek afvises. Se dog L7. |
+| M4 | Rettet | `measures` er et emne (129 punkter i dækningen, SK11 og PLAN M6). En måling i passet åbner sit eget kort (Playwright: Væg-testen; `screenshots/review-p1-kort-maaling.png`), og `like` på tværs af filer virker i `check-explain` (`measures.hollow` som `core_front.2`: OK). Forklaringerne til målingerne er ikke skrevet endnu. |
+| M5 | Rettet | `"from": "power"` og `"sessions": ["A"]` i `warmup.4`. Kortet viser squat jump og pogo-hop i Styrke A og kun hurtig push-up i Styrke B (Playwright og `screenshots/kort-potenser.png`). |
+| L1 | Rettet | `facing` er påkrævet i sidebilledet, og en figur uden afvises. |
+| L2 | Rettet | »side 2 gange« og »side 3 sæt« er ikke sidetal. »et al.« og »m.fl.« fanges og fjernes. `src/ui/` må ikke læse `pdfPage`, og forklaringerne afviser årstal og ord som metaanalyse og studie. Ordlisten fanger dog ikke »samlet analyse« og »bedst undersøgte«, som står i tre `why` (P2-reviewets I4). |
+| L3 | Rettet | `neck` kan markeres rødt. |
+| L4 | Rettet | eslint afviser `../../../content/explain/press.json`, `/content/explain/press.json` og `…?url` i `Today.tsx` (scratch-mutation: 3 fejl). |
+| L5 | Rettet | SPEC 8 har sprogreglerne og en ordliste, PLAN M6 peger på SPEC 5, 6 og 8, SPEC 4.2 starter med Dagens pas, og ENGINE 9 nævner A2. |
+| L6 | Rettet | SPEC 9.1 og valideringen: en `like`, hvor »Lettere« eller »Sværere« nævner et trin (»Trin E2«), afvises, mens »hold 2 sek« ikke giver en falsk fejl. |
+
+### Nyt fund
+
+12. **L7 (lav)**: Labeltjekket afviser rigtige labels på hold på 10 sek og tider pr. gentagelse, og dets råd kan ikke følges.
+    - Hvor: `src/content/validate.ts:474–484` (`checkLabel`) og `docs/SPEC.md` 9.1 (»En "dose"-fase kan kun have en tid over 10 sek i sin label«).
+    - Hvorfor: SPEC 9.1 (labelen viser fasens tid) og kravet om, at valideringen ikke afviser gyldigt indhold.
+      - »Hold 10 sek« på holdet i nakke N1 og N3 (10 sek) og »Hold 10–30 sek« i nakke N2 og rotation R2–R3 afvises med »giv den "seconds": 10«. Følger træneren rådet, mangler holdet sin `"dose"`-fase og afvises igen.
+      - Tiden for én gentagelse afvises: »Et slag hver 2 sek« med `"repeat": "dose"` (rådet siger »giv den "seconds": 2«, men det har den allerede) og »0,8 sek pr. pump« med `"repeat": 10`.
+      - Indholdet i dag undgår det med »Hold« og »Pres og hold« uden tid, så ingen fil fejler.
+    - Rettelse: Godkend en tid på en `"dose"`-fase, når den passer med dosisens sekunder eller er over 10 sek. Godkend både tiden for én gentagelse og den samlede tid på en `repeat`-fase, og giv et råd, der kan følges. Ret SPEC 9.1 og `validate.test.ts` tilsvarende.
+
+### Til orkestratoren
+
+- P6 i `docs/runs/NAT-2-TASKS.md` beskriver stadig D41: kortet lukkes med »et tryk«, og »Grønt« kræver introkort i motor og Open & Strong. Ret den til D44, før P6 begynder.
+- Forslag: hintet »Dagens første power-øvelse« i opvarmningen vælges stadig med `item.key === '4'` i `Runner.tsx`. Nu kan det læses fra `"from": "power"` i data, så koden ikke kender punktet.
