@@ -160,3 +160,52 @@ Kortenes påstande om passet og motoren er tjekket i koden (`src/ui/session/Runn
 - **Cooper:** ENGINE 5.6 siger »cooper (valgfri, ellers base-check)«, men motorpasset i de lette uger har kun Cooper. Springer du den over, måles grundformen ikke i uge 4, 8 og 12.
 - **Balance:** Kortet viser »Så længe du kan« øverst (`src/ui/components/cardItem.ts:39`), men målingen stopper ved 60 sek pr. ben.
 - **Passet:** Sættene viser stadig programmets cues og »reps« (P6 og P8).
+
+## Opfølgning
+
+2026-11-06 · worktree på d29720b · indhold: c984532 · F2: c58447c, 759a207 og d29720b
+
+Resultat: alle 10 fund er rettet. Der er ét nyt lavt fund (N1).
+
+| Fund | Status | Hvad er gjort |
+| ---- | ------ | ------------- |
+| F1 | rettet | `press.5` bruger én flade hele trinnet: den laveste af bord, sofa, stol og trappetrin, hvor du kan lave 3 pr. side med 2–3 i reserve. »Sværere« er bare trin 6. P53 siger, at motoren ikke kender højden. Kortet lover intet, motoren ikke gør. Se N1. |
+| F2 | rettet | Der er nu et ur pr. side (»Venstre side«/»Højre side«, ved balance »Venstre ben«/»Højre ben«). Begge tider kan rettes, og skridtet viser »Den korteste tid gemmes: N sek.«. Kortene siger »Appen gemmer selv den korteste«. Kilderne er SPEC 4.8, P59 og D49. |
+| F3 | rettet | Alle ni kort siger, hvad du gør i »Venstre ben/side«. Det gør legs.1–2, posterior.1 og groin.1–2 fra del 1 også. P54 har reglen for sideliggende øvelser. |
+| F4 | rettet | Første cue er »Skiftevis: målet på hvert ben« (»… med hvert ben foran«), og »Gør klar« siger, at du trykker to gange. Rådet om fodtøj står nu i udgangsstillingen. |
+| F5 | rettet (P61) | Du tager resten af sættene som rygsæk-row og retter bord-row-sættene til 0 med − uden at trykke »Smerte«. Motoren tåler 0, se nedenfor. |
+| F6 | rettet | core_front.5–7 og burpee-squat (E1–E9 og V5) kan nu tegnes. W5 har fire etbens-positioner. nordic_depth og posterior.4–6 har samme kontakter. |
+| F7 | rettet | Nordic: »det højeste, du nåede helt«, ellers »Spring målingen over«. Push-ups: »tag den sådan hver gang«. Væg-testen: »Mål på samme måde hver gang«. |
+| F8 | rettet | P55 og P56 beskriver nu kortene. groin.3, groin.5 og posterior.3 har fået »1 sek stille« som de andre trin i P55. |
+| F9 | rettet | Kick-up er forklaret i shoulder.4–7, og vejen ud står ved typiske fejl: drej ud til siden, og lad hovedet lande blødt. |
+| F10 | rettet | Kortene siger »Tryk »Gem målingen«« og »løbeur eller en app«. legs.4 har fået `pillow` som udstyr. »Det er stigens sidste trin« står ens overalt. |
+
+**At logge 0 i pull (P61):** Jeg har prøvet det i en scratch-test med motorens testhjælper (`src/engine/__tests__/helpers/log.ts`, ikke committet): `pull.3` med 12, 0, 0 efter et hit og `pull.4` med 0, 0, 0.
+
+- Passet er stadig grønt og gennemført, og ugen tæller, for par 1 er logget.
+- Ingen `step_changed`, ingen nedrykning og intet rødt pas.
+- Trin og mål er uændrede.
+- Det eneste, der sker, er et miss: `hits` bliver 0. Det betyder intet, da du vælger trin 1 bagefter.
+- »Reserve« har kun 1, 2 og 3. Et 0-sæt tæller derfor som arbejdssæt og ikke som en måling.
+
+**Nyt fund:**
+
+- **N1 (lav):** `press.5` siger »Bliv på samme flade, til appen flytter dig«. Men programmets udførelse står stadig i passet under »Hvorfor« og i Stiger: »Hånden på et bord, senere sofa, stol og trappetrin« (`program/tracks/press.json:53`).
+  - Hvor: `content/explain/press.json` (press.5, trin 1 og typiske fejl nr. 2) og `docs/DECISIONS.md` (P53).
+  - Hvorfor: Midt i et pas ser du to modsatte råd. CLAUDE.md siger, at programmet er den faglige sandhed, men motoren kender ikke fladen (ENGINE 5.4).
+  - Rettelse: Sig på kortet og i P53, hvordan programmets »senere« følges i appen, fx »Programmets »senere sofa, stol og trappetrin« betyder her: jo stærkere du er, når du når trin 5, jo lavere flade starter du på.« Forslag til motoren: fladen som et felt, ligesom rygsækkens vægt (R-LOAD).
+
+**Verificeret:**
+
+- `node scripts/check-explain.ts`: alle 26 filer er i orden, 129 af 129 punkter er forklaret, og 3 har figur.
+- `npx vitest run src/content src/ui/__tests__/sides.test.ts src/ui/__tests__/card.test.ts`: 126 bestået.
+- Scratch-testen af P61: 2 bestået.
+- `E2E_PORT=4194 npx playwright test e2e/measure.spec.ts`: 3 bestået i `pixel9a` og `pixel9a-utc`.
+- Scratch-tjek af de 75 kort fra del 2 med alle folder åbne (port 4195): 0 problemer mod 18 px, 7:1 og 56 px og ingen kildeord.
+- Skærmbillederne `screenshots/maaling-hoejre-side.png` og `maaling-pr-side.png` viser uret til højre side og de to tider.
+
+**Til telefonen** (punkt 3 ovenfor erstattes): Stiger → Pres → trin 5. Forstår du, hvilken flade du skal bruge, og at du bliver på den?
+
+**Uden for pakken:**
+
+- Ifølge P61 retter du hvert bord-row-sæt til 0 med −. Fra mål 12 er det op til 36 tryk midt i et pas. Forslag til byggeagenten: en knap til at springe resten af en øvelse over uden at bruge »Smerte«.
