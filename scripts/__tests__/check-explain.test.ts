@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import * as prettier from 'prettier';
 import { afterAll, describe, expect, test } from 'vitest';
 import { PRESS, PRESS_FIGURES } from '../../src/content/__tests__/fixtures.ts';
-import type { ExplainItem } from '../../src/content/types.ts';
+import type { ExplainItem, FigureItem, Pose } from '../../src/content/types.ts';
 
 const dir = mkdtempSync(join(tmpdir(), 'comeback-content-'));
 afterAll(() => rmSync(dir, { recursive: true, force: true }));
@@ -48,6 +48,16 @@ describe('check-explain', () => {
     expect(result.status).toBe(1);
     expect(result.out).toContain('FEJL');
     expect(result.out).toContain('press.1 › cues[0]: højst 6 ord (har 8)');
+  });
+
+  test('en figur, der ikke rører gulvet, som positionen siger, giver figursystemets fejl', async () => {
+    await write('explain', 'press', PRESS);
+    const floating = structuredClone(PRESS_FIGURES);
+    const top = (floating.figures[0] as FigureItem).keyframes.top as Pose;
+    top.arms = { near: { to: [69.17, 6] }, far: { to: [70.57, 6] } };
+    const result = run(await write('figures', 'press', floating));
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('press.1 › top: hånden (begge) skal røre gulvet');
   });
 
   test('en figur kræver en gyldig forklaring', async () => {

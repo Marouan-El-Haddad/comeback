@@ -1,14 +1,17 @@
 // Checks explanation and figure files in content/ (docs/SPEC.md 9.1) for the content agents:
 //   node scripts/check-explain.ts content/explain/press.json [more files]
 //   node scripts/check-explain.ts                      (every file in content/, with coverage)
-// A figure file is checked against the explanation file of the same name, and a »like« into another
-// file is looked up there. Prints short Danish messages and exits with code 1 when a file has a
-// problem, also when prettier would change it.
+// A figure file is checked against the explanation file of the same name, first its format and then
+// the figure system's quality checks (joints, contacts, sliding hands and feet; src/figure/check.ts),
+// and a »like« into another file is looked up there. Prints short Danish messages and exits with
+// code 1 when a file has a problem, also when prettier would change it. The contact sheet:
+// node scripts/figure-sheet.ts <figurfil>.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as prettier from 'prettier';
 import { PROGRAM } from '../src/engine/program.ts';
+import { checkFigureFile } from '../src/figure/check.ts';
 import { isLike, type ExplainFile, type FigureFile } from '../src/content/types.ts';
 import {
   coverage,
@@ -112,6 +115,10 @@ async function check(file: string): Promise<Result> {
       }
     }
     if (problems.length === 0) problems = validateFigureFile(loaded.data, name, PROGRAM, explain);
+    // A valid file is drawn and checked: joints, contacts, sliding hands and feet (src/figure/check.ts).
+    if (problems.length === 0 && explain) {
+      problems = checkFigureFile(loaded.data as FigureFile, explain);
+    }
     const figures = (loaded.data as { figures?: unknown[] }).figures?.length ?? 0;
     summary = `${figures} ${figures === 1 ? 'figur' : 'figurer'}`;
     if (problems.length === 0) result.figures = loaded.data as FigureFile;
