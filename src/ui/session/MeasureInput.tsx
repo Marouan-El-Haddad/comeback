@@ -1,9 +1,12 @@
 // Entering a measurement (docs/SPEC.md 4.8): reps and centimetres with −/+, times with a stopwatch,
-// Nordic depth with three buttons, distance in metres. Shows the previous value and the level.
+// Nordic depth with three buttons, distance in metres. Shows the previous value and the level. A
+// time measured per side (side plank, balance) has a clock for the left side and then one for the
+// right, each started with »Start uret«, and saves the shorter time (P59, D49).
 import { useState } from 'preact/hooks';
 import { measureLevel, PROGRAM } from '../../engine/index.ts';
 import type { Level, State } from '../../engine/types.ts';
 import { HowButton } from '../card.tsx';
+import { measureSides, shortest } from './sides.ts';
 import { Countdown, Stopwatch } from './timers.tsx';
 
 const LEVEL: Record<Level, string> = {
@@ -28,18 +31,28 @@ export function MeasureInput(props: {
   paused: boolean;
 }) {
   const measure = PROGRAM.measures.find((m) => m.id === props.measureId);
+  // A time has one clock, or one per side: null is a side without a name (D49).
+  const sides: Array<string | null> = (measure && measureSides(measure)) ?? [null];
   const [value, setValue] = useState<number | null>(null);
+  const [times, setTimes] = useState<Array<number | null>>(() => sides.map(() => null));
   const [timing, setTiming] = useState(false);
   const [timed, setTimed] = useState(false);
   const [busy, setBusy] = useState(false);
   if (!measure) return null;
+  const clocked = measure.unit === 'sec';
+  // A time measured per side saves the shorter of the two (P59).
+  const result = clocked ? shortest(times) : value;
   const previous = [...props.state.measurements].reverse().find((m) => m.measureId === measure.id);
-  const level = value !== null ? measureLevel(PROGRAM, measure.id, value) : null;
+  const level = result !== null ? measureLevel(PROGRAM, measure.id, result) : null;
   const save = async () => {
-    if (value === null || busy) return;
+    if (result === null || busy) return;
     setBusy(true);
-    await props.onSave(value);
+    await props.onSave(result);
   };
+  /** The side whose clock comes next; -1 when every side has its time. */
+  const next = times.findIndex((t) => t === null);
+  const setTime = (side: number, time: number | null) =>
+    setTimes((all) => all.map((t, i) => (i === side ? time : t)));
   const timedTest = measure.placement.type === 'replace_finisher';
 
   return (
@@ -73,16 +86,53 @@ export function MeasureInput(props: {
         </>
       )}
 
-      {measure.unit === 'sec' && value === null && (
-        <>
-          {timing ? (
-            <Stopwatch paused={props.paused} onStop={(s) => setValue(s)} />
-          ) : (
-            <button type="button" class="btn primary block" onClick={() => setTiming(true)}>
-              Start uret
-            </button>
+      {clocked && (
+        <div class="stack">
+          {sides.map((label, side) => {
+            const time = times[side] ?? null;
+            if (time !== null) {
+              return (
+                <label class="field" key={side}>
+                  <span>{label ?? measure.name} (sek)</span>
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    min={0}
+                    value={time}
+                    onInput={(e) => {
+                      const raw = (e.target as HTMLInputElement).value;
+                      setTime(side, raw === '' ? null : Math.max(0, Number(raw)));
+                      // An emptied time gets »Start uret« again, never a clock that just runs.
+                      setTiming(false);
+                    }}
+                  />
+                </label>
+              );
+            }
+            if (side !== next) return null;
+            return (
+              <div class="stack" key={side}>
+                {label && <h2>{label}</h2>}
+                {timing ? (
+                  <Stopwatch
+                    paused={props.paused}
+                    onStop={(s) => {
+                      setTime(side, s);
+                      setTiming(false);
+                    }}
+                  />
+                ) : (
+                  <button type="button" class="btn primary block" onClick={() => setTiming(true)}>
+                    Start uret
+                  </button>
+                )}
+              </div>
+            );
+          })}
+          {sides.length > 1 && result !== null && (
+            <p class="hint">Den korteste tid gemmes: {result} sek.</p>
           )}
-        </>
+        </div>
       )}
 
       {measure.unit === 'depth' && (
@@ -100,10 +150,7 @@ export function MeasureInput(props: {
         </div>
       )}
 
-      {(measure.unit === 'reps' ||
-        measure.unit === 'cm' ||
-        measure.unit === 'm' ||
-        (measure.unit === 'sec' && value !== null)) &&
+      {(measure.unit === 'reps' || measure.unit === 'cm' || measure.unit === 'm') &&
         (!timedTest || timed) && (
           <label class="field">
             <span>
@@ -130,7 +177,7 @@ export function MeasureInput(props: {
         <button
           type="button"
           class="btn primary block"
-          disabled={value === null || busy}
+          disabled={result === null || busy}
           onClick={() => void save()}
         >
           Gem målingen
