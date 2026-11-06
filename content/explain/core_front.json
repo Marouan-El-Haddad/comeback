@@ -12,11 +12,11 @@
       "start": "Lig på ryggen med armene strakt lodret op over skuldrene. Løft benene, så hofte og knæ er bøjet 90° med knæene lige over hoften.",
       "steps": [
         "Pres lænden mod gulvet, og hold den der hele sættet.",
-        "Stræk højre arm bagud over hovedet og venstre ben ud på 3 sek, mens du puster helt ud.",
+        "Stræk venstre arm bagud over hovedet og højre ben ud på 3 sek, mens du puster helt ud.",
         "Hold 1 sek, når arm og ben er lige over gulvet, og før dem roligt tilbage.",
-        "Gør det samme med venstre arm og højre ben, og skift side hver gang."
+        "Tag alle gentagelser med venstre arm og højre ben i »Venstre side« og med højre arm og venstre ben i »Højre side«."
       ],
-      "tempo": "3 sek ud, 1 sek stille, roligt tilbage. Skift side hver gang.",
+      "tempo": "3 sek ud, 1 sek stille, og roligt tilbage.",
       "breathing": "Pust helt ud, mens arm og ben strækkes, og træk vejret ind på vej tilbage.",
       "cues": ["Lænden presset mod gulvet", "Pust helt ud i strækket", "3 sek ud, 1 sek stille"],
       "mistakes": [
@@ -29,8 +29,8 @@
           "fix": "Pust helt ud, mens du strækker, så ribbenene sænker sig. Træk vejret ind på vej tilbage."
         },
         {
-          "mistake": "Arm og ben skyder ud i et hurtigt ryk.",
-          "fix": "Tæl 3 sek ud og 1 sek stille, før du fører dem tilbage."
+          "mistake": "Arm og ben på samme side strækkes.",
+          "fix": "Stræk altid modsat arm og ben: venstre arm med højre ben, højre arm med venstre ben."
         }
       ],
       "easier": "Det er stigens første trin. Stræk benet en kortere vej ud, så lænden kan blive presset mod gulvet.",
@@ -51,16 +51,6 @@
               ]
             },
             {
-              "id": "right_arm",
-              "name": "Højre arm ude",
-              "text": "Højre arm strakt bagud over hovedet og venstre ben strakt ud, begge en håndsbredde over gulvet. Venstre arm peger stadig lodret op, og højre knæ er stadig over hoften. Lænden presset mod gulvet.",
-              "contacts": [
-                { "part": "back", "on": "floor" },
-                { "part": "hip", "on": "floor" },
-                { "part": "head", "on": "floor" }
-              ]
-            },
-            {
               "id": "left_arm",
               "name": "Venstre arm ude",
               "text": "Venstre arm strakt bagud over hovedet og højre ben strakt ud, begge en håndsbredde over gulvet. Højre arm peger stadig lodret op, og venstre knæ er stadig over hoften. Lænden presset mod gulvet.",
@@ -72,9 +62,6 @@
             }
           ],
           "phases": [
-            { "to": "right_arm", "seconds": 3, "label": "3 sek ud" },
-            { "to": "right_arm", "seconds": 1, "label": "1 sek stille" },
-            { "to": "start", "seconds": 2, "label": "Tilbage" },
             { "to": "left_arm", "seconds": 3, "label": "3 sek ud" },
             { "to": "left_arm", "seconds": 1, "label": "1 sek stille" },
             { "to": "start", "seconds": 2, "label": "Tilbage" }
@@ -176,6 +163,316 @@
             { "to": "hold", "seconds": 2, "label": "Løft op" },
             { "to": "hold", "seconds": "dose", "label": "Hold" },
             { "to": "rest", "seconds": 2, "label": "Ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_front.3",
+      "trains": "Spænding i hele kroppen på én gang, så midten er stiv og samlet, når du tager imod slag og spark.",
+      "start": "Planke på underarmene med albuerne lige under skuldrene, knyttede hænder og fødderne samlede på tæerne. Kroppen lige fra hæl til hoved.",
+      "steps": [
+        "Gå op i planke på underarmene med albuerne under skuldrene og knyttede hænder.",
+        "Træk albuerne mod tæerne uden at flytte dem, og klem baller og lår hårdt.",
+        "Træk navlen ind, og vip bækkenet ind under dig, så lænden ikke svajer.",
+        "Hold den fulde spænding, og sænk dig roligt, når tiden er gået."
+      ],
+      "tempo": "Hold stillingen med maks spænding hele tiden.",
+      "breathing": "Korte vejrtrækninger: pust kort ud, og træk vejret ind uden at slippe spændingen.",
+      "cues": ["Albuerne mod tæerne", "Klem baller og lår", "Maks spænding hele vejen"],
+      "mistakes": [
+        {
+          "mistake": "Hoften hænger, og lænden svajer.",
+          "fix": "Klem ballerne hårdere, og vip bækkenet ind under dig."
+        },
+        {
+          "mistake": "Hoften stikker op.",
+          "fix": "Sænk hoften, til kroppen er lige fra hæl til hoved."
+        },
+        {
+          "mistake": "Du holder vejret.",
+          "fix": "Træk vejret kort og roligt gennem hele holdet."
+        }
+      ],
+      "easier": "Trin 2: hollow hold.",
+      "harder": "Trin 4: long-lever planke.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, og læg dig på maven med albuerne under skuldrene.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "down",
+              "name": "Nede",
+              "text": "Liggende på maven med underarmene i gulvet, albuerne lige under skuldrene og hænderne knyttet. Fødderne samlede med tæerne sat i gulvet.",
+              "contacts": [
+                { "part": "belly", "on": "floor" },
+                { "part": "forearm", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "plank",
+              "name": "Planke",
+              "text": "RKC-planke: underarmene i gulvet med albuerne lige under skuldrene og knyttede hænder. Kroppen lige fra hæl til hoved med bækkenet vippet ind og ballerne klemt. Kun underarme og tæer rører gulvet.",
+              "contacts": [
+                { "part": "forearm", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "plank", "seconds": 2, "label": "Løft op" },
+            { "to": "plank", "seconds": "dose", "label": "Hold" },
+            { "to": "down", "seconds": 2, "label": "Ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_front.4",
+      "trains": "Samme stive midte med en længere løftestang, så maven holder, når kroppen er strakt, fx når du læner dig væk fra et spark.",
+      "start": "Planke på underarmene med albuerne et stykke foran hovedet, knyttede hænder og fødderne samlede på tæerne.",
+      "steps": [
+        "Læg dig på maven, og sæt albuerne et stykke foran hovedet.",
+        "Løft dig op i planke, og træk albuerne mod tæerne uden at flytte dem.",
+        "Klem baller og lår som i RKC-planken, så kroppen er lige fra hæl til hoved.",
+        "Hold spændingen, og sænk dig roligt, når tiden er gået."
+      ],
+      "tempo": "Hold stillingen med samme spænding som i RKC-planken hele tiden.",
+      "breathing": "Korte vejrtrækninger: pust kort ud, og træk vejret ind uden at slippe spændingen.",
+      "cues": ["Albuerne foran hovedet", "Samme spænding, lang krop", "Ingen svaj i lænden"],
+      "mistakes": [
+        {
+          "mistake": "Lænden svajer.",
+          "fix": "Klem ballerne hårdere, og vip bækkenet ind under dig. Svajer den igen, er sættet slut."
+        },
+        {
+          "mistake": "Albuerne glider tilbage under skuldrene.",
+          "fix": "Sæt dem et stykke foran hovedet igen. Det er den lange løftestang, der gør øvelsen."
+        },
+        {
+          "mistake": "Hoften stikker op for at gøre det lettere.",
+          "fix": "Sænk hoften, til kroppen er lige fra hæl til hoved."
+        }
+      ],
+      "easier": "Trin 3: RKC-planke.",
+      "harder": "Trin 5: rollout fra knæ på glat gulv.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, og læg dig på maven med albuerne et stykke foran hovedet.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "down",
+              "name": "Nede",
+              "text": "Liggende på maven med underarmene i gulvet, albuerne et stykke foran hovedet og hænderne knyttet. Fødderne samlede med tæerne sat i gulvet.",
+              "contacts": [
+                { "part": "belly", "on": "floor" },
+                { "part": "forearm", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "plank",
+              "name": "Planke",
+              "text": "Long-lever planke: underarmene i gulvet med albuerne et stykke foran hovedet, så overarmene peger ca. 45° skråt frem. Kroppen lige fra hæl til hoved og lidt lavere end i RKC-planken. Kun underarme og tæer rører gulvet.",
+              "contacts": [
+                { "part": "forearm", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "plank", "seconds": 2, "label": "Løft op" },
+            { "to": "plank", "seconds": "dose", "label": "Hold" },
+            { "to": "down", "seconds": 2, "label": "Ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_front.5",
+      "trains": "Maven holder lænden lige, mens armene glider langt frem, så du kan holde formen, når kroppen er helt strakt.",
+      "start": "Knæl på et glat gulv med knæene i hoftebredde og hænderne på et håndklæde lige under skuldrene. Armene strakte og kroppen lige fra knæ til hoved.",
+      "steps": [
+        "Spænd maven, og klem ballerne, så kroppen er lige fra knæ til hoved.",
+        "Lad håndklædet glide frem på 3 sek, så langt du kan uden svaj, gerne til armene er strakt over hovedet.",
+        "Hold 1 sek stille, og træk dig tilbage i ét roligt stræk, til hænderne er under skuldrene.",
+        "Hold kroppen lige hele vejen tilbage, så hoften ikke kommer først."
+      ],
+      "tempo": "3 sek ud, 1 sek stille, og træk dig tilbage i ét roligt stræk.",
+      "breathing": "Træk vejret ind, før du ruller ud, og pust ud, når du trækker dig tilbage.",
+      "cues": ["Rul ud uden svaj", "3 sek ud, 1 sek stille", "Ballerne klemt hele vejen"],
+      "mistakes": [
+        {
+          "mistake": "Lænden svajer, når du er langt ude.",
+          "fix": "Rul en kortere vej ud, klem ballerne, og hold ribbenene nede."
+        },
+        {
+          "mistake": "Hoften bliver tilbage, så kun armene bevæger sig.",
+          "fix": "Skub hoften frem med ballerne, så kroppen er lige fra knæ til hænder."
+        },
+        {
+          "mistake": "Håndklædet sidder fast, så hænderne hakker.",
+          "fix": "Brug et glat gulv som parket eller fliser, ikke et tæppe."
+        }
+      ],
+      "easier": "Trin 4: long-lever planke. Har du kun tæppe, kan håndklædet ikke glide, så vælg selv trin 4 under Stiger.",
+      "harder": "Trin 6: stående rollout mod væg.",
+      "equipment": ["towel"],
+      "getReady": "Find et glat gulv, og læg et håndklæde, hvor hænderne skal være, når du knæler.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "in",
+              "name": "Inde",
+              "text": "Knælende med knæene i hoftebredde og tæerne i gulvet. Hænderne på håndklædet lige under skuldrene med strakte arme. Kroppen lige fra knæ til hoved og ca. 35° op fra gulvet.",
+              "contacts": [
+                { "part": "knee", "on": "floor" },
+                { "part": "toes", "on": "floor" },
+                { "part": "hand", "on": "towel" }
+              ]
+            },
+            {
+              "id": "out",
+              "name": "Ude",
+              "text": "Armene strakt frem over hovedet med hænderne langt fremme på håndklædet. Kroppen lige fra knæ til hænder og lige over gulvet uden svaj i lænden. Knæ og tæer bliver, hvor de var.",
+              "contacts": [
+                { "part": "knee", "on": "floor" },
+                { "part": "toes", "on": "floor" },
+                { "part": "hand", "on": "towel" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "out", "seconds": 3, "label": "3 sek ud" },
+            { "to": "out", "seconds": 1, "label": "1 sek stille" },
+            { "to": "in", "seconds": 1.5, "label": "Træk tilbage" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_front.6",
+      "trains": "Hele forsiden af kroppen holder dig lige fra stående og ud i en lang, skrå planke, så lænden er beskyttet, når kroppen strækkes mest.",
+      "start": "Stå med ansigtet mod en væg på et glat gulv med fødderne i hoftebredde. Bøj i hoften, og sæt hænderne på et håndklæde lige foran fødderne.",
+      "steps": [
+        "Stil dig så langt fra væggen, at du kan rulle ud til den og tilbage uden svaj.",
+        "Spænd maven, og lad håndklædet glide frem på 3 sek, til væggen stopper det.",
+        "Hold 1 sek stille, og træk dig tilbage i ét roligt stræk, til hænderne er ved fødderne.",
+        "Flyt dig længere fra væggen, efterhånden som det bliver let."
+      ],
+      "tempo": "3 sek ud, 1 sek stille, og træk dig tilbage i ét roligt stræk.",
+      "breathing": "Træk vejret ind, før du ruller ud, og pust ud, når du trækker dig tilbage.",
+      "cues": ["Ud til væggen uden svaj", "3 sek ud, 1 sek stille", "Ballerne klemt hele vejen"],
+      "mistakes": [
+        {
+          "mistake": "Lænden svajer, før du når væggen.",
+          "fix": "Stil dig tættere på væggen, så du kan holde kroppen lige hele vejen."
+        },
+        {
+          "mistake": "Du bøjer knæene for at komme tilbage.",
+          "fix": "Hold benene næsten strakte, og træk dig tilbage med maven og armene."
+        },
+        {
+          "mistake": "Hoften kommer først tilbage, så kroppen knækker.",
+          "fix": "Hold ballerne klemt, og træk hænderne ind mod fødderne, mens kroppen er lige."
+        }
+      ],
+      "easier": "Trin 5: rollout fra knæ.",
+      "harder": "Trin 7: fuld stående rollout uden væg.",
+      "equipment": ["towel", "wall"],
+      "getReady": "Stil dig med ansigtet mod en væg på et glat gulv, og læg et håndklæde lige foran fødderne.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "in",
+              "name": "Inde",
+              "text": "Stående foroverbøjet med fødderne i hoftebredde, benene næsten strakte og hoften højt. Hænderne på håndklædet lige foran fødderne med strakte arme. Væggen står et stykke foran dig.",
+              "contacts": [
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "towel" }
+              ]
+            },
+            {
+              "id": "out",
+              "name": "Ved væggen",
+              "text": "Kroppen lige fra hæl til hænder og ca. 30° over gulvet med armene strakt over hovedet. Håndklædet er stoppet af væggen, og fingrene rører den. Tæerne i gulvet.",
+              "contacts": [
+                { "part": "toes", "on": "floor" },
+                { "part": "hand", "on": "towel" },
+                { "part": "hand", "on": "wall" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "out", "seconds": 3, "label": "3 sek ud" },
+            { "to": "out", "seconds": 1, "label": "1 sek stille" },
+            { "to": "in", "seconds": 1.5, "label": "Træk tilbage" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_front.7",
+      "trains": "Den fulde rollout fra stående: hele forsiden af kroppen holder dig lige fra stående til strakt lige over gulvet og tilbage.",
+      "start": "Stå på et glat gulv med fødderne i hoftebredde og god plads foran dig. Bøj i hoften, og sæt hænderne på et håndklæde lige foran fødderne.",
+      "steps": [
+        "Spænd maven, og klem ballerne, før du starter.",
+        "Lad håndklædet glide frem på 3 sek, til kroppen er strakt lige over gulvet med armene over hovedet.",
+        "Hold 1 sek stille, og træk dig tilbage i ét roligt stræk, til hænderne er ved fødderne.",
+        "Svajer lænden, eller knækker formen, så stop sættet."
+      ],
+      "tempo": "3 sek ud, 1 sek stille, og træk dig tilbage i ét roligt stræk.",
+      "breathing": "Træk vejret ind, før du ruller ud, og pust ud, når du trækker dig tilbage.",
+      "cues": ["Hele vejen ud uden svaj", "3 sek ud, 1 sek stille", "Ballerne klemt hele vejen"],
+      "mistakes": [
+        {
+          "mistake": "Lænden svajer i bunden.",
+          "fix": "Stop sættet. Kan du ikke komme helt ud uden svaj, så vælg selv trin 6 under Stiger."
+        },
+        {
+          "mistake": "Du lægger dig på gulvet i bunden.",
+          "fix": "Stop lige over gulvet med kroppen spændt, og træk dig tilbage derfra."
+        },
+        {
+          "mistake": "Du bøjer i hoften for at komme tilbage.",
+          "fix": "Træk hænderne ind mod fødderne med kroppen lige, og bøj først i hoften til sidst."
+        }
+      ],
+      "easier": "Trin 6: stående rollout mod væg.",
+      "harder": "Det er stigens sidste trin: gør hver gentagelse lige så ren som den første.",
+      "equipment": ["towel"],
+      "getReady": "Find et glat gulv med god plads foran dig, og læg et håndklæde lige foran fødderne.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "in",
+              "name": "Inde",
+              "text": "Stående foroverbøjet med fødderne i hoftebredde, benene næsten strakte og hoften højt. Hænderne på håndklædet lige foran fødderne med strakte arme.",
+              "contacts": [
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "towel" }
+              ]
+            },
+            {
+              "id": "out",
+              "name": "Ude",
+              "text": "Kroppen strakt lige fra hæl til hænder og lige over gulvet med armene strakt over hovedet og hænderne langt fremme på håndklædet. Kun tæerne rører gulvet, og lænden svajer ikke.",
+              "contacts": [
+                { "part": "toes", "on": "floor" },
+                { "part": "hand", "on": "towel" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "out", "seconds": 3, "label": "3 sek ud" },
+            { "to": "out", "seconds": 1, "label": "1 sek stille" },
+            { "to": "in", "seconds": 1.5, "label": "Træk tilbage" }
           ]
         }
       ]

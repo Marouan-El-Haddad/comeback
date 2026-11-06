@@ -73,7 +73,7 @@
       "trains": "Ryggen og armene trækker din egen kropsvægt op, så du bliver stærkere til at trække og styre i clinchen.",
       "start": "Lig på ryggen under langsiden af et tungt bord med brystet lige under kanten. Grib kanten i skulderbredde med fingrene ind over bordpladen, og sæt fødderne fladt i gulvet med bøjede knæ.",
       "steps": [
-        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop, og lav rygsæk-row.",
+        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop, og vælg trin 1 under Stiger efter passet.",
         "Løft hoften, så knæ, hofte og skuldre er på én lige linje, og hæng i strakte arme.",
         "Træk brystet op mod kanten med albuerne tæt langs siden, og hold 1 sek pause.",
         "Sænk dig på 3 sek til strakte arme uden at lade hoften falde."
@@ -92,10 +92,10 @@
         },
         {
           "mistake": "Bordet vipper eller flytter sig.",
-          "fix": "Stop, og lav rygsæk-row i stedet. Brug kun et tungt spisebord, og lig under langsiden."
+          "fix": "Stop, og vælg trin 1, rygsæk-row, under Stiger efter passet. Brug kun et tungt spisebord, og lig under langsiden."
         }
       ],
-      "easier": "Trin 1: rygsæk-row med én arm. Lav også den, hvis bordet vipper det mindste.",
+      "easier": "Trin 1: rygsæk-row med én arm. Vælg det under Stiger, hvis bordet vipper det mindste.",
       "harder": "Trin 3: bord-row med strakte ben, så kroppen er en planke fra hæl til hoved.",
       "equipment": ["table"],
       "getReady": "Find et tungt spisebord, ikke et klapbord, og gør plads på gulvet ved langsiden.",
@@ -124,6 +124,311 @@
           "phases": [
             { "to": "top", "seconds": 1, "label": "Træk op" },
             { "to": "top", "seconds": 1, "label": "1 sek pause" },
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pull.3",
+      "trains": "Hele kropsvægten hænger i armene, mens kroppen holder sig stiv som en planke: trækstyrke til clinchen.",
+      "start": "Lig på ryggen under langsiden af det tunge bord med brystet lige under kanten, og grib kanten i skulderbredde. Stræk benene, så kun hælene står i gulvet.",
+      "steps": [
+        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop.",
+        "Løft hoften, så kroppen er en planke fra hæl til hoved, og hæng i strakte arme.",
+        "Træk brystet op mod kanten med albuerne tæt langs siden, og hold 1 sek pause.",
+        "Sænk dig på 3 sek til strakte arme uden at lade hoften falde."
+      ],
+      "tempo": "Træk op i ét roligt træk, 1 sek pause med brystet ved kanten, og sænk på 3 sek.",
+      "breathing": "Pust ud, når du trækker op, og ånd ind på vej ned.",
+      "cues": ["Planke fra hæl til hoved", "Brystet mod kanten", "1 sek pause i toppen"],
+      "mistakes": [
+        {
+          "mistake": "Hoften hænger, så kroppen knækker.",
+          "fix": "Klem ballerne, og hold kroppen lige fra hæl til hoved hele vejen."
+        },
+        {
+          "mistake": "Du rækker hagen frem mod bordet.",
+          "fix": "Hold nakken lang, og træk, til det er brystet, der når kanten."
+        },
+        {
+          "mistake": "Bordet vipper eller flytter sig.",
+          "fix": "Stop, og vælg trin 1, rygsæk-row, under Stiger efter passet. Brug kun et tungt spisebord."
+        }
+      ],
+      "easier": "Trin 2: bord-row med bøjede knæ.",
+      "harder": "Trin 4: fødderne på en stol, så kroppen er vandret.",
+      "equipment": ["table"],
+      "getReady": "Læg dig under langsiden af det tunge spisebord, og træk først let for at mærke, at det står fast.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "På ryggen med hovedet under bordet og hænderne om kanten i skulderbredde. Armene er strakte og lodrette, og kroppen er en lige planke fra hælene til hovedet. Kun hælene rører gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "table" },
+                { "part": "heel", "on": "floor" }
+              ]
+            },
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Brystet oppe ved bordkanten, albuerne bøjet og tæt langs siden, og skulderbladene samlet. Kroppen er stadig en lige planke fra hæl til hoved, og hælene står samme sted.",
+              "contacts": [
+                { "part": "hand", "on": "table" },
+                { "part": "heel", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "top", "seconds": 1, "label": "Træk op" },
+            { "to": "top", "seconds": 1, "label": "1 sek pause" },
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pull.4",
+      "trains": "Kroppen vandret, så næsten hele vægten skal trækkes af ryg og arme: mere trækstyrke til clinchen.",
+      "start": "Lig under langsiden af det tunge bord som i trin 3, og læg hælene på sædet af en solid stol. Grib kanten i skulderbredde.",
+      "steps": [
+        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop.",
+        "Løft hoften, så kroppen er en lige planke fra hælene på stolen til hovedet.",
+        "Træk brystet op mod kanten med albuerne tæt langs siden, og hold 1 sek pause.",
+        "Sænk dig på 3 sek til strakte arme uden at lade hoften falde."
+      ],
+      "tempo": "Træk op i ét roligt træk, 1 sek pause med brystet ved kanten, og sænk på 3 sek.",
+      "breathing": "Pust ud, når du trækker op, og ånd ind på vej ned.",
+      "cues": ["Kroppen vandret", "Samme pause i toppen", "Brystet mod kanten"],
+      "mistakes": [
+        {
+          "mistake": "Hoften hænger, og kroppen knækker.",
+          "fix": "Klem ballerne, og hold kroppen lige fra hælene på stolen til hovedet."
+        },
+        {
+          "mistake": "Du rækker hagen frem mod bordet.",
+          "fix": "Hold nakken lang, og træk, til det er brystet, der når kanten."
+        },
+        {
+          "mistake": "Stolen eller bordet flytter sig.",
+          "fix": "Stop. Brug en solid stol, der står fast. Vipper bordet, så vælg trin 1 under Stiger efter passet."
+        }
+      ],
+      "easier": "Trin 3: bord-row med strakte ben og hælene i gulvet.",
+      "harder": "Trin 5: archer bord-row med bredt greb, hvor den ene arm trækker.",
+      "equipment": ["chair", "table"],
+      "getReady": "Stil en solid stol en kropslængde fra bordets langside, så hælene kan ligge på sædet.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "På ryggen med hovedet under bordet, hænderne om kanten i skulderbredde og armene strakte og lodrette. Hælene ligger på stolesædet, og kroppen er en lige planke, der skråner ned mod hovedet.",
+              "contacts": [
+                { "part": "hand", "on": "table" },
+                { "part": "heel", "on": "chair" }
+              ]
+            },
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Brystet oppe ved bordkanten, albuerne bøjet og tæt langs siden, og skulderbladene samlet. Kroppen er en lige planke, næsten vandret fra hælene på stolen til hovedet.",
+              "contacts": [
+                { "part": "hand", "on": "table" },
+                { "part": "heel", "on": "chair" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "top", "seconds": 1, "label": "Træk op" },
+            { "to": "top", "seconds": 1, "label": "1 sek pause" },
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pull.5",
+      "trains": "Den ene arm trækker næsten alene: trækstyrke på hver side til clinchen og vejen mod etarms bord-row.",
+      "start": "Lig under langsiden af det tunge bord med kroppen som en planke og hælene i gulvet som i trin 3. Grib kanten bredt, ca. dobbelt skulderbredde.",
+      "steps": [
+        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop.",
+        "Træk brystet op mod den ene hånd med albuen tæt langs siden. Den anden arm bliver næsten strakt.",
+        "Hold 1 sek pause i toppen, og sænk dig på 3 sek til strakte arme.",
+        "I sættet »Venstre side« trækker du mod venstre hånd hver gang. I »Højre side« mod højre."
+      ],
+      "tempo": "Træk op i ét roligt træk, 1 sek pause i toppen, og sænk på 3 sek.",
+      "breathing": "Pust ud, når du trækker op, og ånd ind på vej ned.",
+      "cues": ["Grib bredt", "Den ene arm trækker", "Den anden hjælper kun lidt"],
+      "mistakes": [
+        {
+          "mistake": "Begge arme trækker lige meget.",
+          "fix": "Hold den hjælpende arm næsten strakt, og lad den kun støtte."
+        },
+        {
+          "mistake": "Hoften drejer eller hænger.",
+          "fix": "Klem ballerne, og hold kroppen lige og hoften i niveau, mens du trækker til siden."
+        },
+        {
+          "mistake": "Bordet vipper eller flytter sig.",
+          "fix": "Stop, og vælg trin 1, rygsæk-row, under Stiger efter passet. Brug kun et tungt spisebord."
+        }
+      ],
+      "easier": "Trin 4: bord-row med fødderne på en stol og begge arme.",
+      "harder": "Trin 6: etarms bord-row med den frie arm langs siden.",
+      "equipment": ["table"],
+      "getReady": "Læg dig under langsiden af det tunge spisebord, og træk først let for at mærke, at det står fast.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "På ryggen under bordet med hænderne om kanten i ca. dobbelt skulderbredde og armene strakte. Kroppen er en lige planke fra hælene til hovedet, og kun hælene rører gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "table" },
+                { "part": "heel", "on": "floor" }
+              ]
+            },
+            {
+              "id": "top",
+              "name": "Oppe til siden",
+              "text": "Brystet oppe ved kanten tæt ved den trækkende hånd, og den albue er bøjet tæt langs siden. Den anden arm er næsten strakt ud mod sin hånd. Kroppen er stadig en lige planke.",
+              "contacts": [
+                { "part": "hand", "on": "table" },
+                { "part": "heel", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "top", "seconds": 1, "label": "Træk op" },
+            { "to": "top", "seconds": 1, "label": "1 sek pause" },
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pull.6",
+      "trains": "Én arm trækker hele vægten, mens maven holder hoften fra at dreje: fuld trækstyrke på hver side til clinchen.",
+      "start": "Lig under langsiden af det tunge bord med kroppen som en planke og hælene i gulvet. Grib kanten med den ene hånd lige over skulderen, og læg den frie arm langs siden.",
+      "steps": [
+        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop.",
+        "Spænd maven og ballerne, og træk brystet op mod kanten med albuen tæt langs siden.",
+        "Hold 1 sek pause i toppen uden at dreje hoften, og sænk dig på 3 sek.",
+        "I sættet »Venstre side« trækker venstre hånd, og højre arm ligger langs siden. I »Højre side« bytter du."
+      ],
+      "tempo": "Træk op i ét roligt træk, 1 sek pause i toppen, og sænk på 3 sek.",
+      "breathing": "Pust ud, når du trækker op, og ånd ind på vej ned.",
+      "cues": ["Hoften må ikke dreje", "Den frie arm langs siden", "1 sek pause i toppen"],
+      "mistakes": [
+        {
+          "mistake": "Hoften og kroppen drejer op mod den trækkende side.",
+          "fix": "Spænd maven og ballerne, og hold begge hofter i samme højde hele vejen."
+        },
+        {
+          "mistake": "Den frie arm griber fat eller hjælper.",
+          "fix": "Læg den frie arm fladt langs siden, og lad den blive der."
+        },
+        {
+          "mistake": "Bordet vipper eller flytter sig.",
+          "fix": "Stop, og vælg trin 1, rygsæk-row, under Stiger efter passet. Brug kun et tungt spisebord."
+        }
+      ],
+      "easier": "Trin 5: archer bord-row, hvor den anden arm hjælper lidt.",
+      "harder": "Trin 7: samme row med 3 sek pause med brystet ved kanten.",
+      "equipment": ["table"],
+      "getReady": "Læg dig under langsiden af det tunge spisebord, og træk først let for at mærke, at det står fast.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "På ryggen under bordet med den ene hånd om kanten lige over skulderen og armen strakt. Den frie arm ligger langs siden. Kroppen er en lige planke fra hælene til hovedet, og kun hælene rører gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "table", "count": 1 },
+                { "part": "heel", "on": "floor" }
+              ]
+            },
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Brystet oppe ved kanten, albuen bøjet og tæt langs siden. Den frie arm ligger stadig langs siden, og kroppen er en lige planke uden at dreje.",
+              "contacts": [
+                { "part": "hand", "on": "table", "count": 1 },
+                { "part": "heel", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "top", "seconds": 1, "label": "Træk op" },
+            { "to": "top", "seconds": 1, "label": "1 sek pause" },
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pull.7",
+      "trains": "Etarms bord-row med et langt hold i toppen: styrke til at holde fast, når du har grebet i clinchen.",
+      "start": "Som trin 6: under bordet med kroppen som en planke og hælene i gulvet, den ene hånd om kanten lige over skulderen og den frie arm langs siden.",
+      "steps": [
+        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop.",
+        "Træk brystet op mod kanten med albuen tæt langs siden.",
+        "Hold brystet ved kanten i 3 sek uden at dreje hoften, og sænk dig på 3 sek.",
+        "I sættet »Venstre side« trækker venstre hånd, og højre arm ligger langs siden. I »Højre side« bytter du."
+      ],
+      "tempo": "Træk op i ét roligt træk, hold brystet ved kanten i 3 sek, og sænk på 3 sek.",
+      "breathing": "Pust ud, når du trækker op, træk vejret roligt i holdet, og ånd ind på vej ned.",
+      "cues": ["Hold 3 sek ved kanten", "Hoften må ikke dreje", "Den frie arm langs siden"],
+      "mistakes": [
+        {
+          "mistake": "Brystet synker væk fra kanten under holdet.",
+          "fix": "Klem skulderbladet ind, og hold albuen tæt. Stop sættet, når du ikke kan holde de 3 sek."
+        },
+        {
+          "mistake": "Hoften drejer op mod den trækkende side.",
+          "fix": "Spænd maven og ballerne, og hold begge hofter i samme højde."
+        },
+        {
+          "mistake": "Bordet vipper eller flytter sig.",
+          "fix": "Stop, og vælg trin 1, rygsæk-row, under Stiger efter passet. Brug kun et tungt spisebord."
+        }
+      ],
+      "easier": "Trin 6: etarms bord-row med 1 sek pause i toppen.",
+      "harder": "Der er intet trin over dette. Gør hvert hold renere: brystet ved kanten og ingen drejning.",
+      "equipment": ["table"],
+      "getReady": "Læg dig under langsiden af det tunge spisebord, og træk først let for at mærke, at det står fast.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "På ryggen under bordet med den ene hånd om kanten lige over skulderen og armen strakt. Den frie arm ligger langs siden. Kroppen er en lige planke fra hælene til hovedet, og kun hælene rører gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "table", "count": 1 },
+                { "part": "heel", "on": "floor" }
+              ]
+            },
+            {
+              "id": "top",
+              "name": "Ved kanten",
+              "text": "Brystet holdes ved kanten med albuen bøjet og tæt langs siden. Den frie arm ligger stadig langs siden, og kroppen er en lige planke uden at dreje.",
+              "contacts": [
+                { "part": "hand", "on": "table", "count": 1 },
+                { "part": "heel", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "top", "seconds": 1, "label": "Træk op" },
+            { "to": "top", "seconds": 3, "label": "Hold 3 sek" },
             { "to": "bottom", "seconds": 3, "label": "3 sek ned" }
           ]
         }

@@ -3,8 +3,8 @@
   "subject": "burpee_skill",
   "why": [
     "Burpees er en færdighed: først teknik, så rytme, så fart. En ren teknik kræver færre kræfter pr. gentagelse, så du kan lave flere, og den holder, når du er træt sidst i en runde.",
-    "Varianterne gør burpeen til kamptræning: du laver en sprawl, hvor benene skydes bagud og hoften presses mod gulvet, kommer hurtigt op i garde, giver knæ med høj puls og holder balancen på ét ben.",
-    "Teknik-burpeen gælder altid. Den næste variant kan du vælge, når du er på trin E6 eller højere i EMOM'en, og du øver den i EMOM'ens 2 sidste minutter eller i kamp-runderne."
+    "Varianterne gør burpeen til kamptræning: du laver en sprawl, hvor benene skydes bagud og hoften presses mod gulvet, kommer op i garde igen, giver knæ med høj puls og holder balancen på ét ben.",
+    "Teknik-burpeen gælder altid. Varianterne tager du i rækkefølge, og du øver dem i EMOM'ens 2 sidste minutter, når du er på trin E6 eller højere, eller i kamp-runderne."
   ],
   "items": [
     {
@@ -39,7 +39,7 @@
         }
       ],
       "easier": "Det er første trin. Er hoppene for hårde, så træd fødderne tilbage og ind ét ad gangen, og hold brystet til gulvet.",
-      "harder": "Trin 2: sprawl til garde. Den kan du vælge, når du er på trin E6 eller højere i EMOM'en.",
+      "harder": "Trin 2: sprawl til garde. Den øver du i EMOM'ens 2 sidste minutter, når du er på trin E6 eller højere, eller i kamp-runderne.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, hvor du kan ligge strakt ud bag dig.",
       "movements": [
@@ -102,12 +102,12 @@
       "trains": "Sprawlen, hvor du skyder benene bagud og presser hoften mod gulvet, og vanen at komme lige op i garde, klar til at slå.",
       "start": "Stå i kampstilling med den ene fod et halvt skridt foran, let bøjede knæ og hænderne knyttet foran ansigtet.",
       "steps": [
-        "Sæt hænderne i gulvet foran fødderne, og skyd begge ben bagud i ét hurtigt ryk.",
+        "Sæt hænderne i gulvet foran fødderne, og skyd begge ben bagud.",
         "Pres hoften ned mod gulvet, til lårene næsten rører, og løft brystet og blikket.",
         "Spring fødderne ind under hoften, og rejs dig direkte op i kampstilling uden hop i toppen.",
         "Få hænderne op i garde, så snart de slipper gulvet."
       ],
-      "tempo": "Først teknik, så rytme, så fart: ned i ét hurtigt ryk og op i garde i samme rytme hver gang.",
+      "tempo": "Først teknik, så rytme, så fart. Find et tempo, du kan holde i alle gentagelser.",
       "breathing": "Pust ud, når benene skyder bagud, og ånd ind på vej op.",
       "cues": ["Hoften ned mod gulvet", "Brystet op, blikket frem", "Op i garde uden hop"],
       "mistakes": [
@@ -125,7 +125,7 @@
         }
       ],
       "easier": "Trin 1: teknik-burpee.",
-      "harder": "Trin 3: Muay Thai-burpee. Sprawl med teep i imponer-kataloget kan du vælge fra dette trin.",
+      "harder": "Trin 3: Muay Thai-burpee. Sprawl med teep er en imponer-variant, som kræver dette trin.",
       "equipment": [],
       "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig i kampstilling.",
       "movements": [
@@ -177,7 +177,7 @@
         "Land blødt i kampstilling med hænderne oppe i garde.",
         "Giv 2 knæ med det bageste ben: hoften frem og hænderne trukket ned som i clinchen."
       ],
-      "tempo": "Først teknik, så rytme, så fart. Burpeen i jævn rytme og knæene hurtige og skarpe.",
+      "tempo": "Først teknik, så rytme, så fart. Find et tempo, du kan holde i alle gentagelser.",
       "breathing": "Pust ud på vej ned og på hvert knæ, og ånd ind på vej op.",
       "cues": ["Land i garde", "Hoften frem i knæet", "Pust ud på hvert knæ"],
       "mistakes": [
@@ -195,7 +195,7 @@
         }
       ],
       "easier": "Trin 2: sprawl til garde.",
-      "harder": "Trin 4: burpee med tuck jump eller klap push-up. Burpee med switch kick i imponer-kataloget kan du vælge fra dette trin.",
+      "harder": "Trin 4: burpee med tuck jump eller klap push-up. Burpee med switch kick er en imponer-variant, som kræver dette trin.",
       "equipment": [],
       "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig i kampstilling med garden oppe.",
       "movements": [
@@ -425,7 +425,7 @@
         "Lav en push-up med brystet til gulvet, og pres dig op til strakte arme.",
         "Hop foden ind tæt på hænderne, og rejs dig helt op på samme ben. Tag alle gentagelser, før du skifter ben."
       ],
-      "tempo": "Først teknik, så rytme, så fart. Tag det roligt nok til, at den frie fod bliver i luften.",
+      "tempo": "Først teknik, så rytme, så fart. Find et tempo, hvor den frie fod bliver i luften hele vejen.",
       "breathing": "Pust ud på vej ned, og ånd ind på vej op.",
       "cues": ["Den frie fod i luften", "Brystet til gulvet", "Op på samme ben"],
       "mistakes": [
@@ -443,7 +443,7 @@
         }
       ],
       "easier": "Trin 4: burpee med tuck jump eller klap push-up.",
-      "harder": "Det er sidste trin. Næste udfordring er SEAL-burpeen i imponer-kataloget, når du har 50 på burpee-testen.",
+      "harder": "Det er sidste trin. SEAL-burpeen er en imponer-variant, som kræver 50 på burpee-testen.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, og bestem, hvilket ben du starter på.",
       "movements": [

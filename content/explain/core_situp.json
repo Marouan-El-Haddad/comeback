@@ -132,6 +132,351 @@
           ]
         }
       ]
+    },
+    {
+      "id": "core_situp.3",
+      "trains": "Maven holder hele kroppen stiv og samlet, også når den bevæger sig, så du står imod, når du tager spark og knæ på kroppen.",
+      "start": "Lig på ryggen med armene strakt bagud over hovedet og benene strakte og samlede. Hollow-position er kroppen som en stiv, lav bue med lænden presset ned.",
+      "steps": [
+        "Pres lænden mod gulvet, og løft skulderblade, arme og ben fra gulvet, så du ligger i hollow-position.",
+        "Gyng bagud mod skulderbladene og frem mod bagdelen med hele kroppen på én gang.",
+        "Hold samme bue hele vejen: armene ved ørerne, benene strakte og ribbenene ned mod hoften.",
+        "Tæl én gentagelse, hver gang du har gynget frem og tilbage."
+      ],
+      "tempo": "Gyng roligt og jævnt, så kroppen holder formen hele vejen.",
+      "breathing": "Pust ud, når du løfter dig op i hollow-position, og træk så vejret kort og roligt, mens du gynger.",
+      "cues": [
+        "Hold formen hele vejen",
+        "Armene ved ørerne, strakte ben",
+        "Ribbenene ned mod hoften"
+      ],
+      "mistakes": [
+        {
+          "mistake": "Du svinger arme eller ben for at få fart.",
+          "fix": "Hold arme og ben stille, og lad hele kroppen gynge samlet som en stiv bue."
+        },
+        {
+          "mistake": "Lænden svajer, eller hælene rammer gulvet.",
+          "fix": "Træk ribbenene ned mod hoften, og gyng kortere. Slipper formen igen, er sættet slut."
+        },
+        {
+          "mistake": "Hagen trykkes ned mod brystet.",
+          "fix": "Løft med maven, og hold en knytnæves plads mellem hage og bryst."
+        }
+      ],
+      "easier": "Trin 2: strikt sit-up.",
+      "harder": "Trin 4: V-ups.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, og læg dig på ryggen med armene strakt over hovedet.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "back",
+              "name": "Gynget bagud",
+              "text": "Hollow-positionen gynget bagud: ryggen rører gulvet midt på, og skulderbladene er lige over gulvet. Benene strakte og samlede ca. 35° op fra gulvet. Armene strakt bagud ved ørerne og fri af gulvet med hovedet imellem.",
+              "contacts": [{ "part": "back", "on": "floor" }]
+            },
+            {
+              "id": "front",
+              "name": "Gynget frem",
+              "text": "Samme bue gynget frem: bagdelen rører gulvet, og overkroppen er ca. 35° op fra gulvet med armene strakt bagud ved ørerne. De strakte, samlede ben er lige over gulvet med hælene fri.",
+              "contacts": [{ "part": "hip", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "front", "seconds": 1, "label": "Gyng frem" },
+            { "to": "back", "seconds": 1, "label": "Gyng bagud" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_situp.4",
+      "trains": "Maven og musklerne foran hoften løfter overkrop og strakte ben på én gang: fart og styrke, når du trækker knæet op til knæspark.",
+      "start": "Lig på ryggen med benene strakte og samlede og armene strakt bagud over hovedet, så hænder og hæle hviler let i gulvet.",
+      "steps": [
+        "Spænd maven, og pres lænden mod gulvet.",
+        "Løft arme, overkrop og strakte ben på samme tid, til hænderne rører tæerne.",
+        "Sænk arme og ben på 3 sek, til hænder og hæle rører let gulvet.",
+        "Hold 1 sek stille uden at slappe af i maven, og løft igen."
+      ],
+      "tempo": "Op i ét roligt stræk, 3 sek ned og 1 sek stille i bunden.",
+      "breathing": "Pust ud på vej op, og træk vejret ind på vej ned.",
+      "cues": [
+        "Strakte ben hele vejen",
+        "Hænderne rører tæerne i toppen",
+        "3 sek ned, 1 sek stille"
+      ],
+      "mistakes": [
+        {
+          "mistake": "Knæene bøjer, når du rækker mod tæerne.",
+          "fix": "Hold benene strakte og samlede, og løft dem højere op mod hænderne."
+        },
+        {
+          "mistake": "Du kaster armene frem for at komme op.",
+          "fix": "Spænd maven først, og løft arme og ben på samme tid i ét roligt stræk."
+        },
+        {
+          "mistake": "Lænden svajer, når arme og ben sænkes.",
+          "fix": "Pres lænden mod gulvet, og sænk roligt. Svajer den stadig, er sættet slut."
+        }
+      ],
+      "easier": "Trin 3: hollow rocks.",
+      "harder": "Trin 5: dragon flag-negativer.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, hvor du kan ligge helt strakt med armene over hovedet.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "down",
+              "name": "Nede",
+              "text": "Liggende på ryggen med hoved, ryg og bagdel i gulvet. Armene strakt bagud over hovedet og benene strakte og samlede, så hænder og hæle rører let gulvet.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "hip", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "hand", "on": "floor" },
+                { "part": "heel", "on": "floor" }
+              ]
+            },
+            {
+              "id": "up",
+              "name": "Oppe",
+              "text": "Balancerende på bagdelen med overkroppen og de strakte, samlede ben løftet mod hinanden, begge ca. 65° fra gulvet, så kroppen danner et smalt V. Armene strakt frem, og hænderne rører tæerne.",
+              "contacts": [{ "part": "hip", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "up", "seconds": 1.5, "label": "Op" },
+            { "to": "down", "seconds": 3, "label": "3 sek ned" },
+            { "to": "down", "seconds": 1, "label": "1 sek stille" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_situp.5",
+      "trains": "Maven bremser hele kroppen ned som én stiv planke: styrke, der holder dig samlet i clinchen, og vejen til dragon flag.",
+      "start": "Lig på ryggen med hovedet en håndsbredde fra en tung sofa og knæene bøjede. Grib med begge hænder om sofaens ben eller nederste kant lige bag hovedet.",
+      "steps": [
+        "Træk knæene ind til brystet, og rul hoften op, til vægten hviler på skulderbladene.",
+        "Stræk hofte og ben, til kroppen er næsten lodret over skulderbladene og ikke over nakken.",
+        "Spænd mave og baller, og sænk den strakte krop på 5 sek, til den er lige over gulvet.",
+        "Bøj knæene, sæt fødderne i gulvet, og rul op igen til næste gentagelse."
+      ],
+      "tempo": "Rul op roligt med bøjede knæ, og sænk den strakte krop på 5 sek.",
+      "breathing": "Træk vejret ind i toppen, og pust langsomt ud hele vejen ned.",
+      "cues": ["Vægten på skulderbladene", "Strakt krop, 5 sek ned", "Ingen knæk i hoften"],
+      "mistakes": [
+        {
+          "mistake": "Kroppen knækker i hoften eller svajer i lænden.",
+          "fix": "Klem baller og mave, og sænk kun så langt, du kan holde kroppen lige. Bøj så knæene."
+        },
+        {
+          "mistake": "Du falder det sidste stykke ned.",
+          "fix": "Tæl de 5 sek hele vejen ned. Kan du ikke bremse mere, så bøj knæene, og sæt fødderne i gulvet."
+        },
+        {
+          "mistake": "Vægten glider op på nakken.",
+          "fix": "Stop, når kroppen er næsten lodret, og hold vægten på skulderbladene. Pres ikke hovedet ned i gulvet."
+        }
+      ],
+      "easier": "Trin 4: V-ups.",
+      "harder": "Trin 6: dragon flag.",
+      "equipment": ["sofa"],
+      "getReady": "Læg dig med hovedet ind mod en tung sofa, og prøv, at den står fast, når du trækker i den.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "start",
+              "name": "Liggende",
+              "text": "Liggende på ryggen med hoved, ryg og bagdel i gulvet og hovedet en håndsbredde fra sofaen. Knæene bøjede og fødderne i gulvet. Hænderne holder om sofaen bag hovedet med bøjede albuer, der peger op.",
+              "contacts": [
+                { "part": "back", "on": "floor" },
+                { "part": "hip", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "foot", "on": "floor" },
+                { "part": "hand", "on": "sofa" }
+              ]
+            },
+            {
+              "id": "tuck",
+              "name": "Knæ til brystet",
+              "text": "Knæene bøjede og trukket ind over brystet, og hoften rullet op fra gulvet, så vægten hviler på skulderbladene. Baghovedet let i gulvet, albuerne bøjede og hænderne om sofaen.",
+              "contacts": [
+                { "part": "shoulders", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "hand", "on": "sofa" }
+              ]
+            },
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Kroppen strakt fra skuldre til tæer med samlede ben, næsten lodret, ca. 80° fra gulvet. Kun skulderblade og baghoved rører gulvet, og vægten er på skulderbladene. Albuerne bøjede og hænderne om sofaen.",
+              "contacts": [
+                { "part": "shoulders", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "hand", "on": "sofa" }
+              ]
+            },
+            {
+              "id": "low",
+              "name": "Nede",
+              "text": "Kroppen stadig strakt fra skuldre til tæer, men sænket, til den er næsten vandret med hælene lige over gulvet. Kun skulderblade og baghoved rører gulvet. Albuerne bøjede og hænderne om sofaen.",
+              "contacts": [
+                { "part": "shoulders", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "hand", "on": "sofa" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "tuck", "seconds": 1.5, "label": "Knæene op" },
+            { "to": "top", "seconds": 1.5, "label": "Stræk op" },
+            { "to": "low", "seconds": 5, "label": "5 sek ned" },
+            { "to": "start", "seconds": 1.5, "label": "Sæt fødderne i gulvet" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_situp.6",
+      "trains": "Bruce Lees signaturøvelse: maven løfter og sænker hele kroppen som én stiv planke og giver dig kontrol i spark og clinch.",
+      "start": "Lig på ryggen med hovedet en håndsbredde fra en tung sofa, og grib om sofaens ben eller nederste kant bag hovedet. Rul op med bøjede knæ, og stræk kroppen næsten lodret op.",
+      "steps": [
+        "Spænd mave og baller, så kroppen er én stiv planke fra skuldre til tæer.",
+        "Sænk den strakte krop på 3 sek, til den er lige over gulvet.",
+        "Løft den op igen i ét roligt stræk uden at bøje i hoften.",
+        "Stop, når kroppen er næsten lodret, så vægten bliver på skulderbladene og ikke på nakken."
+      ],
+      "tempo": "3 sek ned og op igen i ét roligt stræk, hele tiden som én planke.",
+      "breathing": "Træk vejret ind i toppen, og pust langsomt ud på vej ned og op igen.",
+      "cues": ["Op og ned som én planke", "Vægten på skulderbladene", "Ingen knæk i hoften"],
+      "mistakes": [
+        {
+          "mistake": "Du bøjer i hoften for at komme op.",
+          "fix": "Klem baller og mave hele vejen. Knækker hoften stadig, er sættet slut."
+        },
+        {
+          "mistake": "Lænden svajer i bunden.",
+          "fix": "Træk ribbenene ned mod hoften, og klem ballerne. Svajer lænden stadig, er sættet slut."
+        },
+        {
+          "mistake": "Vægten glider op på nakken i toppen.",
+          "fix": "Stop, når kroppen er næsten lodret, så vægten bliver på skulderbladene."
+        }
+      ],
+      "easier": "Trin 5: dragon flag-negativer.",
+      "harder": "Trin 7: dragon flag med pause.",
+      "equipment": ["sofa"],
+      "getReady": "Læg dig med hovedet ind mod en tung sofa, og prøv, at den står fast, når du trækker i den.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Kroppen strakt fra skuldre til tæer med samlede ben, næsten lodret, ca. 80° fra gulvet. Kun skulderblade og baghoved rører gulvet, og vægten er på skulderbladene. Albuerne bøjede og hænderne om sofaen.",
+              "contacts": [
+                { "part": "shoulders", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "hand", "on": "sofa" }
+              ]
+            },
+            {
+              "id": "low",
+              "name": "Nede",
+              "text": "Kroppen stadig strakt fra skuldre til tæer, men sænket, til den er næsten vandret med hælene lige over gulvet. Kun skulderblade og baghoved rører gulvet. Albuerne bøjede og hænderne om sofaen.",
+              "contacts": [
+                { "part": "shoulders", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "hand", "on": "sofa" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "low", "seconds": 3, "label": "3 sek ned" },
+            { "to": "top", "seconds": 2, "label": "Op som én planke" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_situp.7",
+      "trains": "Pausen halvvejs nede giver styrke og fuld kontrol over en strakt krop, så du holder dig samlet og stærk i clinch og spark.",
+      "start": "Lig på ryggen med hovedet en håndsbredde fra en tung sofa, og grib om sofaens ben eller nederste kant bag hovedet. Rul op med bøjede knæ, og stræk kroppen næsten lodret op.",
+      "steps": [
+        "Spænd mave og baller, så kroppen er én stiv planke fra skuldre til tæer.",
+        "Sænk den strakte krop langsomt til halvvejs, og hold 3 sek stille.",
+        "Sænk dig langsomt resten af vejen, til kroppen er lige over gulvet.",
+        "Løft den op igen i ét roligt stræk, til den er næsten lodret over skulderbladene."
+      ],
+      "tempo": "Langsomt ned med 3 sek pause halvvejs, og op igen i ét roligt stræk.",
+      "breathing": "Træk vejret ind i toppen, pust langsomt ud på vej ned, og hold ikke vejret i pausen.",
+      "cues": ["3 sek pause halvvejs nede", "Vægten på skulderbladene", "Ingen knæk i hoften"],
+      "mistakes": [
+        {
+          "mistake": "Hoften knækker, eller lænden svajer i pausen.",
+          "fix": "Klem baller og mave, og træk ribbenene ned mod hoften, til pausen er slut."
+        },
+        {
+          "mistake": "Du falder ned efter pausen.",
+          "fix": "Fortsæt lige så langsomt resten af vejen ned. Kan du ikke bremse, er sættet slut."
+        },
+        {
+          "mistake": "Vægten glider op på nakken i toppen.",
+          "fix": "Stop, når kroppen er næsten lodret, så vægten bliver på skulderbladene."
+        }
+      ],
+      "easier": "Trin 6: dragon flag.",
+      "harder": "Det er stigens sidste trin. Her bygger du videre med flere gentagelser op til toppen af intervallet.",
+      "equipment": ["sofa"],
+      "getReady": "Læg dig med hovedet ind mod en tung sofa, og prøv, at den står fast, når du trækker i den.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Kroppen strakt fra skuldre til tæer med samlede ben, næsten lodret, ca. 80° fra gulvet. Kun skulderblade og baghoved rører gulvet, og vægten er på skulderbladene. Albuerne bøjede og hænderne om sofaen.",
+              "contacts": [
+                { "part": "shoulders", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "hand", "on": "sofa" }
+              ]
+            },
+            {
+              "id": "half",
+              "name": "Halvvejs",
+              "text": "Kroppen strakt fra skuldre til tæer og sænket halvvejs, ca. 45° fra gulvet. Kun skulderblade og baghoved rører gulvet, og vægten er på skulderbladene. Albuerne bøjede og hænderne om sofaen.",
+              "contacts": [
+                { "part": "shoulders", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "hand", "on": "sofa" }
+              ]
+            },
+            {
+              "id": "low",
+              "name": "Nede",
+              "text": "Kroppen stadig strakt fra skuldre til tæer, men sænket, til den er næsten vandret med hælene lige over gulvet. Kun skulderblade og baghoved rører gulvet. Albuerne bøjede og hænderne om sofaen.",
+              "contacts": [
+                { "part": "shoulders", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "hand", "on": "sofa" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "half", "seconds": 1.5, "label": "Ned til halvvejs" },
+            { "to": "half", "seconds": 3, "label": "3 sek pause" },
+            { "to": "low", "seconds": 1.5, "label": "Resten af vejen ned" },
+            { "to": "top", "seconds": 2, "label": "Op som én planke" }
+          ]
+        }
+      ]
     }
   ]
 }

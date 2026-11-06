@@ -12,16 +12,16 @@
       "start": "Planke på strakte arme med hænderne lige under skuldrene og kroppen lige fra hæl til hoved. Fødderne i hoftebredde på tæerne.",
       "steps": [
         "Spænd maven og ballerne, så kroppen er lige som en planke.",
-        "Løft højre hånd, rør venstre skulder, og sæt hånden ned igen.",
-        "Gør det samme med venstre hånd, og skift hånd hver gang.",
+        "Løft venstre hånd, rør højre skulder, og sæt hånden ned igen.",
+        "Tag alle gentagelser med venstre hånd i »Venstre side« og med højre hånd i »Højre side«.",
         "Hold hoften stille: den må hverken synke eller dreje."
       ],
-      "tempo": "Roligt: ca. 1 sek op til skulderen og 1 sek ned igen. Skift hånd hver gang.",
+      "tempo": "Roligt, så hoften står stille ved hvert tap.",
       "breathing": "Træk vejret roligt og jævnt, og pust ud ved hvert tap.",
-      "cues": ["Hoften stille", "Rolige tap, skift hånd", "Pres gulvet væk"],
+      "cues": ["Hoften stille", "Rolige tap", "Pres gulvet væk"],
       "mistakes": [
         {
-          "mistake": "Hoften vipper fra side til side.",
+          "mistake": "Hoften drejer eller flytter sig, når hånden løftes.",
           "fix": "Sæt fødderne bredere, klem ballerne, og tap langsommere."
         },
         {
@@ -30,7 +30,7 @@
         },
         {
           "mistake": "Du skynder dig gennem tappene.",
-          "fix": "Tag 1 sek op og 1 sek ned, så du står stille på én hånd et øjeblik."
+          "fix": "Tap roligt, så du står stille på én hånd et øjeblik, før hånden sættes ned."
         }
       ],
       "easier": "Sæt fødderne bredere fra hinanden. Jo bredere, jo lettere.",
@@ -50,15 +50,6 @@
               ]
             },
             {
-              "id": "tap_right",
-              "name": "Højre tap",
-              "text": "Højre hånd rører venstre skulder, og venstre hånd står i gulvet lige under skulderen. Hofte og skuldre er vandrette og står stille som i planken.",
-              "contacts": [
-                { "part": "hand", "on": "floor", "count": 1 },
-                { "part": "toes", "on": "floor" }
-              ]
-            },
-            {
               "id": "tap_left",
               "name": "Venstre tap",
               "text": "Venstre hånd rører højre skulder, og højre hånd står i gulvet lige under skulderen. Hofte og skuldre er vandrette og står stille som i planken.",
@@ -69,9 +60,7 @@
             }
           ],
           "phases": [
-            { "to": "tap_right", "seconds": 1, "label": "Højre tap" },
-            { "to": "plank", "seconds": 1, "label": "Ned" },
-            { "to": "tap_left", "seconds": 1, "label": "Venstre tap" },
+            { "to": "tap_left", "seconds": 1, "label": "Tap" },
             { "to": "plank", "seconds": 1, "label": "Ned" }
           ]
         }
@@ -83,9 +72,9 @@
       "start": "Planke på albuerne med albuerne lige under skuldrene og fødderne i hoftebredde på tæerne. En vandflaske ligger på lænden.",
       "steps": [
         "Gå op i planke på albuerne, og læg vandflasken på lænden med den ene hånd.",
-        "Stræk venstre arm frem og højre ben bagud, så begge er vandrette.",
-        "Hold hoften i niveau, så flasken bliver liggende.",
-        "Byt til højre arm og venstre ben uden pause, og hold lige så længe."
+        "Stræk venstre arm frem og højre ben bagud i »Venstre side«, så begge er vandrette.",
+        "Hold hoften i niveau, så flasken bliver liggende, til tiden er gået.",
+        "Gør det samme med højre arm og venstre ben i »Højre side«, uden pause imellem."
       ],
       "tempo": "Løft arm og ben roligt, og hold stillingen stille hele tiden.",
       "breathing": "Træk vejret kort og roligt uden at slippe spændingen i maven.",
@@ -146,6 +135,139 @@
             { "to": "right", "seconds": 1, "label": "Løft" },
             { "to": "right", "seconds": "dose", "label": "Hold højre" },
             { "to": "plank", "seconds": 1, "label": "Ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_rot.R3",
+      "trains": "Maven, ryggen og skuldrene holder hoften i niveau højt oppe på én hånd og én fod, så kroppen ikke drejer, når du slår og sparker.",
+      "start": "Planke på strakte arme med hænderne lige under skuldrene og fødderne i hoftebredde på tæerne. En vandflaske ligger på lænden.",
+      "steps": [
+        "Gå op i planke på strakte arme, og læg vandflasken på lænden med den ene hånd.",
+        "Stræk venstre arm frem og højre ben bagud i »Venstre side«, så begge er vandrette.",
+        "Hold hoften i niveau, så flasken bliver liggende, til tiden er gået.",
+        "Gør det samme med højre arm og venstre ben i »Højre side«, uden pause imellem."
+      ],
+      "tempo": "Løft arm og ben roligt, og hold stillingen stille hele tiden.",
+      "breathing": "Træk vejret kort og roligt uden at slippe spændingen i maven.",
+      "cues": ["Hoften i niveau", "Skub gulvet væk", "Flasken bliver liggende"],
+      "mistakes": [
+        {
+          "mistake": "Hoften drejer op mod det løftede ben.",
+          "fix": "Klem ballerne, og sænk benet lidt, så hoften bliver vandret og flasken ligger stille."
+        },
+        {
+          "mistake": "Skulderen synker ned over den hånd, du står på.",
+          "fix": "Skub gulvet væk, så skulderen står lige over hånden."
+        },
+        {
+          "mistake": "Arm og ben løftes for højt.",
+          "fix": "Løft dem kun til vandret. Højere giver svaj i lænden."
+        }
+      ],
+      "easier": "Trin R2: 2-punkts planke på albuerne.",
+      "harder": "Trin R4: 2-punkts med bevægelse.",
+      "equipment": ["bottles"],
+      "getReady": "Find en fri plads på gulvet, og læg en vandflaske klar ved siden af dig.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "plank",
+              "name": "Planke",
+              "text": "Planke på strakte arme: hænderne lige under skuldrene, fødderne i hoftebredde på tæerne og kroppen lige fra hæl til hoved. Flasken ligger på lænden.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "left",
+              "name": "Venstre arm frem",
+              "text": "Venstre arm strakt frem i skulderhøjde og højre ben strakt bagud i hoftehøjde. Kun højre hånd og venstre fods tæer rører gulvet. Hofte og skuldre vandrette, og flasken ligger stille.",
+              "contacts": [
+                { "part": "hand", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "right",
+              "name": "Højre arm frem",
+              "text": "Højre arm strakt frem i skulderhøjde og venstre ben strakt bagud i hoftehøjde. Kun venstre hånd og højre fods tæer rører gulvet. Hofte og skuldre vandrette, og flasken ligger stille.",
+              "contacts": [
+                { "part": "hand", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "left", "seconds": 1, "label": "Løft" },
+            { "to": "left", "seconds": "dose", "label": "Hold venstre" },
+            { "to": "plank", "seconds": 1, "label": "Ned" },
+            { "to": "right", "seconds": 1, "label": "Løft" },
+            { "to": "right", "seconds": "dose", "label": "Hold højre" },
+            { "to": "plank", "seconds": 1, "label": "Ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_rot.R4",
+      "trains": "Maven og hoften holder kroppen stille, mens arm og ben bevæger sig, ligesom når du slår og sparker uden at miste balancen.",
+      "start": "2-punkts planke på albuerne: den ene arm strakt frem og det modsatte ben strakt bagud, begge vandrette, med en vandflaske på lænden.",
+      "steps": [
+        "Gå op i planke på albuerne med flasken på lænden, og stræk venstre arm frem og højre ben bagud.",
+        "Før arm og ben langsomt ud til siden og tilbage, uden at hoften drejer.",
+        "Tag alle gentagelser med venstre arm og højre ben i »Venstre side«.",
+        "Skift til højre arm og venstre ben i »Højre side«, uden pause imellem."
+      ],
+      "tempo": "Langsomt ud og langsomt tilbage, uden at hoften synker eller drejer.",
+      "breathing": "Træk vejret roligt, og pust ud, når arm og ben føres ud til siden.",
+      "cues": ["Langsomt ud og tilbage", "Hoften i niveau", "Flasken bliver liggende"],
+      "mistakes": [
+        {
+          "mistake": "Hoften drejer, når benet går ud til siden.",
+          "fix": "Før benet en kortere vej ud, og klem ballerne, så flasken ligger stille."
+        },
+        {
+          "mistake": "Du svinger arm og ben ud.",
+          "fix": "Før dem langsomt, så du kan stoppe når som helst på vejen."
+        },
+        {
+          "mistake": "Hoften synker, og lænden svajer.",
+          "fix": "Spænd maven, og hold arm og ben lidt lavere, til hoften er i niveau igen."
+        }
+      ],
+      "easier": "Trin R3: 2-punkts på hænderne.",
+      "harder": "Det er stigens sidste trin: hold flasken helt stille i hver gentagelse.",
+      "equipment": ["bottles"],
+      "getReady": "Find en fri plads med luft til siderne, og læg en vandflaske klar ved siden af dig.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "reach",
+              "name": "2-punkts",
+              "text": "2-punkts planke på albuerne: venstre arm strakt frem i skulderhøjde og højre ben strakt bagud i hoftehøjde. Kun højre underarm og venstre fods tæer rører gulvet. Flasken ligger på lænden.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "wide",
+              "name": "Ud til siden",
+              "text": "Venstre arm ført ud, så den peger lige ud til siden i skulderhøjde, og højre ben ført ca. 45° ud til siden i hoftehøjde, begge strakte. Hofte og skuldre står vandret og stille.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "wide", "seconds": 2, "label": "Ud til siden" },
+            { "to": "reach", "seconds": 2, "label": "Tilbage" }
           ]
         }
       ]

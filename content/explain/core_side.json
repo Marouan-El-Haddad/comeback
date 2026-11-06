@@ -14,7 +14,7 @@
         "Spænd maven og ballerne, og løft hoften fra gulvet.",
         "Skub gulvet væk med albuen, så hoved, hofte og fødder er på én linje.",
         "Hold stillingen, og sænk hoften roligt, når tiden er gået.",
-        "Tag næste sæt på den anden side."
+        "Tag sæt 1 på venstre side og sæt 2 på højre side."
       ],
       "tempo": "Løft hoften roligt, og hold stillingen stille hele tiden.",
       "breathing": "Træk vejret roligt og jævnt gennem hele holdet.",
@@ -40,7 +40,7 @@
       "easier": "Sæt den øverste fod i gulvet lige foran den nederste, så du står mere stabilt.",
       "harder": "Trin S2: med benløft.",
       "equipment": [],
-      "getReady": "Find en fri plads, og læg dig på siden med albuen under skulderen.",
+      "getReady": "Find en fri plads, og læg dig med albuen under skulderen: på venstre side i sæt 1 og på højre side i sæt 2.",
       "movements": [
         {
           "positions": [
@@ -78,13 +78,13 @@
       "start": "Sideplanke på albuen: underarmen i gulvet med albuen under skulderen, hoften løftet og hoved, hofte og fødder på én linje.",
       "steps": [
         "Læg dig på venstre side, og løft hoften op i sideplanke på albuen.",
-        "Løft det øverste ben strakt op på 2 sek med tæerne pegende frem.",
-        "Sænk det på 2 sek, til fødderne mødes, og hold hoften oppe hele sættet.",
-        "Lav alle gentagelser på venstre side, og skift så til højre uden pause."
+        "Løft det øverste ben langsomt op, strakt og med tæerne pegende frem.",
+        "Sænk det på 3 sek, til fødderne mødes, og hold hoften oppe hele sættet.",
+        "Tag alle gentagelser på venstre side, og skift så til højre side uden pause."
       ],
-      "tempo": "Langsomt: ca. 2 sek op og 2 sek ned. Hoften bliver oppe hele sættet.",
+      "tempo": "Løft langsomt, og sænk på 3 sek. Hoften bliver oppe hele sættet.",
       "breathing": "Pust ud, når benet løftes, og træk vejret ind, når det sænkes.",
-      "cues": ["Hoften oppe hele sættet", "Tæerne peger frem", "2 sek op, 2 sek ned"],
+      "cues": ["Hoften oppe hele sættet", "Tæerne peger frem", "Løft langsomt, sænk på 3 sek"],
       "mistakes": [
         {
           "mistake": "Hoften synker, når benet løftes.",
@@ -96,7 +96,7 @@
         },
         {
           "mistake": "Benet svinger op og falder ned.",
-          "fix": "Tæl 2 sek op og 2 sek ned, så siden arbejder hele vejen."
+          "fix": "Løft langsomt, og sænk på 3 sek, så siden arbejder hele vejen."
         }
       ],
       "easier": "Trin S1: sideplanke på albuen.",
@@ -126,8 +126,225 @@
             }
           ],
           "phases": [
-            { "to": "leg_up", "seconds": 2, "label": "2 sek op" },
-            { "to": "plank", "seconds": 2, "label": "2 sek ned" }
+            { "to": "leg_up", "seconds": 2, "label": "Løft langsomt" },
+            { "to": "plank", "seconds": 3, "label": "3 sek ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_side.S3",
+      "trains": "Hele siden af kroppen og ydersiden af begge hofter, som holder bækkenet vandret, når du står på ét ben og sparker.",
+      "start": "Sideplanke på albuen med albuen lige under skulderen, hoften løftet og hoved, hofte og fødder på én linje.",
+      "steps": [
+        "Løft hoften op i sideplanke på albuen med hoved, hofte og fødder på én linje.",
+        "Stræk den øverste arm lodret op, og løft det øverste ben strakt op, så du står som en stjerne.",
+        "Hold stillingen stille, og sænk arm, ben og hofte roligt, når tiden er gået.",
+        "Tag sæt 1 på venstre side og sæt 2 på højre side."
+      ],
+      "tempo": "Løft dig roligt op i stjernen, og hold stillingen stille hele tiden.",
+      "breathing": "Træk vejret roligt og jævnt gennem hele holdet.",
+      "cues": ["Øverste arm og ben strakt op", "Hoften højt og frem", "Skub gulvet væk med albuen"],
+      "mistakes": [
+        {
+          "mistake": "Hoften synker, når benet løftes.",
+          "fix": "Løft benet lidt lavere, og skub gulvet væk med albuen. Synker hoften igen, er sættet slut."
+        },
+        {
+          "mistake": "Kroppen vipper frem mod gulvet.",
+          "fix": "Hold armen lodret over skulderen, og skub hoften frem, så du står lige."
+        },
+        {
+          "mistake": "Det øverste ben glider frem foran kroppen.",
+          "fix": "Løft benet lige op ud til siden med tæerne pegende frem."
+        }
+      ],
+      "easier": "Trin S2: med benløft.",
+      "harder": "Trin S4: stjerne på strakt arm.",
+      "equipment": [],
+      "getReady": "Find en fri plads, og læg dig med albuen under skulderen: på venstre side i sæt 1 og på højre side i sæt 2.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "down",
+              "name": "Nede",
+              "text": "Liggende på siden med underarmen i gulvet, albuen lige under skulderen og underarmen pegende frem. Benene strakte og fødderne oven på hinanden. Den øverste hånd på hoften, og hoften hviler i gulvet.",
+              "contacts": [
+                { "part": "side", "on": "floor" },
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "plank",
+              "name": "Sideplanke",
+              "text": "Hoften løftet, så hoved, hofte og fødder er på én lige linje. Albuen lige under skulderen og den øverste hånd på hoften. Kun underarmen og den nederste fods yderside rører gulvet.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "star",
+              "name": "Stjerne",
+              "text": "Som sideplanken, men den øverste arm er strakt lodret op over skulderen, og det øverste ben er løftet strakt ca. 30° ud til siden. Kun underarmen og den nederste fods yderside rører gulvet.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "plank", "seconds": 2, "label": "Løft hoften" },
+            { "to": "star", "seconds": 1.5, "label": "Arm og ben op" },
+            { "to": "star", "seconds": "dose", "label": "Hold" },
+            { "to": "plank", "seconds": 1.5, "label": "Arm og ben ned" },
+            { "to": "down", "seconds": 2, "label": "Ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_side.S4",
+      "trains": "Siden af kroppen og skulderen, der bærer dig på én strakt arm, så du står stabilt, når du sparker og bliver presset i clinchen.",
+      "start": "Lig på siden med hånden fladt i gulvet lige under skulderen og strakt arm. Benene strakte og fødderne oven på hinanden.",
+      "steps": [
+        "Skub gulvet væk med hånden, og løft hoften, til hoved, hofte og fødder er på én linje.",
+        "Stræk den øverste arm lodret op, og løft det øverste ben strakt op i en stjerne.",
+        "Hold stillingen stille, og sænk arm, ben og hofte roligt, når tiden er gået.",
+        "Tag sæt 1 på venstre side og sæt 2 på højre side."
+      ],
+      "tempo": "Løft dig roligt op i stjernen, og hold stillingen stille hele tiden.",
+      "breathing": "Træk vejret roligt og jævnt gennem hele holdet.",
+      "cues": ["Hånden lige under skulderen", "Skub gulvet væk", "Øverste arm og ben strakt op"],
+      "mistakes": [
+        {
+          "mistake": "Hånden står foran eller bag skulderen.",
+          "fix": "Flyt hånden, så den står lige under skulderen med strakt arm."
+        },
+        {
+          "mistake": "Skulderen synker ned mod øret.",
+          "fix": "Skub gulvet væk med hånden, så skulderen står lige over hånden."
+        },
+        {
+          "mistake": "Hoften synker eller skyder bagud.",
+          "fix": "Løft hoften, og skub den frem på linje. Synker den igen, er sættet slut."
+        }
+      ],
+      "easier": "Trin S3: stjerne-sideplanke på albuen.",
+      "harder": "Trin S5: stjerne-teep.",
+      "equipment": [],
+      "getReady": "Find en fri plads, og læg dig med hånden under skulderen: på venstre side i sæt 1 og på højre side i sæt 2.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "down",
+              "name": "Nede",
+              "text": "Liggende på siden med hoften i gulvet og overkroppen løftet på strakt arm, hånden fladt i gulvet lige under skulderen. Benene strakte og fødderne oven på hinanden. Den øverste hånd på hoften.",
+              "contacts": [
+                { "part": "side", "on": "floor" },
+                { "part": "hand", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "plank",
+              "name": "Sideplanke",
+              "text": "Hoften løftet, så hoved, hofte og fødder er på én lige linje, med strakt arm og hånden lige under skulderen. Den øverste hånd på hoften. Kun hånden og den nederste fods yderside rører gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "star",
+              "name": "Stjerne",
+              "text": "Som sideplanken, men den øverste arm er strakt lodret op over skulderen, og det øverste ben er løftet strakt ca. 30° ud til siden. Kun den nederste hånd og fodens yderside rører gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "plank", "seconds": 2, "label": "Løft hoften" },
+            { "to": "star", "seconds": 1.5, "label": "Arm og ben op" },
+            { "to": "star", "seconds": "dose", "label": "Hold" },
+            { "to": "plank", "seconds": 1.5, "label": "Arm og ben ned" },
+            { "to": "down", "seconds": 2, "label": "Ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core_side.S5",
+      "trains": "Siden af kroppen holder dig stille, mens benet trækker op og sparker ud som en teep: kontrol over hoften midt i et spark.",
+      "start": "Stjerne på albuen: underarmen i gulvet med albuen lige under skulderen, hoften løftet, den øverste arm strakt op og det øverste ben løftet strakt.",
+      "steps": [
+        "Løft dig op i stjernen på albuen med hoved, hofte og fødder på én linje.",
+        "Træk det øverste knæ op mod brystet, og hold hoften oppe.",
+        "Spark benet frem som en teep, træk knæet ind igen, og stræk benet tilbage i stjernen.",
+        "Tag alle gentagelser på venstre side, og skift så til højre side uden pause."
+      ],
+      "tempo": "Kontrolleret: knæet op, sparket ud og benet tilbage, mens hoften står stille.",
+      "breathing": "Pust kort ud, når du sparker, og træk vejret ind, når benet kommer tilbage.",
+      "cues": ["Knæ til brystet, spark ud", "Hoften oppe hele tiden", "Pust ud på sparket"],
+      "mistakes": [
+        {
+          "mistake": "Hoften synker, når knæet kommer op.",
+          "fix": "Skub gulvet væk med albuen, og løft hoften, før du sparker. Synker den igen, er sættet slut."
+        },
+        {
+          "mistake": "Sparket går skævt op mod loftet.",
+          "fix": "Spark lige frem i hoftehøjde, som en teep mod en modstanders mave."
+        },
+        {
+          "mistake": "Overkroppen drejer med sparket.",
+          "fix": "Hold den øverste arm lodret og brystet fremad, mens benet arbejder."
+        }
+      ],
+      "easier": "Trin S4: stjerne på strakt arm.",
+      "harder": "Det er stigens sidste trin: gør hvert spark lige så rent som det første, med hoften helt stille.",
+      "equipment": [],
+      "getReady": "Find en fri plads med luft foran dig, og læg dig på venstre side med albuen under skulderen.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "star",
+              "name": "Stjerne",
+              "text": "Stjerne på albuen: underarmen i gulvet med albuen lige under skulderen, hoften løftet og på linje, den øverste arm strakt lodret op og det øverste ben løftet strakt ca. 30° ud til siden.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "knee",
+              "name": "Knæ til brystet",
+              "text": "Det øverste knæ trukket op mod brystet, så hofte og knæ er bøjet ca. 90° foran kroppen. Hoften er stadig løftet, og den øverste arm peger lodret op.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "teep",
+              "name": "Teep",
+              "text": "Det øverste ben sparket strakt frem i hoftehøjde med foden trukket op, så trædepuden skubber frem. Hoften er løftet og står stille, og den øverste arm peger lodret op.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "knee", "seconds": 1, "label": "Knæ til brystet" },
+            { "to": "teep", "seconds": 0.6, "label": "Spark ud" },
+            { "to": "knee", "seconds": 0.6, "label": "Træk ind" },
+            { "to": "star", "seconds": 1, "label": "Tilbage i stjernen" }
           ]
         }
       ]

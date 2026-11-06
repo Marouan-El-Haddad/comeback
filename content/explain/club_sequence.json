@@ -17,7 +17,7 @@
         "Pres op til midten, hold 3 sek, og lav 10 hurtige mikro-pumps: få cm ned og op.",
         "Gå helt ned og helt op. Det er én runde."
       ],
-      "tempo": "Hvert hold er 3 sek, mikro-pumpene er hurtige, og runden slutter med en rolig gentagelse helt ned og op.",
+      "tempo": "Hvert hold er 3 sek, mikro-pumpene er hurtige, og runden slutter helt ned og helt op.",
       "breathing": "Træk vejret kort og roligt i holdene, og pust ud, når du presser op.",
       "cues": ["Kroppen som en planke", "Træk vejret i holdene", "Små, hurtige mikro-pumps"],
       "mistakes": [
@@ -34,7 +34,7 @@
           "fix": "Træk vejret kort og roligt, også i det sidste hold."
         }
       ],
-      "easier": "Hænderne på sofaen, til du kan lave en ren runde i gulvet.",
+      "easier": "Hænderne på sofaen, til du kan lave en ren runde i gulvet. Så længe du bruger sofaen, svarer du nej til »Ren runde?«.",
       "harder": "Trin C2: to runder i træk i hvert sæt.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, og læg dig i planke på strakte arme med flade hænder.",
@@ -85,8 +85,7 @@
             { "to": "bottom", "seconds": 3, "label": "Hold 3 sek" },
             { "to": "middle", "seconds": 1, "label": "Op til midten" },
             { "to": "middle", "seconds": 3, "label": "Hold 3 sek" },
-            { "to": "pump", "seconds": 0.4, "label": "10 mikro-pumps: kort ned" },
-            { "to": "middle", "seconds": 0.4, "label": "Kort op" },
+            { "to": "pump", "seconds": 0.8, "repeat": 10, "label": "10 mikro-pumps" },
             { "to": "bottom", "seconds": 2, "label": "Helt ned" },
             { "to": "top", "seconds": 2, "label": "Helt op" }
           ]
@@ -102,7 +101,7 @@
         "Lav 10 hurtige mikro-pumps i midten, og gå helt ned og helt op.",
         "Start runde to med det samme fra toppen, uden at lægge dig ned."
       ],
-      "tempo": "Hvert hold er 3 sek, mikro-pumpene er hurtige, og hver runde slutter med en rolig gentagelse helt ned og op.",
+      "tempo": "Hvert hold er 3 sek, mikro-pumpene er hurtige, og hver runde slutter helt ned og helt op.",
       "breathing": "Træk vejret roligt i holdene, og tag et dybt åndedrag i toppen, før runde to.",
       "cues": ["Direkte videre til runde to", "Kroppen som en planke", "Træk vejret i holdene"],
       "mistakes": [
@@ -170,8 +169,347 @@
             { "to": "bottom", "seconds": 3, "label": "Hold 3 sek" },
             { "to": "middle", "seconds": 1, "label": "Op til midten" },
             { "to": "middle", "seconds": 3, "label": "Hold 3 sek" },
-            { "to": "pump", "seconds": 0.4, "label": "10 mikro-pumps: kort ned" },
-            { "to": "middle", "seconds": 0.4, "label": "Kort op" },
+            { "to": "pump", "seconds": 0.8, "repeat": 10, "label": "10 mikro-pumps" },
+            { "to": "bottom", "seconds": 2, "label": "Helt ned" },
+            { "to": "top", "seconds": 2, "label": "Helt op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "club_sequence.C3",
+      "trains": "Mere udholdenhed i alle positioner, så du kan blive i dem i tre runder uden at hvile.",
+      "start": "Planke på strakte arme med flade hænder lidt bredere end skuldrene og fingrene frem. Kroppen er lige fra hæl til hoved.",
+      "steps": [
+        "Gå ned til midten, helt ned og op til midten igen, og hold 3 sek hvert sted.",
+        "Lav 10 hurtige mikro-pumps i midten, og gå helt ned og helt op.",
+        "Start næste runde med det samme fra toppen, uden at lægge dig ned.",
+        "Bliv ved, til du har lavet tre runder. Passet viser, hvilken runde du er i."
+      ],
+      "tempo": "Hvert hold er 3 sek, mikro-pumpene er hurtige, og hver runde slutter helt ned og helt op.",
+      "breathing": "Træk vejret roligt i holdene, og tag et dybt åndedrag i toppen før hver ny runde.",
+      "cues": ["Tre runder uden at hvile", "Kroppen som en planke", "Træk vejret i holdene"],
+      "mistakes": [
+        {
+          "mistake": "Du lægger dig ned mellem runderne.",
+          "fix": "Bliv i planken på strakte arme, tag et dybt åndedrag, og start næste runde."
+        },
+        {
+          "mistake": "Midten kryber op i de sidste runder.",
+          "fix": "Hold albuerne bøjet ca. 90° i holdene i midten og under mikro-pumpene."
+        },
+        {
+          "mistake": "Hoften hænger, når du bliver træt.",
+          "fix": "Klem ballerne, og træk navlen ind. Formen skal holde i alle tre runder."
+        }
+      ],
+      "easier": "Trin C2: to runder i træk i hvert sæt.",
+      "harder": "Trin C4: fem runder i træk.",
+      "equipment": [],
+      "getReady": "Læg dig i planke på strakte arme med flade hænder, og gør dig klar til tre runder i træk.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Strakte arme med flade hænder under skuldrene, lidt bredere end skulderbredde og fingrene frem. Kroppen er lige fra hæl til hoved, og tæerne er i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "middle",
+              "name": "Midten",
+              "text": "Halvvejs nede: brystet midt mellem toppen og gulvet, albuerne bøjet ca. 90° og skråt bagud. Kroppen er lige, og hænderne er samme sted.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Brystet lige over gulvet uden at røre det, albuerne bøjet mere end i midten og skråt bagud. Kroppen er stadig lige fra hæl til hoved.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "pump",
+              "name": "Mikro-pump",
+              "text": "3–5 cm under midten med albuerne lidt mere bøjede. Kroppen er lige, og kun armene bevæger sig.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "middle", "seconds": 1, "label": "Ned til midten" },
+            { "to": "middle", "seconds": 3, "label": "Hold 3 sek" },
+            { "to": "bottom", "seconds": 1, "label": "Helt ned" },
+            { "to": "bottom", "seconds": 3, "label": "Hold 3 sek" },
+            { "to": "middle", "seconds": 1, "label": "Op til midten" },
+            { "to": "middle", "seconds": 3, "label": "Hold 3 sek" },
+            { "to": "pump", "seconds": 0.8, "repeat": 10, "label": "10 mikro-pumps" },
+            { "to": "bottom", "seconds": 2, "label": "Helt ned" },
+            { "to": "top", "seconds": 2, "label": "Helt op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "club_sequence.C4",
+      "trains": "Udholdenhed og vilje til at blive i alle positioner i fem runder, så klubbens pause-push-ups bliver lettere.",
+      "start": "Planke på strakte arme med flade hænder lidt bredere end skuldrene og fingrene frem. Kroppen er lige fra hæl til hoved.",
+      "steps": [
+        "Gå ned til midten, helt ned og op til midten igen, og hold 3 sek hvert sted.",
+        "Lav 10 hurtige mikro-pumps i midten, og gå helt ned og helt op.",
+        "Start næste runde med det samme fra toppen, uden at lægge dig ned.",
+        "Bliv ved, til du har lavet fem runder. Passet viser, hvilken runde du er i."
+      ],
+      "tempo": "Hvert hold er 3 sek, mikro-pumpene er hurtige, og hver runde slutter helt ned og helt op.",
+      "breathing": "Træk vejret roligt i holdene, og tag et dybt åndedrag i toppen før hver ny runde.",
+      "cues": ["Fem runder uden at hvile", "Kroppen som en planke", "Træk vejret i holdene"],
+      "mistakes": [
+        {
+          "mistake": "Du lægger dig ned mellem runderne.",
+          "fix": "Bliv i planken på strakte arme, tag et dybt åndedrag, og start næste runde."
+        },
+        {
+          "mistake": "Midten kryber op i de sidste runder.",
+          "fix": "Hold albuerne bøjet ca. 90° i holdene i midten og under mikro-pumpene."
+        },
+        {
+          "mistake": "Hoften hænger, når du bliver træt.",
+          "fix": "Klem ballerne, og træk navlen ind. Formen skal holde i alle fem runder."
+        }
+      ],
+      "easier": "Trin C3: tre runder i træk.",
+      "harder": "Trin C5: fem runder i træk på knoer.",
+      "equipment": [],
+      "getReady": "Læg dig i planke på strakte arme med flade hænder, og gør dig klar til fem runder i træk.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Strakte arme med flade hænder under skuldrene, lidt bredere end skulderbredde og fingrene frem. Kroppen er lige fra hæl til hoved, og tæerne er i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "middle",
+              "name": "Midten",
+              "text": "Halvvejs nede: brystet midt mellem toppen og gulvet, albuerne bøjet ca. 90° og skråt bagud. Kroppen er lige, og hænderne er samme sted.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Brystet lige over gulvet uden at røre det, albuerne bøjet mere end i midten og skråt bagud. Kroppen er stadig lige fra hæl til hoved.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "pump",
+              "name": "Mikro-pump",
+              "text": "3–5 cm under midten med albuerne lidt mere bøjede. Kroppen er lige, og kun armene bevæger sig.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "middle", "seconds": 1, "label": "Ned til midten" },
+            { "to": "middle", "seconds": 3, "label": "Hold 3 sek" },
+            { "to": "bottom", "seconds": 1, "label": "Helt ned" },
+            { "to": "bottom", "seconds": 3, "label": "Hold 3 sek" },
+            { "to": "middle", "seconds": 1, "label": "Op til midten" },
+            { "to": "middle", "seconds": 3, "label": "Hold 3 sek" },
+            { "to": "pump", "seconds": 0.8, "repeat": 10, "label": "10 mikro-pumps" },
+            { "to": "bottom", "seconds": 2, "label": "Helt ned" },
+            { "to": "top", "seconds": 2, "label": "Helt op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "club_sequence.C5",
+      "trains": "Udholdenhed på knyttede næver med lige håndled, samme linje som i et slag, og det skåner håndleddene.",
+      "start": "Planke på strakte arme med knyttede næver lidt bredere end skuldrene og håndleddene lige. Kroppen er lige fra hæl til hoved.",
+      "steps": [
+        "Knyt hænderne, og sæt pege- og langfingerens knoer i gulvet med lige håndled, som når du slår.",
+        "Gå ned til midten, helt ned og op til midten igen, og hold 3 sek hvert sted.",
+        "Lav 10 hurtige mikro-pumps i midten, gå helt ned og helt op, og start straks næste runde.",
+        "Bliv ved, til du har lavet fem runder. Passet viser, hvilken runde du er i."
+      ],
+      "tempo": "Hvert hold er 3 sek, mikro-pumpene er hurtige, og hver runde slutter helt ned og helt op.",
+      "breathing": "Træk vejret roligt i holdene, og tag et dybt åndedrag i toppen før hver ny runde.",
+      "cues": ["Lige håndled som i et slag", "Kroppen som en planke", "Træk vejret i holdene"],
+      "mistakes": [
+        {
+          "mistake": "Håndleddet knækker, så næven vipper.",
+          "fix": "Hold håndleddet lige, så knoer, håndled og underarm er på én linje."
+        },
+        {
+          "mistake": "Vægten ligger på de yderste knoer.",
+          "fix": "Læg vægten på knoerne ved pege- og langfinger, som rammer i et slag."
+        },
+        {
+          "mistake": "Midten kryber op i de sidste runder.",
+          "fix": "Hold albuerne bøjet ca. 90° i holdene i midten og under mikro-pumpene."
+        }
+      ],
+      "easier": "Trin C4: fem runder i træk med flade hænder.",
+      "harder": "Trin C6: fem runder i træk som diamond.",
+      "equipment": [],
+      "getReady": "Find en plads, gerne på et tæppe, og læg dig i planke på knyttede næver med lige håndled.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Strakte arme på knyttede næver under skuldrene, lidt bredere end skulderbredde. Pege- og langfingerens knoer i gulvet og håndleddene lige. Kroppen er lige fra hæl til hoved.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "middle",
+              "name": "Midten",
+              "text": "Halvvejs nede: brystet midt mellem toppen og gulvet, albuerne bøjet ca. 90° og skråt bagud. Håndleddene er stadig lige, og kroppen er lige.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Brystet lige over gulvet uden at røre det, albuerne bøjet mere end i midten og skråt bagud. Håndleddene er lige, og kroppen er lige fra hæl til hoved.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "pump",
+              "name": "Mikro-pump",
+              "text": "3–5 cm under midten med albuerne lidt mere bøjede. Håndleddene og kroppen er lige, og kun armene bevæger sig.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "middle", "seconds": 1, "label": "Ned til midten" },
+            { "to": "middle", "seconds": 3, "label": "Hold 3 sek" },
+            { "to": "bottom", "seconds": 1, "label": "Helt ned" },
+            { "to": "bottom", "seconds": 3, "label": "Hold 3 sek" },
+            { "to": "middle", "seconds": 1, "label": "Op til midten" },
+            { "to": "middle", "seconds": 3, "label": "Hold 3 sek" },
+            { "to": "pump", "seconds": 0.8, "repeat": 10, "label": "10 mikro-pumps" },
+            { "to": "bottom", "seconds": 2, "label": "Helt ned" },
+            { "to": "top", "seconds": 2, "label": "Helt op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "club_sequence.C6",
+      "trains": "Stærke triceps til lige slag: med hænderne samlet under brystbenet arbejder armene mere i alle positioner.",
+      "start": "Planke på strakte arme med hænderne samlet under brystbenet, så tommel- og pegefingre danner en diamant. Kroppen er lige fra hæl til hoved.",
+      "steps": [
+        "Saml hænderne under brystbenet, så tommel- og pegefingre danner en diamant.",
+        "Gå ned til midten, helt ned og op til midten igen med albuerne tæt ind, og hold 3 sek hvert sted.",
+        "Lav 10 hurtige mikro-pumps i midten, gå helt ned og helt op, og start straks næste runde.",
+        "Bliv ved, til du har lavet fem runder. Passet viser, hvilken runde du er i."
+      ],
+      "tempo": "Hvert hold er 3 sek, mikro-pumpene er hurtige, og hver runde slutter helt ned og helt op.",
+      "breathing": "Træk vejret roligt i holdene, og tag et dybt åndedrag i toppen før hver ny runde.",
+      "cues": ["Albuerne tæt langs kroppen", "Brystet ned mod hænderne", "Træk vejret i holdene"],
+      "mistakes": [
+        {
+          "mistake": "Albuerne flyver ud til siden.",
+          "fix": "Hold albuerne tæt langs kroppen og skråt bagud, så triceps gør arbejdet."
+        },
+        {
+          "mistake": "Hoften hænger, når armene bliver trætte.",
+          "fix": "Klem ballerne, og træk navlen ind. Formen skal holde i alle fem runder."
+        },
+        {
+          "mistake": "Midten kryber op i de sidste runder.",
+          "fix": "Hold albuerne bøjet ca. 90° i holdene i midten og under mikro-pumpene."
+        }
+      ],
+      "easier": "Trin C5: fem runder i træk på knoer.",
+      "harder": "Dette er sporets sidste trin. Hold formen lige god i alle fem runder.",
+      "equipment": [],
+      "getReady": "Læg dig i planke på strakte arme med hænderne samlet under brystbenet.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Strakte arme med hænderne samlet under brystbenet, så tommel- og pegefingre danner en diamant. Kroppen er lige fra hæl til hoved, og tæerne er i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "middle",
+              "name": "Midten",
+              "text": "Halvvejs nede: brystet midt mellem toppen og hænderne, albuerne bøjet ca. 90° og tæt langs kroppen. Kroppen er lige, og hænderne er samme sted.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Brystet lige over hænderne uden at røre dem, albuerne bøjet mere end i midten og tæt langs kroppen. Kroppen er stadig lige fra hæl til hoved.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "pump",
+              "name": "Mikro-pump",
+              "text": "3–5 cm under midten med albuerne lidt mere bøjede og tæt ind. Kroppen er lige, og kun armene bevæger sig.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "middle", "seconds": 1, "label": "Ned til midten" },
+            { "to": "middle", "seconds": 3, "label": "Hold 3 sek" },
+            { "to": "bottom", "seconds": 1, "label": "Helt ned" },
+            { "to": "bottom", "seconds": 3, "label": "Hold 3 sek" },
+            { "to": "middle", "seconds": 1, "label": "Op til midten" },
+            { "to": "middle", "seconds": 3, "label": "Hold 3 sek" },
+            { "to": "pump", "seconds": 0.8, "repeat": 10, "label": "10 mikro-pumps" },
             { "to": "bottom", "seconds": 2, "label": "Helt ned" },
             { "to": "top", "seconds": 2, "label": "Helt op" }
           ]

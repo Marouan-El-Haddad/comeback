@@ -128,6 +128,336 @@
           ]
         }
       ]
+    },
+    {
+      "id": "shoulder.3",
+      "trains": "Skuldrene lærer at bære hele kroppen over hovedet med en stiv krop: grundlaget for håndstands-push-ups og en garde, der bliver oppe.",
+      "start": "Læg dig i planke med strakte arme og hænderne i skulderbredde. Fodsålerne står mod væggen lige over gulvet.",
+      "steps": [
+        "Gå fødderne op ad væggen et lille skridt ad gangen, mens hænderne går ind mod den.",
+        "Stop, når maven er tæt på væggen, og hænderne står en til to håndsbredder fra den.",
+        "Skub gulvet væk, træk ribbenene ned, og spænd ballerne, så kroppen er lang og lige.",
+        "Gå ned samme vej, når tiden er gået: hænderne ud og fødderne ned ad væggen."
+      ],
+      "tempo": "Gå roligt op, hold stillingen stille, og gå roligt ned igen.",
+      "breathing": "Træk vejret roligt og jævnt, også i håndstanden.",
+      "cues": ["Skub gulvet væk", "Ribbenene nede", "Kroppen lang og lige"],
+      "mistakes": [
+        {
+          "mistake": "Lænden svajer, så kroppen bliver en banan.",
+          "fix": "Træk ribbenene ned, og spænd maven og ballerne, så kroppen er lige fra hænder til tæer."
+        },
+        {
+          "mistake": "Skuldrene synker, og du hænger i dem.",
+          "fix": "Skub gulvet væk, så skuldrene går op mod ørerne, og armene er helt strakte."
+        },
+        {
+          "mistake": "Du ved ikke, hvordan du kommer ned, hvis armene giver efter.",
+          "fix": "Gå ned samme vej, som du kom op. Skal det gå hurtigt, så drej ud til siden, og sæt fødderne i gulvet."
+        }
+      ],
+      "easier": "Gå kun halvt op med hænderne længere fra væggen, og hold der. Trin 2 med fødderne på stolen laver du stadig i samme pas.",
+      "harder": "Trin 4: HSPU-negativer, hvor du sænker dig langsomt med ryggen mod væggen.",
+      "equipment": ["wall"],
+      "getReady": "Læg dig i planke med fodsålerne mod en fri væg til sidst i pausen, og gå op, når nedtællingen starter.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "plank",
+              "name": "Planke",
+              "text": "Planke med strakte arme og hænderne i skulderbredde under skuldrene. Fodsålerne mod væggen lige over gulvet, kroppen lige fra hæl til hoved og hovedet væk fra væggen.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "foot", "on": "wall" }
+              ]
+            },
+            {
+              "id": "walk",
+              "name": "Halvvejs",
+              "text": "Fødderne er gået op ad væggen til ca. hoftehøjde, og hænderne er gået et stykke ind mod den. Armene strakte, skuldrene over hænderne og kroppen lige og skrå med fodsålerne mod væggen.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "foot", "on": "wall" }
+              ]
+            },
+            {
+              "id": "handstand",
+              "name": "Håndstand",
+              "text": "Næsten lodret med maven mod væggen og hænderne i skulderbredde en til to håndsbredder fra den. Armene strakte, skuldrene skubbet op mod ørerne, ribbenene nede og kun tæerne mod væggen.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "wall" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "walk", "seconds": 3, "label": "Gå op ad væggen" },
+            { "to": "handstand", "seconds": 3, "label": "Helt op" },
+            { "to": "handstand", "seconds": "dose", "label": "Hold" },
+            { "to": "walk", "seconds": 3, "label": "Gå ned" },
+            { "to": "plank", "seconds": 3, "label": "Tilbage i planke" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shoulder.4",
+      "trains": "Bygger styrke i skuldre og triceps i den langsomme vej ned, hvor du kan styre mere, end du kan presse op.",
+      "start": "Stå med front mod væggen, og sæt hænderne i gulvet i skulderbredde en håndsbredde fra den. Puden ligger på gulvet mellem hænderne og dig.",
+      "steps": [
+        "Spark op til håndstand, så du har ryggen mod væggen, og hælene lander på den.",
+        "Stram kroppen, og sænk dig på 4–5 sek, til toppen af hovedet rører puden blødt.",
+        "Bøj i hoften, og træd fødderne ned i gulvet én ad gangen uden at presse op.",
+        "Rejs dig, og spark op igen til næste gentagelse."
+      ],
+      "tempo": "Sænk dig på 4–5 sek, og træd ned uden at presse op.",
+      "breathing": "Ånd ind, før du sænker dig, og pust langsomt ud på vej ned.",
+      "cues": ["Ned på 4–5 sek", "Hovedet lander blødt", "Ribbenene nede"],
+      "mistakes": [
+        {
+          "mistake": "Du falder det sidste stykke ned på puden.",
+          "fix": "Hovedet skal lande blødt, aldrig med vægt eller vrid. Kan du ikke styre hele vejen, så brug en tykkere pude."
+        },
+        {
+          "mistake": "Albuerne peger lige ud til siden.",
+          "fix": "Hold albuerne ca. 45° ud fra kroppen, så skuldre og arme bærer sammen."
+        },
+        {
+          "mistake": "Du ved ikke, hvordan du kommer ned, hvis armene giver efter.",
+          "fix": "Øv dig først i at dreje ud til siden og sætte fødderne i gulvet, så du altid har en vej ud."
+        }
+      ],
+      "easier": "Trin 3: håndstand med maven mod væggen. Eller sænk dig til en tykkere pude.",
+      "harder": "Trin 5: HSPU til en pude, hvor du også presser dig op igen.",
+      "equipment": ["wall", "pillow"],
+      "getReady": "Læg en foldet pude på gulvet ved en fri væg, og ryd plads ud til siderne.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "ready",
+              "name": "Klar",
+              "text": "Front mod væggen med hænderne i gulvet i skulderbredde en håndsbredde fra den og puden mellem hænderne og fødderne. Fødderne et skridt væk, hoften højt og armene strakte som et omvendt V.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "top",
+              "name": "Håndstand",
+              "text": "Håndstand med ryggen mod væggen: hænderne i skulderbredde en håndsbredde fra den, armene strakte og hælene mod væggen. Ribbenene nede, kroppen lang og blikket på puden.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "heel", "on": "wall" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Albuerne bøjet ca. 90° og ca. 45° ud fra kroppen. Toppen af hovedet rører puden blødt, så hoved og hænder danner en trekant. Hælene er gledet ned ad væggen og rører den stadig.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "head", "on": "pillow" },
+                { "part": "heel", "on": "wall" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "top", "seconds": 1, "label": "Spark op" },
+            { "to": "top", "seconds": 1, "label": "Stram kroppen" },
+            { "to": "bottom", "seconds": 5, "label": "4–5 sek ned" },
+            { "to": "ready", "seconds": 2, "label": "Træd ned" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shoulder.5",
+      "trains": "Skuldre og triceps presser hele kroppen op fra puden: styrken til fuld HSPU og til en garde, der bliver oppe.",
+      "start": "Håndstand med ryggen mod væggen og hælene mod den. Hænderne står i skulderbredde en håndsbredde fra væggen, og puden ligger lige foran dem, væk fra væggen.",
+      "steps": [
+        "Spark op til håndstand med ryggen mod væggen, og stram kroppen.",
+        "Sænk dig på 3 sek, til toppen af hovedet rører puden let, og hold 1 sek stille.",
+        "Pres dig op til strakte arme uden vægt på hovedet i bunden, og gentag.",
+        "Træd ned, når sættet er slut. Gør puden lidt tyndere hver uge."
+      ],
+      "tempo": "3 sek ned, 1 sek stille med hovedet let mod puden, op i ét roligt stræk.",
+      "breathing": "Ånd ind på vej ned, og pust ud, når du presser op.",
+      "cues": ["3 sek ned, 1 sek stille", "Hovedet lander blødt", "Skub gulvet væk"],
+      "mistakes": [
+        {
+          "mistake": "Du lægger vægt på hovedet i bunden.",
+          "fix": "Lad hovedet kun røre puden let. Kan du ikke presse op igen, så brug en tykkere pude."
+        },
+        {
+          "mistake": "Albuerne peger lige ud til siden.",
+          "fix": "Hold albuerne ca. 45° ud fra kroppen, og pres lige op."
+        },
+        {
+          "mistake": "Lænden svajer, når du presser op.",
+          "fix": "Træk ribbenene ned, og spænd ballerne, så kroppen er lige fra hænder til hæle."
+        }
+      ],
+      "easier": "Trin 4: HSPU-negativer, hvor du kun sænker dig og træder ned. Eller brug en tykkere pude.",
+      "harder": "Trin 6: fuld HSPU, hvor hovedet går blødt helt ned til gulvet.",
+      "equipment": ["wall", "pillow", "towel"],
+      "getReady": "Læg en pude eller et par foldede håndklæder ved en fri væg, så du kan gøre den tyndere uge for uge.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Håndstand med ryggen mod væggen: hænderne i skulderbredde en håndsbredde fra den, armene strakte og hælene mod væggen. Ribbenene nede, kroppen lang og puden lige foran hænderne.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "heel", "on": "wall" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Albuerne bøjet ca. 90° og ca. 45° ud fra kroppen. Toppen af hovedet rører puden let, så hoved og hænder danner en trekant. Hælene er gledet ned ad væggen og rører den stadig.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "head", "on": "pillow" },
+                { "part": "heel", "on": "wall" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1.5, "label": "Pres op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shoulder.6",
+      "trains": "Hele kropsvægten presset op over hovedet: skuldre, der holder garden oppe og står imod i clinchen.",
+      "start": "Håndstand med ryggen mod væggen og hælene mod den. Hænderne står i skulderbredde en håndsbredde fra væggen.",
+      "steps": [
+        "Spark op til håndstand med ryggen mod væggen, og stram kroppen.",
+        "Sænk dig på 3 sek, til toppen af hovedet rører gulvet blødt, og hold 1 sek stille.",
+        "Pres dig op til strakte arme uden at lægge vægt på hovedet, og gentag.",
+        "Træd ned, når sættet er slut."
+      ],
+      "tempo": "3 sek ned, 1 sek stille med hovedet let mod gulvet, op i ét roligt stræk.",
+      "breathing": "Ånd ind på vej ned, og pust ud, når du presser op.",
+      "cues": ["Hovedet blødt ned", "Albuerne ca. 45° ud", "Skub gulvet væk"],
+      "mistakes": [
+        {
+          "mistake": "Hovedet rammer gulvet med vægt.",
+          "fix": "Sænk dig langsomt hele vejen, og lad hovedet kun røre gulvet blødt."
+        },
+        {
+          "mistake": "Albuerne peger lige ud til siden.",
+          "fix": "Hold albuerne ca. 45° ud fra kroppen, og pres lige op."
+        },
+        {
+          "mistake": "Benene sparker for at hjælpe dig op.",
+          "fix": "Hold benene samlet og stille mod væggen. Det er armene, der presser."
+        }
+      ],
+      "easier": "Trin 5: HSPU til en pude.",
+      "harder": "Trin 7: deficit-HSPU med hænderne på to stakke bøger.",
+      "equipment": ["wall"],
+      "getReady": "Find et stykke fri væg, og ryd plads ud til siderne.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Håndstand med ryggen mod væggen: hænderne i skulderbredde en håndsbredde fra den, armene strakte og hælene mod væggen. Ribbenene nede og kroppen lang.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "heel", "on": "wall" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Albuerne bøjet ca. 90° og ca. 45° ud fra kroppen. Toppen af hovedet rører gulvet blødt foran hænderne, så hoved og hænder danner en trekant. Hælene er gledet ned ad væggen.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "heel", "on": "wall" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1.5, "label": "Pres op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shoulder.7",
+      "trains": "Hovedet går under hænderne, så skuldrene skal presse længere end fra gulvet: stigens sværeste pres over hovedet.",
+      "start": "Byg to lige høje stakke af store, flade bøger i skulderbredde en håndsbredde fra væggen. Hænderne står på stakkene.",
+      "steps": [
+        "Prøv stakkene med hænderne, og spark op til håndstand med ryggen mod væggen.",
+        "Sænk dig på 3 sek, til hovedet går ned mellem stakkene og rører gulvet blødt.",
+        "Hold 1 sek stille uden vægt på hovedet, og pres dig op til strakte arme.",
+        "Træd ned, når sættet er slut."
+      ],
+      "tempo": "3 sek ned, 1 sek stille med hovedet under håndhøjde, op i ét roligt stræk.",
+      "breathing": "Ånd ind på vej ned, og pust ud, når du presser op.",
+      "cues": ["Hovedet under håndhøjde", "Hovedet lander blødt", "Albuerne ca. 45° ud"],
+      "mistakes": [
+        {
+          "mistake": "Stakkene vipper eller glider.",
+          "fix": "Brug store, flade bøger i lige høje stakke, og prøv dem med hænderne, før du sparker op."
+        },
+        {
+          "mistake": "Hovedet rammer gulvet med vægt.",
+          "fix": "Sænk dig langsomt hele vejen, og lad hovedet kun røre gulvet blødt."
+        },
+        {
+          "mistake": "Albuerne peger lige ud til siden.",
+          "fix": "Hold albuerne ca. 45° ud fra kroppen, så skuldrene kan bære hele vejen ned."
+        }
+      ],
+      "easier": "Trin 6: fuld HSPU mod væggen med hænderne i gulvet.",
+      "harder": "Det er stigens sidste trin. Lidt højere stakke gør vejen ned længere.",
+      "equipment": ["wall", "books"],
+      "getReady": "Byg to lige høje stakke af store bøger ved en fri væg, og prøv, at de står fast.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Håndstand med ryggen mod væggen og hænderne på to lige høje stakke bøger i skulderbredde en håndsbredde fra den. Armene strakte, hælene mod væggen og kroppen lang.",
+              "contacts": [
+                { "part": "hand", "on": "books" },
+                { "part": "heel", "on": "wall" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Albuerne bøjet forbi 90° og ca. 45° ud fra kroppen. Hovedet er gået ned mellem stakkene under håndhøjde og rører gulvet blødt. Hælene er gledet ned ad væggen.",
+              "contacts": [
+                { "part": "hand", "on": "books" },
+                { "part": "head", "on": "floor" },
+                { "part": "heel", "on": "wall" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1.5, "label": "Pres op" }
+          ]
+        }
+      ]
     }
   ]
 }

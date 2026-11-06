@@ -3,8 +3,8 @@
   "subject": "wallsit",
   "why": [
     "Wall sit bygger lårenes udholdenhed – præcis det, klubben tester med wall sit og squats. Lår, der kan holde længe, giver dig overskud til fodarbejde og spark sidst i runden.",
-    "Isometrisk træning, hvor du holder en stilling uden at bevæge dig, sænkede hvileblodtrykket mest af alle træningsformer i en stor samlet analyse, og wall sit var den bedste enkeltøvelse.",
-    "Holder du alle sæt med den planlagte reserve, lægger appen 5 sek til næste gang, op til toppen af intervallet. Brændende lår er i orden; skarp smerte eller smerte i knæet betyder stop og et trin ned."
+    "Wall sit er en af de øvelser, der sænker blodtrykket i hvile mest. Holder du alle sæt med den planlagte reserve, lægger appen 5 sek til næste gang, op til toppen af intervallet.",
+    "Smerte op til 3 ud af 10 under en øvelse er i orden, hvis den er væk næste morgen. Skarp eller stigende smerte i et led: stop øvelsen, og gå et trin ned i en uge."
   ],
   "items": [
     {
@@ -136,11 +136,260 @@
             }
           ],
           "phases": [
-            { "to": "guard", "seconds": "dose", "label": "Hold garden" },
             { "to": "left", "seconds": 0.6, "label": "Venstre lige" },
-            { "to": "guard", "seconds": 0.6, "label": "Tilbage i garde" },
-            { "to": "right", "seconds": 0.6, "label": "Højre lige" },
+            { "to": "right", "seconds": 2, "repeat": "dose", "label": "Rolige lige slag" },
             { "to": "guard", "seconds": 0.6, "label": "Tilbage i garde" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wallsit.W3",
+      "trains": "Lårene arbejder videre, når de allerede brænder, som i klubbens kombination og sidst i en hård runde.",
+      "start": "Stå med ryggen mod væggen og fødderne ca. to fodlængder fremme i hoftebredde. Hold gulvet foran dig frit til squats.",
+      "steps": [
+        "Glid ned i wall sit med ryggen flad mod væggen, lårene vandrette og knæene over anklerne.",
+        "Hold, til tiden er gået, rejs dig, og træd et skridt frem fra væggen.",
+        "Tag direkte 20 kontrollerede squats, ned til lårene er vandrette og helt op, og tryk så »Videre«.",
+        "Svar ja til »Rene runder?«, når alle runder havde fuld wall sit og 20 kontrollerede squats."
+      ],
+      "tempo": "Hold wall sit stille i 45 sek, og tag squatsene roligt og kontrolleret.",
+      "breathing": "Træk vejret roligt i wall sit, og pust ud på vej op i hver squat.",
+      "cues": ["Lårene vandrette", "Direkte videre til squats", "Hælene bliver i gulvet"],
+      "mistakes": [
+        {
+          "mistake": "Du holder pause mellem wall sit og squats.",
+          "fix": "Rejs dig, og gå direkte i gang. Det er kombinationen, der træner lårene."
+        },
+        {
+          "mistake": "Squatsene bliver hurtige og halve.",
+          "fix": "Gå ned, til lårene er vandrette, og op igen i et roligt, kontrolleret tempo."
+        },
+        {
+          "mistake": "Hælene letter, eller knæene falder ind.",
+          "fix": "Hold vægten på hele foden, og lad knæene pege samme vej som tæerne."
+        }
+      ],
+      "easier": "Trin W2: wall sit med garde og lige slag.",
+      "harder": "Trin W4: etbens wall sit. Du rykker op efter to pas i træk med 3 rene runder.",
+      "equipment": ["wall"],
+      "getReady": "Stil dig med ryggen mod væggen, så du har plads foran dig til squats.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "stand",
+              "name": "Ved væggen",
+              "text": "Stående med ryggen mod væggen og fødderne i hoftebredde ca. to fodlængder fra den. Benene er strakte, og armene er krydset over brystet.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "sit",
+              "name": "Wall sit",
+              "text": "Ryggen flad mod væggen og hoften i knæhøjde, så lårene er vandrette og knæene bøjet 90° lige over anklerne. Fødderne fladt i gulvet og armene krydset over brystet.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "free",
+              "name": "Stående frit",
+              "text": "Stående et skridt foran væggen med fødderne i skulderbredde og tæerne let udad. Benene er strakte, og armene er strakt frem i skulderhøjde.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "squat",
+              "name": "Squat nede",
+              "text": "Hoften er sænket bagud og ned, til lårene er vandrette. Hælene i gulvet, knæene peger samme vej som tæerne, brystet er løftet og armene strakt frem.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "sit", "seconds": 2, "label": "Glid ned" },
+            { "to": "sit", "seconds": "dose", "label": "Hold 45 sek" },
+            { "to": "free", "seconds": 2, "label": "Op og et skridt frem" },
+            { "to": "squat", "seconds": 3, "repeat": 20, "label": "20 kontrollerede squats" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wallsit.W4",
+      "trains": "Hvert ben bærer hele stillingen alene, som når du står på ét ben for at sparke eller checke et spark.",
+      "start": "Stå med ryggen mod væggen, og gå fødderne ca. to fodlængder frem i hoftebredde. Kryds armene over brystet.",
+      "steps": [
+        "Glid ned i wall sit med ryggen flad mod væggen og lårene vandrette.",
+        "Stræk det ene ben lige frem i hoftehøjde, og hold hoften i niveau.",
+        "Ved »Venstre ben« står du på venstre ben og strækker højre frem. Ved »Højre ben« omvendt.",
+        "Sæt foden ned, når tiden er gået, og skift ben i nedtællingen til »Højre ben«."
+      ],
+      "tempo": "Glid roligt ned, og hold stillingen helt stille. Venstre og højre ben kommer lige efter hinanden.",
+      "breathing": "Træk vejret roligt og jævnt, også når låret begynder at brænde.",
+      "cues": ["Hoften i niveau", "Benet strakt frem", "Knæet over anklen"],
+      "mistakes": [
+        {
+          "mistake": "Hoften på det strakte bens side falder eller drejer.",
+          "fix": "Hold begge hofter i samme højde og pegende lige frem."
+        },
+        {
+          "mistake": "Det standende knæ falder ind mod midten.",
+          "fix": "Skub knæet lidt ud, så det står over anklen og peger samme vej som tæerne."
+        },
+        {
+          "mistake": "Hoften glider op ad væggen, så låret ikke er vandret.",
+          "fix": "Glid ned til vandret igen. Kan du ikke holde det, så stop, og tryk »Stoppede før tid«."
+        }
+      ],
+      "easier": "Trin W3: wall sit til squats. Eller løft kun foden lidt fra gulvet i stedet for at strække benet frem.",
+      "harder": "Trin W5: wall sit-runden, 3 min med garde og slag og det sidste minut på ét ben.",
+      "equipment": ["wall"],
+      "getReady": "Stil dig med ryggen mod væggen og fødderne to fodlængder fremme, klar til at glide ned.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "stand",
+              "name": "Stående",
+              "text": "Stående med ryggen mod væggen og fødderne i hoftebredde ca. to fodlængder fra den, så kroppen læner sig let bagud mod væggen. Benene er strakte, og armene er krydset over brystet.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "sit",
+              "name": "Wall sit",
+              "text": "Ryggen flad mod væggen og hoften i knæhøjde, så lårene er vandrette og knæene bøjet 90° lige over anklerne. Fødderne i hoftebredde og armene krydset over brystet.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "one_leg",
+              "name": "Ét ben strakt",
+              "text": "Som wall sit, men det ene ben er strakt lige frem i hoftehøjde med foden fri af gulvet. Hoften i niveau, og det standende knæ står over anklen og peger samme vej som tæerne.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "sit", "seconds": 2, "label": "Glid ned" },
+            { "to": "one_leg", "seconds": 1.5, "label": "Stræk benet frem" },
+            { "to": "one_leg", "seconds": "dose", "label": "Hold" },
+            { "to": "sit", "seconds": 1.5, "label": "Foden ned" },
+            { "to": "stand", "seconds": 2, "label": "Glid op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wallsit.W5",
+      "trains": "Lårene holder i 3 min, mens skuldrene arbejder i garden og det sidste minut på ét ben, som sidst i en hård kamp.",
+      "start": "Sæt dig i wall sit med ryggen flad mod væggen, lårene vandrette og knæene over anklerne. Løft hænderne op i garde foran ansigtet.",
+      "steps": [
+        "Hold garden, og slå rolige lige slag i 2 min. Skift arm fra slag til slag.",
+        "Ved »Ét ben, venstre« står du på venstre ben og strækker højre ben frem, mens du slår videre.",
+        "Ved »Ét ben, højre« skifter du ben uden at rejse dig, og slår videre.",
+        "Svar ja til »Rene runder?«, når du holdt hele runden med lårene vandrette og garden oppe."
+      ],
+      "tempo": "2 min på begge ben og 30 sek på hvert ben, med rolige lige slag hele vejen.",
+      "breathing": "Pust kort ud på hvert slag, og træk vejret ind, når hånden er tilbage i garden.",
+      "cues": [
+        "Lårene vandrette hele runden",
+        "Pust ud på hvert slag",
+        "Hoften i niveau på ét ben"
+      ],
+      "mistakes": [
+        {
+          "mistake": "Hoften glider op ad væggen, når lårene brænder.",
+          "fix": "Hold lårene vandrette, og slå roligere. Det er stillingen, der bærer runden."
+        },
+        {
+          "mistake": "Garden falder i det sidste minut.",
+          "fix": "Hold den hånd, der ikke slår, oppe ved ansigtet hele vejen."
+        },
+        {
+          "mistake": "Hoften falder til siden på ét ben.",
+          "fix": "Hold begge hofter i samme højde, og lad det standende knæ pege samme vej som tæerne."
+        }
+      ],
+      "easier": "Trin W4: etbens wall sit.",
+      "harder": "Det er stigens sidste trin. Etbens wall sit med garde og lige slag er en imponer-variant, som kræver trin W4.",
+      "equipment": ["wall"],
+      "getReady": "Stil dig med ryggen mod væggen, klar til at glide ned og løfte garden.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "guard",
+              "name": "Garde",
+              "text": "Wall sit med ryggen flad mod væggen, lårene vandrette og knæene over anklerne. Hænderne i garde foran ansigtet med albuerne ind og hagen lidt ned.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "left",
+              "name": "Venstre lige",
+              "text": "Wall sit som i garde, men venstre arm er strakt lige frem i skulderhøjde. Højre hånd bliver ved ansigtet.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "right",
+              "name": "Højre lige",
+              "text": "Wall sit som i garde, men højre arm er strakt lige frem i skulderhøjde. Venstre hånd bliver ved ansigtet.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor" }
+              ]
+            },
+            {
+              "id": "one_left",
+              "name": "Etbens venstre lige",
+              "text": "Wall sit på ét ben med det andet ben strakt lige frem i hoftehøjde og hoften i niveau. Venstre arm strakt frem i skulderhøjde og højre hånd ved ansigtet.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "one_right",
+              "name": "Etbens højre lige",
+              "text": "Som etbens venstre lige, men højre arm er strakt frem i skulderhøjde og venstre hånd ved ansigtet.",
+              "contacts": [
+                { "part": "back", "on": "wall" },
+                { "part": "hip", "on": "wall" },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "left", "seconds": 0.6, "label": "Venstre lige" },
+            { "to": "right", "seconds": 2, "repeat": "dose", "label": "2 min garde og slag" },
+            { "to": "one_left", "seconds": 2, "label": "Højre ben frem" },
+            { "to": "one_right", "seconds": 2, "repeat": "dose", "label": "30 sek på venstre ben" },
+            { "to": "one_left", "seconds": 2, "label": "Skift ben" },
+            { "to": "one_right", "seconds": 2, "repeat": "dose", "label": "30 sek på højre ben" }
           ]
         }
       ]

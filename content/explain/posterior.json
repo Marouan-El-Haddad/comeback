@@ -3,8 +3,8 @@
   "subject": "posterior",
   "why": [
     "Baller og baglår giver kraft i spark og sprint: de strækker hoften og driver den frem. Stigen går fra hoftebro over glidende leg curl til Nordic, hvor du står på knæ og sænker overkroppen frem mod gulvet, mens baglårene bremser.",
-    "Nordic-øvelsen er blandt de bedst undersøgte måder at forebygge baglårsskader på: programmer med den har cirka halveret dem, men en ny analyse af de samme tal kalder effekten mere usikker.",
-    "Den første uge med Nordic giver ømme baglår, så start i bunden af intervallet. Ømme muskler er i orden; skarp smerte eller smerte i et led betyder stop og et trin ned."
+    "Nordic gør baglårene stærke til at bremse, mens de bliver lange. Den er med for at beskytte baglåret i spark og sprint, men hvor meget den forebygger skader, er usikkert. Den første uge med Nordic giver ømme baglår.",
+    "Smerte op til 3 ud af 10 under en øvelse er i orden, hvis den er væk næste morgen. Skarp eller stigende smerte i et led: stop øvelsen, og gå et trin ned i en uge. Det gør appen, når du trykker »Smerte« og »Skarp eller i et led«; på trin 1 får du den lettere variant."
   ],
   "items": [
     {
@@ -12,12 +12,12 @@
       "trains": "Baller og baglår, der strækker hoften med kraft, som når du driver hoften frem i et knæspark.",
       "start": "Lig på ryggen med armene langs siden og den ene fod fladt i gulvet, så tæt på bagdelen, at underbenet bliver lodret i toppen. Stræk det andet ben, så knæene er i samme højde.",
       "steps": [
-        "Pres hælen i gulvet, og løft hoften i ét roligt stræk.",
+        "Pres hælen i gulvet, og løft hoften kontrolleret.",
         "Hold 2 sek i toppen med ribbenene nede, så det er ballen, der arbejder, ikke lænden.",
         "Sænk hoften på 3 sek, til bagdelen lige rører gulvet.",
         "Tag alle gentagelser med samme ben, og skift så."
       ],
-      "tempo": "Op i ét roligt stræk, 2 sek i toppen og 3 sek ned.",
+      "tempo": "Kontrolleret op, 2 sek i toppen og 3 sek ned.",
       "breathing": "Pust ud på vej op, og træk vejret ind på vej ned.",
       "cues": ["2 sek i toppen", "Ribben nede, ballen arbejder", "Pres gennem hælen"],
       "mistakes": [
@@ -82,10 +82,10 @@
       "steps": [
         "Glid hælene ud på 3 sek, til benene er næsten strakte, mens hoften bliver oppe.",
         "Hold 1 sek stille med hoften stadig løftet fra gulvet.",
-        "Træk hælene ind mod bagdelen i ét roligt stræk, til du er tilbage i hoftebroen.",
+        "Træk hælene kontrolleret ind mod bagdelen, til du er tilbage i hoftebroen.",
         "Hold hoften oppe hele sættet, og sænk den først, når du er færdig."
       ],
-      "tempo": "3 sek ud, 1 sek stille, og ind i ét roligt stræk.",
+      "tempo": "3 sek ud, 1 sek stille, og kontrolleret ind.",
       "breathing": "Træk vejret ind, mens hælene glider ud, og pust ud, når du trækker dem ind.",
       "cues": ["3 sek ud, 1 sek stille", "Hoften oppe hele vejen", "Træk hælene ind"],
       "mistakes": [
@@ -138,6 +138,282 @@
             { "to": "out", "seconds": 3, "label": "3 sek ud" },
             { "to": "out", "seconds": 1, "label": "1 sek stille" },
             { "to": "in", "seconds": 1.5, "label": "Træk ind" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "posterior.3",
+      "trains": "Baglåret på ét ben ad gangen, så det kan bremse benet efter et spark og give kraft i sprint.",
+      "start": "Lig på ryggen på et glat gulv med armene langs siden, knæet bøjet og den ene hæl på et håndklæde. Løft det frie ben, så knæet er over hoften og underbenet vandret.",
+      "steps": [
+        "Løft hoften, så skuldre, hofte og knæ er på en lige linje.",
+        "Glid hælen langsomt ud på 3 sek, til benet er næsten strakt, mens hoften bliver oppe.",
+        "Træk hælen hurtigt ind igen, og hold hoften oppe hele sættet.",
+        "Tag alle gentagelser med samme ben, og skift så."
+      ],
+      "tempo": "Langsomt ud på 3 sek og hurtigt ind.",
+      "breathing": "Træk vejret ind, mens hælen glider ud, og pust ud, når du trækker den ind.",
+      "cues": ["Langsomt ud, hurtigt ind", "Hoften oppe hele vejen", "Hofterne i samme højde"],
+      "mistakes": [
+        {
+          "mistake": "Hoften falder, når benet bliver strakt.",
+          "fix": "Stop lidt før benet er strakt, og klem ballen, så hoften bliver oppe."
+        },
+        {
+          "mistake": "Hoften tipper ned i siden med det frie ben.",
+          "fix": "Hold begge hofteknogler i samme højde, og spænd maven."
+        },
+        {
+          "mistake": "Baglåret får krampe.",
+          "fix": "Stop sættet, stræk benet, og tag næste sæt med en lidt kortere vej ud."
+        }
+      ],
+      "easier": "Trin 2: glidende leg curl med begge hæle på håndklædet.",
+      "harder": "Trin 4: Nordic-negativer med fødderne under sofaen og en pude under knæene.",
+      "equipment": ["towel"],
+      "getReady": "Find et glat gulv, og læg et håndklæde, hvor hælen skal være, når du ligger på ryggen.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "in",
+              "name": "Inde",
+              "text": "Liggende på ryggen med hoved, skuldre og arme i gulvet. Hoften løftet, så skuldre, hofte og knæ er på en lige linje. Arbejdsbenets knæ bøjet ca. 90° med hælen på håndklædet, det frie knæ over hoften.",
+              "contacts": [
+                { "part": "shoulders", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "forearm", "on": "floor" },
+                { "part": "hand", "on": "floor" },
+                { "part": "heel", "on": "towel", "count": 1 }
+              ]
+            },
+            {
+              "id": "out",
+              "name": "Ude",
+              "text": "Arbejdsbenet næsten strakt med hælen langt ude på håndklædet. Hoften er stadig løftet en håndsbredde fra gulvet, det frie knæ er over hoften, og hoved, skuldre og arme ligger i gulvet.",
+              "contacts": [
+                { "part": "shoulders", "on": "floor" },
+                { "part": "head", "on": "floor" },
+                { "part": "forearm", "on": "floor" },
+                { "part": "hand", "on": "floor" },
+                { "part": "heel", "on": "towel", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "out", "seconds": 3, "label": "3 sek ud" },
+            { "to": "in", "seconds": 0.6, "label": "Hurtigt ind" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "posterior.4",
+      "trains": "Baglårene bremser hele kroppens vægt og bliver stærke i den lange stilling, hvor de arbejder i spark og sprint.",
+      "start": "Knæl på en pude foran sofaen med ryggen til den, og skub hælene ind under sofaens kant. Ret kroppen op, så den er lige fra knæ til hoved.",
+      "steps": [
+        "Spænd baller og mave, og hold hænderne foran brystet.",
+        "Sænk dig langsomt frem med lige hofter, så langt du kan styre.",
+        "Tag fra med hænderne i gulvet, når du ikke kan bremse mere.",
+        "Skub dig op igen med hænderne til udgangsstillingen."
+      ],
+      "tempo": "Sænk dig langsomt, så langt du kan styre, og tag fra med hænderne.",
+      "breathing": "Træk vejret ind, før du sænker dig, og pust langsomt ud på vej ned.",
+      "cues": ["Sænk så langt, du kan styre", "Lige fra knæ til hoved", "Tag fra med hænderne"],
+      "mistakes": [
+        {
+          "mistake": "Du knækker i hoften og stikker bagdelen bagud.",
+          "fix": "Klem ballerne, så kroppen er lige fra knæ til hoved hele vejen ned."
+        },
+        {
+          "mistake": "Du falder frem uden at bremse.",
+          "fix": "Sænk dig kun så langt, du kan styre, og tag fra med hænderne i god tid."
+        },
+        {
+          "mistake": "Sofaen løfter sig, eller hælene glider ud.",
+          "fix": "Brug en tungere sofa, eller få en til at sidde i den, og skub hælene længere ind."
+        }
+      ],
+      "easier": "Trin 3: glidende leg curl på ét ben, langsomt ud og hurtigt ind.",
+      "harder": "Trin 5: Nordic ned på 5 sek med kroppen lige hele vejen ned.",
+      "equipment": ["sofa", "pillow"],
+      "getReady": "Læg en pude foran sofaen, og tjek, at sofaen ikke løfter sig, når du trækker op i den med hælene.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "up",
+              "name": "Oppe",
+              "text": "På knæ på puden med vristene i gulvet og hælene inde under sofaens kant. Kroppen er lodret og lige fra knæ til hoved, hoften strakt og hænderne foran brystet.",
+              "contacts": [
+                { "part": "knee", "on": "pillow" },
+                { "part": "foot", "on": "floor" },
+                { "part": "heel", "on": "sofa" }
+              ]
+            },
+            {
+              "id": "low",
+              "name": "Lænet frem",
+              "text": "Kroppen er stadig lige fra knæ til hoved og lænet ca. 45° frem, så langt du kan styre. Knæene på puden, hælene under sofaen og hænderne foran brystet.",
+              "contacts": [
+                { "part": "knee", "on": "pillow" },
+                { "part": "foot", "on": "floor" },
+                { "part": "heel", "on": "sofa" }
+              ]
+            },
+            {
+              "id": "catch",
+              "name": "Tag fra",
+              "text": "Hænderne tager fra i gulvet under skuldrene med bøjede albuer, og brystet er lige over gulvet. Kroppen er stadig lige fra knæ til hoved, knæene på puden og hælene under sofaen.",
+              "contacts": [
+                { "part": "knee", "on": "pillow" },
+                { "part": "foot", "on": "floor" },
+                { "part": "heel", "on": "sofa" },
+                { "part": "hand", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "low", "seconds": 3, "label": "Sænk langsomt" },
+            { "to": "catch", "seconds": 1, "label": "Tag fra med hænderne" },
+            { "to": "up", "seconds": 1.5, "label": "Skub dig op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "posterior.5",
+      "trains": "Baglårene bremser kroppen hele vejen ned og bliver stærke i hele bevægelsen, som de bruger i spark og sprint.",
+      "start": "Knæl på en pude foran sofaen med ryggen til den, og skub hælene ind under sofaens kant. Ret kroppen op, så den er lige fra knæ til hoved.",
+      "steps": [
+        "Spænd baller og mave, og hold hænderne foran brystet.",
+        "Sænk dig frem på 5 sek med kroppen lige hele vejen ned.",
+        "Tag fra med hænderne i gulvet allersidst, lige før brystet når gulvet.",
+        "Skub dig op igen med hænderne til udgangsstillingen."
+      ],
+      "tempo": "5 sek ned med kroppen lige, og op igen med hjælp fra hænderne.",
+      "breathing": "Træk vejret ind, før du sænker dig, og pust langsomt ud på vej ned.",
+      "cues": ["5 sek ned", "Lige fra knæ til hoved", "Hænderne tager fra til sidst"],
+      "mistakes": [
+        {
+          "mistake": "Du knækker i hoften det sidste stykke.",
+          "fix": "Klem ballerne, og hold kroppen lige fra knæ til hoved, også når det bliver tungt."
+        },
+        {
+          "mistake": "Du falder det sidste stykke ned.",
+          "fix": "Tæl de 5 sek fra toppen, og brems hele vejen, til hænderne tager fra."
+        },
+        {
+          "mistake": "Sofaen løfter sig, eller hælene glider ud.",
+          "fix": "Brug en tungere sofa, eller få en til at sidde i den, og skub hælene længere ind."
+        }
+      ],
+      "easier": "Trin 4: Nordic-negativer, hvor du sænker dig så langt, du kan styre.",
+      "harder": "Trin 6: Nordic op igen, hvor baglårene trækker dig op efter et lille skub.",
+      "equipment": ["sofa", "pillow"],
+      "getReady": "Læg en pude foran sofaen, og tjek, at sofaen ikke løfter sig, når du trækker op i den med hælene.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "up",
+              "name": "Oppe",
+              "text": "På knæ på puden med vristene i gulvet og hælene inde under sofaens kant. Kroppen er lodret og lige fra knæ til hoved, hoften strakt og hænderne foran brystet.",
+              "contacts": [
+                { "part": "knee", "on": "pillow" },
+                { "part": "foot", "on": "floor" },
+                { "part": "heel", "on": "sofa" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Kroppen er lige fra knæ til hoved og næsten vandret med brystet lige over gulvet. Hænderne tager fra i gulvet under skuldrene med bøjede albuer, knæene på puden og hælene under sofaen.",
+              "contacts": [
+                { "part": "knee", "on": "pillow" },
+                { "part": "foot", "on": "floor" },
+                { "part": "heel", "on": "sofa" },
+                { "part": "hand", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 5, "label": "5 sek ned" },
+            { "to": "up", "seconds": 1.5, "label": "Skub dig op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "posterior.6",
+      "trains": "Baglårene både bremser og løfter hele kroppen, den fulde styrke, der giver kraft i spark og sprint.",
+      "start": "Knæl på en pude foran sofaen med ryggen til den, og skub hælene ind under sofaens kant. Ret kroppen op, så den er lige fra knæ til hoved.",
+      "steps": [
+        "Sænk dig kontrolleret hele vejen ned med kroppen lige, og tag fra med hænderne i bunden.",
+        "Giv et lille skub fra hænderne, og træk dig op med baglårene.",
+        "Hold kroppen lige fra knæ til hoved hele vejen op til udgangsstillingen."
+      ],
+      "tempo": "Kontrolleret ned, et lille skub fra hænderne i bunden, og baglårene trækker dig op.",
+      "breathing": "Pust langsomt ud på vej ned, og træk vejret ind i bunden, før du trækker dig op.",
+      "cues": ["Kun et lille skub", "Baglårene trækker dig op", "Lige fra knæ til hoved"],
+      "mistakes": [
+        {
+          "mistake": "Du skubber dig hele vejen op med armene.",
+          "fix": "Giv kun et lille skub, så baglårene gør resten af arbejdet."
+        },
+        {
+          "mistake": "Du knækker i hoften på vej op.",
+          "fix": "Klem ballerne, og hold kroppen lige fra knæ til hoved, mens baglårene trækker."
+        },
+        {
+          "mistake": "Baglåret får krampe på vej op.",
+          "fix": "Stop sættet, og stræk benene. Giv lidt mere skub fra hænderne i næste sæt."
+        }
+      ],
+      "easier": "Trin 5: Nordic ned på 5 sek, hvor hænderne skubber dig op igen.",
+      "harder": "Det er stigens sidste trin. Gør skubbet fra hænderne mindre, mens kroppen stadig er lige hele vejen.",
+      "equipment": ["sofa", "pillow"],
+      "getReady": "Læg en pude foran sofaen, og tjek, at sofaen ikke løfter sig, når du trækker op i den med hælene.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "up",
+              "name": "Oppe",
+              "text": "På knæ på puden med vristene i gulvet og hælene inde under sofaens kant. Kroppen er lodret og lige fra knæ til hoved, hoften strakt og hænderne foran brystet.",
+              "contacts": [
+                { "part": "knee", "on": "pillow" },
+                { "part": "foot", "on": "floor" },
+                { "part": "heel", "on": "sofa" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Kroppen er lige fra knæ til hoved og næsten vandret med brystet lige over gulvet. Hænderne tager fra i gulvet under skuldrene med bøjede albuer, knæene på puden og hælene under sofaen.",
+              "contacts": [
+                { "part": "knee", "on": "pillow" },
+                { "part": "foot", "on": "floor" },
+                { "part": "heel", "on": "sofa" },
+                { "part": "hand", "on": "floor" }
+              ]
+            },
+            {
+              "id": "push",
+              "name": "Skub",
+              "text": "Hænderne har lige skubbet fra, og kroppen er løftet ca. 30° fra vandret, stadig lige fra knæ til hoved. Knæene på puden, hælene under sofaen og hænderne foran brystet.",
+              "contacts": [
+                { "part": "knee", "on": "pillow" },
+                { "part": "foot", "on": "floor" },
+                { "part": "heel", "on": "sofa" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 4, "label": "Kontrolleret ned" },
+            { "to": "push", "seconds": 0.5, "label": "Lille skub" },
+            { "to": "up", "seconds": 2.5, "label": "Baglårene trækker op" }
           ]
         }
       ]

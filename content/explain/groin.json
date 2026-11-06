@@ -3,7 +3,8 @@
   "subject": "groin",
   "why": [
     "Adduktorerne er musklerne på indersiden af låret. Stærke adduktorer hjælper dig i clinchen, i teep og i kampstillingen og holder lysken hel. Copenhagen-øvelsen er en sideplanke med det øverste ben oppe på sofaen.",
-    "Hos fodboldspillere gav et program med kun Copenhagen-øvelsen 41 % færre lyskeproblemer. En nyere samlet analyse fandt store styrkefremskridt, men ingen sikker beskyttelse mod skader. Styrken er gevinsten under alle omstændigheder."
+    "Copenhagen-øvelsen gør adduktorerne meget stærkere. Den kan også give færre lyskeproblemer, men det er ikke sikkert. Styrken er gevinsten under alle omstændigheder.",
+    "Smerte op til 3 ud af 10 under en øvelse er i orden, hvis den er væk næste morgen. Skarp eller stigende smerte i et led: stop øvelsen, og gå et trin ned i en uge."
   ],
   "items": [
     {
@@ -132,6 +133,199 @@
             { "to": "plank", "seconds": 2, "label": "Løft hoften" },
             { "to": "plank", "seconds": "dose", "label": "Hold" },
             { "to": "down", "seconds": 2, "label": "Sænk roligt" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "groin.3",
+      "trains": "Adduktorerne på indersiden af låret, der både løfter og bremser hele kroppen, som når du står fast i clinchen.",
+      "start": "Lig på siden foran sofaen med albuen lige under skulderen og fødderne mod sofaen. Læg det øverste ben op, så indersiden af knæet hviler på sofakanten og underbenet på sædet.",
+      "steps": [
+        "Spænd maven, pres knæet ned i sofaen, og løft hoften, til kroppen er lige fra hoved til knæ.",
+        "Sænk hoften på 3 sek, til den er en håndsbredde over gulvet.",
+        "Lad lysken løfte dig langsomt op igen, til kroppen er lige.",
+        "Tag alle gentagelser, og skift så side."
+      ],
+      "tempo": "Sænk hoften på 3 sek, og løft dig langsomt op igen.",
+      "breathing": "Træk vejret ind på vej ned, og pust ud, når lysken løfter dig.",
+      "cues": ["Sænk hoften på 3 sek", "Lysken løfter dig", "Kroppen som en planke"],
+      "mistakes": [
+        {
+          "mistake": "Du falder ned og skubber dig op igen i et ryk.",
+          "fix": "Sænk hoften på 3 sek, og lad lysken løfte dig langsomt op."
+        },
+        {
+          "mistake": "Du stopper, før kroppen er lige i toppen.",
+          "fix": "Løft hoften, til hoved, skuldre, hofte og knæ er på en lige linje."
+        },
+        {
+          "mistake": "Skulderen kryber op mod øret.",
+          "fix": "Pres underarmen i gulvet, og hold afstand mellem skulder og øre."
+        }
+      ],
+      "easier": "Trin 2: kort Copenhagen, hold.",
+      "harder": "Trin 4: lang Copenhagen, hold, med foden på sofaen i stedet for knæet.",
+      "equipment": ["sofa"],
+      "getReady": "Læg dig på siden foran sofaen med fødderne mod den og albuen lige under skulderen.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "plank",
+              "name": "Planke",
+              "text": "Kort Copenhagen: hoften løftet, så hoved, skuldre, hofte og øverste knæ er på en lige linje. Underarmen i gulvet under skulderen, knæet og underbenet på sofaen og den øverste hånd på hoften. Nederste ben hænger frit.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "knee", "on": "sofa", "count": 1 },
+                { "part": "shin", "on": "sofa", "count": 1 }
+              ]
+            },
+            {
+              "id": "dip",
+              "name": "Hoften nede",
+              "text": "Som planken, men hoften er sænket mod gulvet, til den er en håndsbredde over det. Albuen er stadig under skulderen, det øverste knæ og underben ligger på sofaen, og det nederste ben hænger frit.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "knee", "on": "sofa", "count": 1 },
+                { "part": "shin", "on": "sofa", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "dip", "seconds": 3, "label": "3 sek ned" },
+            { "to": "plank", "seconds": 2, "label": "Lysken løfter dig" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "groin.4",
+      "trains": "Adduktorerne og siden af maven i den svære udgave, hvor kun foden støtter, så lysken skal bære hele kroppen.",
+      "start": "Lig på siden foran sofaen med albuen lige under skulderen. Læg det øverste ben op, så indersiden af foden og anklen hviler på sofakanten med strakt knæ.",
+      "steps": [
+        "Spænd maven, og pres indersiden af foden ned i sofaen.",
+        "Løft hoften, til kroppen er lige fra hoved til fod, og lad det nederste ben hænge frit.",
+        "Hold stillingen stille, og træk vejret roligt.",
+        "Sænk hoften roligt, når tiden er gået, og skift side."
+      ],
+      "tempo": "Løft dig roligt op, hold stillingen helt stille, og sænk dig roligt.",
+      "breathing": "Træk vejret kort og roligt gennem hele holdet, og hold ikke vejret.",
+      "cues": [
+        "Albuen under skulderen",
+        "Pres foden ned i sofaen",
+        "Kroppen lige fra hoved til fod"
+      ],
+      "mistakes": [
+        {
+          "mistake": "Hoften hænger ned mod gulvet.",
+          "fix": "Pres foden ned i sofaen, og løft hoften, til kroppen er lige fra hoved til fod."
+        },
+        {
+          "mistake": "Det øverste knæ bøjer sig.",
+          "fix": "Hold det øverste ben strakt, og pres med hele indersiden af foden."
+        },
+        {
+          "mistake": "Overkroppen ruller frem eller tilbage.",
+          "fix": "Hold skuldre og hofter lige over hinanden, som om du ligger mellem to vægge."
+        }
+      ],
+      "easier": "Trin 3: kort Copenhagen med hoften op og ned. Eller lad den nederste fod hvile let i gulvet.",
+      "harder": "Trin 5: lang Copenhagen med det nederste ben op og ned.",
+      "equipment": ["sofa"],
+      "getReady": "Tjek, at sofaen står fast, og læg dig på siden foran den, så den øverste fod kan nå sofakanten.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "down",
+              "name": "Nede",
+              "text": "Liggende på siden med underarmen i gulvet og albuen under skulderen. Indersiden af den øverste fod hviler på sofakanten med strakt knæ. Hoften og det nederste ben ligger i gulvet, og den øverste hånd er på hoften.",
+              "contacts": [
+                { "part": "side", "on": "floor" },
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "sofa", "count": 1 },
+                { "part": "foot", "on": "floor", "count": 1 }
+              ]
+            },
+            {
+              "id": "plank",
+              "name": "Planke",
+              "text": "Hoften løftet, så hoved, skuldre, hofte og den øverste fod er på en lige linje. Underarmen i gulvet under skulderen, indersiden af foden på sofakanten og den øverste hånd på hoften. Nederste ben hænger frit lige over gulvet.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "sofa", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "plank", "seconds": 2, "label": "Løft hoften" },
+            { "to": "plank", "seconds": "dose", "label": "Hold" },
+            { "to": "down", "seconds": 2, "label": "Sænk roligt" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "groin.5",
+      "trains": "Begge lysker på én gang: det øverste ben holder dig oppe, og det nederste løfter sig op mod sofaen.",
+      "start": "Lig på siden foran sofaen med albuen under skulderen og indersiden af den øverste fod på sofakanten. Løft hoften op i lang Copenhagen, så kroppen er lige fra hoved til fod.",
+      "steps": [
+        "Lad det nederste ben hænge strakt lige over gulvet, og hold hoften oppe hele sættet.",
+        "Løft det nederste ben langsomt, til foden rører sofaen under den øverste fod.",
+        "Sænk benet på 3 sek, til foden er lige over gulvet.",
+        "Tag alle gentagelser, og skift så side."
+      ],
+      "tempo": "Løft langsomt, og sænk på 3 sek.",
+      "breathing": "Pust ud, når benet går op, og træk vejret ind på vej ned.",
+      "cues": [
+        "Hoften oppe hele tiden",
+        "Løft langsomt, sænk på 3 sek",
+        "Benet strakt, tæerne frem"
+      ],
+      "mistakes": [
+        {
+          "mistake": "Hoften falder, når det nederste ben går ned.",
+          "fix": "Pres den øverste fod ned i sofaen, og hold kroppen lige fra hoved til fod hele sættet."
+        },
+        {
+          "mistake": "Benet svinger op og falder ned.",
+          "fix": "Løft langsomt, og tæl 3 sek på vej ned."
+        },
+        {
+          "mistake": "Det nederste knæ bøjer, så benet bliver kortere.",
+          "fix": "Hold benet strakt med tæerne pegende frem, så det er indersiden af låret, der løfter."
+        }
+      ],
+      "easier": "Trin 4: lang Copenhagen, hold.",
+      "harder": "Det er sidste trin. Her arbejder du dig op til toppen af intervallet og bliver der.",
+      "equipment": ["sofa"],
+      "getReady": "Tjek, at sofaen står fast, og læg dig på siden foran den, så den øverste fod kan nå sofakanten.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "down",
+              "name": "Benet nede",
+              "text": "Lang Copenhagen: underarmen i gulvet under skulderen, indersiden af den øverste fod på sofakanten og kroppen lige fra hoved til fod. Det nederste ben hænger strakt lige over gulvet.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "sofa", "count": 1 }
+              ]
+            },
+            {
+              "id": "up",
+              "name": "Benet oppe",
+              "text": "Som nede, men det nederste ben er løftet strakt op, til foden rører sofaen lige under den øverste fod. Hoften er stadig oppe, og kroppen er lige.",
+              "contacts": [
+                { "part": "forearm", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "sofa" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "up", "seconds": 2, "label": "Løft langsomt" },
+            { "to": "down", "seconds": 3, "label": "3 sek ned" }
           ]
         }
       ]

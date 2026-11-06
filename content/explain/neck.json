@@ -2,9 +2,9 @@
   "format": 1,
   "subject": "neck",
   "why": [
-    "En stærk nakke holder hovedet stabilt i clinchen, og når du bliver ramt. Stigen bygger den langsomt op: fra blide tryk liggende over tryk mod din egen hånd og hold over sengekanten til langsomme bevægelser mod modstand.",
-    "Nakken trænes som resten af kroppen: lidt mere over tid. Svarer du »Let« to pas i træk, rykker du et trin op. På de andre dage er hage-ind i Open & Strong nok.",
-    "Ingen nakkebroer uden træner. Let ømhed i musklerne er i orden, men skarp smerte betyder stop og et trin ned i en uge. Stop også ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+    "En stærk nakke holder hovedet stabilt i clinchen, og når du bliver ramt. Byg den langsomt: fra blide tryk liggende til langsomme bevægelser mod modstand. Svarer du »Let« to pas i træk, rykker du et trin op. På de andre dage er hage-ind i Open & Strong nok.",
+    "Ingen nakkebroer uden træner. Mærker du snurren, svimmelhed eller smerte ud i armen, så tryk »Stop«, og søg læge, hvis det ikke går over.",
+    "Smerte op til 3 ud af 10 under en øvelse er i orden, hvis den er væk næste morgen. Skarp eller stigende smerte i et led: stop øvelsen, og gå et trin ned i en uge. I nakken stopper du med »Stop«."
   ],
   "items": [
     {
@@ -34,7 +34,7 @@
           "fix": "Træk vejret roligt gennem næsen hele tiden."
         }
       ],
-      "easier": "Det er stigens første trin. Er det for meget, så pres endnu blidere.",
+      "easier": "Pres endnu blidere, så kæben og skuldrene er helt slappe hele holdet.",
       "harder": "Trin N2: hage-ind og løft, hvor du løfter hovedet 2 cm fra gulvet med hagen inde.",
       "equipment": [],
       "getReady": "Læg dig på ryggen på gulvet med bøjede knæ, og lad pulsen falde lidt.",
@@ -168,7 +168,7 @@
         },
         {
           "mistake": "Du presser hårdere end halv kraft eller med et ryk.",
-          "fix": "Byg trykket op over et par sekunder, og bliv på cirka halvdelen af dit hårdeste tryk."
+          "fix": "Byg trykket roligt op, og bliv på cirka halvdelen af dit hårdeste tryk."
         },
         {
           "mistake": "Skuldrene trækker op mod ørerne.",
@@ -257,7 +257,7 @@
       "start": "Stå oprejst med fødderne i hoftebredde og armene langs siden. Hovedet er lige, og blikket vandret.",
       "steps": [
         "Læg hånden mod panden, og pres med 80 % kraft: hårdt, men ikke alt, hvad du har. Hovedet står stille.",
-        "Byg trykket op over et par sekunder, og slip det lige så roligt efter holdet.",
+        "Byg trykket roligt op, og slip det lige så roligt efter holdet.",
         "Tag retningerne i rækkefølgen pande, baghoved, venstre og højre side med hånden over øret.",
         "Stop ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
       ],

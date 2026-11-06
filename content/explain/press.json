@@ -34,7 +34,7 @@
           "fix": "Kig på gulvet lige foran hænderne, og lad brystet nå ned først."
         }
       ],
-      "easier": "Sæt hænderne på sofaen, hvis du ikke kan lave 6 gentagelser i alle sæt. Gør håndleddet ondt, så lav dem på knoerne med lige håndled.",
+      "easier": "Sæt hænderne på sofaen, hvis du ikke kan lave 6 gentagelser i alle sæt. Gør push-ups ondt i håndleddet, så tag dem på knoer.",
       "harder": "Trin 2: fødderne på en stol, så mere af vægten kommer på armene.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, hvor du kan ligge i hele din længde.",
@@ -118,6 +118,313 @@
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "toes", "on": "chair" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1, "label": "Op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "press.3",
+      "trains": "Mere vægt på én arm ad gangen og en mave, der holder kroppen lige, som når du slår med én hånd.",
+      "start": "Den ene hånd på en stak med 3–4 bøger, den anden i gulvet, begge lidt bredere end skuldrene. Fødderne på tæerne lidt fra hinanden, og kroppen lige fra hæl til hoved.",
+      "steps": [
+        "Spænd maven og ballerne, så kroppen er én planke, og hoften ikke drejer.",
+        "Sænk dig på 3 sek med albuerne ca. 45° ud fra kroppen, til brystet er lige over gulvet.",
+        "Hold 1 sek stille, og pres dig op i ét roligt stræk, mest med den nederste arm.",
+        "I sættet »Venstre side« er venstre hånd i gulvet og højre på bøgerne. I »Højre side« bytter du."
+      ],
+      "tempo": "3 sek ned, 1 sek stille lige over gulvet, op i ét roligt stræk.",
+      "breathing": "Ånd ind på vej ned, og pust ud på vej op. Hold ikke vejret i bunden.",
+      "cues": ["Nederste arm arbejder", "Hoften drejer ikke", "3 sek ned, 1 sek stille"],
+      "mistakes": [
+        {
+          "mistake": "Hoften drejer ned mod den nederste side.",
+          "fix": "Spænd maven og ballerne, og hold begge hofter i samme højde hele vejen."
+        },
+        {
+          "mistake": "Den nederste albue peger lige ud til siden.",
+          "fix": "Hold albuen ca. 45° ud fra kroppen, så den peger skråt bagud."
+        },
+        {
+          "mistake": "Bøgerne glider eller vælter.",
+          "fix": "Læg store bøger fladt i en lige stak, og sæt hele hånden midt på den øverste."
+        }
+      ],
+      "easier": "Trin 2: push-up med fødderne på en stol.",
+      "harder": "Trin 4: archer push-up med hænderne i dobbelt skulderbredde.",
+      "equipment": ["books"],
+      "getReady": "Læg 3–4 store bøger fladt i en stak på gulvet, hvor din ene hånd skal stå.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Strakte arme: den ene hånd på bogstakken, den anden i gulvet, begge lidt bredere end skuldrene. Kroppen er lige fra hæl til hoved med hoften i niveau, og tæerne er i gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "books", "count": 1 },
+                { "part": "hand", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Brystet lige over gulvet. Den nederste albue er bøjet ca. 90°, den øverste lidt mindre, begge ca. 45° ud fra kroppen. Kroppen er stadig lige, og hænder og fødder står samme sted.",
+              "contacts": [
+                { "part": "hand", "on": "books", "count": 1 },
+                { "part": "hand", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1, "label": "Op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "press.4",
+      "trains": "Næsten hele vægten på én arm, mens den anden kun støtter: styrke til etarms push-up og til slag med én hånd.",
+      "start": "Planke med hænderne i dobbelt skulderbredde og fingrene frem eller let udad. Fødderne på tæerne lidt fra hinanden, og kroppen lige fra hæl til hoved.",
+      "steps": [
+        "Flyt vægten over mod den ene hånd, og sænk dig mod den på 3 sek.",
+        "Bøj kun den arm, du sænker dig mod. Den anden arm bliver strakt og hjælper mindst muligt.",
+        "Hold 1 sek stille med brystet lige over gulvet, og pres dig op i ét roligt stræk til midten.",
+        "I sættet »Venstre side« sænker du dig mod venstre hånd hver gang. I »Højre side« mod højre."
+      ],
+      "tempo": "3 sek ned, 1 sek stille lige over gulvet, op i ét roligt stræk.",
+      "breathing": "Ånd ind på vej ned, og pust ud på vej op. Hold ikke vejret i bunden.",
+      "cues": ["Dobbelt skulderbredde", "Strakt arm hjælper mindst", "Kroppen som én planke"],
+      "mistakes": [
+        {
+          "mistake": "Den strakte arm bøjer og tager vægten.",
+          "fix": "Hold den albue helt strakt, og lad hånden kun støtte i gulvet."
+        },
+        {
+          "mistake": "Hoften drejer eller hænger, når du flytter dig til siden.",
+          "fix": "Spænd maven og ballerne, og hold hoften i niveau med skuldrene."
+        },
+        {
+          "mistake": "Den arbejdende albue peger lige ud til siden.",
+          "fix": "Hold den albue ca. 45° ud fra kroppen, så den peger skråt bagud."
+        }
+      ],
+      "easier": "Trin 3: skæv push-up med den ene hånd på 3–4 bøger.",
+      "harder": "Trin 5: etarms push-up på skrå med hånden på et bord.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, der er bred nok til dine arme strakt ud til siderne.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Strakte arme med hænderne i dobbelt skulderbredde og skuldrene midt imellem dem. Kroppen er lige fra hæl til hoved, og kun hænder og tæer rører gulvet.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede til siden",
+              "text": "Skuldrene er flyttet over mod den arbejdende hånd, og den albue er bøjet ca. 90°. Den anden arm er strakt skråt ud til siden. Brystet er lige over gulvet, og hænder og fødder står samme sted.",
+              "contacts": [
+                { "part": "hand", "on": "floor" },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1, "label": "Op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "press.5",
+      "trains": "Én arm bærer, mens maven holder hoften i ro: vejen til etarms push-up og styrke til slag med én hånd.",
+      "start": "Den ene hånd på kanten af et tungt bord ud for brystet og den frie hånd på lænden. Fødderne bredt på forfødderne, og kroppen lige og på skrå fra hæl til hoved.",
+      "steps": [
+        "Spænd maven og ballerne, og hold hoften i niveau, så den ikke drejer.",
+        "Sænk brystet mod bordkanten på 3 sek med albuen tæt ind til kroppen.",
+        "Hold 1 sek stille lige over kanten, og pres dig op i ét roligt stræk.",
+        "I sættet »Venstre side« er venstre hånd på bordet. I »Højre side« er det højre."
+      ],
+      "tempo": "3 sek ned, 1 sek stille lige over kanten, op i ét roligt stræk.",
+      "breathing": "Ånd ind på vej ned, og pust ud på vej op. Hold ikke vejret i bunden.",
+      "cues": ["Fødderne bredt", "Hoften i niveau", "3 sek ned, 1 sek stille"],
+      "mistakes": [
+        {
+          "mistake": "Hoften drejer op på den frie side.",
+          "fix": "Spænd maven og ballerne, og hold begge hofter i samme højde."
+        },
+        {
+          "mistake": "Albuen flyver ud til siden.",
+          "fix": "Hold albuen tæt ind til kroppen, så den peger skråt bagud."
+        },
+        {
+          "mistake": "Bordet flytter sig eller vipper.",
+          "fix": "Brug et tungt bord, og pres først let for at mærke, at det står fast."
+        }
+      ],
+      "easier": "En højere flade, fx køkkenbordet, eller trin 4: archer push-up.",
+      "harder": "Når du rammer 8 pr. side i alle sæt med 2 i reserve, så sænk hånden: sofa, stol og til sidst trappetrin. Derefter trin 6.",
+      "equipment": ["table"],
+      "getReady": "Find et tungt bord, der står fast, eller den lavere flade, du er nået til.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Den ene hånd på bordkanten ud for brystet med strakt arm, ca. vinkelret på kroppen. Den frie hånd på lænden. Kroppen er lige og på skrå fra hælene op til hovedet, og fødderne står bredt på forfødderne.",
+              "contacts": [
+                { "part": "hand", "on": "table", "count": 1 },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Brystet lige over bordkanten ved hånden, albuen bøjet ca. 90° og tæt ind til kroppen. Kroppen er stadig lige med hoften i niveau, og hånd og fødder står samme sted.",
+              "contacts": [
+                { "part": "hand", "on": "table", "count": 1 },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1, "label": "Op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "press.6",
+      "trains": "Hele vægten på én arm og en mave, der holder hoften i ro: fuld styrke i hver arm til slag og clinch.",
+      "start": "Planke i gulvet med fødderne mere end skulderbredde fra hinanden og den ene hånd under brystet. Læg den frie hånd på lænden, og hold kroppen lige fra hæl til hoved.",
+      "steps": [
+        "Spænd maven og ballerne, og hold hoften i niveau.",
+        "Sænk dig på 3 sek med albuen tæt ind til kroppen, til brystet er lige over gulvet.",
+        "Hold 1 sek stille, og pres dig op i ét roligt stræk uden at dreje.",
+        "I sættet »Venstre side« er venstre hånd i gulvet og højre på lænden. I »Højre side« bytter du."
+      ],
+      "tempo": "3 sek ned, 1 sek stille lige over gulvet, op i ét roligt stræk.",
+      "breathing": "Ånd ind på vej ned, og pust ud på vej op. Hold ikke vejret i bunden.",
+      "cues": ["Frie hånd på lænden", "Fødderne bredt", "Hoften i niveau"],
+      "mistakes": [
+        {
+          "mistake": "Hoften drejer op, og du presser med siden af kroppen.",
+          "fix": "Spænd maven og ballerne, og hold begge hofter i samme højde hele vejen."
+        },
+        {
+          "mistake": "Albuen flyver ud til siden.",
+          "fix": "Hold albuen tæt ind til kroppen, så den peger skråt bagud."
+        },
+        {
+          "mistake": "Fødderne står for tæt, og du mister balancen.",
+          "fix": "Spred fødderne mere end skulderbredde, før du starter."
+        }
+      ],
+      "easier": "Trin 5: etarms push-up på skrå med hånden på et trappetrin.",
+      "harder": "Trin 7: etarms push-up med fødderne i hoftebredde.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, hvor du kan stå i planke med brede fødder.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Strakt arm med hånden i gulvet under brystet, lidt inden for skulderen, og den frie hånd på lænden. Kroppen er lige fra hæl til hoved, og fødderne står mere end skulderbredde fra hinanden på tæerne.",
+              "contacts": [
+                { "part": "hand", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Brystet lige over gulvet ved hånden, albuen bøjet ca. 90° og tæt ind til kroppen. Kroppen er stadig lige med hoften i niveau, og hånd og fødder står samme sted.",
+              "contacts": [
+                { "part": "hand", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor" }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1, "label": "Op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "press.7",
+      "trains": "Etarms push-up med smal fodstilling, så maven alene holder kroppen fri for vrid, som når du slår hårdt.",
+      "start": "Som trin 6, men med fødderne i hoftebredde: den ene hånd under brystet, den frie hånd på lænden og kroppen lige fra hæl til hoved.",
+      "steps": [
+        "Spænd maven, ballerne og lårene hårdt, så kroppen ikke vrider.",
+        "Sænk dig på 3 sek med albuen tæt ind til kroppen, til brystet er lige over gulvet.",
+        "Hold 1 sek stille, og pres dig op i ét roligt stræk med skuldre og hofte parallelt med gulvet.",
+        "I sættet »Venstre side« er venstre hånd i gulvet og højre på lænden. I »Højre side« bytter du."
+      ],
+      "tempo": "3 sek ned, 1 sek stille lige over gulvet, op i ét roligt stræk.",
+      "breathing": "Ånd ind på vej ned, og pust ud på vej op. Hold ikke vejret i bunden.",
+      "cues": ["Ingen vridning", "Fødderne i hoftebredde", "3 sek ned, 1 sek stille"],
+      "mistakes": [
+        {
+          "mistake": "Kroppen vrider, så skulderen på den frie side løfter sig.",
+          "fix": "Spænd maven hårdere, og hold skuldre og hofte parallelt med gulvet."
+        },
+        {
+          "mistake": "Fødderne glider ud i bred stand.",
+          "fix": "Sæt fødderne i hoftebredde før hvert sæt, og stop sættet, hvis du må sprede dem for at holde balancen."
+        },
+        {
+          "mistake": "Albuen flyver ud til siden.",
+          "fix": "Hold albuen tæt ind til kroppen, så den peger skråt bagud."
+        }
+      ],
+      "easier": "Trin 6: etarms push-up med brede fødder.",
+      "harder": "Der er intet trin over dette. Gør hver gentagelse renere: helt ned, 1 sek stille og ingen vridning.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, og stil fødderne i hoftebredde.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Strakt arm med hånden i gulvet under brystet, lidt inden for skulderen, og den frie hånd på lænden. Fødderne i hoftebredde på tæerne, og kroppen er lige fra hæl til hoved uden vrid.",
+              "contacts": [
+                { "part": "hand", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor" }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Brystet lige over gulvet ved hånden, albuen bøjet ca. 90° og tæt ind til kroppen. Skuldre og hofte er stadig parallelle med gulvet, og hånd og fødder står samme sted.",
+              "contacts": [
+                { "part": "hand", "on": "floor", "count": 1 },
+                { "part": "toes", "on": "floor" }
               ]
             }
           ],

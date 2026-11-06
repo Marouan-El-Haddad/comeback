@@ -4,7 +4,7 @@
   "why": [
     "I Muay Thai står du tit på ét ben: når du sparker, giver knæ og skifter stilling. Stigen bygger styrke i ét ben ad gangen, så standbenet holder, og fodarbejdet bliver stærkere. Den går fra split squat til pistol squat helt ned og op på ét ben.",
     "Tjek anklen med knæ-til-væg: stil tæerne 10 cm fra væggen, og før knæet frem mod den. Når knæet væggen, uden at hælen letter? Ellers: 2 × 10 ankel-vip først (knæet frem over tæerne med hælen i gulvet) og en tynd bog under hælen i trin 4–6.",
-    "Knæet må gerne gå frem over tæerne, så længe hælen bliver i gulvet. Let ømhed i lårene er i orden; skarp smerte eller smerte i knæet betyder stop og et trin ned."
+    "Smerte op til 3 ud af 10 under en øvelse er i orden, hvis den er væk næste morgen. Skarp eller stigende smerte i et led: stop øvelsen, og gå et trin ned i en uge. Det gør appen, når du trykker »Smerte« og »Skarp eller i et led«; på trin 1 får du den lettere variant."
   ],
   "items": [
     {
@@ -130,6 +130,342 @@
             { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
             { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
             { "to": "top", "seconds": 1.5, "label": "Kontrolleret op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "legs.3",
+      "trains": "Mere belastning på ét ben ad gangen, så lår og baller får mere kraft til spark og knæ.",
+      "start": "Stil dig med ryggen til sofaen, et stort skridt foran den, med rygsækken på ryggen. Læg vristen af bagerste fod på sofakanten, og hold i stropperne.",
+      "steps": [
+        "Spænd maven, og læn overkroppen lidt frem med lang ryg.",
+        "Sænk dig dybt på 3 sek, til bagerste knæ er lige over gulvet.",
+        "Hold 1 sek stille, og pres dig op gennem hele forreste fod. Tag alle gentagelser, og skift så ben.",
+        "Uden rygsæk: hænderne på hofterne og 3 sek pause i bunden i stedet for 1 sek."
+      ],
+      "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op. Uden rygsæk: 3 sek pause i bunden.",
+      "breathing": "Træk vejret ind på vej ned, hold ikke vejret i bunden, og pust ud på vej op.",
+      "cues": ["Dybt og kontrolleret", "Forreste hæl i gulvet", "Bagerste ben hviler bare"],
+      "mistakes": [
+        {
+          "mistake": "Du stopper højere oppe, når det bliver tungt.",
+          "fix": "Gå hele vejen ned, til bagerste knæ er lige over gulvet, og tag mindre i rygsækken, hvis du ikke kan."
+        },
+        {
+          "mistake": "Rygsækken trækker overkroppen bagover.",
+          "fix": "Stram stropperne, og læn overkroppen lidt frem med lang ryg."
+        },
+        {
+          "mistake": "Du falder ned i bunden og fjedrer op.",
+          "fix": "Tæl 3 sek ned, og stå helt stille i bunden, før du presser dig op."
+        }
+      ],
+      "easier": "Trin 2: bulgarsk split squat uden rygsæk.",
+      "harder": "Trin 4: etbens rejs-dig fra stol med armene frem som modvægt.",
+      "equipment": ["sofa", "backpack"],
+      "getReady": "Pak rygsækken, så alle sæt bliver rene med den planlagte reserve, fx med vandflasker, hvor 1 liter vejer 1 kg.",
+      "movements": [
+        {
+          "id": "backpack",
+          "name": "Med rygsæk",
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Rygsækken sidder tæt på ryggen. Forreste fod fladt i gulvet et stort skridt foran sofaen, vristen af bagerste fod på sofakanten. Forreste ben næsten strakt, overkroppen lidt frem og hænderne på stropperne.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "sofa", "count": 1 }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Forreste lår vandret eller lidt under med knæet frem over tæerne og hælen i gulvet. Bagerste knæ lige over gulvet, lidt bag hoften. Overkroppen hælder lidt frem med lang ryg, hænderne på stropperne.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "sofa", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1.5, "label": "Kontrolleret op" }
+          ]
+        },
+        {
+          "id": "pause",
+          "name": "Uden rygsæk, med 3 sek pause",
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Uden rygsæk. Forreste fod fladt i gulvet et stort skridt foran sofaen, vristen af bagerste fod på sofakanten. Forreste ben næsten strakt, overkroppen lidt frem og hænderne på hofterne.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "sofa", "count": 1 }
+              ]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Forreste lår vandret eller lidt under med knæet frem over tæerne og hælen i gulvet. Bagerste knæ lige over gulvet, lidt bag hoften. Overkroppen hælder lidt frem med lang ryg, hænderne på hofterne.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "foot", "on": "sofa", "count": 1 }
+              ]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 3, "label": "3 sek pause" },
+            { "to": "top", "seconds": 1.5, "label": "Kontrolleret op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "legs.4",
+      "trains": "Styrke på ét ben gennem en dyb bevægelse med stolen som stop, så standbenet holder i spark og knæ.",
+      "start": "Sid yderst på en solid stol med den ene fod fladt i gulvet lige foran sædet. Stræk det andet ben frem med hælen lidt over gulvet, og stræk armene frem i skulderhøjde.",
+      "steps": [
+        "Læn overkroppen frem, og rejs dig på ét ben med armene frem som modvægt.",
+        "Sæt dig igen på 3 sek, til bagdelen rører stolen let, og hold 1 sek stille uden at slappe af.",
+        "Rejs dig kontrolleret igen. Tag alle gentagelser på samme ben, og skift så.",
+        "Sænk sædet gradvist: er stolen for lav, så læg puder på sædet, og fjern dem én ad gangen, efterhånden som det går."
+      ],
+      "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
+      "breathing": "Træk vejret ind på vej ned, og pust ud, når du rejser dig.",
+      "cues": ["Armene frem som modvægt", "Rør stolen let", "Hele foden i gulvet"],
+      "mistakes": [
+        {
+          "mistake": "Du gynger bagud og kaster dig op.",
+          "fix": "Læn overkroppen frem, og stræk armene langt frem, før du rejser dig."
+        },
+        {
+          "mistake": "Standbenets knæ falder ind mod midten.",
+          "fix": "Hold knæet over midten af foden, så det peger samme vej som tæerne."
+        },
+        {
+          "mistake": "Hælen letter, når du rejser dig.",
+          "fix": "Læg en tynd bog under hælen, og lav ankel-vip før sættet, hvis du ikke klarede knæ-til-væg."
+        }
+      ],
+      "easier": "Trin 3: bulgarsk split squat med rygsæk eller med 3 sek pause i bunden.",
+      "harder": "Trin 5: pistol-negativer, hvor du sænker dig på ét ben uden stol og rejser dig på to.",
+      "equipment": ["chair", "wall"],
+      "getReady": "Stil en solid stol med ryggen mod en væg, så den ikke kan glide.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Bagdelen rører stolens forkant let. Standbenets fod står fladt lige foran sædet, og knæet er bøjet ca. 90°. Det frie ben er strakt frem med hælen lidt over gulvet, overkroppen lænet frem og armene strakt frem.",
+              "contacts": [
+                { "part": "foot", "on": "floor", "count": 1 },
+                { "part": "hip", "on": "chair" }
+              ]
+            },
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Stående på ét ben foran stolen med knæet næsten strakt og overkroppen lodret. Det frie ben er strakt frem med hælen lidt over gulvet, og armene er strakt frem i skulderhøjde.",
+              "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
+            }
+          ],
+          "phases": [
+            { "to": "top", "seconds": 1.5, "label": "Rejs dig" },
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "legs.5",
+      "trains": "Styrke og kontrol på ét ben hele vejen ned, så du kan styre kroppen på standbenet i spark og skift.",
+      "start": "Stå på ét ben med det frie ben strakt frem og hælen lidt over gulvet. Stræk armene frem i skulderhøjde som modvægt.",
+      "steps": [
+        "Sænk dig på 5 sek helt ned på ét ben, så bagdelen kommer tæt på hælen.",
+        "Hold hele foden i gulvet, og lad knæet gå frem over tæerne.",
+        "Sæt den frie fod ned i bunden, og rejs dig kontrolleret på to ben.",
+        "Løft det frie ben frem igen. Tag alle gentagelser på samme ben, og skift så."
+      ],
+      "tempo": "5 sek ned på ét ben, og rejs dig kontrolleret på to.",
+      "breathing": "Træk vejret roligt på vej ned, og pust ud, når du rejser dig.",
+      "cues": ["5 sek ned på ét ben", "Hælen bliver i gulvet", "Rejs dig på to"],
+      "mistakes": [
+        {
+          "mistake": "Du falder det sidste stykke ned.",
+          "fix": "Sænk dig langsommere fra starten, og sæt den frie fod ned, før du mister styringen."
+        },
+        {
+          "mistake": "Hælen letter, eller du vælter bagover.",
+          "fix": "Stræk armene længere frem. Letter hælen stadig, så læg en tynd bog under den, og lav ankel-vip først."
+        },
+        {
+          "mistake": "Standbenets knæ falder ind mod midten.",
+          "fix": "Hold knæet over midten af foden, så det peger samme vej som tæerne."
+        }
+      ],
+      "easier": "Trin 4: etbens rejs-dig fra stol, hvor stolen tager imod dig i bunden.",
+      "harder": "Trin 6: pistol squat, hele vejen ned og op på ét ben.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, og stå på bare fødder eller i sko, så foden ikke glider.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Stående på ét ben med knæet næsten strakt og overkroppen lodret. Det frie ben er strakt frem med hælen lidt over gulvet, og armene er strakt frem i skulderhøjde.",
+              "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Helt nede på ét ben: bagdelen tæt på hælen, knæet bøjet helt og frem over tæerne og hele foden i gulvet. Det frie ben er strakt frem over gulvet, overkroppen lænet frem og armene strakt frem.",
+              "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
+            },
+            {
+              "id": "squat",
+              "name": "På to ben",
+              "text": "Helt nede i en dyb squat på begge fødder, som står fladt i hoftebredde. Knæene er bøjet helt, overkroppen er lænet frem, og armene er strakt frem.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            },
+            {
+              "id": "stand",
+              "name": "Stående",
+              "text": "Stående på begge fødder i hoftebredde med strakte ben, overkroppen lodret og armene strakt frem i skulderhøjde.",
+              "contacts": [{ "part": "foot", "on": "floor" }]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 5, "label": "5 sek ned" },
+            { "to": "squat", "seconds": 0.6, "label": "Sæt foden ned" },
+            { "to": "stand", "seconds": 1.5, "label": "Rejs dig på to" },
+            { "to": "top", "seconds": 0.8, "label": "Løft benet frem" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "legs.6",
+      "trains": "Fuld styrke og balance på ét ben til standbenet i spark, knæ og hurtige skift.",
+      "start": "Stå på ét ben med det frie ben strakt frem og hælen lidt over gulvet. Stræk armene frem i skulderhøjde som modvægt.",
+      "steps": [
+        "Sænk dig på 3 sek helt ned på ét ben, så bagdelen kommer tæt på hælen.",
+        "Hold 1 sek stille med hele foden i gulvet og det frie ben over gulvet.",
+        "Pres dig op på samme ben uden at sætte den frie fod ned.",
+        "Tag alle gentagelser på samme ben, og skift så."
+      ],
+      "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
+      "breathing": "Træk vejret ind på vej ned, og pust ud på vej op.",
+      "cues": ["Hele vejen ned og op", "Hælen bliver i gulvet", "Armene frem som modvægt"],
+      "mistakes": [
+        {
+          "mistake": "Du falder ned i bunden og fjedrer op.",
+          "fix": "Tæl 3 sek ned, og hold 1 sek stille, før du presser dig op."
+        },
+        {
+          "mistake": "Hælen letter, eller du vælter bagover.",
+          "fix": "Stræk armene længere frem. Letter hælen stadig, så læg en tynd bog under den, og lav ankel-vip først."
+        },
+        {
+          "mistake": "Standbenets knæ falder ind på vej op.",
+          "fix": "Pres knæet ud over midten af foden, så det peger samme vej som tæerne."
+        }
+      ],
+      "easier": "Trin 5: pistol-negativer, hvor du sænker dig på ét ben og rejser dig på to.",
+      "harder": "Trin 7: pistol med 2 sek pause i bunden og et knæspark i toppen.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, og stå på bare fødder eller i sko, så foden ikke glider.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Stående på ét ben med knæet næsten strakt og overkroppen lodret. Det frie ben er strakt frem med hælen lidt over gulvet, og armene er strakt frem i skulderhøjde.",
+              "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Helt nede på ét ben: bagdelen tæt på hælen, knæet bøjet helt og frem over tæerne og hele foden i gulvet. Det frie ben er strakt frem over gulvet, overkroppen lænet frem og armene strakt frem.",
+              "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 1, "label": "1 sek stille" },
+            { "to": "top", "seconds": 1.5, "label": "Kontrolleret op" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "legs.7",
+      "trains": "Styrke helt nede og et eksplosivt knæ fra ét ben, som når du rejser dig og giver knæ i clinchen.",
+      "start": "Stå på ét ben med det frie ben strakt frem og hælen lidt over gulvet. Stræk armene frem i skulderhøjde som modvægt.",
+      "steps": [
+        "Sænk dig på 3 sek helt ned på ét ben med hele foden i gulvet.",
+        "Hold 2 sek pause i bunden, og bliv spændt i hele benet.",
+        "Rejs dig på samme ben, og driv det frie knæ op mod hænderne i et knæspark.",
+        "Stræk benet frem igen til næste gentagelse. Tag alle gentagelser på samme ben, og skift så."
+      ],
+      "tempo": "3 sek ned, 2 sek pause i bunden, kontrolleret op, og driv så knæet op.",
+      "breathing": "Træk vejret ind på vej ned, og pust kraftigt ud i knæsparket.",
+      "cues": ["2 sek pause i bunden", "Driv knæet op", "Hælen bliver i gulvet"],
+      "mistakes": [
+        {
+          "mistake": "Du synker sammen og hviler i pausen.",
+          "fix": "Bliv spændt i hele benet i de 2 sek, og hold vægten midt på foden."
+        },
+        {
+          "mistake": "Du mister balancen i knæsparket.",
+          "fix": "Rejs dig helt op først, og spænd maven, før knæet går op."
+        },
+        {
+          "mistake": "Hælen letter, eller du vælter bagover.",
+          "fix": "Stræk armene længere frem, og hold vægten midt på foden hele vejen ned."
+        }
+      ],
+      "easier": "Trin 6: pistol squat uden pause og knæspark.",
+      "harder": "Det er stigens sidste trin. Hold formen, og byg op til toppen af intervallet.",
+      "equipment": [],
+      "getReady": "Find en fri plads på gulvet, og stå på bare fødder eller i sko, så foden ikke glider.",
+      "movements": [
+        {
+          "positions": [
+            {
+              "id": "top",
+              "name": "Oppe",
+              "text": "Stående på ét ben med knæet næsten strakt og overkroppen lodret. Det frie ben er strakt frem med hælen lidt over gulvet, og armene er strakt frem i skulderhøjde.",
+              "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
+            },
+            {
+              "id": "bottom",
+              "name": "Nede",
+              "text": "Helt nede på ét ben: bagdelen tæt på hælen, knæet bøjet helt og frem over tæerne og hele foden i gulvet. Det frie ben er strakt frem over gulvet, overkroppen lænet frem og armene strakt frem.",
+              "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
+            },
+            {
+              "id": "knee",
+              "name": "Knæspark",
+              "text": "Stående på ét ben med strakt knæ og hele foden i gulvet. Det frie knæ er drevet op over hoftehøjde med underbenet hængende ned, og hænderne er strakt frem lige over knæet.",
+              "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
+            }
+          ],
+          "phases": [
+            { "to": "bottom", "seconds": 3, "label": "3 sek ned" },
+            { "to": "bottom", "seconds": 2, "label": "2 sek pause" },
+            { "to": "top", "seconds": 1.5, "label": "Kontrolleret op" },
+            { "to": "knee", "seconds": 0.4, "label": "Knæ op" },
+            { "to": "top", "seconds": 0.8, "label": "Benet frem igen" }
           ]
         }
       ]

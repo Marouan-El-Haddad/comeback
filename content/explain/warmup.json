@@ -111,7 +111,7 @@
         "Kosak-squat: sæt dig ned på det ene ben, mens det andet er strakt med tæerne op. Skift side, til du har 5 på hver.",
         "Kat-ko: rund ryggen op mod loftet, og lad den derefter synke med brystet frem. 10 gange."
       ],
-      "tempo": "Roligt og jævnt med et kort stop yderst i hver bevægelse.",
+      "tempo": "Roligt og jævnt hele vejen, uden ryk.",
       "breathing": "Træk vejret roligt. I kat-ko puster du ud, når du runder ryggen, og ånder ind, når den synker.",
       "cues": ["Brystet drejer op mod loftet", "Hælen ned, tæerne op", "Rund op, og lad synke"],
       "mistakes": [
@@ -286,8 +286,8 @@
           "fix": "Hold knæet og foden pegende frem, og drej hoften op over dem."
         }
       ],
-      "easier": "Gør håndleddene ondt, så vip mindre langt frem, og tag skulderblads-push-ups på knoerne. Støt en hånd let mod væggen i hip airplanes.",
-      "harder": "Lav hip airplanes langsommere, og hold et kort øjeblik med bækkenet drejet helt op.",
+      "easier": "Gør push-ups ondt i håndleddet, så tag skulderblads-push-ups på knoer, og vip mindre langt frem. Støt en hånd let mod væggen i hip airplanes.",
+      "harder": "Læn overkroppen helt ned til vandret i hip airplanes, og drej bækkenet længere op.",
       "equipment": [],
       "getReady": "Find en plads på gulvet, hvor du kan stå på alle fire og i planke.",
       "movements": [

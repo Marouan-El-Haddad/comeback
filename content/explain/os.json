@@ -18,7 +18,7 @@
         "Gør det samme med håndklædet under midten og under toppen af skulderbladene."
       ],
       "tempo": "Bliv i hver position i 3 dybe vejrtrækninger, og ryk så videre.",
-      "breathing": "Ånd dybt ind gennem næsen, og pust langsomt ud gennem munden, cirka dobbelt så længe.",
+      "breathing": "Ånd ind på ca. 2 sek, og pust langsomt ud på ca. 4 sek. Så når du alle 3 positioner på et minut.",
       "cues": ["Lang udånding, synk ned", "Hoften bliver i gulvet", "Ribbenene ned mod hoften"],
       "mistakes": [
         {
@@ -76,11 +76,23 @@
             }
           ],
           "phases": [
-            { "to": "low", "seconds": "dose", "label": "3 dybe vejrtrækninger" },
+            {
+              "to": "low",
+              "seconds": "dose",
+              "label": "3 dybe vejrtrækninger"
+            },
             { "to": "mid", "seconds": 2, "label": "Ryk en håndsbredde" },
-            { "to": "mid", "seconds": "dose", "label": "3 dybe vejrtrækninger" },
+            {
+              "to": "mid",
+              "seconds": "dose",
+              "label": "3 dybe vejrtrækninger"
+            },
             { "to": "high", "seconds": 2, "label": "Ryk en håndsbredde" },
-            { "to": "high", "seconds": "dose", "label": "3 dybe vejrtrækninger" }
+            {
+              "to": "high",
+              "seconds": "dose",
+              "label": "3 dybe vejrtrækninger"
+            }
           ]
         }
       ]
@@ -95,7 +107,7 @@
         "Pust ud, mens brystet drejer mod loftet, og før armen samme vej tilbage.",
         "Tag 5, rul om på den anden side, og gentag."
       ],
-      "tempo": "Åbn på 2 sek, og luk på 2 sek. Efter 5 skifter du side.",
+      "tempo": "Roligt og jævnt, så du når 5 pr. side, før uret skifter.",
       "breathing": "Pust ud, mens du åbner, og ånd ind, mens du lukker.",
       "cues": ["Knæene bliver samlet", "Følg hånden med blikket", "Pust ud, når du åbner"],
       "mistakes": [
@@ -145,16 +157,12 @@
             }
           ],
           "phases": [
-            { "to": "open", "seconds": 2, "label": "Åbn" },
-            { "to": "closed", "seconds": 2, "label": "Luk" },
-            { "to": "open", "seconds": 2, "label": "Åbn" },
-            { "to": "closed", "seconds": 2, "label": "Luk" },
-            { "to": "open", "seconds": 2, "label": "Åbn" },
-            { "to": "closed", "seconds": 2, "label": "Luk" },
-            { "to": "open", "seconds": 2, "label": "Åbn" },
-            { "to": "closed", "seconds": 2, "label": "Luk" },
-            { "to": "open", "seconds": 2, "label": "Åbn" },
-            { "to": "closed", "seconds": 2, "label": "Luk" },
+            {
+              "to": "open",
+              "seconds": 4,
+              "repeat": 5,
+              "label": "Åbn og luk, 5 gange"
+            },
             { "to": "closed", "seconds": 5, "label": "Skift side" }
           ]
         }
@@ -170,7 +178,7 @@
         "Sænk armene roligt.",
         "Tag 8, hvil et par vejrtrækninger, og tag 8 til."
       ],
-      "tempo": "Løft på 1 sek, hold 2 sek, og sænk roligt på 1 sek.",
+      "tempo": "Løft roligt, hold 2 sek, og sænk roligt. Hvil kort mellem de to sæt.",
       "breathing": "Pust ud, når du løfter, og ånd ind, når du sænker.",
       "cues": ["Tommelfingrene op", "Skulderbladene ned mod lommerne", "Panden bliver i gulvet"],
       "mistakes": [
@@ -237,7 +245,7 @@
         "Løft hænder og underarme 2 cm ud fra væggen, og sæt dem tilbage.",
         "Glid roligt ned til start med skuldrene væk fra ørerne."
       ],
-      "tempo": "Glid op på 2 sek, løft armene fra væggen i 1 sek, og glid roligt ned igen.",
+      "tempo": "Langsomt op, et kort løft fra væggen og langsomt ned, så de 8 gentagelser passer til uret.",
       "breathing": "Pust ud på vej op, så ribbenene bliver nede, og ånd ind på vej ned.",
       "cues": ["Skuldrene væk fra ørerne", "Ribbenene nede", "Kun 2 cm fra væggen"],
       "mistakes": [
@@ -306,7 +314,7 @@
         "Hold 5 sek med blikket vandret, og mærk strækket bag i nakken.",
         "Slip roligt, og gentag."
       ],
-      "tempo": "Træk hagen ind på 1 sek, hold 5 sek, og slip på 1 sek.",
+      "tempo": "Træk hagen ind, hold 5 sek, og slip roligt.",
       "breathing": "Træk vejret roligt gennem næsen, også mens du holder.",
       "cues": ["Hagen lige bagud", "Blikket vandret", "Skuldrene står stille"],
       "mistakes": [
@@ -370,8 +378,8 @@
           "fix": "Klem ballen, og træk halebenet ind under dig. Så flytter strækket op foran på hoften."
         },
         {
-          "mistake": "Det gør ondt i knæet, der står på gulvet.",
-          "fix": "Læg mere blødt under, eller flyt knæet lidt væk fra sofaen. Ved skarp smerte i knæet: stop, og brug den lettere udgave."
+          "mistake": "Knæet, der står på gulvet, trykker eller gør ondt.",
+          "fix": "Læg mere blødt under knæet, eller flyt det lidt væk fra sofaen. Skarp eller stigende smerte i et led: stop øvelsen."
         },
         {
           "mistake": "Hoften drejer ud til siden.",
