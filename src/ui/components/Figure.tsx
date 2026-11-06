@@ -7,6 +7,10 @@
 // The phone runs without JIT, so the animation is cheap: the SVG is drawn once, and each frame only
 // moves the elements of the body (at most 30 times a second). It stops when the figure is off the
 // screen or the app is in the background, and goes on from where it stood.
+//
+// In a session the figure can follow the session's clock instead of its own (docs/SPEC.md 3.2,
+// src/figure/sync.ts): `clock` gives the time into the movement for each frame. A small still image
+// of one position is »Næste« and »Dagens pas« (FigureStill).
 import { Fragment } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { FigureItem, OwnMovement } from '../../content/types.ts';
@@ -36,21 +40,56 @@ function addStyle(): void {
 /** At most this many drawings a second: a smooth figure, little work without JIT. */
 const FPS = 30;
 
+/** Seconds into the movement at `now` (performance.now()); null = the first position, no phase. */
+export type FigureClock = (now: number) => number | null;
+
 export interface FigureProps {
   figure: FigureItem;
   movement: OwnMovement;
   /** The text alternative: the positions and the phases in words (docs/SPEC.md 6). */
   label: string;
+  /** The session's clock (src/figure/sync.ts); without it the figure runs in its own tempo. */
+  clock?: FigureClock;
+  /** In a session: no slow motion, so the figure keeps to the clock and leaves room for the set. */
+  compact?: boolean;
 }
 
-export function Figure({ figure, movement, label }: FigureProps) {
+export function Figure({ figure, movement, label, clock, compact = false }: FigureProps) {
   addStyle();
   const reduced = useReducedMotion();
   const model = useMemo(() => buildModel(figure, movement), [figure, movement]);
   return reduced ? (
     <Stills model={model} label={label} />
   ) : (
-    <Animated model={model} label={label} />
+    <Animated model={model} label={label} clock={clock} compact={compact} />
+  );
+}
+
+/** One position as a still image (»Næste«, »Dagens pas«): the movement's most typical by default. */
+export function FigureStill({
+  figure,
+  movement,
+  label,
+  position,
+}: {
+  figure: FigureItem;
+  movement: OwnMovement;
+  label: string;
+  position: string;
+}) {
+  addStyle();
+  const model = useMemo(() => buildModel(figure, movement), [figure, movement]);
+  const markup = useMemo(() => svgBody(stillPrims(model, position)), [model, position]);
+  return (
+    <div class="figure-still-only" role="img" aria-label={label}>
+      <svg
+        class="figure-svg"
+        viewBox={viewBox(model.box)}
+        preserveAspectRatio="xMidYMid meet"
+        aria-hidden="true"
+        dangerouslySetInnerHTML={{ __html: markup }}
+      />
+    </div>
   );
 }
 
@@ -101,9 +140,23 @@ function isTall(model: FigureModel): boolean {
   return model.box.y1 - model.box.y0 > (model.box.x1 - model.box.x0) * 0.9;
 }
 
-function Animated({ model, label }: { model: FigureModel; label: string }) {
+function Animated({
+  model,
+  label,
+  clock,
+  compact,
+}: {
+  model: FigureModel;
+  label: string;
+  clock: FigureClock | undefined;
+  compact: boolean;
+}) {
   const svg = useRef<SVGSVGElement>(null);
-  const [phase, setPhase] = useState<number | null>(() => phaseAt(model, 0));
+  const timeAt = useRef(clock);
+  timeAt.current = clock;
+  const [phase, setPhase] = useState<number | null>(() =>
+    clock ? phaseOrNull(model, clock(performance.now())) : phaseAt(model, 0),
+  );
   const [slow, setSlow] = useState(false);
   const speed = useRef(1);
   speed.current = slow ? 0.5 : 1;
@@ -121,18 +174,18 @@ function Animated({ model, label }: { model: FigureModel; label: string }) {
     let raf = 0;
     let last = -1;
     let drawn = -Infinity;
-    /** Seconds into the loop; only runs while the figure is shown. */
-    let t = 0;
+    /** Seconds into the loop; only runs while the figure is shown. Null = the first position. */
+    let t: number | null = timeAt.current ? timeAt.current(performance.now()) : 0;
     let onScreen = true;
     let shown = document.visibilityState !== 'hidden';
-    let current = phaseAt(model, 0);
+    let current = phaseOrNull(model, t);
 
     const draw = () => {
-      for (const p of movingPrims(model, poseAt(model, t))) {
+      for (const p of movingPrims(model, poseAt(model, t ?? 0))) {
         const node = nodes.get(p.key);
         if (node) for (const [name, value] of moving(p)) node.setAttribute(name, value);
       }
-      const now = phaseAt(model, t);
+      const now = phaseOrNull(model, t);
       if (now !== current) {
         current = now;
         setPhase(now);
@@ -140,7 +193,9 @@ function Animated({ model, label }: { model: FigureModel; label: string }) {
     };
     const tick = (now: number) => {
       raf = 0;
-      if (last >= 0) t += ((now - last) / 1000) * speed.current;
+      const follow = timeAt.current;
+      if (follow) t = follow(now);
+      else if (last >= 0) t = (t ?? 0) + ((now - last) / 1000) * speed.current;
       last = now;
       if (now - drawn >= 1000 / FPS - 1) {
         drawn = now;
@@ -179,9 +234,14 @@ function Animated({ model, label }: { model: FigureModel; label: string }) {
     };
   }, [model]);
 
-  const toggle = () => setSlow((s) => !s);
+  // Following the session's clock, or small in a session: no slow motion.
+  const steady = compact || clock !== undefined;
+  const toggle = steady ? undefined : () => setSlow((s) => !s);
+  const classes = ['figure', isTall(model) ? 'tall' : '', compact ? 'compact' : '']
+    .filter(Boolean)
+    .join(' ');
   return (
-    <figure class={isTall(model) ? 'figure tall' : 'figure'} data-speed={slow ? 'slow' : 'normal'}>
+    <figure class={classes} data-speed={slow ? 'slow' : 'normal'}>
       <div class="figure-stage" role="img" aria-label={label} onClick={toggle}>
         <svg
           ref={svg}
@@ -194,7 +254,7 @@ function Animated({ model, label }: { model: FigureModel; label: string }) {
       </div>
       <figcaption class="figure-caption">
         <Phases movement={model.movement} current={phase} />
-        {!model.frozen && (
+        {!model.frozen && toggle && (
           <button type="button" class="btn figure-speed" onClick={toggle}>
             {slow ? 'Normal fart' : 'Slowmotion'}
           </button>
@@ -202,6 +262,11 @@ function Animated({ model, label }: { model: FigureModel; label: string }) {
       </figcaption>
     </figure>
   );
+}
+
+/** The phase at `t`, or none when the figure stands in its first position (t = null). */
+function phaseOrNull(model: FigureModel, t: number | null): number | null {
+  return t === null ? null : phaseAt(model, t);
 }
 
 /** Reduced motion: every position as a still image with its name, side by side. */

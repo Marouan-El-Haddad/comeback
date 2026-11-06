@@ -351,8 +351,12 @@ export function buildModel(
     const pose = figure.keyframes[p.id];
     if (pose) track(box, movingPrims(model, pose));
   }
+  // A repeated move (30 punches in a wall sit) passes the same poses: it is measured once.
+  const measured = new Set<string>();
   for (const m of line.moves) {
-    if (m.from === m.to) continue;
+    const key = `${m.from}>${m.to}`;
+    if (m.from === m.to || measured.has(key)) continue;
+    measured.add(key);
     for (let k = 1; k < SAMPLES; k++)
       track(box, movingPrims(model, poseAt(model, m.start + (m.seconds * k) / SAMPLES)));
   }
