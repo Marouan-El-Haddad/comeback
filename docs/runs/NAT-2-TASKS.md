@@ -32,8 +32,9 @@ Status: `[ ]` ikke startet · `[~]` i gang · `[x]` færdig (reviewet og udgivet
 - Grønt: `npm run check`; Playwright: ren opstart giver en måling; indfasning, tidsmaskine og genindlæsning giver ingen; hele suiten i `pixel9a` og `pixel9a-utc`.
 - Skærmbillede: `screenshots/diagnose.png`.
 
-### [~] P1 – Kilderne først: den nye retning og datamodellen for forklaringer og figurer (pakke 1)
+### [x] P1 – Kilderne først: den nye retning og datamodellen for forklaringer og figurer (pakke 1)
 
+- Status: færdig 02:45. Review `docs/reviews/nat2-p1-kilder.md`: 0 høje, 5 middel, 6 lave, alle rettet og tjekket i »Opfølgning«; ét nyt lavt fund (L7) rettes i P3. Udgivet (Actions 42145649687).
 - Agent: `comeback-builder`.
 - Mål: `docs/SPEC.md`, `docs/DECISIONS.md`, `docs/PLAN.md` og `CLAUDE.md` rettet til den nye retning og logget i `docs/DECISIONS.md` afsnit 3 som Afvigelse og Tilføjelse:
   - ingen henvisninger til PDF, sidetal eller kilder i appen; »Hvorfor« forklarer selv, og Om viser ikke kilder;
@@ -55,7 +56,7 @@ Status: `[ ]` ikke startet · `[~]` i gang · `[x]` færdig (reviewet og udgivet
 - Kilder: `docs/PROGRAM_KILDE.md` (sporenes afsnit); datamodellen fra P1; SPEC 3.2 og 3.5.
 - Grønt: `node scripts/check-explain.ts` for hver fil; `npm run check`; Playwright-flow, der åbner kortet fra Stiger og fra et pas.
 
-### [ ] P3 – Figursystemet og animationen (pakke 3)
+### [~] P3 – Figursystemet og animationen (pakke 3)
 
 - Agent: `comeback-builder`.
 - Mål: et figursystem i appen bygget ud fra `tools/pictos/` i samme stil som piktogrammerne: keyframes fra positionerne i forklaringerne, animation mellem dem i øvelsens tempo (fx push-up: 3 sek ned, 1 sek stille, op), faserne som tekst under figuren, et tryk afspiller i slowmotion, ved reduceret bevægelse vises positionerne som stillbilleder side om side, og figuren har et tekstalternativ. Et værktøj, der tegner alle positioner for et spor som et kontaktark (PNG) til review. Figuren vises i øvelseskortet.

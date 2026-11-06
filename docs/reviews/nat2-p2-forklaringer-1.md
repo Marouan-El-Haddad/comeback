@@ -181,3 +181,63 @@ Henvisninger til P1-fund, som ikke er nye fund:
 - De tre piktogrammer med albuer, der bøjer bagud (P1-reviewet), vises nu i 382 × 180 px på kortet: `squat_jump` (power ben trin 1–2), `bulgarian` (ben trin 2) og `chin_tuck` (N1–N6 og hage-ind). Figurerne fra P4 erstatter dem.
 - Passet viser stadig programmets cues, fx »4 minutter med 3 burpees i starten af hvert minut« og »Hold nakken neutral liggende på ryg, mave og begge sider«, ikke forklaringernes korte cues. Det hører til »Nu« i P6.
 - Passet siger »reps«, mens kortet og forklaringerne siger »gentagelser«. Det hører til ordlisten i P8.
+
+## Opfølgning
+
+2026-11-06 · worktree på 4a828d6 · kortet: 94963b5, c0c279c og e878579 (D47, R16; SPEC 3.2, 3.5, 3.8 og 9.1) · indholdet: 05263df (del 1-rettelser og del 2) og 972f292 (P51, P52) · trænernes tolkninger: P53–P60
+
+Metode: Rettelserne er læst mod fundene. De 54 punkter fra del 1 er sammenlignet felt for felt med aa7c8d6. Skærmbillederne fra `npm run shots:cards` er gennemgået. Scratch-testene fra reviewet er kørt igen mod 4a828d6 (ikke committet): holdet bag kortet og tilbage-gestussen i et pas, og SPEC 6, kilder, bredde og første skærm på de 54 kort. En ny scratch-test prøver »Lettere variant i dag« i tidsmaskinen.
+
+Resultat: 14 af 15 fund er rettet, og I8 er delvis rettet. Der er 3 nye fund, alle lave.
+
+Indhold:
+
+- **I1 (middel): rettet.** Dead bug og skulder-tap laves nu med én side pr. sæt. »Venstre side« er venstre arm og højre ben (dead bug) og venstre hånd (skulder-tap). Figuren viser kun den ene side, og cuen »skift hånd« er væk. P54 er rimelig: skater-hop og split jumps kan ikke laves på én side, så de laves skiftevis med »Som planlagt« ved begge sider.
+- **I2 (lav): rettet.** C1 siger »Så længe du bruger sofaen, svarer du nej til »Ren runde?««. Power ben og overkrop trin 1 har fået samme sætning om deres spørgsmål.
+- **I3 (lav): rettet.** Programmets egen smertesætning står nu i alle otte »Hvorfor«, der nævner smerte, med appens knapper og »Stop« i nakken. E1 og E2 har ikke længere deres egen formulering.
+- **I4 (lav): rettet.** Der er ingen »analyse« eller andre undersøgelser tilbage i del 1.
+- **I5 (lav): rettet.** S2 har »Løft langsomt, og sænk på 3 sek« i tempo, cue, fejl og faser, og P55 gør det generelle tempo til regel.
+- **I6 (lav): rettet.** SPEC 9.1 og 3.8 siger, at »Lettere« på et første trin er trænerens egen udgave, og kortet viser den øverst som »Lettere variant i dag«. Scratch-test i tidsmaskinen: efter skarp smerte på squat jump tirsdag 10/11 viser sættet 17/11 »· lettere variant«, og kortet viser »Lettere variant i dag: Hop lavere og i halv fart …«. Se dog N1 og N3.
+- **I7 (lav): rettet.** os.1 siger »Ånd ind på ca. 2 sek, og pust langsomt ud på ca. 4 sek«, så de tre positioner passer til minuttet.
+- **I8 (lav): delvis.**
+  - Rettet: P51 dækker S1, S3 og S4, og kortet siger venstre side i sæt 1 og højre i sæt 2.
+  - Ikke rettet: begrundelsen står stadig i en fjerde celle, mens tabellen i DECISIONS afsnit 4 kun har tre kolonner (`docs/DECISIONS.md:88`). GitHub viser derfor ikke begrundelsen, og det gælder også de nye P52–P60.
+  - Rettelse: tilføj kolonnen »Begrundelse« i tabellens overskrift og skillelinje.
+- **I9 (lav): rettet.** Der står ikke længere »kan du vælge«. Varianterne »øver du«, og imponer-varianterne »kræver dette trin«.
+
+Kort:
+
+- **K1 (middel): rettet.** Løsningen er en anden end den foreslåede, men den er dækkende: med D47 står passet stille, mens kortet er åbent. Scratch-testen fra reviewet giver nu 0 sæt for core_side.S1 efter 80 sek med kortet åbent. Pausen står på 0:45, og kortet viser »Passet står stille.«. Når kortet er lukket, kører pausen videre, og holdet logges som før.
+- **K2 (middel): rettet.** Stiger har nu »Øvrige« med de syv spor, opvarmningen, Open & Strong og målingerne, så også V1–V5 kan åbnes. »Næste« viser alle slags øvelser, også ved spørgsmålene.
+- **K3 (middel): rettet.** Kortet lægger sig i browserens historik. `page.goBack()` lukker kortet i Stiger og i passet, både i e2e-testene og i scratch-testen, og passet står samme sted.
+- **K4 (lav): rettet.** Dosis forklares nu også som »sæt × runder«, »sæt × gentagelser« og »gentagelser × sekunder«.
+- **K5 (lav): rettet.** På alle 54 kort står første cue og første trin på første skærm. På os.1 begynder første trin på første skærm, men slutter ved 869 px.
+- **K6 (lav): rettet.** Der er nye flows for holdet bag kortet, Open & Strong (står stille, derefter uden tryk og med `os_done`), tilbage-gestussen, »Øvrige« og »Næste«.
+
+Nye fund:
+
+- **N1 (lav):** »Lettere variant i dag« kan begynde med »Det er stigens første trin.«.
+  - Hvor: `content/explain/core_front.json:36` og `content/explain/core_situp.json:36` (`easier`).
+  - Hvorfor: SPEC 9.1 (ny): »Lettere« på et første trin er trænerens konkrete, lettere udgave, og kortet viser teksten øverst efter skarp smerte. Indledningen siger ikke, hvad du skal gøre i dag.
+  - Rettelse: Fjern »Det er stigens første trin.«, så teksten er selve varianten.
+- **N2 (lav):** Bord-row siger ikke, hvad du gør med dagens sæt, når bordet vipper.
+  - Hvor: `content/explain/pull.json:76`, `:95` og `:98` (pull.2). Samme tekst står i pull.3–7, som hører til del 2.
+  - Hvorfor:
+    - Teksten er ændret fra »lav rygsæk-row« til »stop, og vælg trin 1 under Stiger efter passet«. Det er bedre for progressionen, men midt i passet står bord-row-sættene stadig på skærmen.
+    - Trykker man »Som planlagt« for at komme videre, logges sæt, der ikke blev lavet, og de kan tælle som hit (ENGINE 5.4).
+    - Programmet siger »bliv på rygsæk-row« (`docs/PROGRAM_KILDE.md:287`).
+  - Rettelse: Sig, hvad du gør i dag, fx »Vipper bordet, så stop. Tag rygsæk-row resten af passet, og sæt bord-row-sættene til 0 reps. Vælg trin 1 under Stiger efter passet.« Forslag til byggeagenten: lad »Hold pause« føre til Stiger (P6).
+
+- **N3 (lav):** »Lettere variant i dag« er ikke dækket af nogen test.
+  - Hvor: `e2e/card.spec.ts` og `src/ui/__tests__/card.test.ts`; koden er `src/ui/session/Runner.tsx` (`lighter: true` ved »Sådan gør du«) og `src/ui/components/ExerciseCard.tsx:117–123`.
+  - Hvorfor: NAT-2's fælles krav siger, at ny brugerflade dækkes af Playwright-flows. Boksen vises kun efter skarp smerte på trin 1, så den bliver ikke set i de andre flows.
+  - Rettelse: Lav et flow i tidsmaskinen som scratch-testen. Først skarp smerte på første sæt i Styrke A 10/11 og passet kørt færdigt. Derefter »+1 dag« syv gange, Styrke A igen og »Sådan gør du« ved første sæt. Forvent »· lettere variant« og boksen.
+
+Verificeret:
+
+- `npx vitest run`: 477 bestået. `npx tsc --noEmit`: 0 fejl. eslint og prettier: rene.
+- `node scripts/check-explain.ts`: 23 filer er OK, og 129 af 129 punkter er forklaret.
+- `CARDS_PORT=4188 npm run shots:cards`: 129 kort. Ifølge værktøjet har alle første cue og første trin på første skærm.
+- Scratch, 54 kort fra del 1 med alle folder åbne: 0 problemer mod 18 px, 7:1 og 56 px. Ingen kilder og intet bredere end 414 px.
+- Hele suiten (`E2E_PORT=4187 npx playwright test`): 40 bestået og 2 flaky. Begge flows for Styrke B i uge 1 timede ud ved første forsøg, mens mine scratch-tests kørte ved siden af. Alene bestod alle fire uge 1-flows uden gentagelse (7,7 min). Årsagen ligger i testhjælperen, ikke i appen: `runSessionToSummary` klikker »Som planlagt«, mens knappen er `disabled` (`busy`), og venter derefter i realtid på næste sæt.
+- Nye skærmbilleder: `screenshots/review-p2-opf-kort-i-pausen.png`, `screenshots/review-p2-opf-efter-tilbage.png` og `screenshots/review-p2-opf-lettere-variant.png`.

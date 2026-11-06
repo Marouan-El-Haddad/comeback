@@ -21,3 +21,5 @@
 | 01:42 | Startet parallelt: P1-opfølgningsreview, kortets rettelser (K1–K6), 8 trænere med rettelser til del 1 og del 2 (63 trin) samt forklaringer til de 12 målinger | – |
 | 01:58 | P1-opfølgning: alle 11 fund rettet; ét nyt lavt fund (L7, labeltjekket afviser »Hold 10 sek«) | Grøn: Vitest 472, Playwright 38 i worktree |
 | 02:04 | Forklaringerne færdige: alle 129 trin, rutinepunkter og målinger i 23 filer; fundene I1–I9 fra P2-reviewet rettet | Grøn: check-explain 23/23, npm run check i ren worktree (472 tests) |
+| 02:40 | Kortets rettelser K1–K6: passet står stille, mens kortet er åbent (D47), »Øvrige« i Stiger, tilbage-gestus lukker kortet; trænernes tolkninger P53–P60 logget | Grøn: npm run check (477 tests), Playwright 42 bestået; JS 68,8 kB gz |
+| 02:45 | P1 færdig og udgivet; P2-opfølgning, review af forklaringer del 2 og P3 (figursystemet) startet | Grøn: Actions 42145649687 |
