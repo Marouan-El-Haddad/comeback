@@ -113,6 +113,14 @@ describe('kontakt med væggen (wall sit)', () => {
     expect(messages(figure, movement).join('\n')).toContain('wallsit.W1 › sit: hoved rører væggen');
   });
 
+  test('hovedet ind i væggen måles fra hovedets kant', () => {
+    const { figure, movement } = reference('wallsit', 'wallsit.W1');
+    const sit = figure.keyframes.sit as Pose;
+    sit.hip = [1, sit.hip[1]];
+    sit.head = 0;
+    expect(messages(figure, movement).join('\n')).toContain('sit: hoved går 5,4 ind i væggen');
+  });
+
   test('en figur bag væggen går ind i den', () => {
     const { figure, movement } = reference('wallsit', 'wallsit.W1');
     (figure.keyframes.stand as Pose).hip = [-3, (figure.keyframes.stand as Pose).hip[1]];

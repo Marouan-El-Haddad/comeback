@@ -469,8 +469,10 @@ export function evaluatePose(
       for (const { limb, p } of bodyPoints(s, k)) {
         const d = nearest(these, p);
         if (d < TOUCH[k][0]) {
+          // The head is a circle round its centre; the other points sit on the surface.
+          const depth = k === 'head' ? BODY.headRadius - d : -d;
           problems.push(
-            `${limb.includes('.') ? limb : KIND_NAME[k]} går ${num(-d)} ind i ${SURFACE_NAME[on]}`,
+            `${limb.includes('.') ? limb : KIND_NAME[k]} går ${num(depth)} ind i ${SURFACE_NAME[on]}`,
           );
         }
       }
