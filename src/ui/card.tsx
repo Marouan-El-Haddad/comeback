@@ -5,14 +5,17 @@
 // The card takes the place of the screen it was opened from, which is hidden but stays mounted:
 // a session's timers keep running, and »Tilbage« returns to the same place (DECISIONS.md D43).
 import { useCallback, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import type { CardContext } from './components/cardItem.ts';
 import { lazy } from './lazy.tsx';
 
 export interface CardProps {
-  /** A step id ('press.1') or a routine item id ('warmup.2', 'os.3'). */
+  /** A step id ('press.1'), a routine item id ('warmup.2', 'os.3') or 'measures.<id>'. */
   id: string;
   /** The text of the way back: »Tilbage«, »Tilbage til passet«. */
   back: string;
   onClose: () => void;
+  /** Opened in a session: its kind and first power step (the warm-up's »Potensér«). */
+  context?: CardContext | null;
 }
 
 const load = () => import('./components/ExerciseCard.tsx');
@@ -20,22 +23,25 @@ const load = () => import('./components/ExerciseCard.tsx');
 export const ExerciseCard = lazy<CardProps>(() => load().then((m) => m.ExerciseCard));
 
 /** Fetches the card's code and the explanation, so the card opens complete, never half drawn. */
-export function prepareCard(id: string): Promise<void> {
+export function prepareCard(id: string, context: CardContext | null = null): Promise<void> {
   return load()
-    .then((m) => m.prepare(id))
+    .then((m) => m.prepare(id, context))
     .catch(() => undefined);
 }
 
 export interface CardState {
   /** The open card's id, or null. */
   id: string | null;
-  open: (id: string) => void;
+  /** The session it was opened from, or null. */
+  context: CardContext | null;
+  open: (id: string, context?: CardContext) => void;
   close: () => void;
 }
 
 /** The card shown in place of a screen; closing it restores the scroll position and the focus. */
 export function useCard(): CardState {
   const [id, setId] = useState<string | null>(null);
+  const [context, setContext] = useState<CardContext | null>(null);
   const back = useRef<{ y: number; focus: HTMLElement | null } | null>(null);
   useLayoutEffect(() => {
     if (id !== null) {
@@ -48,15 +54,16 @@ export function useCard(): CardState {
     window.scrollTo(0, saved.y);
     if (saved.focus?.isConnected) saved.focus.focus({ preventScroll: true });
   }, [id]);
-  const open = useCallback((cardId: string) => {
+  const open = useCallback((cardId: string, from?: CardContext) => {
     const focus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    void prepareCard(cardId).then(() => {
+    void prepareCard(cardId, from ?? null).then(() => {
       back.current ??= { y: window.scrollY, focus };
+      setContext(from ?? null);
       setId(cardId);
     });
   }, []);
   const close = useCallback(() => setId(null), []);
-  return { id, open, close };
+  return { id, context, open, close };
 }
 
 /** »Sådan gør du«: opens the card of the exercise next to it. */

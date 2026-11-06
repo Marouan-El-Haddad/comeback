@@ -5,14 +5,16 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, test } from 'vitest';
 import { findSourceRef } from '../../content/refs.ts';
-import type { ExplainFile, ExplainItem } from '../../content/types.ts';
+import type { ExplainFile, ExplainItem, Movement } from '../../content/types.ts';
 import { PROGRAM } from '../../engine/program.ts';
 import type { Program } from '../../engine/types.ts';
 import {
   cardItem,
+  cardMovements,
   doseLegend,
   equipmentText,
   explanationOf,
+  likeSubject,
   movementsText,
   phasesText,
 } from '../components/cardItem.ts';
@@ -197,5 +199,72 @@ describe('tekster på kortet', () => {
     expect(movementsText(two)).toBe(
       'Med bøjede knæ. Oppe: Oppe i ord. Nede: Nede i ord. Med strakte ben. Oppe: Oppe i ord. Nede: Nede i ord.',
     );
+  });
+});
+
+describe('målinger, »like« på tværs af filer og »Potensér« (docs/SPEC.md 9.1)', () => {
+  test('hver måling har et kort: »Måling«, navnet og hvad der måles', () => {
+    for (const m of PROGRAM.measures) {
+      const card = cardItem(PROGRAM, `measures.${m.id}`);
+      expect(card?.subject, m.id).toBe('measures');
+      expect(card?.kicker, m.id).toBe('Måling');
+      expect(card?.name, m.id).toBe(m.name);
+      expect(card?.dose, m.id).not.toBe('');
+      expect(findSourceRef(card?.execution ?? ''), m.id).toBeNull();
+    }
+    expect(cardItem(PROGRAM, 'measures.wall_test')?.dose).toBe('Afstand i cm');
+    expect(cardItem(PROGRAM, 'measures.hollow')?.dose).toBe('Så længe du kan');
+    expect(cardItem(PROGRAM, 'measures.nope')).toBeNull();
+  });
+
+  test('en måling »som« et trin får trinnets forklaring fra den anden fil', () => {
+    const measures: ExplainFile = {
+      format: 1,
+      subject: 'measures',
+      why: ['Hvorfor.'],
+      items: [{ id: 'measures.hollow', like: 'core_front.2' }],
+    };
+    const core: ExplainFile = {
+      format: 1,
+      subject: 'core_front',
+      why: ['Hvorfor.'],
+      items: [item('core_front.2')],
+    };
+    expect(likeSubject(measures, 'measures.hollow')).toBe('core_front');
+    expect(explanationOf(measures, 'measures.hollow')).toBeNull();
+    expect(explanationOf(measures, 'measures.hollow', core)?.id).toBe('core_front.2');
+    expect(likeSubject(core, 'core_front.2')).toBeNull();
+  });
+
+  const potenser: Movement[] = [
+    { id: 'power', name: 'Dagens første power-øvelse', from: 'power' },
+    {
+      ...(item('warmup.4').movements[0] as Movement),
+      id: 'pogo',
+      name: 'Pogo-hop',
+      sessions: ['A'],
+    },
+  ];
+
+  test('i Styrke A: power-trinnets bevægelse under dets navn og pogo-hop', () => {
+    const power = { name: 'Squat jump', explained: item('power_legs.1') };
+    const shown = cardMovements(potenser, { session: 'A', power: 'power_legs.1' }, power);
+    expect(shown.map((m) => m.name)).toEqual(['Squat jump', 'Pogo-hop']);
+    expect(shown[0]?.phases).toHaveLength(2);
+  });
+
+  test('i Styrke B: ingen pogo-hop; uden forklaring kun power-trinnets navn', () => {
+    const power = { name: 'Hurtig push-up', explained: null };
+    const shown = cardMovements(potenser, { session: 'B', power: 'power_upper.1' }, power);
+    expect(shown.map((m) => m.name)).toEqual(['Hurtig push-up']);
+    expect(shown[0]?.phases).toEqual([]);
+    expect(movementsText(shown)).toBe('Hurtig push-up.');
+  });
+
+  test('et pas uden power-blok udelader den lånte bevægelse; uden for et pas vises alt', () => {
+    expect(cardMovements(potenser, { session: 'travel', power: null }, null)).toEqual([]);
+    const outside = cardMovements(potenser, null, null);
+    expect(outside.map((m) => m.name)).toEqual(['Dagens første power-øvelse', 'Pogo-hop']);
+    expect(phasesText(potenser[0] as Movement)).toBe('');
   });
 });

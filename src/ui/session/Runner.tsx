@@ -19,6 +19,7 @@ import {
   type SessionPlan,
 } from '../../engine/index.ts';
 import type { Light, Pain, Rir, SessionSummary, Side } from '../../engine/types.ts';
+import { MEASURES } from '../../content/types.ts';
 import { audioState, enableAudio, play } from '../audio.ts';
 import { ExerciseCard, HowButton, useCard } from '../card.tsx';
 import { Picto } from '../components/Picto.tsx';
@@ -131,7 +132,12 @@ export function Runner({
     <>
       {view}
       {card.id !== null && (
-        <ExerciseCard id={card.id} back="Tilbage til passet" onClose={card.close} />
+        <ExerciseCard
+          id={card.id}
+          back="Tilbage til passet"
+          onClose={card.close}
+          context={card.context}
+        />
       )}
     </>
   );
@@ -380,6 +386,7 @@ export function Runner({
             <MeasureInput
               measureId={block.measureId ?? ''}
               state={state}
+              onCard={() => card.open(`${MEASURES}.${block.measureId ?? ''}`)}
               onSave={async (value) => {
                 await model.commit([
                   ctx.make(
@@ -417,7 +424,14 @@ export function Runner({
             <p class="step-kicker">{item.dose}</p>
             <h1>{item.name}</h1>
             <p class="cue">{item.execution}</p>
-            <HowButton onClick={() => card.open(`${WARMUP?.id ?? 'warmup'}.${item.key}`)} />
+            <HowButton
+              onClick={() =>
+                card.open(`${WARMUP?.id ?? 'warmup'}.${item.key}`, {
+                  session: run.kind,
+                  power: power?.stepId ?? null,
+                })
+              }
+            />
             {item.key === '4' && power && (
               <p class="hint">Dagens første power-øvelse: {getStep(PROGRAM, power.stepId).name}</p>
             )}
@@ -524,7 +538,7 @@ export function Runner({
             measureId={measureId}
             state={state}
             firstSetOf={`${trackName(step.block.trackId)} · ${getStep(PROGRAM, step.block.stepId).name}`}
-            onCard={() => card.open(step.block.stepId)}
+            onCard={() => card.open(`${MEASURES}.${measureId}`)}
             onSave={async (value) => {
               await model.commit([
                 logSet(ctx, {
@@ -732,6 +746,7 @@ export function Runner({
         <MeasureInput
           measureId={step.block.measureId ?? ''}
           state={state}
+          onCard={() => card.open(`${MEASURES}.${step.block.measureId ?? ''}`)}
           onSave={async (value) => {
             await model.commit([
               ctx.make(
@@ -759,6 +774,7 @@ export function Runner({
         <MeasureInput
           measureId={plan.motor?.measureId ?? 'base_check'}
           state={state}
+          onCard={() => card.open(`${MEASURES}.${plan.motor?.measureId ?? 'base_check'}`)}
           onSave={async (value) => {
             await model.commit([
               ctx.make(

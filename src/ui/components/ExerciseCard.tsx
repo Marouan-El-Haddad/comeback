@@ -12,23 +12,44 @@ import type { CardProps } from '../card.tsx';
 import { useExplain } from '../content.ts';
 import {
   cardItem,
+  cardMovements,
   equipmentText,
   explanationOf,
+  likeSubject,
   movementsText,
   phasesText,
+  type CardContext,
   type CardItem,
 } from './cardItem.ts';
 import { pictoUrl } from './Picto.tsx';
 
-/** Fetches the explanation before the card opens (src/ui/card.tsx), so it opens complete. */
-export async function prepare(id: string): Promise<void> {
-  const item = cardItem(PROGRAM, id);
-  if (item) await loadExplain(item.subject);
+/** The session's first power step as the warm-up's »Potensér« shows it, or null. */
+function powerOf(context: CardContext | null): CardItem | null {
+  return context?.power ? cardItem(PROGRAM, context.power) : null;
 }
 
-export function ExerciseCard({ id, back, onClose }: CardProps) {
+/**
+ * Fetches the explanation before the card opens (src/ui/card.tsx), so it opens complete: also the
+ * file a »like« points into and, in a session's warm-up, the first power step's file.
+ */
+export async function prepare(id: string, context: CardContext | null = null): Promise<void> {
+  const item = cardItem(PROGRAM, id);
+  if (!item) return;
+  const file = await loadExplain(item.subject);
+  const other = likeSubject(file, id);
+  const power = powerOf(context);
+  await Promise.all([
+    other ? loadExplain(other) : null,
+    power && power.subject !== item.subject ? loadExplain(power.subject) : null,
+  ]);
+}
+
+export function ExerciseCard({ id, back, onClose, context = null }: CardProps) {
   const item = cardItem(PROGRAM, id);
   const file = useExplain(item?.subject ?? '');
+  const other = useExplain(likeSubject(file, id) ?? '');
+  const power = powerOf(context);
+  const powerFile = useExplain(power?.subject ?? '');
   const title = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     title.current?.focus({ preventScroll: true });
@@ -49,7 +70,15 @@ export function ExerciseCard({ id, back, onClose }: CardProps) {
       </article>
     );
   }
-  const explained = explanationOf(file, id);
+  const explained = explanationOf(file, id, other);
+  // The warm-up's »Potensér« shows the session's first power step (docs/SPEC.md 9.1).
+  const movements = cardMovements(
+    explained?.movements ?? [],
+    context,
+    power && context?.power
+      ? { name: power.name, explained: explanationOf(powerFile, context.power) }
+      : null,
+  );
   // The track's »Hvorfor« from content/explain replaces the programme's own text (SPEC 3.2).
   const why = file ? file.why : item.why;
 
@@ -68,7 +97,7 @@ export function ExerciseCard({ id, back, onClose }: CardProps) {
       </header>
       {file !== undefined && (
         <>
-          <Figure id={id} name={item.name} movements={explained?.movements ?? []} />
+          <Figure id={id} name={item.name} movements={movements} />
           {explained ? <Explained x={explained} /> : <ProgrammeOnly item={item} />}
           <Folds x={explained} why={why} />
         </>
@@ -86,8 +115,10 @@ function Figure({ id, name, movements }: { id: string; name: string; movements: 
   // A step without its own pictogram uses the ladder's nearest one (SPEC 5): say so.
   const similar = url !== null && PROGRAM.pictos[id]?.fallback === true;
   const [only] = movements;
+  // Names when there are several movements, or one that has a name: the session's power step in
+  // the warm-up's »Potensér« (docs/SPEC.md 9.1).
   const phases =
-    movements.length > 1 ? (
+    movements.length > 1 || only?.name ? (
       <ul class="card-phases">
         {movements.map((m) => (
           <li key={m.id ?? m.name}>
