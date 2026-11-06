@@ -694,7 +694,8 @@
   gap: 8px;
 }
 
-.ladder-row {
+.ladder-row,
+.other-row {
   width: 100%;
   min-height: 88px;
   display: grid;
@@ -940,7 +941,7 @@
 /* The exercise card (docs/SPEC.md 3.8): read in the middle of a session too, so every text is at
    least 18 px with 7:1 contrast as in the session (SPEC 6), and no grey text. */
 .exercise-card {
-  gap: 18px;
+  gap: 12px;
   padding-bottom: 32px;
   font-size: 18px;
   line-height: 1.35;
@@ -952,8 +953,18 @@
   color: var(--c-ink);
 }
 
+/* The way back, and in a session what the session does meanwhile (D47). */
 .card-top {
   display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-status {
+  flex: 1;
+  padding: 4px 12px;
+  border-left: 6px solid var(--c-gold);
+  font-weight: 600;
 }
 
 .card-head {
@@ -981,6 +992,10 @@
   color: var(--c-red);
 }
 
+.card-dose-value.long {
+  font-size: 24px;
+}
+
 .card-dose-legend {
   font-weight: 600;
 }
@@ -994,7 +1009,7 @@
 .card-picto {
   display: block;
   width: 100%;
-  height: 180px;
+  height: 140px;
   object-fit: contain;
 }
 
@@ -1012,23 +1027,31 @@
   text-align: center;
 }
 
+/* Several movements: each name and its phases on one line (D47). */
 ul.card-phases {
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 8px;
+  gap: 6px;
+  font-family: 'Bai Jamjuree', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--c-ink);
   text-align: left;
 }
 
 .card-move-name {
-  display: block;
-  font-family: 'Bai Jamjuree', system-ui, sans-serif;
-  font-size: 18px;
-  color: var(--c-ink);
+  font-weight: 700;
+  color: var(--c-navy);
 }
 
-.card-move-phases {
-  display: block;
+/* »Lettere variant i dag«: the variant the session runs after sharp pain on step 1 (D47). */
+.card-lighter {
+  padding: 12px;
+  border: 2px solid var(--c-navy);
+  border-radius: 12px;
+  background: var(--c-blueTint);
+  color: var(--c-navy);
 }
 
 .card-similar {
@@ -1157,4 +1180,23 @@ ul.card-phases {
 
 .card-back {
   min-height: 64px;
+}
+
+/* Stiger: »Øvrige« below the 13 (docs/SPEC.md 3.5, D47). Without a pictogram the text takes the
+   whole row: never a generic icon. */
+.other-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.other-row.no-picto,
+.step-open.no-picto {
+  grid-template-columns: 1fr;
+}
+
+.other-heading {
+  margin-top: 8px;
 }

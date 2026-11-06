@@ -34,6 +34,9 @@ export function useTick(active: boolean): number {
   const [now, setNow] = useState(() => performance.now());
   useEffect(() => {
     if (!active) return;
+    // The time right away when a pause ends: with the tick from before the pause, a clock that has
+    // just resumed counts the whole pause against a stale time and shows its full time for a moment.
+    setNow(performance.now());
     const id = setInterval(() => setNow(performance.now()), 250);
     return () => clearInterval(id);
   }, [active]);

@@ -2,7 +2,9 @@
 // the explanation from content/explain (9.1). Until the figure system (milestone 6) draws the step,
 // the figure is its pictogram from program/pictos.json with the phases as text under it. Without an
 // explanation the card shows the programme's execution and cues without sources (DECISIONS.md D43).
-// Loaded with lazy() from src/ui/card.tsx: it fetches content, so never in the start files (SPEC 7).
+// The order lets it be skimmed in a pause: figure, cues, »Sådan gør du« with the start position
+// first, then »Træner« (D47). Loaded with lazy() from src/ui/card.tsx: it fetches content, so never
+// in the start files (SPEC 7).
 import type { ComponentChildren } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import { loadExplain } from '../../content/load.ts';
@@ -44,7 +46,7 @@ export async function prepare(id: string, context: CardContext | null = null): P
   ]);
 }
 
-export function ExerciseCard({ id, back, onClose, context = null }: CardProps) {
+export function ExerciseCard({ id, back, onClose, context = null, status }: CardProps) {
   const item = cardItem(PROGRAM, id);
   const file = useExplain(item?.subject ?? '');
   const other = useExplain(likeSubject(file, id) ?? '');
@@ -60,10 +62,21 @@ export function ExerciseCard({ id, back, onClose, context = null }: CardProps) {
       {back}
     </button>
   );
+  // In a session: the way back and what the session does meanwhile (D47).
+  const top = (
+    <div class="card-top">
+      {backButton}
+      {status && (
+        <p class="card-status" role="status">
+          {status}
+        </p>
+      )}
+    </div>
+  );
   if (!item) {
     return (
       <article class="screen exercise-card" data-card={id}>
-        <div class="card-top">{backButton}</div>
+        {top}
         <h1 class="card-title" ref={title} tabIndex={-1}>
           Øvelsen findes ikke i programmet
         </h1>
@@ -84,21 +97,35 @@ export function ExerciseCard({ id, back, onClose, context = null }: CardProps) {
 
   return (
     <article class="screen exercise-card" data-card={id} aria-labelledby="card-title">
-      <div class="card-top">{backButton}</div>
+      {top}
       <header class="card-head">
         <p class="step-kicker">{item.kicker}</p>
         <h1 id="card-title" class="card-title" ref={title} tabIndex={-1}>
           {item.name}
         </h1>
         <p class="card-dose">
-          <span class="card-dose-value">{item.dose}</span>
+          {/* Big numbers for a short dose; a dose in words would wrap at that size (D47). */}
+          <span class={item.dose.length > 18 ? 'card-dose-value long' : 'card-dose-value'}>
+            {item.dose}
+          </span>
           {item.doseLegend && <span class="card-dose-legend">{item.doseLegend}</span>}
         </p>
       </header>
       {file !== undefined && (
         <>
           <Figure id={id} name={item.name} movements={movements} />
-          {explained ? <Explained x={explained} /> : <ProgrammeOnly item={item} />}
+          {context?.lighter && explained && (
+            <section class="card-lighter" aria-label="Lettere variant i dag">
+              <p>
+                <strong>Lettere variant i dag:</strong> {explained.easier}
+              </p>
+            </section>
+          )}
+          {explained ? (
+            <Explained x={explained} movements={movements} />
+          ) : (
+            <ProgrammeOnly item={item} />
+          )}
           <Folds x={explained} why={why} />
         </>
       )}
@@ -109,27 +136,22 @@ export function ExerciseCard({ id, back, onClose, context = null }: CardProps) {
   );
 }
 
-/** The step's pictogram with the phases of one repetition under it (the figure from P3 on). */
+/** Several movements, or one with a name (»Potensér«): listed after »Sådan gør du« (D47). */
+function named(movements: Movement[]): boolean {
+  return movements.length > 1 || (movements.length === 1 && !!movements[0]?.name);
+}
+
+/**
+ * The step's pictogram with the phases of one repetition under it (the figure from P3 on). Several
+ * movements have their phases in »Bevægelserne« instead, so the cues and the steps still start on
+ * the first screen (D47).
+ */
 function Figure({ id, name, movements }: { id: string; name: string; movements: Movement[] }) {
   const url = pictoUrl(id);
   // A step without its own pictogram uses the ladder's nearest one (SPEC 5): say so.
   const similar = url !== null && PROGRAM.pictos[id]?.fallback === true;
   const [only] = movements;
-  // Names when there are several movements, or one that has a name: the session's power step in
-  // the warm-up's »Potensér« (docs/SPEC.md 9.1).
-  const phases =
-    movements.length > 1 || only?.name ? (
-      <ul class="card-phases">
-        {movements.map((m) => (
-          <li key={m.id ?? m.name}>
-            <span class="card-move-name">{m.name}</span>
-            <span class="card-move-phases">{phasesText(m)}</span>
-          </li>
-        ))}
-      </ul>
-    ) : only ? (
-      <p class="card-phases">{phasesText(only)}</p>
-    ) : null;
+  const phases = only && !named(movements) ? <p class="card-phases">{phasesText(only)}</p> : null;
   if (!url) return phases ? <div class="card-figure">{phases}</div> : null;
   return (
     <figure class="card-figure">
@@ -138,7 +160,7 @@ function Figure({ id, name, movements }: { id: string; name: string; movements: 
         src={url}
         alt={movements.length > 0 ? movementsText(movements) : name}
         width={382}
-        height={180}
+        height={140}
         decoding="async"
       />
       {(phases || similar) && (
@@ -160,34 +182,59 @@ function Section({ title, children }: { title: string; children: ComponentChildr
   );
 }
 
-/** Visible without unfolding: Træner, Udgangsstilling, the numbered steps and the cues. */
-function Explained({ x }: { x: ExplainItem }) {
+/**
+ * Visible without unfolding, in the order that lets the card be skimmed in a pause (D47): the cues,
+ * »Sådan gør du« with the start position first and the numbered steps, the movements when there are
+ * several (each name and its phases on one line: the warm-up's »Mobilisér«, the session's power step
+ * in »Potensér«, docs/SPEC.md 9.1), then »Træner«.
+ */
+function Explained({ x, movements }: { x: ExplainItem; movements: Movement[] }) {
   return (
     <>
-      <Section title="Træner">
-        <p>{x.trains}</p>
-      </Section>
-      <Section title="Udgangsstilling">
-        <p>{x.start}</p>
+      <Section title="Cues">
+        <Cues cues={x.cues} />
       </Section>
       <Section title="Sådan gør du">
+        <p class="card-start">
+          <strong>Udgangsstilling:</strong> {x.start}
+        </p>
         <ol class="card-steps">
           {x.steps.map((step) => (
             <li key={step}>{step}</li>
           ))}
         </ol>
       </Section>
-      <Section title="Cues">
-        <Cues cues={x.cues} />
+      {named(movements) && (
+        <Section title="Bevægelserne">
+          <ul class="card-phases">
+            {movements.map((m) => {
+              const text = phasesText(m);
+              return (
+                <li key={m.id ?? m.name}>
+                  <strong class="card-move-name">{m.name}</strong>
+                  {text ? `: ${text}` : ''}
+                </li>
+              );
+            })}
+          </ul>
+        </Section>
+      )}
+      <Section title="Træner">
+        <p>{x.trains}</p>
       </Section>
     </>
   );
 }
 
-/** No explanation yet: the programme's own execution, the parts of a round and the cues. */
+/** No explanation yet: the programme's cues, its own execution and the parts of a round. */
 function ProgrammeOnly({ item }: { item: CardItem }) {
   return (
     <>
+      {item.cues.length > 0 && (
+        <Section title="Cues">
+          <Cues cues={item.cues} />
+        </Section>
+      )}
       {(item.execution || item.round.length > 0) && (
         <Section title="Sådan gør du">
           {item.execution && <p>{item.execution}</p>}
@@ -201,11 +248,6 @@ function ProgrammeOnly({ item }: { item: CardItem }) {
               </ol>
             </>
           )}
-        </Section>
-      )}
-      {item.cues.length > 0 && (
-        <Section title="Cues">
-          <Cues cues={item.cues} />
         </Section>
       )}
     </>

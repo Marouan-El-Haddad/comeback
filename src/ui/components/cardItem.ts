@@ -26,6 +26,11 @@ export interface CardContext {
   session: SessionKind;
   /** The session's first power step, or null when it has none. */
   power: string | null;
+  /**
+   * The set runs the lighter variant (sharp pain on step 1, ENGINE R-PAIN-SHARP): the card shows the
+   * explanation's »Lettere« at the top (docs/SPEC.md 3.8, DECISIONS.md D47).
+   */
+  lighter?: boolean;
 }
 
 /** A measurement's »dose«: what is measured (docs/SPEC.md 4.8). */
@@ -80,9 +85,22 @@ export function doseLegend(dose: Dose): string | null {
     case 'emom':
       return 'minutter × gentagelser i starten af hvert minut';
     case 'rounds':
+      // »2 × 1 runde«: the first number is sets (D47); »5 runder i træk« says it itself.
+      return dose.text.includes('×') ? 'sæt × runder' : null;
     case 'always':
       return null;
   }
+}
+
+/**
+ * What the numbers in a routine item's dose mean, read from its text (D47): »2 × 8« is sets ×
+ * repetitions, »8 × 5 sek« repetitions × seconds; a dose in words says it itself.
+ */
+export function routineLegend(dose: string): string | null {
+  const range = String.raw`\d+(?:–\d+)?`;
+  if (new RegExp(`^${range} × ${range} sek$`).test(dose)) return 'gentagelser × sekunder';
+  if (new RegExp(`^${range} × ${range}$`).test(dose)) return 'sæt × gentagelser';
+  return null;
 }
 
 /** The card of a step or routine item, or null when the programme has no such id. */
@@ -141,7 +159,7 @@ export function cardItem(program: Program, id: string): CardItem | null {
     kicker: `${routine.name} · ${index + 1} af ${routine.items.length}`,
     name: routineItem.name,
     dose: routineItem.dose,
-    doseLegend: null,
+    doseLegend: routineLegend(routineItem.dose),
     execution: withoutSources(routineItem.execution),
     cues: [],
     round: [],

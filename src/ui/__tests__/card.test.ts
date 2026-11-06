@@ -12,6 +12,7 @@ import {
   cardItem,
   cardMovements,
   doseLegend,
+  routineLegend,
   equipmentText,
   explanationOf,
   likeSubject,
@@ -171,8 +172,26 @@ describe('tekster på kortet', () => {
     expect(doseLegend({ kind: 'emom', minutes: 4, reps: 3 })).toBe(
       'minutter × gentagelser i starten af hvert minut',
     );
-    expect(doseLegend({ kind: 'rounds', sets: 2, rounds: [1, 1], text: '2 × 1 runde' })).toBeNull();
+    // The club sequence: the first number is sets (D47); »5 runder i træk« says it itself.
+    expect(doseLegend({ kind: 'rounds', sets: 2, rounds: [1, 1], text: '2 × 1 runde' })).toBe(
+      'sæt × runder',
+    );
+    expect(
+      doseLegend({ kind: 'rounds', sets: 1, rounds: [5, 5], text: '5 runder i træk' }),
+    ).toBeNull();
     expect(doseLegend({ kind: 'always', text: 'Altid' })).toBeNull();
+  });
+
+  test('en rutines dosis forklares, når den er tal × tal (D47)', () => {
+    expect(routineLegend('2 × 8')).toBe('sæt × gentagelser');
+    expect(routineLegend('8 × 5 sek')).toBe('gentagelser × sekunder');
+    expect(routineLegend('3 positioner × 3 dybe vejrtrækninger')).toBeNull();
+    expect(routineLegend('5 pr. side')).toBeNull();
+    expect(routineLegend('2 min')).toBeNull();
+    expect(cardItem(PROGRAM, 'os.3')?.doseLegend).toBe('sæt × gentagelser');
+    expect(cardItem(PROGRAM, 'os.5')?.doseLegend).toBe('gentagelser × sekunder');
+    expect(cardItem(PROGRAM, 'club_sequence.C1')?.doseLegend).toBe('sæt × runder');
+    expect(cardItem(PROGRAM, 'club_sequence.C4')?.doseLegend).toBeNull();
   });
 
   test('udstyr som dansk opremsning; tom liste er kun gulvet', () => {

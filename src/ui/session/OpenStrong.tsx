@@ -17,8 +17,10 @@ export function OpenStrong({ model, onClose }: { model: Model; onClose: () => vo
   const [saved, setSaved] = useState(false);
   const items = OS?.items ?? [];
   const item = items[index];
-  // »Sådan gør du« opens the item's exercise card; the clock keeps running under it (SPEC 3.8).
+  // »Sådan gør du« opens the item's exercise card; the clock stands still while it is open, so the
+  // item keeps its time (docs/SPEC.md 3.8, DECISIONS.md D47).
   const card = useCard();
+  const held = paused || card.id !== null;
 
   useEffect(() => {
     void keepAwake();
@@ -91,7 +93,7 @@ export function OpenStrong({ model, onClose }: { model: Model; onClose: () => vo
               <Countdown
                 key={index}
                 seconds={item.seconds}
-                paused={paused}
+                paused={held}
                 onDone={() => void next()}
                 end="go"
               />
@@ -136,7 +138,12 @@ export function OpenStrong({ model, onClose }: { model: Model; onClose: () => vo
         </div>
       </div>
       {card.id !== null && (
-        <ExerciseCard id={card.id} back="Tilbage til Open & Strong" onClose={card.close} />
+        <ExerciseCard
+          id={card.id}
+          back="Tilbage til Open & Strong"
+          onClose={card.close}
+          status="Open & Strong står stille."
+        />
       )}
     </>
   );

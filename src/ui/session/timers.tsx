@@ -155,10 +155,13 @@ export function PhaseRunner(props: {
   );
 }
 
-/** Counts up (max tests: hollow, side plank, wall sit, balance). */
-export function Stopwatch(props: { running: boolean; onStop: (seconds: number) => void }) {
-  const [clock] = useState<Clock>(() => startClock());
-  const now = useTick(props.running);
+/** Counts up (max tests: hollow, side plank, wall sit, balance); stands still while paused. */
+export function Stopwatch(props: { paused: boolean; onStop: (seconds: number) => void }) {
+  const [clock, setClock] = useState<Clock>(() => startClock());
+  useEffect(() => {
+    setClock((c) => (props.paused ? pauseClock(c) : resumeClock(c)));
+  }, [props.paused]);
+  const now = useTick(!props.paused);
   const seconds = elapsedMs(clock, now) / 1000;
   return (
     <div class="stopwatch">

@@ -51,6 +51,35 @@ export function setCount(block: BlockPlan): number {
   return block.sets + (block.measureId ? 1 : 0);
 }
 
+/** A step where you do an exercise: what »Næste« can show. */
+export type ExerciseStep = Extract<
+  Step,
+  { type: 'set' | 'round' | 'emom' | 'club' | 'neck' | 'measure' }
+>;
+
+const EXERCISES = new Set<Step['type']>(['set', 'round', 'emom', 'club', 'neck', 'measure']);
+
+function isExercise(step: Step): step is ExerciseStep {
+  return EXERCISES.has(step.type);
+}
+
+/**
+ * »Næste« in the pause and at the questions (docs/SPEC.md 3.2, DECISIONS.md D47): the next exercise
+ * of any kind after `from`, skipping pauses and questions and the sets of a block that pain ended.
+ */
+export function nextExercise(
+  steps: readonly Step[],
+  from: number,
+  ended: ReadonlySet<string>,
+): ExerciseStep | undefined {
+  for (const step of steps.slice(from + 1)) {
+    if (!isExercise(step)) continue;
+    if (step.type === 'set' && ended.has(step.block.blockId)) continue;
+    return step;
+  }
+  return undefined;
+}
+
 function sides(block: BlockPlan): Array<Side | undefined> {
   return block.per === 'side' || block.per === 'ben' ? ['L', 'R'] : [undefined];
 }

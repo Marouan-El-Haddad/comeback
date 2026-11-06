@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'preact/hooks';
 import {
   defaultAnswers,
   finishSession,
+  formatDose,
   getStep,
   getTrack,
   lightFor,
@@ -29,7 +30,7 @@ import { ulid } from '../ids.ts';
 import type { Model } from '../model.ts';
 import { requestPersistOnce } from '../persist.ts';
 import { keepAwake, onWakeState, releaseAwake, wakeState } from '../wakelock.ts';
-import { buildSteps, setCount, type Step } from './steps.ts';
+import { buildSteps, nextExercise, setCount, type ExerciseStep, type Step } from './steps.ts';
 import { Countdown, PhaseRunner, type Phase } from './timers.tsx';
 import { MeasureInput } from './MeasureInput.tsx';
 import { RUN_KEY, type RunRequest, type RunState } from './resume.ts';
@@ -125,9 +126,11 @@ export function Runner({
   const soundNoted = () => writeLocal(true, SOUND_KEY);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [finished, setFinished] = useState<SessionSummary | null>(null);
-  // »Sådan gør du« opens the exercise card in place of the session, which keeps running under it
-  // (docs/SPEC.md 3.8, DECISIONS.md D43).
+  // »Sådan gør du« opens the exercise card in place of the session (docs/SPEC.md 3.8). While it is
+  // open the session stands still – every clock, also the pause – so nothing starts or is logged
+  // behind it (DECISIONS.md D47). `held` is what the timers get.
   const card = useCard();
+  const held = paused || card.id !== null;
   const withCard = (view: preact.JSX.Element) => (
     <>
       {view}
@@ -137,6 +140,7 @@ export function Runner({
           back="Tilbage til passet"
           onClose={card.close}
           context={card.context}
+          status="Passet står stille."
         />
       )}
     </>
@@ -384,6 +388,7 @@ export function Runner({
           />
           <div class="session-body">
             <MeasureInput
+              paused={held}
               measureId={block.measureId ?? ''}
               state={state}
               onCard={() => card.open(`${MEASURES}.${block.measureId ?? ''}`)}
@@ -438,7 +443,7 @@ export function Runner({
             <Countdown
               key={`w${itemIndex}`}
               seconds={item.seconds}
-              paused={paused}
+              paused={held}
               onDone={nextPre}
               end="go"
             />
@@ -527,6 +532,10 @@ export function Runner({
     advance();
   };
 
+  // »Næste« in the pause and at the questions: the next exercise of any kind (D47).
+  const upcoming = nextExercise(steps, run.stepIndex, ended);
+  const nextBox = upcoming ? <NextUp step={upcoming} onCard={card.open} /> : null;
+
   let body: preact.ComponentChildren = null;
   switch (step.type) {
     case 'set':
@@ -534,6 +543,7 @@ export function Runner({
         const measureId = step.block.measureId;
         body = (
           <MeasureInput
+            paused={held}
             key={`m-${step.block.blockId}`}
             measureId={measureId}
             state={state}
@@ -571,8 +581,17 @@ export function Runner({
         <SetStep
           key={`${step.block.blockId}-${step.setIndex}-${step.side ?? ''}`}
           step={step}
-          paused={paused}
-          onCard={card.open}
+          paused={held}
+          // After sharp pain on step 1 the set runs the lighter variant: the card shows it at the
+          // top (docs/SPEC.md 3.8, D47).
+          onCard={(id) =>
+            card.open(
+              id,
+              step.block.tempDown?.lighter
+                ? { session: run.kind, power: null, lighter: true }
+                : undefined,
+            )
+          }
           onLog={async (value, rir, pain) => {
             const measureId = step.measure ? step.block.measureId : undefined;
             const events = [
@@ -609,33 +628,17 @@ export function Runner({
       );
       break;
     case 'rest': {
-      const next = steps
-        .slice(run.stepIndex + 1)
-        .find((s) => s.type === 'set' && !ended.has(s.block.blockId));
       body = (
         <div class="rest">
           <p class="step-kicker">Pause</p>
           <Countdown
             key={`r${run.stepIndex}`}
             seconds={step.seconds}
-            paused={paused}
+            paused={held}
             onDone={advance}
             end="go"
           />
-          {next?.type === 'set' && (
-            <div class="next-up card panel">
-              <p class="muted">Næste</p>
-              <p class="next-title">
-                {trackName(next.block.trackId)} · {getStep(PROGRAM, next.block.stepId).name}
-              </p>
-              <p>
-                Sæt {next.setIndex} af {setCount(next.block)}
-                {next.side ? ` · ${sideWord(next.side, next.block)}` : ''} ·{' '}
-                {next.measure ? 'måling: max' : `mål ${next.block.target} ${unitWord(next.block)}`}
-              </p>
-              <HowButton onClick={() => card.open(next.block.stepId)} />
-            </div>
-          )}
+          {nextBox}
           <div class="fixed-actions">
             <button type="button" class="btn block" onClick={advance}>
               Spring pausen over
@@ -650,6 +653,7 @@ export function Runner({
         <Question
           title={trackName(step.block.trackId)}
           question="Alle hop/reps lige høje og hurtige?"
+          next={nextBox}
           onAnswer={(yes) => void logResult(step.block, { quality: yes })}
         />
       );
@@ -659,7 +663,7 @@ export function Runner({
         <EmomStep
           key={`emom${run.stepIndex}`}
           block={step.block}
-          paused={paused}
+          paused={held}
           onDone={advance}
           onCard={card.open}
         />
@@ -667,7 +671,10 @@ export function Runner({
       break;
     case 'emom-q':
       body = (
-        <EmomQuestions onSave={(clean, rest20) => void logResult(step.block, { clean, rest20 })} />
+        <EmomQuestions
+          next={nextBox}
+          onSave={(clean, rest20) => void logResult(step.block, { clean, rest20 })}
+        />
       );
       break;
     case 'club':
@@ -676,7 +683,7 @@ export function Runner({
           key={`club${step.set}`}
           block={step.block}
           set={step.set}
-          paused={paused}
+          paused={held}
           onDone={advance}
           onCard={card.open}
         />
@@ -688,7 +695,7 @@ export function Runner({
           key={`round-${step.block.blockId}-${step.round}`}
           block={step.block}
           round={step.round}
-          paused={paused}
+          paused={held}
           onDone={advance}
           onCard={card.open}
         />
@@ -699,6 +706,7 @@ export function Runner({
         <Question
           title={getStep(PROGRAM, step.block.stepId).name}
           question="Rene runder?"
+          next={nextBox}
           onAnswer={(yes) => void logResult(step.block, { clean: yes })}
         />
       );
@@ -708,6 +716,7 @@ export function Runner({
         <Question
           title="Klubsekvensen"
           question="Ren runde?"
+          next={nextBox}
           onAnswer={(yes) => void logResult(step.block, { clean: yes })}
         />
       );
@@ -717,7 +726,7 @@ export function Runner({
         <NeckStep
           key="neck"
           block={step.block}
-          paused={paused}
+          paused={held}
           onDone={advance}
           onCard={card.open}
           onStop={async () => {
@@ -739,11 +748,12 @@ export function Runner({
       );
       break;
     case 'neck-q':
-      body = <Feel onAnswer={(feel) => void logResult(step.block, { feel })} />;
+      body = <Feel next={nextBox} onAnswer={(feel) => void logResult(step.block, { feel })} />;
       break;
     case 'measure':
       body = (
         <MeasureInput
+          paused={held}
           measureId={step.block.measureId ?? ''}
           state={state}
           onCard={() => card.open(`${MEASURES}.${step.block.measureId ?? ''}`)}
@@ -767,11 +777,12 @@ export function Runner({
       );
       break;
     case 'motor':
-      body = <MotorStep plan={plan} paused={paused} onDone={advance} />;
+      body = <MotorStep plan={plan} paused={held} onDone={advance} />;
       break;
     case 'distance':
       body = (
         <MeasureInput
+          paused={held}
           measureId={plan.motor?.measureId ?? 'base_check'}
           state={state}
           onCard={() => card.open(`${MEASURES}.${plan.motor?.measureId ?? 'base_check'}`)}
@@ -915,11 +926,82 @@ function YesNo(props: { label: string; value: boolean; onChange: (v: boolean) =>
   );
 }
 
-function Question(props: { title: string; question: string; onAnswer: (yes: boolean) => void }) {
+/**
+ * »Næste« in the pause and at the questions (docs/SPEC.md 3.2, DECISIONS.md D47): the next exercise
+ * of any kind, with »Sådan gør du« for its card.
+ */
+function NextUp({ step, onCard }: { step: ExerciseStep; onCard: (id: string) => void }) {
+  const block = step.block;
+  const title = (stepId: string) => {
+    const track = getTrack(PROGRAM, block.trackId);
+    const data = getStep(PROGRAM, stepId);
+    return data.name === track.short
+      ? `${track.short} · trin ${data.key}`
+      : `${track.short} · ${data.name}`;
+  };
+  let heading: string;
+  let line = '';
+  let cardId: string;
+  switch (step.type) {
+    case 'set':
+      heading = title(block.stepId);
+      line =
+        `Sæt ${step.setIndex} af ${setCount(block)}` +
+        (step.side ? ` · ${sideWord(step.side, block)}` : '') +
+        (step.measure ? ' · måling: max' : ` · mål ${block.target} ${unitWord(block)}`);
+      cardId = step.measure && block.measureId ? `${MEASURES}.${block.measureId}` : block.stepId;
+      break;
+    case 'round':
+      heading = title(block.stepId);
+      line = `Runde ${step.round} af ${block.rounds ?? 1}`;
+      cardId = block.stepId;
+      break;
+    case 'emom': {
+      const emom = block.emom;
+      heading = title(emom?.stepId ?? block.stepId);
+      line = emom ? `${emom.minutes} min · ${emom.reps} i starten af hvert minut` : '';
+      cardId = emom?.stepId ?? block.stepId;
+      break;
+    }
+    case 'club':
+      heading = title(block.stepId);
+      line = `Sæt ${step.set} af ${block.sets}`;
+      cardId = block.stepId;
+      break;
+    case 'neck':
+      heading = title(block.stepId);
+      line = formatDose(getStep(PROGRAM, block.stepId).dose);
+      cardId = block.stepId;
+      break;
+    case 'measure': {
+      const measure = PROGRAM.measures.find((m) => m.id === block.measureId);
+      heading = `Måling · ${measure?.name ?? ''}`;
+      cardId = `${MEASURES}.${block.measureId ?? ''}`;
+      break;
+    }
+  }
+  return (
+    <div class="next-up card panel" data-testid="next-up">
+      <p class="muted">Næste</p>
+      <p class="next-title">{heading}</p>
+      {line && <p>{line}</p>}
+      <HowButton onClick={() => onCard(cardId)} />
+    </div>
+  );
+}
+
+function Question(props: {
+  title: string;
+  question: string;
+  /** »Næste« under the question. */
+  next?: preact.ComponentChildren;
+  onAnswer: (yes: boolean) => void;
+}) {
   return (
     <div class="stack">
       <p class="step-kicker">{props.title}</p>
       <h1>{props.question}</h1>
+      {props.next}
       <div class="fixed-actions">
         <button type="button" class="btn block" onClick={() => props.onAnswer(false)}>
           Nej
@@ -932,11 +1014,18 @@ function Question(props: { title: string; question: string; onAnswer: (yes: bool
   );
 }
 
-function Feel({ onAnswer }: { onAnswer: (feel: 'easy' | 'ok' | 'hard') => void }) {
+function Feel({
+  next,
+  onAnswer,
+}: {
+  next?: preact.ComponentChildren;
+  onAnswer: (feel: 'easy' | 'ok' | 'hard') => void;
+}) {
   return (
     <div class="stack">
       <p class="step-kicker">Nakke-stigen</p>
       <h1>Hvordan føltes trinnet?</h1>
+      {next}
       <div class="fixed-actions">
         <button type="button" class="btn block" onClick={() => onAnswer('easy')}>
           Let
@@ -952,7 +1041,13 @@ function Feel({ onAnswer }: { onAnswer: (feel: 'easy' | 'ok' | 'hard') => void }
   );
 }
 
-function EmomQuestions({ onSave }: { onSave: (clean: boolean, rest20: boolean) => void }) {
+function EmomQuestions({
+  next,
+  onSave,
+}: {
+  next?: preact.ComponentChildren;
+  onSave: (clean: boolean, rest20: boolean) => void;
+}) {
   const [clean, setClean] = useState<boolean | null>(null);
   const [rest, setRest] = useState<boolean | null>(null);
   return (
@@ -960,6 +1055,7 @@ function EmomQuestions({ onSave }: { onSave: (clean: boolean, rest20: boolean) =
       <p class="step-kicker">Burpees</p>
       <YesNo label="Alle minutter rene?" value={clean ?? true} onChange={setClean} />
       <YesNo label="Mindst 20 sek pause i sidste minut?" value={rest ?? true} onChange={setRest} />
+      {next}
       <div class="fixed-actions">
         <button
           type="button"

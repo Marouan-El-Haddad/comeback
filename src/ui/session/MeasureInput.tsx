@@ -24,6 +24,8 @@ export function MeasureInput(props: {
   firstSetOf?: string;
   /** Opens the exercise card of that exercise (»Sådan gør du«, docs/SPEC.md 3.8). */
   onCard?: () => void;
+  /** The session stands still (»Hold pause«, or the exercise card is open: D47). */
+  paused: boolean;
 }) {
   const measure = PROGRAM.measures.find((m) => m.id === props.measureId);
   const [value, setValue] = useState<number | null>(null);
@@ -59,7 +61,7 @@ export function MeasureInput(props: {
           {timing ? (
             <Countdown
               seconds={180}
-              paused={false}
+              paused={props.paused}
               onDone={() => setTimed(true)}
               label="Flest rene reps"
             />
@@ -74,7 +76,7 @@ export function MeasureInput(props: {
       {measure.unit === 'sec' && value === null && (
         <>
           {timing ? (
-            <Stopwatch running={true} onStop={(s) => setValue(s)} />
+            <Stopwatch paused={props.paused} onStop={(s) => setValue(s)} />
           ) : (
             <button type="button" class="btn primary block" onClick={() => setTiming(true)}>
               Start uret
