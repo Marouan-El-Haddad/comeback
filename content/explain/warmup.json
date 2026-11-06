@@ -404,7 +404,11 @@
       "equipment": [],
       "getReady": "Stil dig med plads omkring dig til dagens første power-øvelse.",
       "movements": [
+        { "id": "power", "name": "Dagens første power-øvelse", "from": "power" },
         {
+          "id": "pogo",
+          "name": "Pogo-hop",
+          "sessions": ["A"],
           "positions": [
             {
               "id": "landet",
