@@ -168,12 +168,14 @@ Vælg en dato (standard i morgen). Appen genstarter i simuleret tilstand med et 
 
 Ét kort pr. trin og pr. rutinepunkt (opvarmning og Open & Strong), som åbnes fra Stiger, fra »Dagens pas« og fra passet (»Nu« og pausen) (`DECISIONS.md` T7). Navn og dosis kommer fra programmet; resten fra `content/explain/` og `content/figures/` (9.1). En, der aldrig har set øvelsen, skal kunne lave den rigtigt ud fra kortet og figuren.
 
-- **Øverst:** navn, dosis fra programmet (fx »3 × 6–12«) og den animerede figur. Under figuren står faserne som tekst (»3 sek ned · 1 sek stille · Op«), og den, der kører, er fremhævet.
+- **Åbnes** (`DECISIONS.md` D43): i Stiger med et tryk på et trin; i passet med »Sådan gør du« ved den aktuelle øvelse (sæt, hold, en måling som første sæt, EMOM, klubsekvensen, runder, nakke og opvarmningens punkter) og ved »Næste« i pausen; i Open & Strong ved det aktuelle punkt. Kortet vises i stedet for skærmen, det blev åbnet fra. Skærmen under bliver stående, så et pas kører videre med sine timere, og intet sættes på pause. »Tilbage« står øverst og nederst og fører tilbage til samme sted (i passet »Tilbage til passet«).
+- **Øverst:** navn, dosis fra programmet (fx »3 × 6–12«) med en forklaring af tallene (»sæt × gentagelser«, »sæt × sekunder«, »minutter × gentagelser i starten af hvert minut«) og den animerede figur. Under figuren står faserne som tekst (»3 sek ned · 1 sek stille · Op«), og den, der kører, er fremhævet. Har punktet flere bevægelser, står hver bevægelses navn over dens faser.
 - **Synligt uden at folde ud:** »Træner«, udgangsstilling, 2–4 nummererede trin og 2–3 cues.
-- **Foldet sammen** (ét tryk åbner): tempo og vejrtrækning, typiske fejl med rettelse, lettere og sværere variant, udstyr og sporets »Hvorfor«.
+- **Foldet sammen** (ét tryk åbner hver): tempo og vejrtrækning, typiske fejl med rettelse, lettere og sværere variant, udstyr og sporets »Hvorfor«. Udstyret står i foldens overskrift (»Udstyr: Stol og væg«, »Udstyr: Kun gulvet«), og folden viser »Gør klar«.
+- **Tekst:** kortet læses også midt i et pas, så al tekst på kortet er mindst 18 px med kontrast mindst 7:1, også når det åbnes fra Stiger (afsnit 6).
 - **Figuren** animerer mellem positionerne i øvelsens tempo, fx push-up: 3 sek ned, 1 sek stille, op. Et tryk på figuren skifter til slowmotion (halv fart) og tilbage. Ved `prefers-reduced-motion: reduce` vises positionerne som stillbilleder side om side med deres navn. Figuren har et tekstalternativ, der beskriver positionerne og faserne.
 - Har et trin flere bevægelser (fx opvarmningens »Mobilisér«), har hver sin figur med navn.
-- Mangler forklaringen eller figuren, viser kortet programmets udførelse og piktogrammet.
+- Mangler forklaringen eller figuren, viser kortet programmets udførelse og piktogrammet. Uden forklaring: programmets udførelse uden sidetal og kilder under »Sådan gør du« (udeladt, hvis den kun gentager dosis), rundens dele i rækkefølge, de cues, der ikke gentager udførelsen, og sporets »Hvorfor«; ingen tomme overskrifter. Er piktogrammet lånt fra stigens nærmeste trin, står der »Tegningen viser en lignende øvelse.«
 
 ### 3.9 Sådan virker programmet
 
