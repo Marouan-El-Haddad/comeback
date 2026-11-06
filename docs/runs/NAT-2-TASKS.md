@@ -48,8 +48,9 @@ Status: `[ ]` ikke startet · `[~]` i gang · `[x]` færdig (reviewet og udgivet
 - Kilder: `docs/runs/NAT-2.md`; SPEC 3, 5 og 6; PLAN M5 og M6; DECISIONS 3 og 6; ENGINE 7.1 og 9; `CLAUDE.md`.
 - Grønt: `npm run check` (inkl. `program-source.spec.ts` uændret); hele Playwright-suiten.
 
-### [~] P2 – Øvelseskortet og forklaringerne, del 1 (pakke 2)
+### [x] P2 – Øvelseskortet og forklaringerne, del 1 (pakke 2)
 
+- Status: færdig 03:20. Review `docs/reviews/nat2-p2-forklaringer-1.md`: 0 høje, 4 middel, 11 lave; opfølgningen viser 14 af 15 rettet og alle 4 middel rettet; I8 rettet af orkestratoren. Nye lave fund: N1 og N2 rettes i trænernes runde efter P5-reviewet, N3 (test af boksen »Lettere variant i dag«) laves i P6. Udgivet (Actions 42149465609).
 - Agenter: `comeback-coach` × flere parallelt (en gruppe spor pr. agent, hver sin fil, ingen commits) og `comeback-builder` til kortet i appen.
 - Mål, indhold: alle felter fra opgavens pakke 2 for trin 1 og 2 i alle spor, alle trin i burpee-teknik og nakke, opvarmningen og de øvrige rutiner i `program/routines.json` samt Open & Strong; desuden sporets »Hvorfor«.
 - Mål, app: øvelseskortet (navn, dosis, figur eller piktogram, »Træner«, udgangsstilling, trin, tempo og vejrtrækning, cues, typiske fejl, lettere og sværere, udstyr) kan åbnes fra Stiger og fra passet; detaljer kan foldes ud. Skærmbilleder af kortet for alle trin i del 1.
@@ -65,7 +66,7 @@ Status: `[ ]` ikke startet · `[~]` i gang · `[x]` færdig (reviewet og udgivet
 - Kilder: `tools/pictos/`; datamodellen fra P1; SPEC 5 og 6.
 - Grønt: `npm run check`; Playwright: figuren animerer, tryk giver slowmotion, reduceret bevægelse giver stillbilleder; opstarten er ikke blevet langsommere.
 
-### [ ] P4 – Figurerne, del 1 (pakke 3, rækkefølge som forklaringerne)
+### [~] P4 – Figurerne, del 1 (pakke 3, rækkefølge som forklaringerne)
 
 - Agenter: `comeback-builder` × flere parallelt på datafiler (et spor eller en gruppe pr. agent, ingen kodeændringer, ingen commits).
 - Mål: keyframes for alle trin i del 1 ud fra »positioner i ord«; kontaktark i `screenshots/figures/`.
@@ -77,9 +78,10 @@ Status: `[ ]` ikke startet · `[~]` i gang · `[x]` færdig (reviewet og udgivet
 - Mål: forklaringer og keyframes for alle øvrige trin; kontaktark og skærmbilleder af kortene.
 - Grønt: `node scripts/check-explain.ts`, figurtestene og `npm run check`.
 
-### [ ] P6 – Passet: hvad nu, hvad næste (pakke 4)
+### [~] P6 – Passet: hvad nu, hvad næste (pakke 4)
 
 - Agent: `comeback-builder`.
+- Fra tidligere reviews: N3 fra P2 (en test af boksen »Lettere variant i dag«).
 - Mål: »Dagens pas« på ét blik før start (blokke, øvelser med figur, sæt × gentagelser, pauser, udstyr, forventet tid); under passet er »Nu« (figur, mål, 2 cues), »Næste« (figur, navn, mål) og fremdriften altid synlige; i pausen vises næste øvelse stort med animation og »Gør klar«; første gang en øvelse kommer i passet, vises et introkort med animation og trin i pausen før øvelsens første sæt, og det lukker ved et tryk eller af sig selv, når pausen slutter, så SK3 holder (D44, som erstatter D41). Bevægelse kun, hvor den viser en ændring. Desuden »Hold pause« som vej tilbage til fanerne midt i et pas (NAT-1 forslag 3).
 - Kilder: SPEC 3.2, 3.3, 4.2–4.5, 5 og 6 (efter P1).
 - Grønt: Playwright: Styrke A, Styrke B, motor og Open & Strong gennem tidsmaskinen med »Nu«, »Næste«, pause og introkort; et pas uden berøring, hvor SPEC lover det; opstarten ikke langsommere.

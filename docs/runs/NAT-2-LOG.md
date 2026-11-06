@@ -23,3 +23,16 @@
 | 02:04 | Forklaringerne færdige: alle 129 trin, rutinepunkter og målinger i 23 filer; fundene I1–I9 fra P2-reviewet rettet | Grøn: check-explain 23/23, npm run check i ren worktree (472 tests) |
 | 02:40 | Kortets rettelser K1–K6: passet står stille, mens kortet er åbent (D47), »Øvrige« i Stiger, tilbage-gestus lukker kortet; trænernes tolkninger P53–P60 logget | Grøn: npm run check (477 tests), Playwright 42 bestået; JS 68,8 kB gz |
 | 02:45 | P1 færdig og udgivet; P2-opfølgning, review af forklaringer del 2 og P3 (figursystemet) startet | Grøn: Actions 42145649687 |
+| 03:15 | P2-opfølgning: 14 af 15 rettet, alle 4 middel; review af forklaringer del 2: 0 høje, 2 middel (press.5 mod motoren, sideplanke og balance med ét ur), 8 lave (`docs/reviews/nat2-p5-forklaringer-2.md`); rettelsesrunde sendt til 8 trænere | – |
+| 03:20 | P2 færdig og udgivet | Grøn: Actions 42149465609 |
+| 03:26 | Rettelserne til forklaringerne (P5 F1–F10, P2 N1–N2) committet; P53–P56 og P59 passer til kortene, P61 tilføjet | Grøn: check-explain 26/26, npm run check i ren worktree (533 tests) |
+| 03:43 | P3 bygget: figurmotoren som TypeScript-udgave af `tools/pictos`, animation i tempoet, slowmotion, stillbilleder, tekstalternativ, figurtjek i `check-explain`, kontaktark uden server; tre referencefigurer; L7 rettet | Grøn: npm run check (534 tests), Playwright 47/47; JS 75,6 kB gz, startfilerne uændrede |
+| 03:50 | P3-review, F2 (sideplanke og balance med to ure) og 9 figuragenter til del 1 startet | – |
+| 04:01 | F2 rettet: sideplanke og balance måles med et ur pr. side, og den korteste tid gemmes (SPEC 4.8, D49), uden ændring af hændelser eller skema | Grøn: npm run check (538 tests), Playwright 50 bestået |
+| 04:02 | Opfølgning på review af forklaringer del 2 og P6 (passet: »Dagens pas«, »Nu og næste«, pause og introkort) startet | – |
+| 04:12 | Opfølgning på forklaringer del 2: alle 10 fund rettet, ét nyt lavt (N1) | Grøn: check-explain 26/26, Playwright measure.spec 3/3 |
+| 04:17 | P3-review: 1 høj (knæet knækker midt i en push-up, fordi hoften interpoleres lige), 3 middel (tjekket fanger ikke forkert `facing`, strakte led tegnet bøjede, vejledningen), 4 lave (`docs/reviews/nat2-p3-figurer.md`); rettes af P3-agenten efter P6 | – |
+| 04:34 | Figurerne del 1 committet: 54 af 129 punkter i 22 figurfiler med kontaktark i `screenshots/figures/` | Grøn: check-explain 45/45, npm run check i ren worktree (550 tests) |
+| 04:38 | Figurerne del 2 (75 punkter, også de 12 målinger) startet hos de 9 figuragenter, mens P6 bygger | – |
+| 05:02 | Alle figurer committet: 129 af 129 trin, rutinepunkter og målinger har figur; strakte led rettet (P3-review M2). Figuragenterne har listet de steder, hvor motorens grænser tvang en dårligere udgave (kontakt på albue og ryg, hop, skridt) | Grøn: check-explain 46/46, npm run check i ren worktree (550 tests) |
+| 05:10 | Stoppet: brugerens ugentlige forbrug er ved at slippe op. P6 er stoppet midt i arbejdet (ucommittet i arbejdsmappen); rapport og P3-brief committet | Grøn: npm run check på 3cdd417 (550 tests) |
