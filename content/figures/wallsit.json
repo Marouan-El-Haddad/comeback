@@ -1,0 +1,41 @@
+{
+  "format": 1,
+  "subject": "wallsit",
+  "figures": [
+    {
+      "id": "wallsit.W1",
+      "view": "side",
+      "facing": 1,
+      "props": [{ "type": "wall", "x": 0, "side": -1 }],
+      "highlight": ["near.thigh"],
+      "keyframes": {
+        "stand": {
+          "hip": [5.5, 43.43],
+          "torso": 90,
+          "head": -8,
+          "arms": {
+            "near": { "to": [12.5, 70.43], "upper": 12, "lower": 9 },
+            "far": { "to": [11.5, 72.43], "upper": 11, "lower": 9 }
+          },
+          "legs": {
+            "near": { "to": [29.5, 3.6], "tip": [36.7, 0.3] },
+            "far": { "to": [28.5, 3.6], "tip": [35.7, 0.3] }
+          }
+        },
+        "sit": {
+          "hip": [5.5, 26.6],
+          "torso": 90,
+          "head": -8,
+          "arms": {
+            "near": { "to": [12.5, 53.6], "upper": 12, "lower": 9 },
+            "far": { "to": [11.5, 55.6], "upper": 11, "lower": 9 }
+          },
+          "legs": {
+            "near": { "to": [29.5, 3.6], "tip": [36.7, 0.3] },
+            "far": { "to": [28.5, 3.6], "tip": [35.7, 0.3] }
+          }
+        }
+      }
+    }
+  ]
+}

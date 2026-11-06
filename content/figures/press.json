@@ -1,0 +1,38 @@
+{
+  "format": 1,
+  "subject": "press",
+  "figures": [
+    {
+      "id": "press.1",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.upperArm"],
+      "keyframes": {
+        "top": {
+          "hip": [44.04, 20.02],
+          "torso": 20.45,
+          "head": -4,
+          "arms": { "near": { "to": [69.2, 0] }, "far": { "to": [70.6, 0] } },
+          "legs": {
+            "near": { "to": [0, 3.6], "tip": [3.4, 0.3] },
+            "far": { "to": [-0.6, 3.6], "tip": [2.8, 0.3] }
+          }
+        },
+        "bottom": {
+          "hip": [46.86, 7.2],
+          "torso": 4.39,
+          "head": -4,
+          "arms": {
+            "near": { "to": [69.2, 0], "upper": 12.5 },
+            "far": { "to": [70.6, 0], "upper": 12.5 }
+          },
+          "legs": {
+            "near": { "to": [0, 3.6], "tip": [3.4, 0.3] },
+            "far": { "to": [-0.6, 3.6], "tip": [2.8, 0.3] }
+          }
+        }
+      }
+    }
+  ]
+}
