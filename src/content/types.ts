@@ -207,21 +207,8 @@ export function isLike(entry: ExplainEntry): entry is ExplainLike {
 /** A point in figure units: x to the right, y up, the floor at y = 0. */
 export type Point = [number, number];
 
-/** Segment lengths in figure units, as the pictograms (tools/pictos/picto.py). */
-export const BODY = {
-  shin: 23,
-  thigh: 24,
-  torso: 30,
-  upperArm: 16,
-  forearm: 15,
-  neck: 11,
-  headRadius: 6.4,
-  /** Ankle to toes, or wrist to fingers, when a tip is given as an angle. */
-  tip: 7.5,
-} as const;
-
-/** Front view: the default widths of the shoulders and the pelvis. */
-export const FRONT_WIDTH = { shoulders: 22, hips: 12 } as const;
+// The segment lengths (BODY) and the front view's widths (FRONT_WIDTH) are in src/content/units.ts:
+// this module is part of the start files, and the figure system must not pull them in there.
 
 export type View = 'side' | 'front' | 'top';
 export type LimbSide = 'near' | 'far';

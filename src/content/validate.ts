@@ -4,8 +4,8 @@
 // hands and feet on the floor) is checked by the figure system's own tests (milestone 6).
 import type { Dose, Program } from '../engine/types.ts';
 import { findSourceRef } from './refs.ts';
+import { BODY } from './units.ts';
 import {
-  BODY,
   CONTENT_FORMAT,
   EQUIPMENT,
   isBorrowed,

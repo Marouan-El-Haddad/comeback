@@ -3,8 +3,8 @@
 // interpolated – the hip, the torso and head angles, and the points the hands and feet reach – and
 // the limbs are solved again in every frame, so the limbs keep their length, the joints keep bending
 // the anatomical way, and a hand or foot with the same point in both keyframes stays planted.
+import { FRONT_WIDTH } from '../content/units.ts';
 import {
-  FRONT_WIDTH,
   type FigureItem,
   type IkLimb,
   type JointLimb,

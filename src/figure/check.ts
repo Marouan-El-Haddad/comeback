@@ -11,8 +11,8 @@
 // - A hand or ankle reaches its point, limbs given by their joints have about their length, a foot
 //   points forward, and a red segment is a segment the figure shows.
 // The messages are short and in Danish, like the format check's: the figure agents read them.
+import { BODY } from '../content/units.ts';
 import {
-  BODY,
   isFigureLike,
   isBorrowed,
   isLike,

@@ -4,9 +4,8 @@
 // kinematics like picto.py's ik(). In side view the elbows and knees bend the anatomical way by
 // themselves, from the figure's `facing`; in front and top view the limb's `bend` picks the side.
 // Pure functions without DOM: the app, the tests and the contact sheet share them.
+import { BODY, FRONT_WIDTH } from '../content/units.ts';
 import {
-  BODY,
-  FRONT_WIDTH,
   type FigureItem,
   type IkLimb,
   type JointLimb,

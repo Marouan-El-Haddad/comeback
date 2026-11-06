@@ -5,7 +5,7 @@
 // Colours are the design tokens as CSS variables (docs/SPEC.md 5): the app injects them, and the
 // contact sheet defines them from src/ui/design-tokens.json.
 import type { FigureItem, Point, Prop, Segment } from '../content/types.ts';
-import { BODY } from '../content/types.ts';
+import { BODY } from '../content/units.ts';
 import { polar, type Bone, type Skeleton } from './geometry.ts';
 
 /** The colour roles of a figure; PAINT maps them to the design tokens. */
