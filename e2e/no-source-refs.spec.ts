@@ -37,6 +37,16 @@ test('ingen skærm henviser til PDF, sidetal eller kilder (SK10)', async ({ page
     // Exact: a step is a button too, and its execution can contain »tilbage«.
     await page.getByRole('button', { name: 'Tilbage', exact: true }).click();
   }
+  // »Øvrige« (D47): the other tracks, the warm-up, Open & Strong and the measurements.
+  const others = page.locator('.other-row');
+  await expect(others).toHaveCount(10);
+  for (let i = 0; i < 10; i++) {
+    const name = (await others.nth(i).locator('.ladder-name').innerText()).trim();
+    await others.nth(i).click();
+    await expect(page.locator('.other-detail')).toBeVisible();
+    await expectNoRefs(page, `Stiger → Øvrige → ${name}`);
+    await page.getByRole('button', { name: 'Tilbage', exact: true }).click();
+  }
 
   await page.getByRole('button', { name: 'Mere', exact: true }).click();
   await expectNoRefs(page, 'Mere');

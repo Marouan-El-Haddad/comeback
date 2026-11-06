@@ -69,7 +69,10 @@ test('Væg-testen før opvarmningen har sit eget kort (en måling)', async ({ pa
   await expect(c.getByRole('heading', { level: 1 })).toHaveText('Væg-testen');
   await expect(c.locator('.step-kicker')).toHaveText('Måling');
   await expect(c.locator('.card-dose')).toContainText('Afstand i cm');
-  await expect(c).toContainText('Mål fra baghoved til væg.');
+  // Its own explanation (content/explain/measures.json) now stands where the programme's one-line
+  // »Sådan« stood until it was written.
+  await expect(c.locator('.card-start')).toContainText('Udgangsstilling:');
+  await expect(c.locator('.card-steps li').first()).toBeVisible();
   await c.getByRole('button', { name: 'Tilbage til passet' }).first().click();
   await expect(page.getByRole('heading', { name: 'Væg-testen' })).toBeVisible();
 });
