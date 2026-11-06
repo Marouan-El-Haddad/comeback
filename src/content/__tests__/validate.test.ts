@@ -2,7 +2,7 @@
 // message that says what is wrong and where.
 import { describe, expect, test } from 'vitest';
 import { PROGRAM } from '../../engine/program.ts';
-import type { ExplainFile, ExplainItem, FigureFile, FigureItem } from '../types.ts';
+import type { ExplainFile, ExplainItem, FigureFile, FigureItem, OwnMovement } from '../types.ts';
 import {
   coverage,
   statedSeconds,
@@ -10,7 +10,21 @@ import {
   validateExplainFile,
   validateFigureFile,
 } from '../validate.ts';
-import { CORE_FRONT, CORE_FRONT_FIGURES, EMOM, OS, PRESS, PRESS_FIGURES } from './fixtures.ts';
+import {
+  CLUB,
+  CORE_FRONT,
+  CORE_FRONT_FIGURES,
+  EMOM,
+  MEASURES_EXPLAIN,
+  OS,
+  PRESS,
+  PRESS_FIGURES,
+  WALLSIT,
+  WARMUP_POTENSER,
+} from './fixtures.ts';
+
+/** The item's first movement, which in these examples has its own positions and phases. */
+const own = (item: ExplainItem, n = 0) => item.movements[n] as OwnMovement;
 
 const explainProblems = (file: unknown, name: string) =>
   validateExplainFile(file, name, PROGRAM).map((p) => `${p.where}: ${p.message}`);
@@ -143,35 +157,33 @@ describe('forklaringer: hver regel giver en fejl', () => {
     ['udstyr to gange', press((i) => (i.equipment = ['wall', 'wall'])), '»wall« står to gange'],
     [
       'ukendt kropsdel',
-      press((i) => (i.movements[0]!.positions[0]!.contacts[0]!.part = 'nose' as never)),
+      press((i) => (own(i).positions[0]!.contacts[0]!.part = 'nose' as never)),
       'ukendt kropsdel »nose«',
     ],
     [
       'count på en enkelt kropsdel',
-      press(
-        (i) => (i.movements[0]!.positions[0]!.contacts = [{ part: 'back', on: 'floor', count: 1 }]),
-      ),
+      press((i) => (own(i).positions[0]!.contacts = [{ part: 'back', on: 'floor', count: 1 }])),
       '»count« bruges kun',
     ],
     [
       'flade uden udstyr',
-      press((i) => (i.movements[0]!.positions[0]!.contacts[1]!.on = 'chair')),
+      press((i) => (own(i).positions[0]!.contacts[1]!.on = 'chair')),
       '»chair« skal også stå i »equipment«',
     ],
     [
       'ugyldigt positions-id',
-      press((i) => (i.movements[0]!.positions[1]!.id = 'Bund')),
+      press((i) => (own(i).positions[1]!.id = 'Bund')),
       'små bogstaver a–z',
     ],
     [
       'fase til ukendt position',
-      press((i) => (i.movements[0]!.phases[0]!.to = 'mid')),
+      press((i) => (own(i).phases[0]!.to = 'mid')),
       'positionen »mid« findes ikke (der er: top, bottom)',
     ],
     [
       'position uden fase',
       press((i) =>
-        i.movements[0]!.positions.push({
+        own(i).positions.push({
           id: 'mid',
           name: 'Midt',
           text: 'Halvvejs.',
@@ -180,24 +192,20 @@ describe('forklaringer: hver regel giver en fejl', () => {
       ),
       'ingen fase går til positionen »mid«',
     ],
-    [
-      'for lang fase',
-      press((i) => (i.movements[0]!.phases[0]!.seconds = 12)),
-      '0.2–10 sek eller "dose"',
-    ],
+    ['for lang fase', press((i) => (own(i).phases[0]!.seconds = 12)), '0.2–10 sek eller "dose"'],
     [
       '"dose" i en øvelse med gentagelser',
-      press((i) => (i.movements[0]!.phases[1]!.seconds = 'dose')),
+      press((i) => (own(i).phases[1]!.seconds = 'dose')),
       '"dose" bruges kun ved hold',
     ],
     [
       'gentagelsen slutter et andet sted',
-      press((i) => i.movements[0]!.phases.pop()),
+      press((i) => own(i).phases.pop()),
       'sidste fase skal gå til »top«',
     ],
     [
       'programmets tempo mangler',
-      press((i) => (i.movements[0]!.phases[0]!.seconds = 2)),
+      press((i) => (own(i).phases[0]!.seconds = 2)),
       'programmet siger »3 sek ned«, men ingen fase varer 3 sek',
     ],
     [
@@ -219,7 +227,7 @@ describe('forklaringer: hver regel giver en fejl', () => {
 
   test('et hold uden "dose"-fase', () => {
     const file = structuredClone(CORE_FRONT);
-    (file.items[0] as ExplainItem).movements[0]!.phases[0]!.seconds = 5;
+    own(file.items[1] as ExplainItem).phases[0]!.seconds = 5;
     expect(explainProblems(file, 'core_front').join('\n')).toContain('et hold skal have en fase');
   });
 
@@ -233,14 +241,14 @@ describe('forklaringer: hver regel giver en fejl', () => {
 
   test('en rutine må have "dose" og slutte et andet sted', () => {
     const file = structuredClone(OS);
-    const item = file.items[0] as ExplainItem;
-    item.movements[0]!.phases = [
+    const movement = own(file.items[0] as ExplainItem);
+    movement.phases = [
       { to: 'up', seconds: 1, label: 'Løft' },
       { to: 'up', seconds: 2, label: 'Hold 2 sek' },
       { to: 'up', seconds: 'dose', label: 'Bliv' },
     ];
-    item.movements[0]!.positions = item.movements[0]!.positions.filter((p) => p.id !== 'down');
-    item.movements[0]!.positions.unshift({ id: 'down', name: 'Nede', text: 'Nede.', contacts: [] });
+    movement.positions = movement.positions.filter((p) => p.id !== 'down');
+    movement.positions.unshift({ id: 'down', name: 'Nede', text: 'Nede.', contacts: [] });
     expect(explainProblems(file, 'os')).toEqual([]);
   });
 
@@ -280,7 +288,7 @@ describe('figurer', () => {
     ],
     [
       'facing forfra',
-      pressFigure((f) => ((f.view = 'top'), (f.facing = 1))),
+      pressFigure((f) => Object.assign(f, { view: 'top', facing: 1 })),
       '»facing« bruges kun i sidebilledet',
     ],
     [
@@ -337,7 +345,7 @@ describe('figurer', () => {
   test('kontakt med en flade kræver rekvisitten', () => {
     const explain = press((i) => {
       i.equipment = ['chair'];
-      i.movements[0]!.positions[0]!.contacts[1]!.on = 'chair';
+      own(i).positions[0]!.contacts[1]!.on = 'chair';
     });
     expect(figureProblems(PRESS_FIGURES, 'press', explain).join('\n')).toContain(
       'positionen »top« rører »chair«, men figuren har ingen chair',
@@ -371,7 +379,14 @@ describe('figurer', () => {
       format: 1,
       subject: 'burpee_emom',
       figures: [
-        { id: 'burpee_emom.E2', view: 'side', props: [], highlight: ['torso'], keyframes: {} },
+        {
+          id: 'burpee_emom.E2',
+          view: 'side',
+          facing: 1,
+          props: [],
+          highlight: ['torso'],
+          keyframes: {},
+        },
       ],
     };
     expect(figureProblems(file, 'burpee_emom', EMOM).join('\n')).toContain(
@@ -385,9 +400,205 @@ describe('dækning', () => {
     const result = coverage(PROGRAM, [PRESS, EMOM], [PRESS_FIGURES]);
     expect(result.all).toHaveLength(
       PROGRAM.tracks.reduce((n, t) => n + t.steps.length, 0) +
-        PROGRAM.routines.reduce((n, r) => n + r.items.length, 0),
+        PROGRAM.routines.reduce((n, r) => n + r.items.length, 0) +
+        PROGRAM.measures.length,
     );
     expect(result.explained).toEqual(['press.1', 'burpee_emom.E1', 'burpee_emom.E2']);
     expect(result.drawn).toEqual(['press.1']);
+  });
+});
+
+describe('gentagelser, tider og »dose« (M2, M3)', () => {
+  test('klubsekvensen med ti mikro-pumps som én gentaget fase og wall sit med slag under holdet', () => {
+    expect(explainProblems(CLUB, 'club_sequence')).toEqual([]);
+    expect(explainProblems(WALLSIT, 'wallsit')).toEqual([]);
+  });
+
+  const club = (change: (m: OwnMovement) => void): ExplainFile => {
+    const file = structuredClone(CLUB);
+    change(own(file.items[0] as ExplainItem));
+    return file;
+  };
+  const cases: Array<[string, ExplainFile, string]> = [
+    [
+      'repeat til samme position',
+      club((m) => (m.phases[6]!.to = 'mid')),
+      '»repeat« går frem og tilbage: »to« skal være en anden position end »mid«',
+    ],
+    [
+      'repeat uden for 2–30',
+      club((m) => (m.phases[6]!.repeat = 40)),
+      'et helt tal fra 2 til 30 eller "dose"',
+    ],
+    [
+      'en label med sekunder, der ikke passer',
+      club((m) => (m.phases[1]!.seconds = 1)),
+      '»Hold 3 sek« siger 3 sek, men fasen varer 1 sek',
+    ],
+    [
+      'en kort tid i en label på en "dose"-fase',
+      club((m) => (m.phases[1]!.seconds = 'dose')),
+      '»Hold 3 sek« siger 3 sek, men fasen er "dose"',
+    ],
+  ];
+  test.each(cases)('%s', (_, file, fragment) => {
+    expect(explainProblems(file, 'club_sequence').join('\n')).toContain(fragment);
+  });
+
+  test('"repeat": "dose" kun, hvor dosis tillader det', () => {
+    const file = structuredClone(PRESS);
+    own(file.items[0] as ExplainItem).phases[0]!.repeat = 'dose';
+    expect(explainProblems(file, 'press').join('\n')).toContain('"dose" bruges kun ved hold');
+  });
+
+  test('en gentaget fase ender, hvor den startede', () => {
+    // Push-up: down and still, then three times up and back down: the repetition ends at the bottom.
+    const file = structuredClone(PRESS);
+    const movement = own(file.items[0] as ExplainItem);
+    movement.phases = [
+      { to: 'bottom', seconds: 3, label: '3 sek ned' },
+      { to: 'bottom', seconds: 1, label: '1 sek stille' },
+      { to: 'top', seconds: 1, repeat: 3, label: 'Tre gange op' },
+    ];
+    expect(explainProblems(file, 'press').join('\n')).toContain('sidste fase skal gå til »top«');
+  });
+
+  test('rutinens dosis læses: hage-ind »8 × 5 sek« kræver en fase på 5 sek', () => {
+    const chin: ExplainItem = {
+      ...(structuredClone(OS.items[0]) as ExplainItem),
+      id: 'os.5',
+      movements: [
+        {
+          positions: [
+            { id: 'neutral', name: 'Neutral', text: 'Blikket vandret.', contacts: [] },
+            { id: 'tucked', name: 'Hagen ind', text: 'Hagen trukket lige bagud.', contacts: [] },
+          ],
+          phases: [
+            { to: 'tucked', seconds: 1, label: 'Hagen ind' },
+            { to: 'tucked', seconds: 2, label: 'Hold 2 sek' },
+            { to: 'neutral', seconds: 1, label: 'Slip' },
+          ],
+        },
+      ],
+    };
+    chin.tempo = 'Roligt ind, og slip.';
+    const file: ExplainFile = { ...structuredClone(OS), items: [chin] };
+    expect(explainProblems(file, 'os').join('\n')).toContain(
+      'programmet siger »5 sek«, men ingen fase varer 5 sek',
+    );
+  });
+});
+
+describe('målinger og »like« på tværs af filer (M4, L6)', () => {
+  const resolve = (id: string) =>
+    id === 'core_front.2' ? (CORE_FRONT.items[0] as ExplainItem) : null;
+
+  test('målingerne er et emne med id’erne measures.<id>', () => {
+    const measures = subjectOf(PROGRAM, 'measures');
+    expect(measures?.items.map((i) => i.id)).toContain('measures.wall_test');
+    expect(measures?.items).toHaveLength(PROGRAM.measures.length);
+    expect(validateExplainFile(MEASURES_EXPLAIN, 'measures', PROGRAM, resolve)).toEqual([]);
+  });
+
+  test('»like« til et trin i en anden fil skal være forklaret dér', () => {
+    const problems = validateExplainFile(MEASURES_EXPLAIN, 'measures', PROGRAM, () => null);
+    expect(problems.map((p) => p.message).join('\n')).toContain(
+      '»like« peger på »core_front.2«, som ikke er forklaret fuldt i content/explain/core_front.json',
+    );
+  });
+
+  test('»like« til noget, programmet ikke har', () => {
+    const file = structuredClone(MEASURES_EXPLAIN);
+    file.items[1] = { id: 'measures.hollow', like: 'core_front.9' };
+    expect(explainProblems(file, 'measures').join('\n')).toContain(
+      '»like« peger på »core_front.9«, som ikke findes i programmet',
+    );
+  });
+
+  test('»like« deler »Lettere« og »Sværere«, så de nævner intet trin (L6)', () => {
+    const file = structuredClone(EMOM);
+    (file.items[0] as ExplainItem).harder = 'Trin E2: et minut mere.';
+    expect(explainProblems(file, 'burpee_emom').join('\n')).toContain(
+      '»like« deler »harder« med burpee_emom.E1, som nævner',
+    );
+  });
+});
+
+describe('»Potensér« og pas (M5)', () => {
+  test('dagens første power-øvelse lånes, og pogo-hop hører kun til Styrke A', () => {
+    expect(explainProblems(WARMUP_POTENSER, 'warmup')).toEqual([]);
+  });
+
+  test('»from« og »sessions« bruges kun i rutiner', () => {
+    const file = structuredClone(PRESS);
+    const item = file.items[0] as ExplainItem;
+    item.movements = [
+      { id: 'a', name: 'Lånt', from: 'power' },
+      { ...own(item), id: 'b', name: 'Egen', sessions: ['A'] },
+    ];
+    const text = explainProblems(file, 'press').join('\n');
+    expect(text).toContain('»from« bruges kun i rutiner');
+    expect(text).toContain('»sessions« bruges kun i rutiner');
+  });
+
+  test('ukendt pas og to lånte bevægelser', () => {
+    const file = structuredClone(WARMUP_POTENSER);
+    const item = file.items[0] as ExplainItem;
+    item.movements[1]!.sessions = ['X' as never];
+    item.movements.push({ id: 'power2', name: 'Igen', from: 'power' });
+    const text = explainProblems(file, 'warmup').join('\n');
+    expect(text).toContain('ukendt pas »X«');
+    expect(text).toContain('højst én bevægelse med »from«');
+  });
+});
+
+describe('figurer: facing og nakke (L1, L3)', () => {
+  test('sidebilledet skal have »facing«', () => {
+    const file = structuredClone(PRESS_FIGURES);
+    delete (file.figures[0] as { facing?: number }).facing;
+    expect(figureProblems(file, 'press', PRESS).join('\n')).toContain(
+      'sidebilledet skal have »facing«',
+    );
+  });
+
+  test('nakken kan være rød', () => {
+    const file = structuredClone(PRESS_FIGURES);
+    (file.figures[0] as FigureItem).highlight = ['neck'];
+    expect(figureProblems(file, 'press', PRESS)).toEqual([]);
+  });
+
+  test('en lånt bevægelse har ingen figur', () => {
+    const file: FigureFile = {
+      format: 1,
+      subject: 'warmup',
+      figures: [
+        {
+          id: 'warmup.4',
+          movement: 'power',
+          view: 'side',
+          facing: 1,
+          props: [],
+          highlight: ['torso'],
+          keyframes: {},
+        },
+      ],
+    };
+    expect(figureProblems(file, 'warmup', WARMUP_POTENSER).join('\n')).toContain(
+      'bevægelsen viser dagens power-trin med dets egen figur',
+    );
+  });
+});
+
+describe('kilder i forklaringerne (L2)', () => {
+  test('ingen årstal og ingen studier eller forskning', () => {
+    const year = press((i) => (i.trains = 'Som vist i 2023.'));
+    expect(explainProblems(year, 'press').join('\n')).toContain('ingen årstal (»2023«)');
+    const study = press((i) => (i.trains = 'En metaanalyse viser, at det virker.'));
+    expect(explainProblems(study, 'press').join('\n')).toContain(
+      'ingen henvisning til studier eller forskning (»metaanalyse«)',
+    );
+    // Words that only look like it: »forskellige«, »2.000«.
+    const fine = press((i) => (i.trains = 'Forskellige vinkler og 2.000 skridt.'));
+    expect(explainProblems(fine, 'press')).toEqual([]);
   });
 });

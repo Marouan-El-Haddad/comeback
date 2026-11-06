@@ -8,7 +8,9 @@ import {
   BODY,
   CONTENT_FORMAT,
   EQUIPMENT,
+  isBorrowed,
   isLike,
+  MEASURES,
   PAIRED_PARTS,
   SINGLE_PARTS,
   SURFACES,
@@ -17,6 +19,8 @@ import {
   type ExplainItem,
   type FigureFile,
   type Movement,
+  type OwnMovement,
+  type Phase,
 } from './types.ts';
 
 export interface Problem {
@@ -25,22 +29,26 @@ export interface Problem {
   message: string;
 }
 
-/** A step or routine item as the programme has it. */
+/** A step, routine item or measurement as the programme has it. */
 export interface SubjectItem {
   id: string;
-  /** The step's dose; undefined for a routine item. */
+  kind: 'step' | 'routine' | 'measure';
+  /** The step's dose; undefined for a routine item or a measurement. */
   dose?: Dose;
-  /** The programme's own words about it: execution, cues and the parts of a round. */
+  /** The programme's own words about it: execution, cues, a round's parts, a routine's dose. */
   texts: string[];
 }
 
 export interface Subject {
-  kind: 'track' | 'routine';
+  kind: 'track' | 'routine' | 'measures';
   id: string;
   items: SubjectItem[];
 }
 
-/** The track or routine a content file belongs to; routine items get the id `<routine>.<key>`. */
+/**
+ * The subject a content file belongs to: a track, a routine (items `<routine>.<key>`) or the
+ * measurements (`measures`, items `measures.<id>`).
+ */
 export function subjectOf(program: Program, id: string): Subject | null {
   const track = program.tracks.find((t) => t.id === id);
   if (track) {
@@ -49,6 +57,7 @@ export function subjectOf(program: Program, id: string): Subject | null {
       id,
       items: track.steps.map((s) => ({
         id: s.id,
+        kind: 'step',
         dose: s.dose,
         texts: [s.execution, ...s.cues, ...(s.round ?? []).map((r) => r.label)],
       })),
@@ -59,11 +68,39 @@ export function subjectOf(program: Program, id: string): Subject | null {
     return {
       kind: 'routine',
       id,
-      items: routine.items.map((i) => ({ id: `${routine.id}.${i.key}`, texts: [i.execution] })),
+      items: routine.items.map((i) => ({
+        id: `${routine.id}.${i.key}`,
+        kind: 'routine',
+        texts: [i.execution, i.dose],
+      })),
+    };
+  }
+  if (id === MEASURES) {
+    return {
+      kind: 'measures',
+      id,
+      items: program.measures.map((m) => ({
+        id: `${MEASURES}.${m.id}`,
+        kind: 'measure',
+        texts: [m.how],
+      })),
     };
   }
   return null;
 }
+
+/** The subject of an item id: 'press.1' → 'press', 'measures.hollow' → 'measures'. */
+export function subjectIdOf(itemId: string): string {
+  const dot = itemId.indexOf('.');
+  return dot < 0 ? itemId : itemId.slice(0, dot);
+}
+
+/** A step, routine item or measurement anywhere in the programme, or null. */
+export function programItem(program: Program, itemId: string): SubjectItem | null {
+  return subjectOf(program, subjectIdOf(itemId))?.items.find((i) => i.id === itemId) ?? null;
+}
+
+const UNKNOWN_SUBJECT = 'er hverken et spor, en rutine eller »measures«';
 
 // ---------------------------------------------------------------------------------------------
 // Limits (docs/SPEC.md 9.1)
@@ -84,12 +121,20 @@ export const LIMITS = {
   movements: { max: 4, name: 40 },
   positions: { min: 1, max: 6, name: 24, nameWords: 3, text: 240 },
   phases: { min: 1, max: 12, label: 32, labelWords: 5, seconds: [0.2, 10] as const },
+  repeat: [2, 30] as const,
 } as const;
 
 const ID = /^[a-z][a-z0-9_]*$/;
 const EMOJI = /[\p{Extended_Pictographic}\u{FE0F}]/u;
 const DOSE = /\d+\s*×\s*\d+/u;
 const STATED_SECONDS = /(\d+(?:,\d+)?)(?:\s*[–-]\s*(\d+(?:,\d+)?))?\s*sek\b(?:\s+[\p{L}]+)?/gu;
+/** A year: the explanations name no studies (A2). Danish style writes thousands as »2.000«. */
+const YEAR = /\b(?:19|20)\d{2}\b/u;
+/** Studies and research are sources outside the app (A2). */
+const RESEARCH =
+  /\b(?:meta-?analyse\p{L}*|studie(?:r|t|rne|ts|rnes)?|forskning\p{L}*|forsker\p{L}*|evidens\p{L}*)(?!\p{L})/iu;
+/** A step named in »Lettere« or »Sværere«: »trin 2«, »E3«. */
+const STEP_NAME = /\btrin\s+[A-Z]?\d+\b|\b[A-Z]\d\b/iu;
 
 // ---------------------------------------------------------------------------------------------
 // A small reader for untyped JSON that collects problems with their place in the file
@@ -205,6 +250,10 @@ function text(r: Report, where: string, value: unknown, rule: TextRule): value i
   if (EMOJI.test(value)) r.add(where, `ingen emojis: ${quote}`);
   const ref = findSourceRef(value);
   if (ref) r.add(where, `ingen henvisning til PDF, sidetal eller kilder (»${ref}«)`);
+  const year = YEAR.exec(value);
+  if (year) r.add(where, `ingen årstal (»${year[0]}«): forklaringen nævner ingen studier`);
+  const research = RESEARCH.exec(value);
+  if (research) r.add(where, `ingen henvisning til studier eller forskning (»${research[0]}«)`);
   if (rule.noDose) {
     const dose = DOSE.exec(value);
     if (dose) r.add(where, `skriv ikke dosis (»${dose[0]}«); den står på kortet fra programmet`);
@@ -236,7 +285,7 @@ const ITEM_KEYS = [
   'movements',
 ] as const;
 
-/** The seconds the programme (or the tempo text) states: »3 sek ned« → [3, 3, '3 sek ned']. */
+/** The seconds the programme (or a text) states: »3 sek ned« → [3, 3, '3 sek ned']. */
 export function statedSeconds(texts: readonly string[]): Array<[number, number, string]> {
   const found: Array<[number, number, string]> = [];
   for (const t of texts) {
@@ -249,11 +298,17 @@ export function statedSeconds(texts: readonly string[]): Array<[number, number, 
   return found;
 }
 
-/** Which uses of `"dose"` and which loops the item's dose allows (docs/SPEC.md 9.1). */
-function rulesFor(item: SubjectItem): { dose: 'required' | 'allowed' | 'never'; loop: boolean } {
+interface Rules {
+  /** Whether a phase may (or must) last "dose": seconds "dose" or repeat "dose". */
+  dose: 'required' | 'allowed' | 'never';
+  /** A repetition ends where it started. */
+  loop: boolean;
+}
+
+/** Which uses of "dose" and which loops the item allows (docs/SPEC.md 9.1). */
+function rulesFor(item: SubjectItem): Rules {
+  if (item.kind !== 'step') return { dose: 'allowed', loop: false }; // routine item, measurement
   switch (item.dose?.kind) {
-    case undefined:
-      return { dose: 'allowed', loop: false }; // a routine item
     case 'hold':
       return { dose: 'required', loop: false };
     case 'rounds':
@@ -265,15 +320,69 @@ function rulesFor(item: SubjectItem): { dose: 'required' | 'allowed' | 'never'; 
   }
 }
 
-function checkMovement(
-  r: Report,
-  where: string,
-  value: unknown,
-  several: boolean,
-  equipment: readonly string[],
-): void {
-  if (!shape(r, where, value, ['positions', 'phases'], ['id', 'name'])) return;
-  if (several) {
+const longest = LIMITS.phases.seconds[1];
+
+/** A phase that lasts as long as the dose: its seconds or its repeat is "dose". */
+function lastsDose(phase: Phase): boolean {
+  return phase.seconds === 'dose' || phase.repeat === 'dose';
+}
+
+/** Seconds of the whole phase (one way, or all repeats); null for a "dose" phase. */
+function phaseTotal(phase: Phase): number | null {
+  if (lastsDose(phase) || !finite(phase.seconds)) return null;
+  return phase.seconds * (typeof phase.repeat === 'number' ? phase.repeat : 1);
+}
+
+/** The position each phase ends in: a repeat ends where it started. */
+function endPositions(movement: OwnMovement): string[] {
+  let current = movement.positions[0]?.id ?? '';
+  return movement.phases.map((phase) => {
+    if (phase.repeat === undefined) current = phase.to;
+    return current;
+  });
+}
+
+interface MovementContext {
+  several: boolean;
+  equipment: readonly string[];
+  item: SubjectItem;
+  rules: Rules;
+  sessions: readonly string[];
+}
+
+function checkSessions(r: Report, where: string, value: unknown, ctx: MovementContext): void {
+  if (value === undefined) return;
+  if (ctx.item.kind !== 'routine') {
+    r.add(where, '»sessions« bruges kun i rutiner (fx pogo-hop kun i Styrke A)');
+    return;
+  }
+  if (!list(r, where, value, 1, ctx.sessions.length, 'pas')) return;
+  const seen = new Set<unknown>();
+  for (const s of value) {
+    if (typeof s !== 'string' || !ctx.sessions.includes(s)) {
+      r.add(where, `ukendt pas »${show(s)}« (tilladt: ${ctx.sessions.join(', ')})`);
+    } else if (seen.has(s)) r.add(where, `»${s}« står to gange`);
+    seen.add(s);
+  }
+}
+
+function checkMovement(r: Report, where: string, value: unknown, ctx: MovementContext): void {
+  if (isObject(value) && 'from' in value) {
+    // The warm-up's »Potensér«: the session's first power step, with its own figure and phases.
+    if (!shape(r, where, value, ['from', 'name'], ['id', 'sessions'])) return;
+    if (ctx.item.kind !== 'routine') {
+      r.add(where, '»from« bruges kun i rutiner (opvarmningens »Potensér«)');
+    }
+    if (value.from !== 'power') r.add(at(where, 'from'), 'skal være "power"');
+    if (ctx.several && (typeof value.id !== 'string' || !ID.test(value.id))) {
+      r.add(where, 'flere bevægelser kræver et »id« med små bogstaver, tal og _');
+    }
+    text(r, at(where, 'name'), value.name, { kind: 'short', chars: LIMITS.movements.name });
+    checkSessions(r, at(where, 'sessions'), value.sessions, ctx);
+    return;
+  }
+  if (!shape(r, where, value, ['positions', 'phases'], ['id', 'name', 'sessions'])) return;
+  if (ctx.several) {
     if (typeof value.id !== 'string' || !ID.test(value.id)) {
       r.add(where, 'flere bevægelser kræver et »id« med små bogstaver, tal og _');
     }
@@ -284,6 +393,7 @@ function checkMovement(
   if (value.name !== undefined) {
     text(r, at(where, 'name'), value.name, { kind: 'short', chars: LIMITS.movements.name });
   }
+  checkSessions(r, at(where, 'sessions'), value.sessions, ctx);
 
   const positionIds: string[] = [];
   const p = LIMITS.positions;
@@ -299,36 +409,77 @@ function checkMovement(
       text(r, at(w, 'name'), pos.name, { kind: 'short', chars: p.name, words: p.nameWords });
       text(r, at(w, 'text'), pos.text, { kind: 'prose', chars: p.text });
       if (list(r, at(w, 'contacts'), pos.contacts, 0, 8, 'kontakter')) {
-        pos.contacts.forEach((c, j) => checkContact(r, at(at(w, 'contacts'), j), c, equipment));
+        pos.contacts.forEach((c, j) => checkContact(r, at(at(w, 'contacts'), j), c, ctx.equipment));
       }
     });
   }
 
   const ph = LIMITS.phases;
   const reached = new Set<string>(positionIds.slice(0, 1));
+  let current = positionIds[0];
   if (list(r, at(where, 'phases'), value.phases, ph.min, ph.max, 'faser')) {
     value.phases.forEach((phase, i) => {
       const w = at(at(where, 'phases'), i);
-      if (!shape(r, w, phase, ['to', 'seconds', 'label'])) return;
-      if (typeof phase.to !== 'string' || !positionIds.includes(phase.to)) {
+      if (!shape(r, w, phase, ['to', 'seconds', 'label'], ['repeat'])) return;
+      const known = typeof phase.to === 'string' && positionIds.includes(phase.to);
+      if (!known) {
         r.add(
           at(w, 'to'),
           `positionen »${show(phase.to)}« findes ikke (der er: ${positionIds.join(', ')})`,
         );
-      } else reached.add(phase.to);
+      } else reached.add(phase.to as string);
       const s = phase.seconds;
       if (s !== 'dose' && (!finite(s) || s < ph.seconds[0] || s > ph.seconds[1])) {
         r.add(at(w, 'seconds'), `${ph.seconds[0]}–${ph.seconds[1]} sek eller "dose"`);
       }
-      text(r, at(w, 'label'), phase.label, {
-        kind: 'short',
-        chars: ph.label,
-        words: ph.labelWords,
-      });
+      const repeat = phase.repeat;
+      const [fewest, most] = LIMITS.repeat;
+      if (repeat !== undefined) {
+        if (
+          repeat !== 'dose' &&
+          (!Number.isInteger(repeat) || (repeat as number) < fewest || (repeat as number) > most)
+        ) {
+          r.add(at(w, 'repeat'), `et helt tal fra ${fewest} til ${most} eller "dose"`);
+        }
+        if (repeat === 'dose' && s === 'dose') {
+          r.add(
+            at(w, 'seconds'),
+            'med "repeat": "dose" er »seconds« tiden for én gang frem og tilbage',
+          );
+        }
+        if (known && phase.to === current) {
+          r.add(
+            at(w, 'repeat'),
+            `»repeat« går frem og tilbage: »to« skal være en anden position end »${current}«`,
+          );
+        }
+      } else if (known) current = phase.to as string;
+      if (
+        text(r, at(w, 'label'), phase.label, {
+          kind: 'short',
+          chars: ph.label,
+          words: ph.labelWords,
+        })
+      ) {
+        checkLabel(r, at(w, 'label'), phase as unknown as Phase);
+      }
     });
   }
   for (const id of positionIds) {
     if (!reached.has(id)) r.add(at(where, 'positions'), `ingen fase går til positionen »${id}«`);
+  }
+}
+
+/** A label that says »N sek« says how long the phase lasts (all its repeats). */
+function checkLabel(r: Report, where: string, phase: Phase): void {
+  const total = phaseTotal(phase);
+  for (const [min, max] of statedSeconds([phase.label])) {
+    const said = `»${phase.label}« siger ${min === max ? min : `${min}–${max}`} sek`;
+    if (total === null) {
+      if (min <= longest) r.add(where, `${said}, men fasen er "dose"; giv den "seconds": ${min}`);
+    } else if (total < min - 1e-9 || total > max + 1e-9) {
+      r.add(where, `${said}, men fasen varer ${Math.round(total * 10) / 10} sek`);
+    }
   }
 }
 
@@ -354,28 +505,44 @@ function checkContact(r: Report, where: string, value: unknown, equipment: reado
   }
 }
 
-/** Phases against the dose: holds need a "dose" phase, repetitions end where they started. */
+/** The movements with their own positions and phases (a borrowed one has the power step's). */
+function ownMovements(movements: readonly unknown[]): OwnMovement[] {
+  return movements.filter(
+    (m): m is OwnMovement =>
+      isObject(m) && !('from' in m) && Array.isArray(m.positions) && Array.isArray(m.phases),
+  );
+}
+
+/**
+ * Phases against the dose: holds need a "dose" phase, repetitions end where they started, and every
+ * time the programme states for the item (»3 sek ned«, »8 × 5 sek«) is a phase of that length.
+ */
 function checkTiming(
   r: Report,
   where: string,
   item: SubjectItem,
-  movements: readonly Movement[],
+  movements: readonly OwnMovement[],
   tempo: string | undefined,
 ): void {
   const rules = rulesFor(item);
-  const phases = movements.flatMap((m) => (Array.isArray(m.phases) ? m.phases : []));
-  const hasDose = phases.some((p) => p.seconds === 'dose');
+  const phases = movements.flatMap((m) => m.phases.filter((p) => isObject(p)));
+  const hasDose = phases.some(lastsDose);
   if (rules.dose === 'required' && !hasDose) {
-    r.add(where, 'et hold skal have en fase med "seconds": "dose" (selve holdet)');
+    r.add(
+      where,
+      'et hold skal have en fase med "seconds": "dose" eller "repeat": "dose" (selve holdet)',
+    );
   }
   if (rules.dose === 'never' && hasDose) {
-    r.add(where, '"dose" bruges kun ved hold, runder og rutiner; her skal faserne have sekunder');
+    r.add(
+      where,
+      '"dose" bruges kun ved hold, runder, rutiner og målinger; her skal faserne have sekunder',
+    );
   }
   if (rules.loop) {
     movements.forEach((m, i) => {
-      if (!Array.isArray(m.positions) || !Array.isArray(m.phases)) return;
       const first = m.positions[0]?.id;
-      const last = m.phases[m.phases.length - 1]?.to;
+      const last = endPositions(m).pop();
       if (first && last && first !== last) {
         r.add(
           at(at(where, 'movements'), i),
@@ -384,14 +551,16 @@ function checkTiming(
       }
     });
   }
-  // A time the programme states is a phase of that length; a time longer than any phase (a hold of
-  // 45 sek, a part of a round) is the "dose" phase, where the dose allows one.
-  const longest = LIMITS.phases.seconds[1];
+  // A time the programme states is a phase of that length (one way or with all repeats); a time
+  // longer than any phase (a hold of 45 sek, a part of a round) is a "dose" phase, where allowed.
+  const inRange = (value: number, min: number, max: number) =>
+    value >= min - 1e-9 && value <= max + 1e-9;
   const matches = ([min, max]: [number, number, string]) =>
     phases.some((p) =>
-      p.seconds === 'dose'
+      lastsDose(p)
         ? rules.dose !== 'never' && min > longest
-        : finite(p.seconds) && p.seconds >= min - 1e-9 && p.seconds <= max + 1e-9,
+        : finite(p.seconds) &&
+          (inRange(p.seconds, min, max) || inRange(phaseTotal(p) ?? -1, min, max)),
     );
   for (const stated of statedSeconds(item.texts)) {
     if (matches(stated)) continue;
@@ -410,8 +579,14 @@ function checkTiming(
   }
 }
 
-function checkItem(r: Report, where: string, value: Json, item: SubjectItem, subject: Subject) {
-  const noDose = subject.kind === 'track';
+function checkItem(
+  r: Report,
+  where: string,
+  value: Json,
+  item: SubjectItem,
+  sessions: readonly string[],
+) {
+  const noDose = item.kind === 'step';
   const prose = (key: string, chars: number) =>
     text(r, at(where, key), value[key], { kind: 'prose', chars, noDose });
   prose('trains', LIMITS.trains);
@@ -464,42 +639,55 @@ function checkItem(r: Report, where: string, value: Json, item: SubjectItem, sub
   }
 
   if (list(r, at(where, 'movements'), value.movements, 1, LIMITS.movements.max, 'bevægelser')) {
-    const several = value.movements.length > 1;
-    value.movements.forEach((mv, i) =>
-      checkMovement(r, at(at(where, 'movements'), i), mv, several, equipment),
-    );
-    if (several) {
+    const ctx: MovementContext = {
+      several: value.movements.length > 1,
+      equipment,
+      item,
+      rules: rulesFor(item),
+      sessions,
+    };
+    value.movements.forEach((mv, i) => checkMovement(r, at(at(where, 'movements'), i), mv, ctx));
+    if (ctx.several) {
       const ids = value.movements.map((mv) => (isObject(mv) ? mv.id : undefined));
       if (new Set(ids).size !== ids.length)
         r.add(at(where, 'movements'), 'to bevægelser har samme id');
     }
+    const borrowed = value.movements.filter((mv) => isObject(mv) && 'from' in mv).length;
+    if (borrowed > 1) r.add(at(where, 'movements'), 'højst én bevægelse med »from«');
     checkTiming(
       r,
       where,
       item,
-      value.movements.filter(isObject) as unknown as Movement[],
+      ownMovements(value.movements),
       typeof value.tempo === 'string' ? value.tempo : undefined,
     );
   }
 }
 
+/** Finds a full explanation in another file, for a »like« across files; undefined = not looked up. */
+export type Resolve = (itemId: string) => ExplainItem | null | undefined;
+
 /**
  * Problems in an explanation file (content/explain/<name>.json); an empty list means it is valid.
- * `name` is the file name without .json.
+ * `name` is the file name without .json. `resolve` looks up a »like« that points into another file
+ * (a measurement like its step); without it such a target is only checked against the programme.
  */
-export function validateExplainFile(data: unknown, name: string, program: Program): Problem[] {
+export function validateExplainFile(
+  data: unknown,
+  name: string,
+  program: Program,
+  resolve?: Resolve,
+): Problem[] {
   const r = new Report();
   if (!shape(r, '', data, ['format', 'subject', 'why', 'items'])) return r.problems;
   if (data.format !== CONTENT_FORMAT) r.add('format', `skal være ${CONTENT_FORMAT}`);
   if (data.subject !== name) r.add('subject', `skal være filens navn: »${name}«`);
   const subject = subjectOf(program, name);
   if (!subject) {
-    r.add(
-      'subject',
-      `»${name}« er hverken et spor i program/tracks eller en rutine i program/routines.json`,
-    );
+    r.add('subject', `»${name}« ${UNKNOWN_SUBJECT}`);
     return r.problems;
   }
+  const sessions = program.sessions.map((s) => s.id);
   const w = LIMITS.why;
   if (list(r, 'why', data.why, w.min, w.max, 'afsnit')) {
     data.why.forEach((p, i) => text(r, at('why', i), p, { kind: 'prose', chars: w.chars }));
@@ -532,24 +720,50 @@ export function validateExplainFile(data: unknown, name: string, program: Progra
     }
     if (!shape(r, where, entry, ITEM_KEYS)) return;
     full.set(item.id, entry);
-    checkItem(r, where, entry, item, subject);
+    checkItem(r, where, entry, item, sessions);
   });
 
-  // »like« points at a full explanation in the same file, and the programme's tempo must fit it.
+  // »like« points at a full explanation – in this file or, for a step of another subject, in that
+  // subject's file – whose fields fit both items; the programme's tempo must fit its phases.
   for (const entry of data.items) {
     if (!isObject(entry) || !('like' in entry) || typeof entry.id !== 'string') continue;
-    const target = typeof entry.like === 'string' ? full.get(entry.like) : undefined;
-    if (!target) {
-      r.add(
-        entry.id,
-        `»like« skal pege på et fuldt forklaret trin i filen (ikke »${show(entry.like)}«)`,
-      );
+    const id = entry.id;
+    const like = entry.like;
+    let target: Json | ExplainItem | null | undefined;
+    if (typeof like !== 'string' || like === id) {
+      target = null;
+    } else if (subjectIdOf(like) === name) {
+      target = full.get(like) ?? null;
+    } else if (!programItem(program, like)) {
+      r.add(id, `»like« peger på »${like}«, som ikke findes i programmet`);
+      continue;
+    } else {
+      target = resolve ? resolve(like) : undefined;
+      if (target === null) {
+        r.add(
+          id,
+          `»like« peger på »${like}«, som ikke er forklaret fuldt i content/explain/${subjectIdOf(like)}.json`,
+        );
+        continue;
+      }
+    }
+    if (target === null) {
+      r.add(id, `»like« skal pege på et fuldt forklaret trin (ikke »${show(like)}«)`);
       continue;
     }
-    const item = subject.items.find((s) => s.id === entry.id);
+    if (target === undefined) continue; // another file, not looked up here
+    const item = subject.items.find((s) => s.id === id);
     if (item && Array.isArray(target.movements)) {
-      const movements = target.movements.filter(isObject) as unknown as Movement[];
-      checkTiming(r, `${entry.id} (som ${show(entry.like)})`, item, movements, undefined);
+      checkTiming(r, `${id} (som ${show(like)})`, item, ownMovements(target.movements), undefined);
+    }
+    for (const key of ['easier', 'harder'] as const) {
+      const named = typeof target[key] === 'string' ? STEP_NAME.exec(target[key]) : null;
+      if (named) {
+        r.add(
+          id,
+          `»like« deler »${key}« med ${show(like)}, som nævner »${named[0]}«; skriv den uden trin, eller forklar ${id} for sig`,
+        );
+      }
     }
   }
   return r.problems;
@@ -561,6 +775,7 @@ export function validateExplainFile(data: unknown, name: string, program: Progra
 
 const SEGMENTS = new Set([
   'torso',
+  'neck',
   ...['near', 'far'].flatMap((s) =>
     ['upperArm', 'forearm', 'thigh', 'shin'].map((g) => `${s}.${g}`),
   ),
@@ -745,10 +960,7 @@ export function validateFigureFile(
   if (data.subject !== name) r.add('subject', `skal være filens navn: »${name}«`);
   const subject = subjectOf(program, name);
   if (!subject) {
-    r.add(
-      'subject',
-      `»${name}« er hverken et spor i program/tracks eller en rutine i program/routines.json`,
-    );
+    r.add('subject', `»${name}« ${UNKNOWN_SUBJECT}`);
     return r.problems;
   }
   if (!explain) {
@@ -784,7 +996,7 @@ export function validateFigureFile(
       r.add(where, `»${show(entry.id)}« har ingen forklaring i content/explain/${name}.json`);
       return;
     }
-    if ('like' in explained) {
+    if (isLike(explained)) {
       r.add(where, `forklares som »${explained.like}« og bruger dens figur; fjern figuren`);
       return;
     }
@@ -797,6 +1009,10 @@ export function validateFigureFile(
           ? `»movement« skal være en af bevægelserne: ${ids}`
           : '»movement« bruges kun, når forklaringen har flere bevægelser',
       );
+      return;
+    }
+    if (isBorrowed(movement)) {
+      r.add(where, 'bevægelsen viser dagens power-trin med dets egen figur; fjern figuren');
       return;
     }
     const key = keyOf(entry.id, entry.movement);
@@ -815,25 +1031,19 @@ export function validateFigureFile(
       }
       return;
     }
-    if (
-      !shape(
-        r,
-        where,
-        entry,
-        ['id', 'view', 'props', 'highlight', 'keyframes'],
-        ['movement', 'facing'],
-      )
-    ) {
-      return;
-    }
+    const required = ['id', 'view', 'props', 'highlight', 'keyframes'];
+    if (!shape(r, where, entry, required, ['movement', 'facing'])) return;
     const view = entry.view;
     if (view !== 'side' && view !== 'front' && view !== 'top') {
       r.add(at(where, 'view'), 'skal være "side", "front" eller "top"');
     }
-    if (entry.facing !== undefined) {
-      if (view !== 'side') r.add(at(where, 'facing'), '»facing« bruges kun i sidebilledet');
-      else if (entry.facing !== 1 && entry.facing !== -1)
-        r.add(at(where, 'facing'), 'skal være 1 eller -1');
+    if (view === 'side' && entry.facing !== 1 && entry.facing !== -1) {
+      r.add(
+        at(where, 'facing'),
+        'sidebilledet skal have »facing«: 1, når brystet vender mod højre, efter at figuren er drejet op at stå, ellers -1',
+      );
+    } else if (view !== 'side' && entry.facing !== undefined) {
+      r.add(at(where, 'facing'), '»facing« bruges kun i sidebilledet');
     }
 
     const equipment: readonly Equipment[] = explained.equipment;
@@ -905,7 +1115,7 @@ export function validateFigureFile(
 // Coverage
 // ---------------------------------------------------------------------------------------------
 
-/** Steps and routine items, and which of them have an explanation and a figure. */
+/** Steps, routine items and measurements, and which of them have an explanation and a figure. */
 export function coverage(
   program: Program,
   explains: readonly ExplainFile[],
@@ -914,17 +1124,21 @@ export function coverage(
   const all = [
     ...program.tracks.flatMap((t) => t.steps.map((s) => s.id)),
     ...program.routines.flatMap((rt) => rt.items.map((i) => `${rt.id}.${i.key}`)),
+    ...program.measures.map((m) => `${MEASURES}.${m.id}`),
   ];
   const entries = new Map(explains.flatMap((f) => f.items.map((e) => [e.id, e] as const)));
   const figured = new Set(
     figures.flatMap((f) => f.figures.map((e) => `${e.id}/${e.movement ?? ''}`)),
   );
-  // Drawn = every movement has a figure; a step explained »like« another is drawn with it.
+  // Drawn = every own movement has a figure; a step explained »like« another is drawn with it, and
+  // a borrowed movement uses the power step's figure.
   const isDrawn = (id: string, depth = 0): boolean => {
     const entry = entries.get(id);
     if (!entry || depth > 1) return false;
     if (isLike(entry)) return isDrawn(entry.like, depth + 1);
-    return entry.movements.every((m) => figured.has(`${id}/${m.id ?? ''}`));
+    return entry.movements
+      .filter((m) => !isBorrowed(m))
+      .every((m) => figured.has(`${id}/${m.id ?? ''}`));
   };
   return {
     all,

@@ -177,6 +177,45 @@ export const CORE_FRONT: ExplainFile = {
   why: ['En stærk mave holder kroppen samlet, når du slår, sparker og tager imod.'],
   items: [
     {
+      id: 'core_front.2',
+      trains: 'Maven, der holder lænden i gulvet.',
+      start: 'Lig på ryggen med lænden presset mod gulvet.',
+      steps: ['Løft skuldre og ben en håndsbredde.', 'Hold, så længe lænden bliver i gulvet.'],
+      tempo: 'Hold stillingen hele tiden.',
+      breathing: 'Korte, rolige vejrtrækninger.',
+      cues: ['Lænden i gulvet', 'Lange arme'],
+      mistakes: [
+        { mistake: 'Lænden løfter sig.', fix: 'Bøj knæene lidt mere.' },
+        { mistake: 'Du holder vejret.', fix: 'Træk vejret kort og roligt.' },
+      ],
+      easier: 'Bøj knæene.',
+      harder: 'Stræk benene helt.',
+      equipment: [],
+      getReady: 'Læg dig på ryggen.',
+      movements: [
+        {
+          positions: [
+            {
+              id: 'down',
+              name: 'Liggende',
+              text: 'På ryggen.',
+              contacts: [{ part: 'back', on: 'floor' }],
+            },
+            {
+              id: 'hold',
+              name: 'Hollow',
+              text: 'Skuldre og ben løftet.',
+              contacts: [{ part: 'back', on: 'floor' }],
+            },
+          ],
+          phases: [
+            { to: 'hold', seconds: 1, label: 'Løft' },
+            { to: 'hold', seconds: 'dose', label: 'Hold' },
+          ],
+        },
+      ],
+    },
+    {
       id: 'core_front.3',
       trains: 'Hele forsiden af kroppen, så den kan tage imod uden at give efter.',
       start: 'Albuerne under skuldrene og kroppen lige fra hæl til hoved.',
@@ -258,6 +297,7 @@ export const CORE_FRONT_FIGURES: FigureFile = {
     {
       id: 'core_front.3',
       view: 'side',
+      facing: 1,
       props: [],
       highlight: ['torso'],
       keyframes: {
@@ -275,6 +315,166 @@ export const CORE_FRONT_FIGURES: FigureFile = {
           },
         },
       },
+    },
+  ],
+};
+
+/** The explanation fields every example item below shares; only the movements differ. */
+const SHARED = {
+  trains: 'Styrke og kontrol.',
+  start: 'Stå klar.',
+  steps: ['Gør det første.', 'Gør det andet.'],
+  tempo: 'Roligt og kontrolleret.',
+  breathing: 'Ånd roligt.',
+  cues: ['Roligt', 'Kontrol'],
+  mistakes: [
+    { mistake: 'Det går for hurtigt.', fix: 'Sænk farten.' },
+    { mistake: 'Du holder vejret.', fix: 'Ånd roligt.' },
+  ],
+  easier: 'Tag det roligere.',
+  harder: 'Tag det langsommere.',
+  getReady: 'Gør klar.',
+};
+
+/** The club sequence's round: three holds of 3 sek and ten micro pumps as one repeated phase. */
+export const CLUB: ExplainFile = {
+  format: 1,
+  subject: 'club_sequence',
+  why: ['Klubsekvensen bygger styrke i hele push-uppens bane.'],
+  items: [
+    {
+      id: 'club_sequence.C1',
+      ...SHARED,
+      equipment: [],
+      movements: [
+        {
+          positions: [
+            { id: 'top', name: 'Oppe', text: 'Strakte arme.', contacts: [...PLANK_CONTACTS] },
+            { id: 'mid', name: 'Midten', text: 'Halvvejs nede.', contacts: [...PLANK_CONTACTS] },
+            {
+              id: 'pump',
+              name: 'Lidt under',
+              text: 'En håndsbredde under midten.',
+              contacts: [...PLANK_CONTACTS],
+            },
+            { id: 'low', name: 'Nede', text: 'Lige over gulvet.', contacts: [...PLANK_CONTACTS] },
+          ],
+          phases: [
+            { to: 'mid', seconds: 1, label: 'Ned til midten' },
+            { to: 'mid', seconds: 3, label: 'Hold 3 sek' },
+            { to: 'low', seconds: 1, label: 'Helt ned' },
+            { to: 'low', seconds: 3, label: 'Hold 3 sek' },
+            { to: 'mid', seconds: 1, label: 'Op til midten' },
+            { to: 'mid', seconds: 3, label: 'Hold 3 sek' },
+            { to: 'pump', seconds: 0.8, repeat: 10, label: '10 mikro-pumps' },
+            { to: 'low', seconds: 2, label: 'Helt ned' },
+            { to: 'top', seconds: 2, label: 'Helt op' },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+/** Wall sit W2: the hold is the punches, repeated for as long as the dose lasts. */
+export const WALLSIT: ExplainFile = {
+  format: 1,
+  subject: 'wallsit',
+  why: ['Wall sit giver stærke lår, der holder dig i garden hele runden.'],
+  items: [
+    {
+      id: 'wallsit.W2',
+      ...SHARED,
+      equipment: ['wall'],
+      movements: [
+        {
+          positions: [
+            {
+              id: 'guard',
+              name: 'Garde',
+              text: 'Ryggen mod væggen, lårene vandrette, hænderne i garde.',
+              contacts: [
+                { part: 'back', on: 'wall' },
+                { part: 'foot', on: 'floor' },
+              ],
+            },
+            {
+              id: 'punch',
+              name: 'Slag',
+              text: 'Som garden, men den forreste arm strakt frem.',
+              contacts: [
+                { part: 'back', on: 'wall' },
+                { part: 'foot', on: 'floor' },
+              ],
+            },
+          ],
+          phases: [{ to: 'punch', seconds: 1.5, repeat: 'dose', label: 'Rolige lige slag' }],
+        },
+      ],
+    },
+  ],
+};
+
+/** A measurement with its own explanation, and one explained like its step (in another file). */
+export const MEASURES_EXPLAIN: ExplainFile = {
+  format: 1,
+  subject: 'measures',
+  why: ['Målingerne viser, hvor du står, og hvor meget du er rykket.'],
+  items: [
+    {
+      id: 'measures.wall_test',
+      ...SHARED,
+      equipment: ['wall'],
+      movements: [
+        {
+          positions: [
+            {
+              id: 'stand',
+              name: 'Mod væggen',
+              text: 'Hæle, baller og skulderblade mod væggen, hagen vandret.',
+              contacts: [
+                { part: 'heel', on: 'wall' },
+                { part: 'back', on: 'wall' },
+                { part: 'foot', on: 'floor' },
+              ],
+            },
+          ],
+          phases: [{ to: 'stand', seconds: 'dose', label: 'Stå stille' }],
+        },
+      ],
+    },
+    { id: 'measures.hollow', like: 'core_front.2' },
+  ],
+};
+
+/** The warm-up's »Potensér«: the session's first power step, and pogo-hop only in Styrke A. */
+export const WARMUP_POTENSER: ExplainFile = {
+  format: 1,
+  subject: 'warmup',
+  why: ['Opvarmningen gør kroppen klar og viser, hvordan dagen er.'],
+  items: [
+    {
+      id: 'warmup.4',
+      ...SHARED,
+      equipment: [],
+      movements: [
+        { id: 'power', name: 'Dagens første power-øvelse', from: 'power' },
+        {
+          id: 'pogo',
+          name: 'Pogo-hop',
+          sessions: ['A'],
+          positions: [
+            {
+              id: 'down',
+              name: 'Landet',
+              text: 'På forfødderne.',
+              contacts: [{ part: 'toes', on: 'floor' }],
+            },
+            { id: 'up', name: 'I luften', text: 'Lige over gulvet.', contacts: [] },
+          ],
+          phases: [{ to: 'up', seconds: 0.4, repeat: 10, label: '10 pogo-hop' }],
+        },
+      ],
     },
   ],
 };

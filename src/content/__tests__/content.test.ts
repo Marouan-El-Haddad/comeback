@@ -4,8 +4,8 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { describe, expect, test } from 'vitest';
 import { PROGRAM } from '../../engine/program.ts';
-import type { ExplainFile } from '../types.ts';
-import { validateExplainFile, validateFigureFile } from '../validate.ts';
+import { isLike, MEASURES, type ExplainFile } from '../types.ts';
+import { validateExplainFile, validateFigureFile, type Resolve } from '../validate.ts';
 
 const CONTENT = join(process.cwd(), 'content');
 
@@ -18,9 +18,20 @@ function json(sub: string, file: string): unknown {
   return JSON.parse(readFileSync(join(CONTENT, sub, file), 'utf8'));
 }
 
+/** A »like« into another file is looked up among all the explanations. */
+const resolve: Resolve = (itemId) => {
+  const entry = files('explain')
+    .flatMap((f) => (json('explain', f) as ExplainFile).items)
+    .find((e) => e.id === itemId);
+  return entry && !isLike(entry) ? entry : null;
+};
+
 describe('content/', () => {
-  test('kun JSON-filer, opkaldt efter et spor eller en rutine', () => {
-    const subjects = new Set([...PROGRAM.tracks, ...PROGRAM.routines].map((s) => s.id));
+  test('kun JSON-filer, opkaldt efter et spor, en rutine eller målingerne', () => {
+    const subjects = new Set([
+      ...[...PROGRAM.tracks, ...PROGRAM.routines].map((s) => s.id),
+      MEASURES,
+    ]);
     const stray = [
       ...(existsSync(CONTENT)
         ? readdirSync(CONTENT).filter((f) => !['explain', 'figures'].includes(f))
@@ -36,7 +47,7 @@ describe('content/', () => {
 
   test('alle forklaringer består valideringen', () => {
     const problems = files('explain').flatMap((f) =>
-      validateExplainFile(json('explain', f), basename(f, '.json'), PROGRAM).map(
+      validateExplainFile(json('explain', f), basename(f, '.json'), PROGRAM, resolve).map(
         (p) => `explain/${f} › ${p.where}: ${p.message}`,
       ),
     );

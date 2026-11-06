@@ -1,11 +1,16 @@
-// Types for the explanations and figures in content/ (docs/SPEC.md 9.1, docs/DECISIONS.md D37).
+// Types for the explanations and figures in content/ (docs/SPEC.md 9.1, docs/DECISIONS.md D37, D45).
 // The files are a layer on top of the programme: names, doses and rules come from program/*.json;
 // content/explain/<id>.json explains each step in the app's own words and describes its positions
 // in words, and content/figures/<id>.json holds the keyframes the figure system draws and animates.
-// One file per track (program/tracks) and per routine (program/routines.json).
+// One file per track (program/tracks), per routine (program/routines.json) and one for the
+// measurements in the sessions (program/measures.json).
+import type { SessionKind } from '../engine/types.ts';
 
 /** Format version of every file in content/. A new field that old files lack needs a new version. */
 export const CONTENT_FORMAT = 1;
+
+/** The subject of the measurements' files: content/explain/measures.json, ids 'measures.<id>'. */
+export const MEASURES = 'measures';
 
 // ---------------------------------------------------------------------------------------------
 // Shared vocabulary
@@ -87,21 +92,48 @@ export interface Phase {
   to: string;
   /**
    * Seconds in the step's tempo (0.2–10). "dose" = as long as the dose says: the hold of a hold
-   * step, a part of a round, or a routine item's time.
+   * step, a part of a round, or a routine item's or measurement's time. With `repeat`: one time
+   * out to `to` and back.
    */
   seconds: number | 'dose';
-  /** The text under the figure while the phase runs: »3 sek ned«. */
+  /** The text under the figure while the phase runs: »3 sek ned«. An »N sek« here is the phase's time. */
   label: string;
+  /**
+   * Out to `to` and back to the position before, this many times (2–30) – the club sequence's ten
+   * micro pumps, twenty squats – or "dose": for as long as the dose lasts (punches in a wall sit).
+   * The phase ends where it started.
+   */
+  repeat?: number | 'dose';
 }
 
-/** A movement: the positions and the phases of one repetition. Starts in positions[0]. */
-export interface Movement {
+interface MovementBase {
   /** Needed when an item has more than one movement (the warm-up's »Mobilisér«). */
   id?: string;
   /** Shown above the figure when there is more than one movement. */
   name?: string;
+  /** Routine items only: the movement belongs only to these sessions (pogo-hop in Styrke A). */
+  sessions?: SessionKind[];
+}
+
+/** A movement: the positions and the phases of one repetition. Starts in positions[0]. */
+export interface OwnMovement extends MovementBase {
   positions: Position[];
   phases: Phase[];
+}
+
+/**
+ * Routine items only: the session's first power step (the warm-up's »Potensér«). The card and the
+ * figure show that step's name, positions and phases; without a power block it is left out.
+ */
+export interface BorrowedMovement extends MovementBase {
+  from: 'power';
+  name: string;
+}
+
+export type Movement = OwnMovement | BorrowedMovement;
+
+export function isBorrowed(movement: Movement): movement is BorrowedMovement {
+  return 'from' in movement;
 }
 
 export interface Mistake {
@@ -109,9 +141,12 @@ export interface Mistake {
   fix: string;
 }
 
-/** The explanation of one step or routine item. */
+/** The explanation of one step, routine item or measurement. */
 export interface ExplainItem {
-  /** A step id ('press.1') or a routine item id ('warmup.1', 'os.3' = routine id + item key). */
+  /**
+   * A step id ('press.1'), a routine item id ('warmup.1', 'os.3' = routine id + item key) or a
+   * measurement id ('measures.hollow' = 'measures.' + the id in program/measures.json).
+   */
   id: string;
   /** »Træner«: what the step does for the body and for Muay Thai. One sentence. */
   trains: string;
@@ -139,7 +174,11 @@ export interface ExplainItem {
   movements: Movement[];
 }
 
-/** A step explained exactly like another item in the same file (the EMOM steps E2–E9). */
+/**
+ * A step explained exactly like another item – in the same file (the EMOM steps E2–E9) or in
+ * another (a measurement like its step: 'measures.hollow' like 'core_front.2'). Only when every
+ * field fits both, so »Lettere« and »Sværere« name no step.
+ */
 export interface ExplainLike {
   id: string;
   like: string;
@@ -149,7 +188,7 @@ export type ExplainEntry = ExplainItem | ExplainLike;
 
 export interface ExplainFile {
   format: typeof CONTENT_FORMAT;
-  /** The track id or routine id; the same as the file name. */
+  /** The track id, routine id or 'measures'; the same as the file name. */
   subject: string;
   /** The track's »Hvorfor« in the app's own words: 1–3 short paragraphs, no sources. */
   why: string[];
@@ -254,29 +293,36 @@ export type Prop =
 
 export type PropType = Prop['type'];
 
-/** The segments drawn in Thai red: the muscles that work. */
-export type Segment = 'torso' | `${LimbSide}.${'upperArm' | 'forearm' | 'thigh' | 'shin'}`;
+/** The segments drawn in Thai red: the muscles that work; `neck` = between shoulders and head. */
+export type Segment = 'torso' | 'neck' | `${LimbSide}.${'upperArm' | 'forearm' | 'thigh' | 'shin'}`;
 
-/** The figure of one step or routine item (one movement of it). */
-export interface FigureItem {
-  /** The step or routine item id, as in content/explain. */
+interface FigureBase {
+  /** The step, routine item or measurement id, as in content/explain. */
   id: string;
   /** The movement's id when the explanation has more than one. */
   movement?: string;
-  view: View;
-  /**
-   * Side view: the way the chest faces when the figure is turned upright without mirroring:
-   * 1 = right, −1 = left. Standing with the chest to the right, a push-up or plank with the head to
-   * the right, and lying on the back with the head to the left are all 1; a handstand with the
-   * chest to the right is −1. It decides which way knees and elbows bend.
-   */
-  facing?: 1 | -1;
   props: Prop[];
   /** Segments in red, at least one. */
   highlight: Segment[];
   /** One pose per position id of the movement in content/explain. */
   keyframes: Record<string, Pose>;
 }
+
+/** The figure of one step, routine item or measurement (one movement of it). */
+export type FigureItem = FigureBase &
+  (
+    | {
+        view: 'side';
+        /**
+         * The way the chest faces when the figure is turned upright without mirroring: 1 = right,
+         * −1 = left. Standing with the chest to the right, a push-up or plank with the head to the
+         * right, and lying on the back with the head to the left are all 1; a handstand with the
+         * chest to the right is −1. It decides which way knees and elbows bend, so it is required.
+         */
+        facing: 1 | -1;
+      }
+    | { view: 'front' | 'top' }
+  );
 
 /** A figure drawn exactly like another figure in the same file. */
 export interface FigureLike {
@@ -289,7 +335,7 @@ export type FigureEntry = FigureItem | FigureLike;
 
 export interface FigureFile {
   format: typeof CONTENT_FORMAT;
-  /** The track id or routine id; the same as the file name and the explanation file. */
+  /** The track id, routine id or 'measures'; the same as the file name and the explanation file. */
   subject: string;
   figures: FigureEntry[];
 }

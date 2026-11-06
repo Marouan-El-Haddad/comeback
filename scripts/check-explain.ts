@@ -1,19 +1,22 @@
 // Checks explanation and figure files in content/ (docs/SPEC.md 9.1) for the content agents:
 //   node scripts/check-explain.ts content/explain/press.json [more files]
 //   node scripts/check-explain.ts                      (every file in content/, with coverage)
-// A figure file is checked against the explanation file of the same name. Prints short Danish
-// messages and exits with code 1 when a file has a problem, also when prettier would change it.
+// A figure file is checked against the explanation file of the same name, and a »like« into another
+// file is looked up there. Prints short Danish messages and exits with code 1 when a file has a
+// problem, also when prettier would change it.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as prettier from 'prettier';
 import { PROGRAM } from '../src/engine/program.ts';
-import type { ExplainFile, FigureFile } from '../src/content/types.ts';
+import { isLike, type ExplainFile, type FigureFile } from '../src/content/types.ts';
 import {
   coverage,
+  subjectIdOf,
   validateExplainFile,
   validateFigureFile,
   type Problem,
+  type Resolve,
 } from '../src/content/validate.ts';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -45,6 +48,18 @@ function read(file: string): { text: string; data: unknown } | { error: string }
   }
 }
 
+/** Looks up a »like« into another explanation file next to this one (content/explain/<subject>). */
+function resolverFor(dir: string): Resolve {
+  return (itemId) => {
+    const loaded = read(join(dir, `${subjectIdOf(itemId)}.json`));
+    if ('error' in loaded) return null;
+    const items = (loaded.data as { items?: unknown }).items;
+    if (!Array.isArray(items)) return null;
+    const entry = (items as ExplainFile['items']).find((e) => e.id === itemId);
+    return entry && !isLike(entry) ? entry : null;
+  };
+}
+
 async function formatted(file: string, text: string): Promise<boolean> {
   // The repo's prettier settings, also for a file outside the repo (the tests write to a temp dir).
   const options = (await prettier.resolveConfig(join(ROOT, 'content', 'x.json'))) ?? {};
@@ -74,10 +89,11 @@ async function check(file: string): Promise<Result> {
   let summary: string;
   const result: Partial<Result> = {};
   if (kind === 'explain') {
-    problems = validateExplainFile(loaded.data, name, PROGRAM);
+    problems = validateExplainFile(loaded.data, name, PROGRAM, resolverFor(dirname(file)));
     const items = (loaded.data as { items?: unknown[] }).items?.length ?? 0;
     const routine = PROGRAM.routines.some((r) => r.id === name);
-    summary = `${items} ${routine ? (items === 1 ? 'punkt' : 'punkter') : 'trin'}`;
+    const unit = name === 'measures' ? 'målinger' : routine ? 'punkter' : 'trin';
+    summary = `${items} ${items === 1 && unit !== 'trin' ? unit.replace(/er$/, '') : unit}`;
     if (problems.length === 0) result.explain = loaded.data as ExplainFile;
   } else {
     // The figures build on the explanation's positions; it must be valid itself first.
@@ -86,7 +102,7 @@ async function check(file: string): Promise<Result> {
     let explain: ExplainFile | null = null;
     problems = [];
     if (other && 'data' in other) {
-      const own = validateExplainFile(other.data, name, PROGRAM);
+      const own = validateExplainFile(other.data, name, PROGRAM, resolverFor(dirname(explainFile)));
       if (own.length === 0) explain = other.data as ExplainFile;
       else {
         problems.push({
@@ -144,7 +160,7 @@ if (all) {
     results.flatMap((r) => (r.figures ? [r.figures] : [])),
   );
   console.log(
-    `\n${files.length === 0 ? 'Ingen filer i content/ endnu. ' : ''}Forklaret: ${cov.explained.length} af ${cov.all.length} trin og rutinepunkter. Med figur: ${cov.drawn.length}.`,
+    `\n${files.length === 0 ? 'Ingen filer i content/ endnu. ' : ''}Forklaret: ${cov.explained.length} af ${cov.all.length} trin, rutinepunkter og målinger. Med figur: ${cov.drawn.length}.`,
   );
 }
 if (files.length > 0 && failed === 0) console.log(`\nAlle ${files.length} filer er i orden.`);
