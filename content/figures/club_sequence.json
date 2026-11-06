@@ -1,0 +1,117 @@
+{
+  "format": 1,
+  "subject": "club_sequence",
+  "figures": [
+    {
+      "id": "club_sequence.C1",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.upperArm"],
+      "keyframes": {
+        "top": {
+          "hip": [44.04, 20.02],
+          "torso": 20.45,
+          "head": -4,
+          "arms": {
+            "near": {
+              "to": [69.2, 0]
+            },
+            "far": {
+              "to": [70.6, 0]
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [0, 3.6],
+              "tip": [3.4, 0.3]
+            },
+            "far": {
+              "to": [-0.6, 3.6],
+              "tip": [2.8, 0.3]
+            }
+          }
+        },
+        "middle": {
+          "hip": [45.92, 13.61],
+          "torso": 12.3,
+          "head": -4,
+          "arms": {
+            "near": {
+              "to": [69.2, 0],
+              "upper": 13.5
+            },
+            "far": {
+              "to": [70.6, 0],
+              "upper": 13.5
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [0, 3.6],
+              "tip": [3.4, 0.3]
+            },
+            "far": {
+              "to": [-0.6, 3.6],
+              "tip": [2.8, 0.3]
+            }
+          }
+        },
+        "bottom": {
+          "hip": [46.86, 7.2],
+          "torso": 4.39,
+          "head": -4,
+          "arms": {
+            "near": {
+              "to": [69.2, 0],
+              "upper": 12.5
+            },
+            "far": {
+              "to": [70.6, 0],
+              "upper": 12.5
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [0, 3.6],
+              "tip": [3.4, 0.3]
+            },
+            "far": {
+              "to": [-0.6, 3.6],
+              "tip": [2.8, 0.3]
+            }
+          }
+        },
+        "pump": {
+          "hip": [46.25, 11.96],
+          "torso": 10.25,
+          "head": -4,
+          "arms": {
+            "near": {
+              "to": [69.2, 0],
+              "upper": 13
+            },
+            "far": {
+              "to": [70.6, 0],
+              "upper": 13
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [0, 3.6],
+              "tip": [3.4, 0.3]
+            },
+            "far": {
+              "to": [-0.6, 3.6],
+              "tip": [2.8, 0.3]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "club_sequence.C2",
+      "like": "club_sequence.C1"
+    }
+  ]
+}

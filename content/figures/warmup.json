@@ -1,0 +1,675 @@
+{
+  "format": 1,
+  "subject": "warmup",
+  "figures": [
+    {
+      "id": "warmup.1",
+      "movement": "sjip",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.shin"],
+      "keyframes": {
+        "nede": {
+          "hip": [0, 51],
+          "torso": 88,
+          "head": -4,
+          "arms": {
+            "near": {
+              "to": [8.6, 61.5],
+              "lower": 9.5
+            },
+            "far": {
+              "to": [7.4, 62.2],
+              "lower": 9
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [1.2, 5.6],
+              "tip": [7.2, 0.3]
+            },
+            "far": {
+              "to": [-0.2, 5.6],
+              "tip": [5.8, 0.3]
+            }
+          }
+        },
+        "oppe": {
+          "hip": [0.4, 57.4],
+          "torso": 88,
+          "head": -4,
+          "arms": {
+            "near": {
+              "to": [9.3, 66.4],
+              "lower": 9.5
+            },
+            "far": {
+              "to": [8.1, 67.1],
+              "lower": 9
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [1.6, 10.8],
+              "tip": [4.77, 4]
+            },
+            "far": {
+              "to": [0.2, 10.8],
+              "tip": [3.37, 4]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "warmup.1",
+      "movement": "skygge",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.upperArm", "near.forearm"],
+      "keyframes": {
+        "garde": {
+          "hip": [-1.5, 48.2],
+          "torso": 92,
+          "head": -12,
+          "arms": {
+            "near": {
+              "to": [8.86, 87.01],
+              "upper": 14
+            },
+            "far": {
+              "to": [5.86, 86.01],
+              "upper": 13
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [12, 3.6],
+              "tip": [19.2, 0.3]
+            },
+            "far": {
+              "to": [-11, 6.4],
+              "tip": [-5, 0.3]
+            }
+          }
+        },
+        "forreste": {
+          "hip": [-0.8, 48],
+          "torso": 89,
+          "head": -17,
+          "arms": {
+            "near": {
+              "to": [30.75, 78.54],
+              "upper": 16
+            },
+            "far": {
+              "to": [9.62, 85.46],
+              "upper": 13
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [12, 3.6],
+              "tip": [19.2, 0.3]
+            },
+            "far": {
+              "to": [-11, 6.4],
+              "tip": [-5, 0.3]
+            }
+          }
+        },
+        "bagerste": {
+          "hip": [2.6, 48.6],
+          "torso": 85,
+          "head": -15,
+          "arms": {
+            "near": {
+              "to": [17.78, 86.42],
+              "upper": 14
+            },
+            "far": {
+              "to": [36.24, 79.03],
+              "upper": 16
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [12, 3.6],
+              "tip": [19.2, 0.3]
+            },
+            "far": {
+              "to": [-10.2, 7],
+              "tip": [-5, 0.3]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "warmup.2",
+      "movement": "spiderman",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.thigh", "near.shin"],
+      "keyframes": {
+        "planke": {
+          "hip": [43.93, 20.34],
+          "torso": 20.85,
+          "head": -4,
+          "arms": {
+            "near": {
+              "to": [71.26, 0]
+            },
+            "far": {
+              "to": [72.66, 0]
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [-0.02, 3.6],
+              "tip": [3.38, 0.3]
+            },
+            "far": {
+              "to": [-0.34, 4.45],
+              "tip": [2.78, 0.3]
+            }
+          }
+        },
+        "udfald": {
+          "hip": [46.14, 15.74],
+          "torso": 30.62,
+          "head": -6,
+          "arms": {
+            "near": {
+              "to": [71.26, 0]
+            },
+            "far": {
+              "to": [72.66, 0]
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [73.4, 3.6],
+              "tip": [81.2, 2.7],
+              "upper": 20
+            },
+            "far": {
+              "to": [0.38, 4.9],
+              "tip": [2.78, 0.3]
+            }
+          }
+        },
+        "drejet": {
+          "hip": [46.14, 15.74],
+          "torso": 30.62,
+          "head": 32,
+          "arms": {
+            "near": {
+              "to": [70.88, 62.03]
+            },
+            "far": {
+              "to": [72.66, 0]
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [73.4, 3.6],
+              "tip": [81.2, 2.7],
+              "upper": 20
+            },
+            "far": {
+              "to": [0.38, 4.9],
+              "tip": [2.78, 0.3]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "warmup.2",
+      "movement": "kosak",
+      "view": "front",
+      "props": [],
+      "highlight": ["near.thigh", "far.thigh"],
+      "keyframes": {
+        "bred": {
+          "hip": [0, 46.17],
+          "torso": 90,
+          "head": 0,
+          "arms": {
+            "near": {
+              "to": [1.5, 66.17],
+              "bend": 1,
+              "upper": 13,
+              "lower": 14.6
+            },
+            "far": {
+              "to": [-1.5, 66.17],
+              "bend": -1,
+              "upper": 13,
+              "lower": 14.6
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [26, 3.6],
+              "tip": [29.6, 0.3],
+              "bend": 1
+            },
+            "far": {
+              "to": [-26, 3.6],
+              "tip": [-29.6, 0.3],
+              "bend": -1
+            }
+          }
+        },
+        "venstre": {
+          "hip": [21.07, 17],
+          "torso": 90,
+          "head": 0,
+          "width": {
+            "shoulders": 20,
+            "hips": 9
+          },
+          "arms": {
+            "near": {
+              "to": [22.57, 37],
+              "bend": 1,
+              "upper": 13,
+              "lower": 14.6
+            },
+            "far": {
+              "to": [19.57, 37],
+              "bend": -1,
+              "upper": 13,
+              "lower": 14.6
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [26, 3.6],
+              "tip": [29.6, 0.3],
+              "bend": 1,
+              "upper": 12.47,
+              "lower": 22.06
+            },
+            "far": {
+              "to": [-26, 3.6],
+              "tip": [-27.2, 11],
+              "bend": -1,
+              "upper": 22.6,
+              "lower": 22
+            }
+          }
+        },
+        "hojre": {
+          "hip": [-21.07, 17],
+          "torso": 90,
+          "head": 0,
+          "width": {
+            "shoulders": 20,
+            "hips": 9
+          },
+          "arms": {
+            "near": {
+              "to": [-19.57, 37],
+              "bend": 1,
+              "upper": 13,
+              "lower": 14.6
+            },
+            "far": {
+              "to": [-22.57, 37],
+              "bend": -1,
+              "upper": 13,
+              "lower": 14.6
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [26, 3.6],
+              "tip": [27.2, 11],
+              "bend": 1,
+              "upper": 22.6,
+              "lower": 22
+            },
+            "far": {
+              "to": [-26, 3.6],
+              "tip": [-29.6, 0.3],
+              "bend": -1,
+              "upper": 12.47,
+              "lower": 22.06
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "warmup.2",
+      "movement": "katko",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["torso", "neck"],
+      "keyframes": {
+        "fire": {
+          "hip": [0.68, 27.99],
+          "torso": 4.13,
+          "head": -16,
+          "arms": {
+            "near": {
+              "to": [30.2, 0],
+              "upper": 15.12
+            },
+            "far": {
+              "to": [31.2, 0],
+              "upper": 15.13
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [-23, 3.6],
+              "tip": [-30.2, 1.4]
+            },
+            "far": {
+              "to": [-24.2, 3.6],
+              "tip": [-31.4, 1.4]
+            }
+          }
+        },
+        "kat": {
+          "hip": [-0.46, 28],
+          "torso": 5.62,
+          "head": -75,
+          "arms": {
+            "near": {
+              "to": [30.2, 0],
+              "upper": 15.92
+            },
+            "far": {
+              "to": [31.2, 0],
+              "upper": 15.96
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [-23, 3.6],
+              "tip": [-30.2, 1.4]
+            },
+            "far": {
+              "to": [-24.2, 3.6],
+              "tip": [-31.4, 1.4]
+            }
+          }
+        },
+        "ko": {
+          "hip": [5.21, 27.43],
+          "torso": 1.47,
+          "head": 28,
+          "arms": {
+            "near": {
+              "to": [30.2, 0],
+              "upper": 13.61
+            },
+            "far": {
+              "to": [31.2, 0],
+              "upper": 13.45
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [-23, 3.6],
+              "tip": [-30.2, 1.4]
+            },
+            "far": {
+              "to": [-24.2, 3.6],
+              "tip": [-31.4, 1.4]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "warmup.3",
+      "movement": "haandled",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.forearm"],
+      "keyframes": {
+        "fire": {
+          "hip": [0.84, 27.99],
+          "torso": 5.47,
+          "head": -16,
+          "arms": {
+            "near": {
+              "to": [30.2, 0],
+              "upper": 15.82,
+              "tip": [36.8, 0.3]
+            },
+            "far": {
+              "to": [31.2, 0],
+              "upper": 15.82,
+              "tip": [37.8, 0.3]
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [-23, 3.6],
+              "tip": [-30.2, 1.4]
+            },
+            "far": {
+              "to": [-24.2, 3.6],
+              "tip": [-31.4, 1.4]
+            }
+          }
+        },
+        "frem": {
+          "hip": [10.63, 25.52],
+          "torso": 7.05,
+          "head": -16,
+          "arms": {
+            "near": {
+              "to": [30.2, 0],
+              "upper": 15.9,
+              "tip": [36.8, 0.3]
+            },
+            "far": {
+              "to": [31.2, 0],
+              "upper": 15.59,
+              "tip": [37.8, 0.3]
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [-23, 3.6],
+              "tip": [-30.2, 1.4]
+            },
+            "far": {
+              "to": [-24.2, 3.6],
+              "tip": [-31.4, 1.4]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "warmup.3",
+      "movement": "skulderblad",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.upperArm"],
+      "keyframes": {
+        "oppe": {
+          "hip": [43.93, 20.34],
+          "torso": 20.85,
+          "head": -4,
+          "arms": {
+            "near": {
+              "to": [71.26, 0]
+            },
+            "far": {
+              "to": [72.66, 0]
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [-0.02, 3.6],
+              "tip": [3.38, 0.3]
+            },
+            "far": {
+              "to": [-0.34, 4.45],
+              "tip": [2.78, 0.3]
+            }
+          }
+        },
+        "nede": {
+          "hip": [44.58, 18.51],
+          "torso": 18.48,
+          "head": -4,
+          "arms": {
+            "near": {
+              "to": [71.26, 0],
+              "upper": 13.05
+            },
+            "far": {
+              "to": [72.66, 0],
+              "upper": 12.99
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [-0.02, 3.6],
+              "tip": [3.38, 0.3]
+            },
+            "far": {
+              "to": [-0.3, 4.46],
+              "tip": [2.78, 0.3]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "warmup.3",
+      "movement": "airplane",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.thigh"],
+      "keyframes": {
+        "laenet": {
+          "hip": [0, 48.8],
+          "torso": 8,
+          "head": -6,
+          "arms": {
+            "near": {
+              "to": [3, 51.4],
+              "upper": 13.6,
+              "lower": 13.6
+            },
+            "far": {
+              "to": [2, 51],
+              "upper": 13.6,
+              "lower": 14.6
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [2, 3.6],
+              "tip": [9.2, 0.3]
+            },
+            "far": {
+              "to": [-46.57, 42.25],
+              "tip": [-45.53, 34.83]
+            }
+          }
+        },
+        "drejet": {
+          "hip": [0, 49.5],
+          "torso": 10,
+          "head": -4,
+          "arms": {
+            "near": {
+              "to": [3, 51.9],
+              "upper": 13.6,
+              "lower": 13.6
+            },
+            "far": {
+              "to": [3, 58.5]
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [2, 3.6],
+              "tip": [9.2, 0.3]
+            },
+            "far": {
+              "to": [-46.97, 51.96],
+              "tip": [-46.71, 48.37]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "warmup.4",
+      "movement": "pogo",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.shin"],
+      "keyframes": {
+        "landet": {
+          "hip": [0, 51.9],
+          "torso": 89,
+          "head": -4,
+          "arms": {
+            "near": {
+              "to": [5.2, 53.7]
+            },
+            "far": {
+              "to": [4, 54.2]
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [1, 5.4],
+              "tip": [7, 0.3]
+            },
+            "far": {
+              "to": [-0.4, 5.4],
+              "tip": [5.6, 0.3]
+            }
+          }
+        },
+        "luften": {
+          "hip": [0.3, 57.9],
+          "torso": 89,
+          "head": -4,
+          "arms": {
+            "near": {
+              "to": [5.5, 59.7]
+            },
+            "far": {
+              "to": [4.3, 60.2]
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [1.2, 11.24],
+              "tip": [3.14, 4]
+            },
+            "far": {
+              "to": [-0.2, 11.24],
+              "tip": [1.74, 4]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

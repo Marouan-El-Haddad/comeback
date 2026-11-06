@@ -1,0 +1,54 @@
+{
+  "format": 1,
+  "subject": "burpee_emom",
+  "figures": [
+    {
+      "id": "burpee_emom.E1",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["torso"],
+      "keyframes": {
+        "stand": {
+          "hip": [51.41, 49.72],
+          "torso": 90,
+          "head": 0,
+          "arms": { "near": { "to": [52.91, 49.12] }, "far": { "to": [52.01, 49.32] } },
+          "legs": { "near": { "to": [52.34, 2.8] }, "far": { "to": [50.94, 2.8] } }
+        },
+        "squat": {
+          "hip": [42.56, 18.22],
+          "torso": 25,
+          "head": 0,
+          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "legs": { "near": { "to": [52.34, 2.8] }, "far": { "to": [50.94, 2.8] } }
+        },
+        "chest": {
+          "hip": [46.9, 5.8],
+          "torso": -3.44,
+          "head": 20,
+          "arms": {
+            "near": { "to": [69.05, 0], "upper": 12.5 },
+            "far": { "to": [70.45, 0], "upper": 12.5 }
+          },
+          "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [-0.6, 2.8] } }
+        },
+        "plank": {
+          "hip": [43.85, 19.71],
+          "torso": 21.08,
+          "head": -4,
+          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [-0.6, 2.8] } }
+        },
+        "jump": {
+          "hip": [51.41, 58.94],
+          "torso": 90,
+          "head": 0,
+          "arms": { "near": { "to": [53.91, 119.54] }, "far": { "to": [55.01, 119.44] } },
+          "legs": { "near": { "to": [52.34, 12] }, "far": { "to": [50.94, 12] } }
+        }
+      }
+    },
+    { "id": "burpee_emom.E2", "like": "burpee_emom.E1" }
+  ]
+}

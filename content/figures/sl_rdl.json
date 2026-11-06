@@ -1,0 +1,35 @@
+{
+  "format": 1,
+  "subject": "sl_rdl",
+  "figures": [
+    {
+      "id": "sl_rdl.1",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.thigh"],
+      "keyframes": {
+        "top": {
+          "hip": [-1.5, 50.18],
+          "torso": 90,
+          "head": -6,
+          "arms": { "near": { "to": [2.5, 49.68] }, "far": { "to": [1.5, 50.18] } },
+          "legs": {
+            "near": { "to": [0, 3.6], "tip": [7.2, 0.3] },
+            "far": { "joint": [-12.04, 28.62], "end": [-22.13, 8], "tip": [-15.13, 5.3] }
+          }
+        },
+        "bottom": {
+          "hip": [-8, 49.51],
+          "torso": 10,
+          "head": -4,
+          "arms": { "near": { "to": [21.54, 24.22] }, "far": { "to": [20.54, 24.42] } },
+          "legs": {
+            "near": { "to": [0, 3.6], "tip": [7.2, 0.3] },
+            "far": { "joint": [-31.64, 45.34], "end": [-54.24, 41.36], "tip": [-52.93, 33.97] }
+          }
+        }
+      }
+    }
+  ]
+}

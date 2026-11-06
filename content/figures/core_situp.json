@@ -1,0 +1,70 @@
+{
+  "format": 1,
+  "subject": "core_situp",
+  "figures": [
+    {
+      "id": "core_situp.1",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["torso"],
+      "keyframes": {
+        "start": {
+          "hip": [0, 5],
+          "torso": 180,
+          "head": -9.4,
+          "arms": { "near": { "to": [0.9, 2.9] }, "far": { "to": [1.2, 3.2] } },
+          "legs": {
+            "near": { "to": [23, 29], "tip": 60 },
+            "far": { "to": [22.2, 29.6], "tip": 60 }
+          }
+        },
+        "top": {
+          "hip": [-0.13, 7.8],
+          "torso": 185.36,
+          "head": -14.76,
+          "arms": { "near": { "to": [0.9, 2.9] }, "far": { "to": [1.2, 3.2] } },
+          "legs": {
+            "near": { "to": [2.06, 40.97], "tip": 100 },
+            "far": { "to": [2.08, 41], "tip": 101 }
+          }
+        }
+      }
+    },
+    {
+      "id": "core_situp.2",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["torso"],
+      "keyframes": {
+        "down": {
+          "hip": [0, 5],
+          "torso": 180,
+          "head": -9.4,
+          "arms": {
+            "near": { "to": [-27, 12], "upper": 12, "lower": 9 },
+            "far": { "to": [-29, 11], "upper": 11, "lower": 9 }
+          },
+          "legs": {
+            "near": { "to": [33.2, 3.6], "tip": [40.4, 0.3] },
+            "far": { "to": [32.4, 3.6], "tip": [39.6, 0.3] }
+          }
+        },
+        "up": {
+          "hip": [0, 5],
+          "torso": 78,
+          "head": -6,
+          "arms": {
+            "near": { "to": [12.46, 29.95], "upper": 12, "lower": 9 },
+            "far": { "to": [11.9, 32.12], "upper": 11, "lower": 9 }
+          },
+          "legs": {
+            "near": { "to": [33.2, 3.6], "tip": [40.4, 0.3] },
+            "far": { "to": [32.4, 3.6], "tip": [39.6, 0.3] }
+          }
+        }
+      }
+    }
+  ]
+}

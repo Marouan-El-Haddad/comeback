@@ -33,6 +33,41 @@
           }
         }
       }
+    },
+    {
+      "id": "press.2",
+      "view": "side",
+      "facing": 1,
+      "props": [
+        { "type": "wall", "x": 0, "side": -1 },
+        { "type": "chair", "x": 0, "width": 24, "height": 24 }
+      ],
+      "highlight": ["near.upperArm"],
+      "keyframes": {
+        "top": {
+          "hip": [57.97, 29.37],
+          "torso": 2.16,
+          "head": -3,
+          "arms": { "near": { "to": [83.45, 0] }, "far": { "to": [84.85, 0] } },
+          "legs": {
+            "near": { "to": [11, 27.6], "tip": [14.4, 24.3] },
+            "far": { "to": [10.4, 27.6], "tip": [13.8, 24.3] }
+          }
+        },
+        "bottom": {
+          "hip": [56.83, 17.16],
+          "torso": -12.83,
+          "head": 4,
+          "arms": {
+            "near": { "to": [83.45, 0], "upper": 12.5 },
+            "far": { "to": [84.85, 0], "upper": 12.5 }
+          },
+          "legs": {
+            "near": { "to": [11, 27.6], "tip": [14.4, 24.3] },
+            "far": { "to": [10.4, 27.6], "tip": [13.8, 24.3] }
+          }
+        }
+      }
     }
   ]
 }

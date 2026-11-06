@@ -1,0 +1,286 @@
+{
+  "format": 1,
+  "subject": "burpee_skill",
+  "figures": [
+    {
+      "id": "burpee_skill.V1",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["torso"],
+      "keyframes": {
+        "stand": {
+          "hip": [51.41, 49.72],
+          "torso": 90,
+          "head": 0,
+          "arms": { "near": { "to": [52.91, 49.12] }, "far": { "to": [52.01, 49.32] } },
+          "legs": { "near": { "to": [52.34, 2.8] }, "far": { "to": [50.94, 2.8] } }
+        },
+        "squat": {
+          "hip": [42.56, 18.22],
+          "torso": 25,
+          "head": 0,
+          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "legs": { "near": { "to": [52.34, 2.8] }, "far": { "to": [50.94, 2.8] } }
+        },
+        "chest": {
+          "hip": [46.9, 5.8],
+          "torso": -3.44,
+          "head": 20,
+          "arms": {
+            "near": { "to": [69.05, 0], "upper": 12.5 },
+            "far": { "to": [70.45, 0], "upper": 12.5 }
+          },
+          "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [-0.6, 2.8] } }
+        },
+        "plank": {
+          "hip": [43.85, 19.71],
+          "torso": 21.08,
+          "head": -4,
+          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [-0.6, 2.8] } }
+        },
+        "jump": {
+          "hip": [51.41, 58.94],
+          "torso": 90,
+          "head": 0,
+          "arms": { "near": { "to": [53.91, 119.54] }, "far": { "to": [55.01, 119.44] } },
+          "legs": { "near": { "to": [52.34, 12] }, "far": { "to": [50.94, 12] } }
+        }
+      }
+    },
+    {
+      "id": "burpee_skill.V2",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.thigh"],
+      "keyframes": {
+        "guard": {
+          "hip": [56.34, 47],
+          "torso": 90,
+          "head": -12,
+          "arms": {
+            "near": { "to": [71.34, 88], "upper": 14 },
+            "far": { "to": [64.34, 87.5], "upper": 13 }
+          },
+          "legs": { "near": { "to": [50.34, 3.7] }, "far": { "to": [62.34, 2.8] } }
+        },
+        "sprawl": {
+          "hip": [49.55, 6.5],
+          "torso": 47.17,
+          "head": 15,
+          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "legs": { "near": { "to": [2.75, 2.8] }, "far": { "to": [2.15, 2.8] } }
+        },
+        "crouch": {
+          "hip": [42.56, 18.22],
+          "torso": 25,
+          "head": 0,
+          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "legs": { "near": { "to": [50.34, 2.8] }, "far": { "to": [62.34, 2.8] } }
+        }
+      }
+    },
+    {
+      "id": "burpee_skill.V3",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.thigh"],
+      "keyframes": {
+        "guard": {
+          "hip": [56.34, 47],
+          "torso": 90,
+          "head": -12,
+          "arms": {
+            "near": { "to": [71.34, 88], "upper": 14 },
+            "far": { "to": [64.34, 87.5], "upper": 13 }
+          },
+          "legs": { "near": { "to": [50.34, 3.7] }, "far": { "to": [62.34, 2.8] } }
+        },
+        "squat": {
+          "hip": [42.56, 18.22],
+          "torso": 25,
+          "head": 0,
+          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "legs": { "near": { "to": [50.34, 2.8] }, "far": { "to": [62.34, 2.8] } }
+        },
+        "chest": {
+          "hip": [46.9, 5.8],
+          "torso": -3.44,
+          "head": 20,
+          "arms": {
+            "near": { "to": [69.05, 0], "upper": 12.5 },
+            "far": { "to": [70.45, 0], "upper": 12.5 }
+          },
+          "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [-0.6, 2.8] } }
+        },
+        "plank": {
+          "hip": [43.85, 19.71],
+          "torso": 21.08,
+          "head": -4,
+          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [-0.6, 2.8] } }
+        },
+        "jump": {
+          "hip": [56.34, 58.76],
+          "torso": 90,
+          "head": 0,
+          "arms": { "near": { "to": [58.84, 119.36] }, "far": { "to": [59.94, 119.26] } },
+          "legs": { "near": { "to": [52.09, 12] }, "far": { "to": [60.59, 12] } }
+        },
+        "knee": {
+          "hip": [66.04, 47.5],
+          "torso": 106,
+          "head": -16,
+          "arms": { "near": { "to": [78.77, 69.34] }, "far": { "to": [79.77, 70.84] } },
+          "legs": { "near": { "to": [75.81, 41.6] }, "far": { "to": [62.34, 3.7] } }
+        }
+      }
+    },
+    {
+      "id": "burpee_skill.V4",
+      "movement": "tuck",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.thigh"],
+      "keyframes": {
+        "stand": {
+          "hip": [51.41, 49.72],
+          "torso": 90,
+          "head": 0,
+          "arms": { "near": { "to": [52.91, 49.12] }, "far": { "to": [52.01, 49.32] } },
+          "legs": { "near": { "to": [52.34, 2.8] }, "far": { "to": [50.94, 2.8] } }
+        },
+        "squat": {
+          "hip": [42.56, 18.22],
+          "torso": 25,
+          "head": 0,
+          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "legs": { "near": { "to": [52.34, 2.8] }, "far": { "to": [50.94, 2.8] } }
+        },
+        "chest": {
+          "hip": [46.9, 5.8],
+          "torso": -3.44,
+          "head": 20,
+          "arms": {
+            "near": { "to": [69.05, 0], "upper": 12.5 },
+            "far": { "to": [70.45, 0], "upper": 12.5 }
+          },
+          "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [-0.6, 2.8] } }
+        },
+        "plank": {
+          "hip": [43.85, 19.71],
+          "torso": 21.08,
+          "head": -4,
+          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [-0.6, 2.8] } }
+        },
+        "tuck": {
+          "hip": [51.41, 57],
+          "torso": 90,
+          "head": -5,
+          "arms": { "near": { "to": [71.01, 64] }, "far": { "to": [70.01, 65] } },
+          "legs": { "near": { "to": [59.05, 42.84] }, "far": { "to": [57.81, 43.5] } }
+        }
+      }
+    },
+    {
+      "id": "burpee_skill.V4",
+      "movement": "clap",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.upperArm", "near.forearm"],
+      "keyframes": {
+        "stand": {
+          "hip": [51.41, 49.72],
+          "torso": 90,
+          "head": 0,
+          "arms": { "near": { "to": [52.91, 49.12] }, "far": { "to": [52.01, 49.32] } },
+          "legs": { "near": { "to": [52.34, 2.8] }, "far": { "to": [50.94, 2.8] } }
+        },
+        "squat": {
+          "hip": [42.56, 18.22],
+          "torso": 25,
+          "head": 0,
+          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "legs": { "near": { "to": [52.34, 2.8] }, "far": { "to": [50.94, 2.8] } }
+        },
+        "chest": {
+          "hip": [46.9, 5.8],
+          "torso": -3.44,
+          "head": 20,
+          "arms": {
+            "near": { "to": [69.05, 0], "upper": 12.5 },
+            "far": { "to": [70.45, 0], "upper": 12.5 }
+          },
+          "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [-0.6, 2.8] } }
+        },
+        "clap": {
+          "hip": [42.69, 22.45],
+          "torso": 24.72,
+          "head": -4,
+          "arms": { "near": { "to": [65.49, 7.2] }, "far": { "to": [65.99, 7.2] } },
+          "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [-0.6, 2.8] } }
+        },
+        "catch": {
+          "hip": [44.52, 17.88],
+          "torso": 18.71,
+          "head": -4,
+          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [-0.6, 2.8] } }
+        },
+        "jump": {
+          "hip": [51.41, 58.94],
+          "torso": 90,
+          "head": 0,
+          "arms": { "near": { "to": [53.91, 119.54] }, "far": { "to": [55.01, 119.44] } },
+          "legs": { "near": { "to": [52.34, 12] }, "far": { "to": [50.94, 12] } }
+        }
+      }
+    },
+    {
+      "id": "burpee_skill.V5",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.thigh"],
+      "keyframes": {
+        "stand": {
+          "hip": [51.61, 48.3],
+          "torso": 90,
+          "head": 0,
+          "arms": { "near": { "to": [53.11, 47.7] }, "far": { "to": [52.21, 47.9] } },
+          "legs": { "near": { "to": [52.34, 2.8] }, "far": { "to": [38.04, 9.5] } }
+        },
+        "squat": {
+          "hip": [42.56, 18.22],
+          "torso": 25,
+          "head": 0,
+          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "legs": { "near": { "to": [52.34, 2.8] }, "far": { "to": [-3.1, 7.5] } }
+        },
+        "plank": {
+          "hip": [43.85, 19.71],
+          "torso": 21.08,
+          "head": -4,
+          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [-1.81, 9] } }
+        },
+        "bottom": {
+          "hip": [46.9, 5.8],
+          "torso": -3.44,
+          "head": 20,
+          "arms": {
+            "near": { "to": [69.05, 0], "upper": 12.5 },
+            "far": { "to": [70.45, 0], "upper": 12.5 }
+          },
+          "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [0.11, 9] } }
+        }
+      }
+    }
+  ]
+}

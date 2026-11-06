@@ -1,0 +1,66 @@
+{
+  "format": 1,
+  "subject": "legs",
+  "figures": [
+    {
+      "id": "legs.1",
+      "view": "side",
+      "facing": 1,
+      "props": [{ "type": "pillow", "at": [-7, 0], "width": 14 }],
+      "highlight": ["near.thigh"],
+      "keyframes": {
+        "top": {
+          "hip": [0, 45.51],
+          "torso": 90,
+          "head": -6,
+          "arms": { "near": { "to": [2.5, 50.51] }, "far": { "to": [1.5, 51.01] } },
+          "legs": {
+            "near": { "to": [19.64, 3.6], "tip": [26.84, 0.3] },
+            "far": { "to": [-25.53, 7.44], "tip": [-21.41, 0.3] }
+          }
+        },
+        "bottom": {
+          "hip": [0, 30.4],
+          "torso": 90,
+          "head": -6,
+          "arms": { "near": { "to": [2.5, 35.4] }, "far": { "to": [1.5, 35.9] } },
+          "legs": {
+            "near": { "to": [19.64, 3.6], "tip": [26.84, 0.3] },
+            "far": { "to": [-22.91, 8.4], "tip": [-21.41, 0.3] }
+          }
+        }
+      }
+    },
+    {
+      "id": "legs.2",
+      "view": "side",
+      "facing": 1,
+      "props": [
+        { "type": "sofa", "x": -57.71, "width": 30, "height": 21, "back": 38, "backSide": "left" }
+      ],
+      "highlight": ["near.thigh"],
+      "keyframes": {
+        "top": {
+          "hip": [5, 48.38],
+          "torso": 82,
+          "head": -4,
+          "arms": { "near": { "to": [8.17, 52.98] }, "far": { "to": [7.17, 53.48] } },
+          "legs": {
+            "near": { "to": [17.9, 3.6], "tip": [25.1, 0.3] },
+            "far": { "to": [-28.91, 23.6], "tip": [-36.11, 21.4] }
+          }
+        },
+        "bottom": {
+          "hip": [0, 28],
+          "torso": 76,
+          "head": 0,
+          "arms": { "near": { "to": [3.64, 32.25] }, "far": { "to": [2.64, 32.75] } },
+          "legs": {
+            "near": { "to": [17.9, 3.6], "tip": [25.1, 0.3] },
+            "far": { "to": [-28.91, 23.6], "tip": [-36.11, 21.4] }
+          }
+        }
+      }
+    }
+  ]
+}

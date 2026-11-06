@@ -1,0 +1,67 @@
+{
+  "format": 1,
+  "subject": "posterior",
+  "figures": [
+    {
+      "id": "posterior.1",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.thigh"],
+      "keyframes": {
+        "bottom": {
+          "hip": [30, 5],
+          "torso": 180.76,
+          "head": -11.76,
+          "arms": { "near": { "to": [30.5, 1.2] }, "far": { "to": [30.3, 1.4] } },
+          "legs": {
+            "near": { "to": [49.32, 3.6], "tip": [56.52, 0.3] },
+            "far": { "joint": [42.41, 25.54], "end": [54.28, 45.18], "tip": [48.23, 49.6] }
+          }
+        },
+        "top": {
+          "hip": [27.4, 16.82],
+          "torso": 204.04,
+          "head": -35.04,
+          "arms": { "near": { "to": [30.5, 1.2] }, "far": { "to": [30.3, 1.4] } },
+          "legs": {
+            "near": { "to": [49.32, 3.6], "tip": [56.52, 0.3] },
+            "far": { "joint": [49.32, 26.6], "end": [70.27, 35.95], "tip": [67.83, 43.04] }
+          }
+        }
+      }
+    },
+    {
+      "id": "posterior.2",
+      "view": "side",
+      "facing": 1,
+      "props": [
+        { "type": "towel", "attach": "near.foot", "width": 12 },
+        { "type": "towel", "attach": "far.foot", "width": 12 }
+      ],
+      "highlight": ["near.thigh"],
+      "keyframes": {
+        "in": {
+          "hip": [27.4, 16.82],
+          "torso": 204.05,
+          "head": -35.05,
+          "arms": { "near": { "to": [30.5, 1.2] }, "far": { "to": [30.3, 1.4] } },
+          "legs": {
+            "near": { "to": [58.69, 5.6], "tip": 50 },
+            "far": { "to": [57.69, 5.6], "tip": 50 }
+          }
+        },
+        "out": {
+          "hip": [29.51, 10],
+          "torso": 190.37,
+          "head": -21.37,
+          "arms": { "near": { "to": [30.5, 1.2] }, "far": { "to": [30.3, 1.4] } },
+          "legs": {
+            "near": { "to": [75.9, 5.6], "tip": 85 },
+            "far": { "to": [74.9, 5.6], "tip": 85 }
+          }
+        }
+      }
+    }
+  ]
+}
