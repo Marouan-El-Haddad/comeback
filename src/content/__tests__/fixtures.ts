@@ -251,10 +251,10 @@ export const CORE_FRONT: ExplainFile = {
   ],
 };
 
-/** The push-up's feet: ankles on the floor, toes down. */
+/** The push-up's feet: ankles on the floor, toes down; the far ankle within the leg's reach. */
 const feet = (): { near: IkLimb; far: IkLimb } => ({
   near: { to: [0, 3.6], tip: [3.4, 0.3] },
-  far: { to: [-1.2, 3.6], tip: [2.2, 0.3] },
+  far: { to: [-0.6, 3.6], tip: [2.8, 0.3] },
 });
 
 export const PRESS_FIGURES: FigureFile = {
