@@ -2,7 +2,7 @@
 
 Natten 5.–6. november 2026. Opgaven: `docs/runs/NAT-2.md`. Tjeklisten står i `docs/runs/NAT-2-TASKS.md` og tidslinjen i `docs/runs/NAT-2-LOG.md`.
 
-**Kørslen blev stoppet kl. 05:10.** Brugerens ugentlige forbrug var ved at slippe op, og det kan kun brugeren løse. Rapporten viser derfor det nåede, det manglende og blokeringen.
+**Kørslen blev stoppet kl. 05:10, fordi brugeren bad om at afslutte nu.** Brugerens ugentlige kvote var ved at slippe op. Det er brugerens beslutning, og resten venter, til brugeren starter en ny kørsel. Rapporten viser derfor det nåede, det manglende og blokeringen.
 
 ## 1. Hvad er lavet
 
