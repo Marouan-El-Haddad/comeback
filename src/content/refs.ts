@@ -4,15 +4,16 @@
 
 /** A page reference in parentheses, as the programme writes it: »(side 37)«, »(s. 7)«. */
 const PAGE = String.raw`\((?:PDF[ -])?(?:side|sider|s\.)\s*\d+(?:\s*[–-]\s*\d+)?\)`;
-/** A citation in parentheses: »(Edwards 2023)«, »(van Dyk 2019)«. */
-const CITATION = String.raw`\([\p{L}'’ .&-]*\p{Lu}[\p{L}'’-]*,?\s(?:19|20)\d{2}[a-z]?\)`;
+/** A citation in parentheses: »(Edwards 2023)«, »(van Dyk 2019)«, »(Edwards et al. 2023)«. */
+const CITATION = String.raw`\([\p{L}'’ .&-]*\p{Lu}[\p{L}'’-]*(?:\s(?:et al\.|m\.\s?fl\.))?,?\s(?:19|20)\d{2}[a-z]?\)`;
 
 const PATTERNS: RegExp[] = [
   /\bPDF/iu,
   /\bsidetal/iu,
   // »side 47« with at most one space (or a no-break space); a tab or a line break is a new table
-  // cell or line in the screen's text, not a page number.
-  /\b(?:side|sider|s\.)[ \xa0]?\d/iu,
+  // cell or line in the screen's text, not a page number. »Skift side 2 gange« and »på hver side
+  // 3 sæt« count times, not pages.
+  /\b(?:side|sider|s\.)[ \xa0]?\d+(?!\d)(?![ \xa0]*(?:gang|gange|sæt)(?!\p{L}))/iu,
   /\bkild(?:e|en|ens|er|erne|ernes)\b/iu,
   new RegExp(CITATION, 'u'),
   /\bhttps?:\/\//iu,

@@ -35,6 +35,24 @@ export default defineConfig(
     languageOptions: { globals: globals.node },
   },
   {
+    // content/ is fetched as JSON files after start (docs/SPEC.md 7): never imported directly, so it
+    // can never end up in a start file. src/content/load.ts reaches it with import.meta.glob.
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/content/explain/*', '**/content/figures/*'],
+              message: 'Hent forklaringer og figurer med src/content/load.ts (docs/SPEC.md 7).',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     // The engine is deterministic: no clock and no randomness (CLAUDE.md, DECISIONS D26).
     files: ['src/engine/**/*.ts'],
     ignores: ['src/engine/__tests__/**'],

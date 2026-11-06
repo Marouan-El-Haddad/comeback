@@ -109,4 +109,26 @@ describe('SK10: ingen henvisninger til PDF, sidetal eller kilder', () => {
     expect(findSourceRef(`se side${String.fromCharCode(0xa0)}47`)).not.toBeNull();
     expect(findSourceRef('Kilderne står i programmets side 54.')).not.toBeNull();
   });
+
+  test('»side« med et antal gange eller sæt er ingen sidehenvisning; »et al.« og »m.fl.« er', () => {
+    for (const text of [
+      'Skift side 2 gange.',
+      'Hold 5 sek på hver side 3 gange.',
+      'Læg dig på højre side 1 gang til.',
+      'Tag den ene side 3 sæt i træk.',
+    ]) {
+      expect(findSourceRef(text), text).toBeNull();
+    }
+    expect(findSourceRef('Skift side 12 gange, se side 12.')).toBe('side 12');
+    expect(findSourceRef('Det virker (Edwards et al. 2023).')).toBe('(Edwards et al. 2023)');
+    expect(findSourceRef('Det virker (Edwards m.fl. 2023).')).toBe('(Edwards m.fl. 2023)');
+    expect(withoutSources('Det virker (Edwards et al. 2023).')).toBe('Det virker.');
+  });
+
+  test('brugerfladen viser aldrig programmets sidetal (pdfPage)', () => {
+    // pdfPage stays in the programme data for the source tests (DECISIONS.md D38); no screen reads it.
+    const files = walk(join(ROOT, 'src', 'ui'), (f) => /\.tsx?$/.test(f));
+    const reading = files.filter((f) => /\bpdfPage\b/.test(readFileSync(f, 'utf8'))).map(rel);
+    expect(reading).toEqual([]);
+  });
 });

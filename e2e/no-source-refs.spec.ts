@@ -79,3 +79,26 @@ test('ingen skærm henviser til PDF, sidetal eller kilder (SK10)', async ({ page
   await expect(page.locator('.prog-track')).toHaveCount(20);
   await expectNoRefs(page, '/program/');
 });
+
+// Without the track's explanation file (not written, or not fetched), »Hvorfor« falls back to the
+// programme's own evidence box through withoutSources: its text without the study it cites.
+test.describe('uden forklaringsfilen', () => {
+  // The service worker would answer the fetch from its cache and bypass the route below.
+  test.use({ serviceWorkers: 'block' });
+
+  test('»Hvorfor« viser programmets tekst uden kildehenvisning (SK10)', async ({ page }) => {
+    await page.route(/\/assets\/power_legs-[\w-]+\.json$/, (route) => route.abort());
+    await openApp(page, '2026-11-17');
+    await onboard(page);
+    await page.getByTestId('start-session').click();
+    await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+    for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
+    await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+    await expect(page.getByTestId('as-planned')).toBeVisible();
+    await page.locator('details.why summary').click();
+    const why = page.locator('details.why');
+    await expect(why).toContainText('At stoppe ved ca. 20 % fartfald');
+    await expect(why).not.toContainText('Pareja-Blanco');
+    await expectNoRefs(page, 'Hvorfor uden forklaringsfil');
+  });
+});
