@@ -11,6 +11,8 @@ test-results/
 playwright-report/
 blob-report/
 playwright/.cache/
+# One screenshot per exercise card for the review (npm run shots:cards)
+screenshots/cards/
 
 # Personal data: never commit the programme PDF or backups
 *.pdf

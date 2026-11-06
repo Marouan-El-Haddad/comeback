@@ -17,7 +17,7 @@ export const IRONFOX_PREFS: Record<string, boolean> = {
   'javascript.options.wasm_optimizingjit': false,
 };
 
-const phone: Project['use'] = {
+export const phone: Project['use'] = {
   browserName: chromium ? 'chromium' : 'firefox',
   viewport: { width: 414, height: 847 },
   deviceScaleFactor: 2,
