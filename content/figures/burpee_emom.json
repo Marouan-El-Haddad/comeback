@@ -10,45 +10,52 @@
       "highlight": ["torso"],
       "keyframes": {
         "stand": {
-          "hip": [51.41, 49.72],
+          "hip": [52.04, 49.99],
           "torso": 90,
           "head": 0,
-          "arms": { "near": { "to": [52.91, 49.12] }, "far": { "to": [52.01, 49.32] } },
-          "legs": { "near": { "to": [52.34, 2.8] }, "far": { "to": [50.94, 2.8] } }
+          "arms": { "near": { "to": [53.54, 48.83] }, "far": { "to": [52.64, 48.8] } },
+          "legs": { "near": { "to": [52.74, 2.8] }, "far": { "to": [51.34, 2.8] } }
         },
         "squat": {
-          "hip": [42.56, 18.22],
+          "hip": [42.55, 18.51],
           "torso": 25,
           "head": 0,
-          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
-          "legs": { "near": { "to": [52.34, 2.8] }, "far": { "to": [50.94, 2.8] } }
+          "arms": { "near": { "to": [69.04, 0] }, "far": { "to": [70.44, 0] } },
+          "legs": { "near": { "to": [52.74, 2.8] }, "far": { "to": [51.34, 2.8] } }
         },
         "chest": {
-          "hip": [46.9, 5.8],
-          "torso": -3.44,
-          "head": 20,
+          "hip": [47.13, 5.3],
+          "torso": -1.72,
+          "head": 16,
           "arms": {
-            "near": { "to": [69.05, 0], "upper": 12.5 },
-            "far": { "to": [70.45, 0], "upper": 12.5 }
+            "near": { "to": [69.04, 0], "upper": 12.5 },
+            "far": { "to": [70.44, 0], "upper": 12.5 }
           },
           "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [-0.6, 2.8] } }
         },
         "plank": {
-          "hip": [43.85, 19.71],
-          "torso": 21.08,
+          "hip": [43.92, 20.09],
+          "torso": 21.48,
           "head": -4,
-          "arms": { "near": { "to": [69.05, 0] }, "far": { "to": [70.45, 0] } },
+          "arms": { "near": { "to": [69.04, 0] }, "far": { "to": [70.44, 0] } },
           "legs": { "near": { "to": [0, 2.8] }, "far": { "to": [-0.6, 2.8] } }
         },
         "jump": {
-          "hip": [51.41, 58.94],
+          "hip": [52.04, 59.19],
           "torso": 90,
           "head": 0,
-          "arms": { "near": { "to": [53.91, 119.54] }, "far": { "to": [55.01, 119.44] } },
-          "legs": { "near": { "to": [52.34, 12] }, "far": { "to": [50.94, 12] } }
+          "arms": { "near": { "to": [54.54, 120.29] }, "far": { "to": [55.64, 120.19] } },
+          "legs": { "near": { "to": [52.74, 12] }, "far": { "to": [51.34, 12] } }
         }
       }
     },
-    { "id": "burpee_emom.E2", "like": "burpee_emom.E1" }
+    { "id": "burpee_emom.E2", "like": "burpee_emom.E1" },
+    { "id": "burpee_emom.E3", "like": "burpee_emom.E1" },
+    { "id": "burpee_emom.E4", "like": "burpee_emom.E1" },
+    { "id": "burpee_emom.E5", "like": "burpee_emom.E1" },
+    { "id": "burpee_emom.E6", "like": "burpee_emom.E1" },
+    { "id": "burpee_emom.E7", "like": "burpee_emom.E1" },
+    { "id": "burpee_emom.E8", "like": "burpee_emom.E1" },
+    { "id": "burpee_emom.E9", "like": "burpee_emom.E1" }
   ]
 }

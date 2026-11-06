@@ -10,8 +10,8 @@
       "highlight": ["near.upperArm"],
       "keyframes": {
         "top": {
-          "hip": [44.04, 20.02],
-          "torso": 20.45,
+          "hip": [43.94, 20.33],
+          "torso": 20.84,
           "head": -4,
           "arms": { "near": { "to": [69.2, 0] }, "far": { "to": [70.6, 0] } },
           "legs": {
@@ -20,7 +20,7 @@
           }
         },
         "bottom": {
-          "hip": [46.86, 7.2],
+          "hip": [46.88, 7.2],
           "torso": 4.39,
           "head": -4,
           "arms": {
@@ -45,8 +45,8 @@
       "highlight": ["near.upperArm"],
       "keyframes": {
         "top": {
-          "hip": [57.97, 29.37],
-          "torso": 2.16,
+          "hip": [57.98, 29.6],
+          "torso": 2.44,
           "head": -3,
           "arms": { "near": { "to": [83.45, 0] }, "far": { "to": [84.85, 0] } },
           "legs": {
@@ -55,7 +55,7 @@
           }
         },
         "bottom": {
-          "hip": [56.83, 17.16],
+          "hip": [56.85, 17.16],
           "torso": -12.83,
           "head": 4,
           "arms": {
@@ -68,6 +68,135 @@
           }
         }
       }
-    }
+    },
+    {
+      "id": "press.3",
+      "view": "side",
+      "facing": 1,
+      "props": [{ "type": "books", "at": [52.82, 0], "width": 14, "count": 3 }],
+      "highlight": ["near.upperArm"],
+      "keyframes": {
+        "top": {
+          "hip": [43.97, 20.26],
+          "torso": 20.75,
+          "head": -4,
+          "arms": {
+            "near": { "to": [69.02, 0] },
+            "far": { "to": [63.52, 6.8], "upper": 13.17, "lower": 12.35 }
+          },
+          "legs": {
+            "near": { "to": [0, 3.6], "tip": [3.4, 0.3] },
+            "far": { "to": [-0.6, 3.6], "tip": [2.8, 0.3] }
+          }
+        },
+        "bottom": {
+          "hip": [46.86, 7.51],
+          "torso": 4.77,
+          "head": -4,
+          "arms": {
+            "near": { "to": [69.02, 0], "upper": 12.5 },
+            "far": { "to": [63.52, 6.8], "upper": 13.17, "lower": 12.35 }
+          },
+          "legs": {
+            "near": { "to": [0, 3.6], "tip": [3.4, 0.3] },
+            "far": { "to": [-0.6, 3.6], "tip": [2.8, 0.3] }
+          }
+        }
+      }
+    },
+    {
+      "id": "press.4",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.upperArm"],
+      "keyframes": {
+        "top": {
+          "hip": [44.42, 19.03],
+          "torso": 19.16,
+          "head": -4,
+          "arms": {
+            "near": { "to": [69.76, 0], "upper": 15, "lower": 14 },
+            "far": { "to": [62.76, 0], "upper": 15.76, "lower": 14.77 }
+          },
+          "legs": {
+            "near": { "to": [0, 3.6], "tip": [3.4, 0.3] },
+            "far": { "to": [-0.6, 3.6], "tip": [2.8, 0.3] }
+          }
+        },
+        "bottom": {
+          "hip": [46.86, 7.51],
+          "torso": 4.77,
+          "head": -4,
+          "arms": {
+            "near": { "to": [69.76, 0], "upper": 12.5 },
+            "far": { "to": [62.76, 0], "upper": 8.86, "lower": 8.31 }
+          },
+          "legs": {
+            "near": { "to": [0, 3.6], "tip": [3.4, 0.3] },
+            "far": { "to": [-0.6, 3.6], "tip": [2.8, 0.3] }
+          }
+        }
+      }
+    },
+    {
+      "id": "press.5",
+      "view": "side",
+      "facing": 1,
+      "props": [{ "type": "table", "x": 60.68, "width": 40, "height": 40 }],
+      "highlight": ["near.upperArm"],
+      "keyframes": {
+        "top": {
+          "hip": [27.5, 41.74],
+          "torso": 54.2,
+          "head": -4,
+          "arms": { "near": { "to": [61.88, 40] }, "far": { "to": [27.86, 50.11] } },
+          "legs": {
+            "near": { "to": [0, 3.6], "tip": [3.4, 0.3] },
+            "far": { "to": [-0.6, 3.6], "tip": [2.8, 0.3] }
+          }
+        },
+        "bottom": {
+          "hip": [36.61, 33.11],
+          "torso": 38.88,
+          "head": -4,
+          "arms": { "near": { "to": [61.88, 40] }, "far": { "to": [39.17, 41.08] } },
+          "legs": {
+            "near": { "to": [0, 3.6], "tip": [3.4, 0.3] },
+            "far": { "to": [-0.6, 3.6], "tip": [2.8, 0.3] }
+          }
+        }
+      }
+    },
+    {
+      "id": "press.6",
+      "view": "side",
+      "facing": 1,
+      "props": [],
+      "highlight": ["near.upperArm"],
+      "keyframes": {
+        "top": {
+          "hip": [43.97, 20.26],
+          "torso": 20.75,
+          "head": -4,
+          "arms": { "near": { "to": [69.02, 0] }, "far": { "to": [48.89, 27.04] } },
+          "legs": {
+            "near": { "to": [0, 3.6], "tip": [3.4, 0.3] },
+            "far": { "to": [-0.6, 3.6], "tip": [2.8, 0.3] }
+          }
+        },
+        "bottom": {
+          "hip": [46.86, 7.51],
+          "torso": 4.77,
+          "head": -4,
+          "arms": { "near": { "to": [69.02, 0] }, "far": { "to": [53.45, 12.68] } },
+          "legs": {
+            "near": { "to": [0, 3.6], "tip": [3.4, 0.3] },
+            "far": { "to": [-0.6, 3.6], "tip": [2.8, 0.3] }
+          }
+        }
+      }
+    },
+    { "id": "press.7", "like": "press.6" }
   ]
 }

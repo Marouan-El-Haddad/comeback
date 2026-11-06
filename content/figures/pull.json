@@ -16,7 +16,7 @@
           "hip": [30, 46],
           "torso": 15,
           "head": -2,
-          "arms": { "near": { "to": [59.58, 23.36] }, "far": { "to": [69.5, 24.2] } },
+          "arms": { "near": { "to": [59.58, 22.74] }, "far": { "to": [69.5, 24.2] } },
           "legs": {
             "near": { "to": [10.5, 3.6], "tip": [17.7, 0.3] },
             "far": { "to": [45, 3.6], "tip": [52.2, 0.3] }
@@ -38,16 +38,16 @@
       "id": "pull.2",
       "view": "side",
       "facing": -1,
-      "props": [{ "type": "table", "x": 40, "width": 50, "height": 43 }],
+      "props": [{ "type": "table", "x": 40, "width": 36, "height": 43 }],
       "highlight": ["near.upperArm", "near.forearm"],
       "keyframes": {
         "bottom": {
-          "hip": [12.42, 18.81],
-          "torso": -17.68,
+          "hip": [12.46, 18.71],
+          "torso": -17.98,
           "head": 11,
           "arms": {
             "near": { "to": [39, 40.6], "tip": [42, 43.4] },
-            "far": { "to": [39.6, 40.3], "tip": [42.6, 43.4] }
+            "far": { "to": [38.6, 40.6], "tip": [41.6, 43.4] }
           },
           "legs": {
             "near": { "to": [-5.67, 3.6], "tip": [-12.87, 0.3] },
@@ -60,7 +60,7 @@
           "head": -10,
           "arms": {
             "near": { "to": [39, 40.6], "tip": [42, 43.4] },
-            "far": { "to": [39.6, 40.3], "tip": [42.6, 43.4] }
+            "far": { "to": [38.6, 40.6], "tip": [41.6, 43.4] }
           },
           "legs": {
             "near": { "to": [-5.67, 3.6], "tip": [-12.87, 0.3] },
@@ -68,6 +68,150 @@
           }
         }
       }
-    }
+    },
+    {
+      "id": "pull.3",
+      "view": "side",
+      "facing": -1,
+      "props": [{ "type": "table", "x": 40, "width": 36, "height": 43 }],
+      "highlight": ["near.upperArm", "near.forearm"],
+      "keyframes": {
+        "bottom": {
+          "hip": [19.97, 8.15],
+          "torso": 6.28,
+          "head": 0,
+          "arms": {
+            "near": { "to": [39, 40.6], "tip": [42, 43.4] },
+            "far": { "to": [38.6, 40.6], "tip": [41.6, 43.4] }
+          },
+          "legs": {
+            "near": { "to": [-26.77, 3], "tip": [-28.37, 10.3] },
+            "far": { "to": [-27.37, 3], "tip": [-28.97, 10.3] }
+          }
+        },
+        "top": {
+          "hip": [16.74, 20.83],
+          "torso": 22.28,
+          "head": -24,
+          "arms": {
+            "near": { "to": [39, 40.6], "tip": [42, 43.4] },
+            "far": { "to": [38.6, 40.6], "tip": [41.6, 43.4] }
+          },
+          "legs": {
+            "near": { "to": [-26.77, 3], "tip": [-28.37, 10.3] },
+            "far": { "to": [-27.37, 3], "tip": [-28.97, 10.3] }
+          }
+        }
+      }
+    },
+    {
+      "id": "pull.4",
+      "view": "side",
+      "facing": -1,
+      "props": [
+        { "type": "chair", "x": -54.02, "width": 24, "height": 24 },
+        { "type": "table", "x": 40, "width": 36, "height": 43 }
+      ],
+      "highlight": ["near.upperArm", "near.forearm"],
+      "keyframes": {
+        "bottom": {
+          "hip": [11.78, 16.36],
+          "torso": -13.08,
+          "head": 8,
+          "arms": {
+            "near": { "to": [39, 40.6], "tip": [42, 43.4] },
+            "far": { "to": [38.6, 40.6], "tip": [41.6, 43.4] }
+          },
+          "legs": {
+            "near": { "to": [-34.02, 27], "tip": [-35.62, 34.3] },
+            "far": { "to": [-34.62, 27], "tip": [-36.22, 34.3] }
+          }
+        },
+        "top": {
+          "hip": [12.94, 29.44],
+          "torso": 2.98,
+          "head": -2,
+          "arms": {
+            "near": { "to": [39, 40.6], "tip": [42, 43.4] },
+            "far": { "to": [38.6, 40.6], "tip": [41.6, 43.4] }
+          },
+          "legs": {
+            "near": { "to": [-34.02, 27], "tip": [-35.62, 34.3] },
+            "far": { "to": [-34.62, 27], "tip": [-36.22, 34.3] }
+          }
+        }
+      }
+    },
+    {
+      "id": "pull.5",
+      "view": "side",
+      "facing": -1,
+      "props": [{ "type": "table", "x": 40, "width": 36, "height": 43 }],
+      "highlight": ["near.upperArm", "near.forearm"],
+      "keyframes": {
+        "bottom": {
+          "hip": [22.17, 10.01],
+          "torso": 8.58,
+          "head": 0,
+          "arms": {
+            "near": { "to": [39, 40.6], "tip": [42, 43.4], "upper": 15, "lower": 14 },
+            "far": { "to": [38.6, 40.6], "tip": [41.6, 43.4], "upper": 15, "lower": 14 }
+          },
+          "legs": {
+            "near": { "to": [-24.32, 3], "tip": [-25.92, 10.3] },
+            "far": { "to": [-24.92, 3], "tip": [-26.52, 10.3] }
+          }
+        },
+        "top": {
+          "hip": [20.13, 18.32],
+          "torso": 19.02,
+          "head": -20,
+          "arms": {
+            "near": { "to": [39, 40.6], "tip": [42, 43.4], "upper": 16, "lower": 15 },
+            "far": { "to": [38.6, 40.6], "tip": [41.6, 43.4], "upper": 8.21, "lower": 7.7 }
+          },
+          "legs": {
+            "near": { "to": [-24.32, 3], "tip": [-25.92, 10.3] },
+            "far": { "to": [-24.92, 3], "tip": [-26.52, 10.3] }
+          }
+        }
+      }
+    },
+    {
+      "id": "pull.6",
+      "view": "side",
+      "facing": -1,
+      "props": [{ "type": "table", "x": 40, "width": 36, "height": 43 }],
+      "highlight": ["near.upperArm", "near.forearm"],
+      "keyframes": {
+        "bottom": {
+          "hip": [19.97, 8.15],
+          "torso": 6.28,
+          "head": 0,
+          "arms": {
+            "near": { "to": [39, 40.6], "tip": [42, 43.4] },
+            "far": { "to": [19.47, 4.83] }
+          },
+          "legs": {
+            "near": { "to": [-26.77, 3], "tip": [-28.37, 10.3] },
+            "far": { "to": [-27.37, 3], "tip": [-28.97, 10.3] }
+          }
+        },
+        "top": {
+          "hip": [16.74, 20.83],
+          "torso": 22.28,
+          "head": -24,
+          "arms": {
+            "near": { "to": [39, 40.6], "tip": [42, 43.4] },
+            "far": { "to": [17.17, 17.5] }
+          },
+          "legs": {
+            "near": { "to": [-26.77, 3], "tip": [-28.37, 10.3] },
+            "far": { "to": [-27.37, 3], "tip": [-28.97, 10.3] }
+          }
+        }
+      }
+    },
+    { "id": "pull.7", "like": "pull.6" }
   ]
 }
