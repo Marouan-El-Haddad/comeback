@@ -17,8 +17,9 @@ Status: `[ ]` ikke startet · `[~]` i gang · `[x]` færdig (reviewet og udgivet
 
 ## Pakker
 
-### [ ] P0 – Diagnose måler kun en ren opstart fra ikonet (opgavens pakke 0)
+### [x] P0 – Diagnose måler kun en ren opstart fra ikonet (opgavens pakke 0)
 
+- Status: færdig 23:29. Review `docs/reviews/nat2-p0-diagnose.md`: 0 høje, 0 middel, 4 lave (L1–L4 rettes billigt af P0-agenten, når P1 er færdig). Udgivet (Actions 42121795936).
 - Agent: `comeback-builder`.
 - Mål: Diagnose viser kun tal fra en ren opstart: appen åbnet fra ikonet som en ny indlæsning, hvor I dag er første skærm. En indlæsning med indfasning eller tidsmaskine, en genindlæsning eller et faneblad i browseren tæller ikke. Billige forbedringer af opstarten, højst en time. Desuden to småting fra NAT-1: spejlets status (`mirrorStatus`) på Diagnose og `cancel-in-progress: true` i `.github/workflows/deploy.yml`.
 - Kilder: `docs/runs/NAT-2-PHONE.md`; `docs/SPEC.md` 1 (SK1), 3.6 og 7; `docs/PLAN.md` M2 (Diagnose); `docs/DECISIONS.md` om ydelse; `src/ui/screens/More.tsx`; `e2e/perf.spec.ts`.
@@ -31,7 +32,7 @@ Status: `[ ]` ikke startet · `[~]` i gang · `[x]` færdig (reviewet og udgivet
 - Grønt: `npm run check`; Playwright: ren opstart giver en måling; indfasning, tidsmaskine og genindlæsning giver ingen; hele suiten i `pixel9a` og `pixel9a-utc`.
 - Skærmbillede: `screenshots/diagnose.png`.
 
-### [ ] P1 – Kilderne først: den nye retning og datamodellen for forklaringer og figurer (pakke 1)
+### [~] P1 – Kilderne først: den nye retning og datamodellen for forklaringer og figurer (pakke 1)
 
 - Agent: `comeback-builder`.
 - Mål: `docs/SPEC.md`, `docs/DECISIONS.md`, `docs/PLAN.md` og `CLAUDE.md` rettet til den nye retning og logget i `docs/DECISIONS.md` afsnit 3 som Afvigelse og Tilføjelse:
@@ -46,7 +47,7 @@ Status: `[ ]` ikke startet · `[~]` i gang · `[x]` færdig (reviewet og udgivet
 - Kilder: `docs/runs/NAT-2.md`; SPEC 3, 5 og 6; PLAN M5 og M6; DECISIONS 3 og 6; ENGINE 7.1 og 9; `CLAUDE.md`.
 - Grønt: `npm run check` (inkl. `program-source.spec.ts` uændret); hele Playwright-suiten.
 
-### [ ] P2 – Øvelseskortet og forklaringerne, del 1 (pakke 2)
+### [~] P2 – Øvelseskortet og forklaringerne, del 1 (pakke 2)
 
 - Agenter: `comeback-coach` × flere parallelt (en gruppe spor pr. agent, hver sin fil, ingen commits) og `comeback-builder` til kortet i appen.
 - Mål, indhold: alle felter fra opgavens pakke 2 for trin 1 og 2 i alle spor, alle trin i burpee-teknik og nakke, opvarmningen og de øvrige rutiner i `program/routines.json` samt Open & Strong; desuden sporets »Hvorfor«.
@@ -69,7 +70,7 @@ Status: `[ ]` ikke startet · `[~]` i gang · `[x]` færdig (reviewet og udgivet
 - Mål: keyframes for alle trin i del 1 ud fra »positioner i ord«; kontaktark i `screenshots/figures/`.
 - Grønt: figurtestene; `npm run check`.
 
-### [ ] P5 – Forklaringer og figurer, del 2 (pakke 2 og 3, resten)
+### [~] P5 – Forklaringer og figurer, del 2 (pakke 2 og 3, resten)
 
 - Agenter: `comeback-coach` × flere parallelt, derefter `comeback-builder` × flere parallelt på datafiler.
 - Mål: forklaringer og keyframes for alle øvrige trin; kontaktark og skærmbilleder af kortene.
@@ -78,7 +79,7 @@ Status: `[ ]` ikke startet · `[~]` i gang · `[x]` færdig (reviewet og udgivet
 ### [ ] P6 – Passet: hvad nu, hvad næste (pakke 4)
 
 - Agent: `comeback-builder`.
-- Mål: »Dagens pas« på ét blik før start (blokke, øvelser med figur, sæt × gentagelser, pauser, udstyr, forventet tid); under passet er »Nu« (figur, mål, 2 cues), »Næste« (figur, navn, mål) og fremdriften altid synlige; i pausen vises næste øvelse stort med animation og »Gør klar«; første gang en øvelse kommer i passet, vises et introkort med animation og trin, før timeren går, og et tryk lukker det. Bevægelse kun, hvor den viser en ændring. Desuden »Hold pause« som vej tilbage til fanerne midt i et pas (NAT-1 forslag 3).
+- Mål: »Dagens pas« på ét blik før start (blokke, øvelser med figur, sæt × gentagelser, pauser, udstyr, forventet tid); under passet er »Nu« (figur, mål, 2 cues), »Næste« (figur, navn, mål) og fremdriften altid synlige; i pausen vises næste øvelse stort med animation og »Gør klar«; første gang en øvelse kommer i passet, vises et introkort med animation og trin i pausen før øvelsens første sæt, og det lukker ved et tryk eller af sig selv, når pausen slutter, så SK3 holder (D44, som erstatter D41). Bevægelse kun, hvor den viser en ændring. Desuden »Hold pause« som vej tilbage til fanerne midt i et pas (NAT-1 forslag 3).
 - Kilder: SPEC 3.2, 3.3, 4.2–4.5, 5 og 6 (efter P1).
 - Grønt: Playwright: Styrke A, Styrke B, motor og Open & Strong gennem tidsmaskinen med »Nu«, »Næste«, pause og introkort; et pas uden berøring, hvor SPEC lover det; opstarten ikke langsommere.
 
