@@ -20,17 +20,25 @@ const PRELOAD_FONTS = [
 
 /**
  * Colours from src/ui/design-tokens.json as CSS variables in index.html: --c-<name> for the
- * colours and --c-level-<id> for the level colours (docs/SPEC.md section 5).
+ * colours, --c-level-<id> for the level colours and --c-picto-<name> for the figures' colours
+ * (docs/SPEC.md section 5).
  */
 function designTokens(base: string): Plugin {
   const colours = Object.entries(tokens.color).map(([name, value]) => `--c-${name}:${value}`);
   const levels = Object.entries(tokens.level).map(
     ([name, value]) => `--c-level-${LEVEL_IDS[name] ?? name.toLowerCase()}:${value}`,
   );
+  const picto = Object.entries(tokens.pictogram)
+    .filter(([, value]) => value.startsWith('#'))
+    .map(([name, value]) => `--c-picto-${name}:${value}`);
   return {
     name: 'comeback-design-tokens',
     transformIndexHtml: () => [
-      { tag: 'style', children: `:root{${[...colours, ...levels].join(';')}}`, injectTo: 'head' },
+      {
+        tag: 'style',
+        children: `:root{${[...colours, ...levels, ...picto].join(';')}}`,
+        injectTo: 'head',
+      },
       { tag: 'meta', attrs: { name: 'theme-color', content: tokens.color.navy }, injectTo: 'head' },
       ...PRELOAD_FONTS.map((file) => ({
         tag: 'link',

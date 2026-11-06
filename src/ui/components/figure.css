@@ -1,0 +1,129 @@
+/* The animated figure (docs/SPEC.md 3.8 and 5). Loaded with the card, never with the first screen
+   (SPEC 7). The figure's colours are the design tokens, set on the SVG's elements by the figure
+   system (src/figure/draw.ts). */
+
+.figure {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+/* The whole figure is the tap target for slow motion; no double-tap zoom on a quick second tap. */
+.figure-stage {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.figure-svg {
+  display: block;
+  width: 100%;
+  height: 150px;
+}
+
+.figure-caption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.figure-caption .card-phases {
+  flex: 1;
+}
+
+/* A phase is never split over two lines; the lines break between the phases. */
+.figure-phase {
+  white-space: nowrap;
+}
+
+/* The running phase: Thai red and a line under it, so it is not shown with colour alone (SPEC 6).
+   Colour and line only, so the text does not move. */
+.figure-phase.now {
+  color: var(--c-red);
+  text-decoration: underline 3px;
+  text-underline-offset: 5px;
+}
+
+.figure-speed {
+  flex: none;
+  padding: 0 12px;
+}
+
+/* A tall figure (standing, a wall sit): the figure beside its phases, one phase a line. */
+.figure.tall:not(.stills) {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.figure.tall:not(.stills) .figure-svg {
+  height: 214px;
+}
+
+.figure.tall .figure-caption {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.figure.tall:not(.stills) .card-phases {
+  display: grid;
+  gap: 6px;
+  text-align: left;
+}
+
+.figure.tall:not(.stills) .figure-sep {
+  display: none;
+}
+
+.figure.tall:not(.stills) .figure-phase {
+  justify-self: start;
+}
+
+.figure.tall:not(.stills) .figure-speed {
+  align-self: flex-start;
+}
+
+.figure.stills.tall .figure-still .figure-svg {
+  height: 180px;
+}
+
+/* Reduced motion: the positions side by side, each with its name. */
+.figure-stills {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.figure-still {
+  flex: 1 1 0;
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+}
+
+.figure-still .figure-svg {
+  height: 120px;
+}
+
+.figure-still-name {
+  margin: 0;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--c-navy);
+  text-align: center;
+}
+
+/* Several movements: each figure under its name (docs/SPEC.md 3.8). */
+.card-move {
+  display: grid;
+  gap: 4px;
+}
+
+.card-move-title {
+  margin: 0;
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--c-navy);
+}

@@ -12,6 +12,8 @@ import {
   type Equipment,
   type ExplainFile,
   type ExplainItem,
+  type FigureFile,
+  type FigureItem,
   type Movement,
   type OwnMovement,
 } from '../../content/types.ts';
@@ -191,32 +193,84 @@ export function likeSubject(file: ExplainFile | null | undefined, id: string): s
   return subject && subject !== file?.subject ? subject : null;
 }
 
+/** A movement on the card, with where its positions come from, so its figure can be found. */
+export type CardMovement = OwnMovement & {
+  /** The item whose explanation holds the positions (a like's target, the power step) and the movement's id there. */
+  source?: { item: string; movement?: string };
+};
+
 /**
  * The movements a card shows. In a session, a movement for other sessions is left out, and the
  * warm-up's borrowed movement becomes the session's first power step: its movements under its name,
  * or its name alone until its explanation is there; without a power step it is left out. Outside a
- * session every movement is shown, a borrowed one by its own name.
+ * session every movement is shown, a borrowed one by its own name. `ownId` is the id of the item
+ * whose explanation the movements are (the item itself, or the one it is explained like).
  */
 export function cardMovements(
   movements: readonly Movement[],
   context: CardContext | null,
   power: { name: string; explained: ExplainItem | null } | null,
-): OwnMovement[] {
-  return movements.flatMap((m): OwnMovement[] => {
+  ownId?: string,
+): CardMovement[] {
+  return movements.flatMap((m): CardMovement[] => {
     if (context && m.sessions && !m.sessions.includes(context.session)) return [];
-    if (!isBorrowed(m)) return [m];
+    if (!isBorrowed(m)) return [ownId ? { ...m, source: { item: ownId, movement: m.id } } : m];
     if (context && !context.power) return [];
     const name = context && power ? power.name : m.name;
-    const own = (context && power ? power.explained?.movements : undefined)?.filter(
-      (x): x is OwnMovement => !isBorrowed(x),
-    );
-    if (!own || own.length === 0) return [{ id: m.id, name, positions: [], phases: [] }];
+    const explained = context && power ? power.explained : null;
+    const own = explained?.movements.filter((x): x is OwnMovement => !isBorrowed(x));
+    if (!explained || !own || own.length === 0) {
+      return [{ id: m.id, name, positions: [], phases: [] }];
+    }
     return own.map((x, i) => ({
       ...x,
       id: m.id && own.length > 1 ? `${m.id}-${x.id ?? i}` : m.id,
       name: own.length > 1 && x.name ? `${name}: ${x.name}` : name,
+      source: { item: explained.id, movement: x.id },
     }));
   });
+}
+
+/**
+ * The drawn figure of an item's movement in a figure file, following a figure »like« in the file;
+ * null when it is not drawn yet (the card then shows the pictogram, docs/SPEC.md 3.8).
+ */
+export function figureIn(
+  file: FigureFile | null | undefined,
+  id: string,
+  movement?: string,
+): FigureItem | null {
+  const find = (target: string) =>
+    file?.figures.find((f) => f.id === target && f.movement === movement);
+  const entry = find(id);
+  // »like« checked here, not with isFigureLike: src/content/types.ts is in the start files.
+  if (!entry) return null;
+  if (!('like' in entry)) return entry;
+  const target = find(entry.like);
+  return target && !('like' in target) ? target : null;
+}
+
+/** The first letter in lower case: a label inside a sentence (»Op« → »op«). */
+function lowerFirst(text: string): string {
+  return text.slice(0, 1).toLocaleLowerCase('da-DK') + text.slice(1);
+}
+
+/** »a, b og c«. */
+function andList(items: readonly string[]): string {
+  if (items.length < 2) return items.join('');
+  return `${items.slice(0, -1).join(', ')} og ${items[items.length - 1] ?? ''}`;
+}
+
+/**
+ * The figure's text alternative (docs/SPEC.md 6): the name, each position in words and the phases:
+ * »Push-up med tempo. Oppe: Strakte arme … Nede: Brystet … Faserne: 3 sek ned, 1 sek stille og op.«
+ */
+export function figureText(name: string, movement: OwnMovement): string {
+  const positions = movement.positions.map((p) => `${p.name}: ${p.text}`).join(' ');
+  const phases = andList(movement.phases.map((p) => lowerFirst(p.label)));
+  return [`${name}.`, positions, phases ? `Faserne: ${phases}.` : '']
+    .filter((t) => t !== '')
+    .join(' ');
 }
 
 /** »Stol og væg«; nothing but the floor is »Kun gulvet«. */

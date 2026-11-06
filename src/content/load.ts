@@ -60,3 +60,10 @@ export function loadedExplain(subject: string): ExplainFile | null | undefined {
   if (!url) return null;
   return loaded.get(url) as ExplainFile | null | undefined;
 }
+
+/** Figures that are already loaded, so the card opens with its figure drawn. */
+export function loadedFigures(subject: string): FigureFile | null | undefined {
+  const url = FIGURES[`/content/figures/${subject}.json`];
+  if (!url) return null;
+  return loaded.get(url) as FigureFile | null | undefined;
+}
