@@ -217,3 +217,67 @@ Metode:
 - `screenshots/review-p1a-bounds-advance-foer-spring.png` og `screenshots/review-p1a-bounds-advance-efter-spring.png`: etbens bounds med `advance` som anvist, i »Land« og 1/30 sek senere i »Spring 2«. Figuren er sprunget tilbage til start (H1).
 - `screenshots/review-p1a-burpee-knae-i-gulvet.png`: burpee E1 midt i »Brystet til gulvet«, med knæene under gulvet (H2).
 - `screenshots/review-p1a-spiderman-knae-i-gulvet.png`: spidermanen i opvarmningen midt i »Foden frem til hånden«, med knæet i gulvet (H2).
+
+## Opfølgning
+
+2026-11-09 · rettelserne 279d015, 6bc1f65, fa303b0, b97d318 og 9d009de · worktree på 9d009de
+
+Metode:
+
+- **Kørt** i worktreen:
+  - Vitest 660/660;
+  - `node scripts/check-explain.ts`: OK, 13 figurer som VENTER;
+  - Playwright i `pixel9a`: `figure.spec.ts` og `card.spec.ts` 17/17.
+- **Startfilerne** er bygget fra 462857d (lige før rettelserne) og 9d009de. `engine` er byte for byte ens, og `index.js` og `index.html` er ens, når versionsteksten og de lazy filers navne er normaliseret.
+- **Mine scratch-scripts igen**, med 120 billeder pr. bevægelse og samlingerne mellem bevægelserne, over alle figurer i `content/` og alle 17 filer i `src/figure/__tests__/p2/`.
+- **Mine egne figurer** efter teksten i `NAT-3-FIGURES.md`, uden at kopiere fra `p2/`:
+  - spiderman i to udgaver;
+  - nakke N5 › mave, `groin.5` og `core_side.S4`;
+  - bounds med `advance` 14;
+  - længdespringet med `lift` på vejen tilbage;
+  - V1 og `measures.burpee_3min` som E1.
+- **Kopierne fra reviewet** er kørt igen, og hver via i `content/` og `p2/` er målt mod de to rigtige positioner.
+- **Egne flows** i `pixel9a`: burpee E1 midt i »Brystet til gulvet«, og bounds med `advance` 14 både animeret og som stillbilleder.
+
+**Resultat:** H1, H2, M1, M2, L1 og L2 er rettet, og intet tjek er slækket. Der er ét nyt fund (H3, høj): en `via` kan bøje led, der er strakte i begge positioner, og tre anvisninger i `NAT-3-FIGURES.md` gør det.
+
+| Fund | Status |
+|---|---|
+| H1 `advance` | Rettet. Hver bevægelse efter en `advance` står, hvor figuren kom til, også holdene, og vejen tilbage går til 0. Tjekket fanger spring mellem bevægelser og mellem billeder. Mine bounds med `advance` 14 og længdespringet med `advance` 20 består; hoftens største skridt mellem to billeder er 4,4. I appen rejser bounds-figuren fra x 1 til 85, står stille under »Land blødt«, »Stå stille« og »Rejs dig« og går tilbage til start på vejen tilbage. Største skridt mellem to billeder er 6,3. Stillbillederne har deres egen kasse. Den animerede figur står stadig i hele turens kasse (148 mod 94 enheder) og bliver mindre; det står som forslag til motoren i `NAT-3-FIGURES.md` |
+| H2 `lift` og `via` | Rettet. Et løftet lem svinger med leddenes vinkler og drejer fri af fladen, og `via` findes. E1 er tegnet og består, og dermed også E2–E9. Mine egne figurer efter teksten består alle. Med 120 billeder pr. bevægelse går intet i en flade i nogen figur i `content/` eller `p2/`, ingen længde ændrer sig, og intet bøjer forkert, springer eller hopper mellem to bevægelser. Men se H3 |
+| M1 | Rettet. Håndstanden er uden `bend`, så albuerne peger ud i rummet som i P68. Vejen tilbage kan have en overgang, og længdespringet med `lift` på den består |
+| M2 | Rettet. Ordene læses med æ, ø og å, og de nævnte former er med. To sjældne vendinger læses stadig ikke: »Armene er løftet …, stadig strakte« (`os.3` › up) og »begge strakte« (`core_rot.R4` › wide, set ovenfra). Figurerne er strakte, så det er kun en note |
+| L1 | Rettet. Min wall sit med vendt `facing` og spejlede fødder fanges nu: »ryggen skal røre væggen, men brystet vender mod væggen« |
+| L2 | Rettet. Tjekket ser 30 billeder i sekundet (mindst 16 pr. bevægelse), spring mellem billeder og samlingerne mellem bevægelser. De to små overskridelser fra reviewet er væk |
+| Ydelse | Uændret i det, man mærker. Figuren tegner 22 billeder i sekundet i ægte tid uden JIT. Burpee-kortet åbner på 45–61 ms mod 37 ms før rettelserne (Firefox uden JIT på pc'en; at bygge figuren tager ca. 2,5 gange så lang tid). Startfilerne er uændrede |
+| Slækket? | Nej. Grænserne er de samme: 8° bøjning, 5° for strakte led, 70° for låret, ±0,5 for segmenterne og 1,5 ind i en flade. Kun en via må røre det, en af de to positioner rører, og det er meningen. Seks figurer, der består, bevæger sig mere end 1 enhed anderledes (`legs.5`, `power_legs.2`, `shoulder.4`, drop-hoppet, `measures.side_plank` og `power_legs.4`). Jeg har set på de tre største: det frie ben folder sig tidligere, hvilket er rimeligt, og alle består min fine måling |
+
+### H3 (høj, nyt): En `via` sætter reglen om, at intet led bøjer mere end i positionerne, ud af kraft, og tre anvisninger bøjer strakte led
+
+- **Hvor:**
+  - `src/figure/check.ts`: `betweenProblems` måler hver halvdel mod dens to ender, og den ene er via-posen. Via-tjekket i `checkFigure` kører ikke reglen om strakte led i teksten.
+  - `docs/runs/NAT-3-FIGURES.md`: rækkerne for `warmup.2 › spiderman`, `burpee_skill.V5` og `shoulder.3`.
+  - `src/figure/__tests__/p2/warmup.2.spiderman.json`, `burpee_skill.V5.json` og `shoulder.3.json`.
+- **Hvorfor:**
+  - **Kilderne:** P1a, accept 1, og SPEC 9.1 (Mellem positionerne: intet led bøjer mere end i positionerne på hver side; Et strakt led) kræver, at et led, der er strakt i begge positioner, er strakt hele vejen.
+  - **Teksterne:** planke siger »Planke med strakte arme«, og V5's plank siger »det frie ben er strakt og løftet«.
+  - **Målt** i via-posen og begge halvdele, mod det mest bøjede af de to rigtige positioner:
+    - `warmup.2 › spiderman` (både i `p2/` og min egen udgave): begge arme, der står i gulvet, bøjer 39° (albuen er 141°), selv om de er strakte i planke og udfald. Det er samme slags knæk midt i en bevægelse, som brugeren så (H1 i `docs/reviews/nat2-p3-figurer.md`), nu i albuerne og i opvarmningen før hvert styrkepas;
+    - `burpee_skill.V5`: det frie ben bøjer 14° og 21°;
+    - `shoulder.3`: det fjerne ben bøjer 13–14°.
+  - **Tjekket og `p2-instructions.test.ts`** siger OK til alle tre. Figuragenterne kopierer nu filerne i `p2/`.
+- **Rettelse:**
+  - **Ret anvisningerne straks.** Alle tre er prøvet og består:
+    - spiderman: via-hoften i [44; 24] med `torso` 14 og det bageste ben som i udfald (`to` [0,38; 4,9], `tip` [2,78; 0,3]). Så er armene og det bageste ben strakte hele vejen. [45; 22] med `torso` 18 virker også. Med det bageste ben som i planke når det ikke sit punkt;
+    - V5: det frie ben på fuld længde i via'erne, `far.to` [−5,6; 19,8] i squat → plank og [−5; 21,7] i plank → squat;
+    - wall walk: det fjerne ben på fuld længde i via'en, `far.to` [3,56; 96,58].
+  - **Tjekket:** i en via og i begge dens halvdele må et lem, der ikke løftes på den overgang, højst bøje 8° mere end det mest bøjede af de to rigtige positioner. Et led, som teksten kalder strakt i begge positioner, skal også være strakt i via'en. Test det med spidermanen fra `p2/`, som den er nu: den skal fejle.
+
+Skærmbilleder fra opfølgningen:
+
+- `screenshots/review-p1a-opf-spiderman-p2-albuer.png`: kontaktarket for spidermanen i `p2/`. Via-poserne og billederne midt i halvdelene har albuer på 141–157° (H3).
+- `screenshots/review-p1a-opf-spiderman-rettet.png`: samme figur med via-hoften i [44; 24], `torso` 14 og det bageste ben som i udfald. Albuerne er 180° hele vejen, og tjekket siger ingen problemer.
+- `screenshots/review-p1a-opf-v5-frit-ben.png`: kontaktarket for V5 i `p2/`. Det frie ben er 166° og 159° i via-poserne (H3).
+- `screenshots/review-p1a-opf-burpee-via.png`: burpee E1 i appen midt i »Brystet til gulvet«. Hoften er højt, og knæene er over gulvet.
+- `screenshots/review-p1a-opf-bounds-undervejs.png`: bounds med `advance` 14 i appen, midt i »I luften« efter andet spring.
+- `screenshots/review-p1a-opf-bounds-stillbilleder.png`: de fire stillbilleder i deres egen kasse, 185 px brede.
