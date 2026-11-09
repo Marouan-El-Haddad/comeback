@@ -177,3 +177,38 @@ Kørt i worktree:
 - **Boksen »Lettere variant i dag« skubber trinene ned.** Fra et sæt med »· lettere variant« begynder første nummererede trin under første skærm på alle 13 trin 1-kort (843–916 px). Kortere tekst løser det ikke alene: legs.1 har ingen betingelse og en boks på 101 px, men trinene begynder alligevel ved 892 px. Boksen kunne vise kun første sætning, stå i stedet for cues eller stå under trinene (SPEC 3.8).
 - **»Rygsæk: X kg« viser kun den vægt, der er lagt til.** Vægten starter på 0, og der er intet felt til startvægten (P42 nævner brugerens egen rettelse, men UI'et har den ikke). Det passer til læg og etbens RDL, som starter uden rygsæk. Men rygsæk-row starter med en rygsæk af ukendt vægt, så »Rygsæk: 2 kg« ligner hele vægten. Forslag: »Rygsæk: +2 kg« eller et felt til startvægten.
 - **Skærmbillederne af kortet er forældede.** `screenshots/kort-maerk.png`, `kort-skimmet.png`, `kort-foldet-ud.png` og `kort-fra-passet.png` viser stadig teksten fra før 3648b6b, fx »Mærk: … ikke skuldrene.« på press.1. `e2e/card.spec.ts` tager dem på ny. De fælles krav siger, at skærmbilleder af ændrede skærme skal ligge i `screenshots/`.
+
+## Opfølgning
+
+2026-11-09 · rettelser: c1685a6 (diff `5fa62f0..c1685a6` i `content/explain/` og `docs/DECISIONS.md`) · worktree på c1685a6
+
+Tjekket:
+
+- `node scripts/check-explain.ts` på de 13 filer: alle i orden.
+- `npx vitest run src/content`: 116 bestået.
+- Sætningstællingen i SPEC 9.1 (`start` 1–2, `getReady` og `trains` 1): ingen overtrædelser.
+- Ingen rester af »Tag den, hvis« i »Lettere« på trin 1, af »stop uret«, af bøgerne under læggen eller af »viser passet »Rygsæk««.
+- Figurerne er ikke ændret.
+
+Status pr. fund:
+
+- **F1 (middel): rettet.** Alle syv trin 1-kort siger nu »… også når …« eller »Brug den også, …«. »Lettere variant i dag« modsiger ikke længere passet efter skarp smerte.
+- **F2 (lav): udskudt til P2.** Teksten i shoulder.4–7 er rigtig, og figurerne rettes i P2.1, når P1a er færdig. Linjen i DECISIONS om, at positionerne er rettet i indhold og ikke kun i ordlyd, mangler stadig. Den kan komme med P2.
+- **F3 (lav): rettet.**
+  - legs.4, trin 3, og core_front.6, trin 4, siger »tager du færre, så ret tallet med −«.
+  - Nye P63 og P64: puden fjernes og afstanden øges efter ét pas, hvor alle sæt rammer toppen med 2 i reserve. Passet viser stadig toppen som mål, og to pas i træk på toppen giver næste trin.
+  - Begge følger nu samme mekanisme. Programmets egne ord, »sænk sædet gradvist« og »Flyt dig længere fra væggen«, er bevaret. Det godkender jeg.
+- **F4 (lav): rettet.** legs.2, legs.3 og legs.6 siger »rent i alle sæt«, som de andre stiger.
+- **F5 (lav): rettet.** »Lettere« i shoulder.3 er nu trin 2 i samme blok, og håndstanden skal holdes »helt oppe«.
+- **F6 (lav): rettet på kortet.** pull.1 siger »som sidst på dette trin«. P65 siger stadig kun »samme indhold som sidst«, men kortet er entydigt.
+- **F7 (lav): rettet.** sl_rdl.1, calf.1 og backpack_row.1 henviser ikke længere til en vægt, som passet viser først senere. De siger »som sidste gang« og »2 kg mere, hvis appen bad om det« (backpack_row: »efter sidste rygsæk-row«).
+- **F8 (lav): rettet.** core_side.S4 siger »skarp smerte«.
+- **F9 (lav): rettet.** core_rot.R2 og R3 siger »tryk »Stoppede før tid««.
+- **F10 (lav): rettet.** `start` i pull.1 og backpack_row.1 har 2 sætninger, og `getReady` i pull.1, pull.2 og backpack_row.1 har én.
+- **F11 (lav): rettet.** Bøgerne er fjernet, så kortet siger trappetrin som programmet.
+
+Nye fund: ingen. De ændrede felter overholder kildernes navne, doser, tempo og regler. Det, de lover om motoren, passer: »Sværere« og to pas i træk er uændret, og P63 og P64 nævner, at motoren ikke kender puderne og afstanden.
+
+Stadig åbent uden for pakken: kortenes skærmbilleder (`screenshots/kort-maerk.png`, `kort-skimmet.png`, `kort-foldet-ud.png` og `kort-fra-passet.png`) viser stadig teksten fra før 3648b6b. Boksen »Lettere variant i dag« skubber stadig trinene under første skærm, og »Rygsæk: X kg« viser stadig kun den vægt, der er lagt til. De to sidste hører til UI'et.
+
+Resultat efter opfølgningen: 0 åbne høje eller middel og 1 åben lav (F2, i P2).

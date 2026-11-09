@@ -115,3 +115,24 @@ Kørt i worktree:
 
 - **EMOM og klubsekvensen har ingen »Smerte«-knap** (`EmomStep` og `ClubStep` i `Runner.tsx`), så »Skarp eller stigende smerte i et led: stop øvelsen, og gå et trin ned i en uge« i EMOM-kortenes »Hvorfor« kan kun følges ved at vælge trinnet under Stiger. Det bør med i P5a, når søndagstjekket kan give smerte på et spor.
 - **EMOM-oprykningen ser ikke på et midlertidigt trin** (`src/engine/session.ts:228–233`). Har EMOM fået »lettere variant« på E1 (det kan først ske, når søndagstjekket kan give smerte på EMOM'en), kan et rent pas give E2 ved næste EMOM, og gendannelsen sætter ham så tilbage til E1 i samme pas (`session.ts:390–393`). Det kræver et scenarie i ENGINE 8, før søndagstjekket bygges.
+
+## Opfølgning
+
+2026-11-09 · rettelserne: c1685a6 · `git diff 5fa62f0 c1685a6 -- content/explain/` · worktree på c1685a6
+
+Kørt: `node scripts/check-explain.ts` på de ti filer (alle i orden), `npx vitest run` (30 filer, 583 tests grønne) og `npm run shots:cards` (`CARDS_PORT=4183`: kun burpee_skill.V3 står under første skærm). `src/` og `program/` er ikke rørt.
+
+| Fund | Status | Tjekket |
+|---|---|---|
+| M1 nakke | Rettet | N2–N6 siger nu fx »Glider hagen frem …, så læg hovedet ned, og svar »Hårdt« efter nakken. Du bliver på trinnet.« Det passer med appen: efter nakken spørger passet »Hvordan føltes trinnet?« med »Let«, »Passende« og »Hårdt« (`Runner.tsx`, `Feel`). Det passer også med R-NECK og ENGINE 6.2: kun »Let« to pas i træk giver næste trin, et andet svar nulstiller tælleren (`derive.ts`, `done(feel === 'easy')`), og »Hårdt« rykker ikke ned. Rådene (læg hovedet ned, pres mindre, støt hovedet, mindre modstand) følger kortenes egne typiske fejl og P66. Alle under 160 tegn |
+| M1 klubsekvens | Rettet | C2–C6: »Knækker formen …, så svar nej til »Ren runde?«. Du bliver på trinnet.« Spørgsmålet har knapperne »Nej« og »Ja«, og R-CLUB nulstiller ved et urent pas |
+| M2 lyske | Rettet | groin.2 og groin.4 peger på nabotrinnet og »Stoppede før tid«, som hold-uret har (`Runner.tsx:1449`). Lyske er en stige, så »vælg trin … under Stiger« kan følges |
+| L1 | Rettet | power_upper.1: »vend straks eksplosivt op uden at falde det sidste stykke«. Ingen pause i bunden |
+| L2 | Rettet for os.1 | Første trin står nu på første skærm. burpee_skill.V3 står stadig under, men kortet åbnes ikke i et pas, og figurens faseliste er uændret, så det accepteres |
+| L3 | Rettet | C6 siger »bagside af armene« i `trains` og i fejlens rettelse |
+| L4 | Rettet | »på knyttede hænder« i stedet for »på knoer« |
+| L5 | Rettet | Bord-rows trin 1 siger nu, at træk-sættene tages som rygsæk-row, hvis bordet vipper (P61) |
+| L6 | Rettet | EMOM-»Hvorfor«: »ved næste EMOM, højst til ugens loft« |
+| L7 | Rettet i teksten | warmup.4 trin 1 siger »som lettere variant, hvis passet viser det«. »Dagens pas« viser »Lettere variant i dag«, så brugeren kan vide det. At opvarmningen selv viser »lettere variant« under »Potensér« (`Runner.tsx:339`), er stadig et forslag uden for P3 |
+
+Ingen nye fund i de ændrede felter. Pakkens del B er godkendt fra min side.
