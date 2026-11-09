@@ -9,16 +9,17 @@
     {
       "id": "core_rot.R1",
       "trains": "Maven og skuldrene holder hoften stille, når kroppen vil dreje, som når du slår, og når du bliver skubbet i clinchen.",
-      "start": "Planke på strakte arme med hænderne lige under skuldrene og kroppen lige fra hæl til hoved. Fødderne i hoftebredde på tæerne.",
+      "start": "Planke på strakte arme med hænderne lige under skuldrene og kroppen lige fra hæl til hoved. Fødderne i hoftebredde eller bredere på tæerne.",
       "steps": [
         "Spænd maven og ballerne, så kroppen er lige som en planke.",
-        "Løft venstre hånd, rør højre skulder, og sæt hånden ned igen.",
-        "Tag alle gentagelser med venstre hånd i »Venstre side« og med højre hånd i »Højre side«.",
-        "Hold hoften stille: den må hverken synke eller dreje."
+        "Løft venstre hånd roligt, rør højre skulder, og sæt hånden ned igen.",
+        "Hold hoften stille: den må hverken synke, dreje eller glide ud til siden.",
+        "Tag alle gentagelser med venstre hånd i »Venstre side«, så højre hånd i »Højre side«."
       ],
       "tempo": "Roligt, så hoften står stille ved hvert tap.",
       "breathing": "Træk vejret roligt og jævnt, og pust ud ved hvert tap.",
       "cues": ["Hoften stille", "Rolige tap", "Pres gulvet væk"],
+      "feel": "Maven og siden af livet holder hoften stille, mens skulderen bærer dig.",
       "mistakes": [
         {
           "mistake": "Hoften drejer eller flytter sig, når hånden løftes.",
@@ -33,10 +34,10 @@
           "fix": "Tap roligt, så du står stille på én hånd et øjeblik, før hånden sættes ned."
         }
       ],
-      "easier": "Sæt fødderne bredere fra hinanden. Jo bredere, jo lettere.",
-      "harder": "Trin R2: 2-punkts planke.",
+      "easier": "Stil fødderne bredt, gerne dobbelt hoftebredde, så hoften lettere står stille. Er det stadig for svært, så sæt knæene i gulvet.",
+      "harder": "Trin R2: 2-punkts planke. Appen rykker dig op, når alle sæt rammer 20 rolige tap pr. side med 2 i reserve to pas i træk.",
       "equipment": [],
-      "getReady": "Find en fri plads på gulvet, og gå op i planke på strakte arme.",
+      "getReady": "Find et sted på gulvet med plads til en planke på strakte arme og brede fødder.",
       "movements": [
         {
           "positions": [
@@ -69,9 +70,9 @@
     {
       "id": "core_rot.R2",
       "trains": "Maven, ryggen og ballerne holder hoften i niveau på kun to punkter, så kroppen ikke drejer, når du slår og sparker.",
-      "start": "Planke på albuerne med albuerne lige under skuldrene og fødderne i hoftebredde på tæerne. En vandflaske ligger på lænden.",
+      "start": "Planke på albuerne med albuerne lige under skuldrene og fødderne i hoftebredde på tæerne. En lukket vandflaske ligger på langs på lænden.",
       "steps": [
-        "Gå op i planke på albuerne, og læg vandflasken på lænden med den ene hånd.",
+        "Gå op i planke på albuerne, og læg flasken på langs på lænden med den ene hånd.",
         "Stræk venstre arm frem og højre ben bagud i »Venstre side«, så begge er vandrette.",
         "Hold hoften i niveau, så flasken bliver liggende, til tiden er gået.",
         "Gør det samme med højre arm og venstre ben i »Højre side«, uden pause imellem."
@@ -79,6 +80,7 @@
       "tempo": "Løft arm og ben roligt, og hold stillingen stille hele tiden.",
       "breathing": "Træk vejret kort og roligt uden at slippe spændingen i maven.",
       "cues": ["Hoften i niveau", "Flasken bliver liggende", "Lang fra hånd til hæl"],
+      "feel": "Maven og siden af livet, ballen på det løftede ben og skulderen, du står på, ikke lænden.",
       "mistakes": [
         {
           "mistake": "Hoften drejer op mod det løftede ben.",
@@ -93,17 +95,17 @@
           "fix": "Løft dem kun til vandret. Højere giver svaj i lænden."
         }
       ],
-      "easier": "Trin R1: planke med skulder-tap.",
-      "harder": "Trin R3: 2-punkts på hænderne.",
+      "easier": "Trin R1: planke med skulder-tap. Logger du skarp smerte, rykker appen dig derned i en uge. Er holdet for langt, så stop uret, når flasken vipper.",
+      "harder": "Trin R3: 2-punkts på hænderne. Appen rykker dig op, når alle sæt holder 30 sek pr. side med 2 i reserve to pas i træk.",
       "equipment": ["bottles"],
-      "getReady": "Find en fri plads på gulvet, og læg en vandflaske klar ved siden af dig.",
+      "getReady": "Læg en lukket vandflaske klar ved siden af dig, hvor du kan nå den fra planken.",
       "movements": [
         {
           "positions": [
             {
               "id": "plank",
               "name": "Planke",
-              "text": "Planke på albuerne: albuerne lige under skuldrene, underarmene i gulvet pegende frem, fødderne i hoftebredde på tæerne og kroppen lige fra hæl til hoved. Flasken ligger på lænden.",
+              "text": "Planke på albuerne: albuerne lige under skuldrene, underarmene i gulvet pegende frem, fødderne i hoftebredde på tæerne og kroppen lige fra hæl til hoved. Flasken ligger på langs på lænden.",
               "contacts": [
                 { "part": "forearm", "on": "floor" },
                 { "part": "toes", "on": "floor" }
@@ -142,9 +144,9 @@
     {
       "id": "core_rot.R3",
       "trains": "Maven, ryggen og skuldrene holder hoften i niveau højt oppe på én hånd og én fod, så kroppen ikke drejer, når du slår og sparker.",
-      "start": "Planke på strakte arme med hænderne lige under skuldrene og fødderne i hoftebredde på tæerne. En vandflaske ligger på lænden.",
+      "start": "Planke på strakte arme med hænderne lige under skuldrene og fødderne i hoftebredde på tæerne. En lukket vandflaske ligger på langs på lænden.",
       "steps": [
-        "Gå op i planke på strakte arme, og læg vandflasken på lænden med den ene hånd.",
+        "Gå op i planke på strakte arme, og læg flasken på langs på lænden med den ene hånd.",
         "Stræk venstre arm frem og højre ben bagud i »Venstre side«, så begge er vandrette.",
         "Hold hoften i niveau, så flasken bliver liggende, til tiden er gået.",
         "Gør det samme med højre arm og venstre ben i »Højre side«, uden pause imellem."
@@ -152,6 +154,7 @@
       "tempo": "Løft arm og ben roligt, og hold stillingen stille hele tiden.",
       "breathing": "Træk vejret kort og roligt uden at slippe spændingen i maven.",
       "cues": ["Hoften i niveau", "Skub gulvet væk", "Flasken bliver liggende"],
+      "feel": "Maven og siden af livet, ballen på det løftede ben og skulderen over hånden, ikke lænden.",
       "mistakes": [
         {
           "mistake": "Hoften drejer op mod det løftede ben.",
@@ -166,17 +169,17 @@
           "fix": "Løft dem kun til vandret. Højere giver svaj i lænden."
         }
       ],
-      "easier": "Trin R2: 2-punkts planke på albuerne.",
-      "harder": "Trin R4: 2-punkts med bevægelse.",
+      "easier": "Trin R2: 2-punkts planke på albuerne. Logger du skarp smerte, rykker appen dig derned i en uge. Er holdet for langt, så stop uret, når flasken vipper.",
+      "harder": "Trin R4: 2-punkts med bevægelse. Appen rykker dig op, når alle sæt holder 30 sek pr. side med 2 i reserve to pas i træk.",
       "equipment": ["bottles"],
-      "getReady": "Find en fri plads på gulvet, og læg en vandflaske klar ved siden af dig.",
+      "getReady": "Læg en lukket vandflaske klar ved siden af dig, hvor du kan nå den fra planken.",
       "movements": [
         {
           "positions": [
             {
               "id": "plank",
               "name": "Planke",
-              "text": "Planke på strakte arme: hænderne lige under skuldrene, fødderne i hoftebredde på tæerne og kroppen lige fra hæl til hoved. Flasken ligger på lænden.",
+              "text": "Planke på strakte arme: hænderne lige under skuldrene, fødderne i hoftebredde på tæerne og kroppen lige fra hæl til hoved. Flasken ligger på langs på lænden.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "toes", "on": "floor" }
@@ -215,16 +218,17 @@
     {
       "id": "core_rot.R4",
       "trains": "Maven og hoften holder kroppen stille, mens arm og ben bevæger sig, ligesom når du slår og sparker uden at miste balancen.",
-      "start": "2-punkts planke på albuerne: den ene arm strakt frem og det modsatte ben strakt bagud, begge vandrette, med en vandflaske på lænden.",
+      "start": "2-punkts planke på albuerne: den ene arm strakt frem og det modsatte ben strakt bagud, begge vandrette, med en lukket vandflaske på langs på lænden.",
       "steps": [
         "Gå op i planke på albuerne med flasken på lænden, og stræk venstre arm frem og højre ben bagud.",
-        "Før arm og ben langsomt ud til siden og tilbage, uden at hoften drejer.",
-        "Tag alle gentagelser med venstre arm og højre ben i »Venstre side«.",
-        "Skift til højre arm og venstre ben i »Højre side«, uden pause imellem."
+        "Før armen ud til siden og benet skråt ud, langsomt og uden at hoften drejer.",
+        "Før dem langsomt tilbage, så flasken bliver liggende.",
+        "Tag alle gentagelser med venstre arm og højre ben i »Venstre side«, så højre arm og venstre ben i »Højre side«."
       ],
       "tempo": "Langsomt ud og langsomt tilbage, uden at hoften synker eller drejer.",
       "breathing": "Træk vejret roligt, og pust ud, når arm og ben føres ud til siden.",
       "cues": ["Langsomt ud og tilbage", "Hoften i niveau", "Flasken bliver liggende"],
+      "feel": "Maven og siden af livet, mest når arm og ben er ude til siden, ikke lænden.",
       "mistakes": [
         {
           "mistake": "Hoften drejer, når benet går ud til siden.",
@@ -239,17 +243,17 @@
           "fix": "Spænd maven, og hold arm og ben lidt lavere, til hoften er i niveau igen."
         }
       ],
-      "easier": "Trin R3: 2-punkts på hænderne.",
-      "harder": "Det er stigens sidste trin. Hold flasken helt stille i hver gentagelse.",
+      "easier": "Trin R3: 2-punkts på hænderne. Logger du skarp smerte, rykker appen dig derned i en uge. Vipper flasken, så stop sættet, og log det, du nåede.",
+      "harder": "Det er stigens sidste trin: appen rykker dig ikke videre. Hold flasken helt stille i hver gentagelse.",
       "equipment": ["bottles"],
-      "getReady": "Find en fri plads med luft til siderne, og læg en vandflaske klar ved siden af dig.",
+      "getReady": "Find en fri plads med luft til siderne, og læg en lukket vandflaske klar ved siden af dig.",
       "movements": [
         {
           "positions": [
             {
               "id": "reach",
               "name": "2-punkts",
-              "text": "2-punkts planke på albuerne: venstre arm strakt frem i skulderhøjde og højre ben strakt bagud i hoftehøjde. Kun højre underarm og venstre fods tæer rører gulvet. Flasken ligger på lænden.",
+              "text": "2-punkts planke på albuerne: venstre arm strakt frem i skulderhøjde og højre ben strakt bagud i hoftehøjde. Kun højre underarm og venstre fods tæer rører gulvet. Flasken ligger på langs på lænden.",
               "contacts": [
                 { "part": "forearm", "on": "floor", "count": 1 },
                 { "part": "toes", "on": "floor", "count": 1 }

@@ -4,44 +4,45 @@
   "why": [
     "Målingerne viser, hvor du står, og hvor meget du er rykket. Du tager dem i uge 1 og i de lette uger 4, 8 og 12, hvor du er frisk, og aldrig alle på én dag. De fleste tager pladsen for det første sæt.",
     "De fleste målinger går helt til grænsen, som ellers kun boss-udfordringerne gør. Et sæt slutter, når formen knækker: tæl kun rene gentagelser, og stop uret, når stillingen glipper. Er dagen gul, er der ingen målinger.",
-    "Målbrættets niveauer er pejlemærker for en trænet voksen, ikke officielle normer. Din egen kurve fra uge 1 til 12 er det, der tæller."
+    "Målbrættets niveauer er pejlemærker for en trænet voksen, ikke officielle normer. Din egen kurve fra uge 1 til 12 er det, der tæller, så tag hver måling på samme måde hver gang."
   ],
   "items": [
     {
       "id": "measures.wall_test",
       "trains": "Måler holdningen i øvre ryg og nakke: hvor langt baghovedet er fra væggen, når du står rank med hagen vandret.",
-      "start": "Stå uden sko med ryggen mod en væg og fødderne samlet. Hæle, baller og skulderblade rører væggen, og hagen er vandret.",
+      "start": "Stå uden sko med ryggen mod en væg og hælene helt inde ved den. Hæle, baller og skulderblade rører væggen, armene hænger, og blikket er ligeud.",
       "steps": [
-        "Stå naturligt rank uden at svaje i lænden, og hold blikket ligeud.",
-        "Lad hovedet blive, hvor det er. Løft ikke hagen for at nå væggen.",
-        "Mål vandret fra baghoved til væg med en lineal, eller sæt fingrene fladt ind imellem: ca. 2 cm pr. finger.",
-        "Rører baghovedet væggen med hagen vandret, er tallet 0, og lavere er bedre. Mål på samme måde hver gang."
+        "Stå naturligt rank med hagen vandret. Lad hovedet blive, hvor det falder: løft ikke hagen, og træk det ikke bagud.",
+        "Mål vandret fra baghoved til væg med en lineal, eller læg fingrene fladt ind imellem og regn ca. 2 cm pr. finger.",
+        "Rører baghovedet væggen, er afstanden 0. Mål på samme måde hver gang, så tallene kan sammenlignes.",
+        "Skriv afstanden i hele cm, og tryk »Gem målingen«. Lavere er bedre."
       ],
       "tempo": "Ingen tid. Stå stille, mens du måler.",
-      "breathing": "Træk vejret normalt, og lad skuldrene falde ned. Hold ikke vejret for at strække dig.",
+      "breathing": "Træk vejret normalt, og lad skuldrene falde ned.",
       "cues": [
-        "Hæle, baller og skulderblade mod væggen",
-        "Hagen vandret, ikke op",
-        "Ingen svaj i lænden"
+        "Hæle, baller, skulderblade mod væggen",
+        "Hagen vandret, blikket ligeud",
+        "Hovedet bliver, hvor det falder"
       ],
+      "feel": "Ingen anstrengelse: du står, som du plejer, og spænder hverken i nakken eller i lænden.",
       "mistakes": [
         {
           "mistake": "Du løfter hagen for at få baghovedet ind til væggen.",
           "fix": "Hold hagen vandret, og mål der, hvor hovedet er."
         },
         {
-          "mistake": "Du svajer i lænden eller skyder brystet frem.",
-          "fix": "Stå naturligt rank. Kun hæle, baller og skulderblade skal røre væggen."
+          "mistake": "Du trækker hovedet bagud for at få et bedre tal.",
+          "fix": "Lad hovedet blive, hvor det falder, når du står naturligt. Det er din holdning, der måles."
         },
         {
-          "mistake": "Hælene står et stykke fra væggen.",
-          "fix": "Sæt hælene helt ind til væggen, før du måler."
+          "mistake": "Du svajer i lænden eller skyder brystet frem.",
+          "fix": "Stå naturligt rank med lænden, som den plejer. Hæle, baller og skulderblade rører bare væggen."
         }
       ],
-      "easier": "Ingen lettere udgave. Målingen er den samme hver gang, så tallene kan sammenlignes.",
-      "harder": "Ingen sværere udgave. 0 cm med hagen vandret er målingens bedste.",
+      "easier": "Ingen lettere udgave: målingen er den samme hver gang. Et tal målt med løftet hage eller hovedet trukket bagud tæller ikke.",
+      "harder": "Ingen sværere udgave. Baghovedet mod væggen med hagen vandret, altså 0 cm, er målingens bedste.",
       "equipment": ["wall"],
-      "getReady": "Find et stykke fri væg, tag skoene af, og hav en lineal klar, hvis du har en.",
+      "getReady": "Find et stykke fri væg, tag skoene af, og læg en lineal klar, hvis du har en.",
       "movements": [
         {
           "positions": [
@@ -79,32 +80,33 @@
     {
       "id": "measures.pushups",
       "trains": "Måler, hvor mange rene push-ups du kan i ét sæt: styrken i bryst, skuldre og arme bag dine slag og din garde.",
-      "start": "Hænderne i gulvet lidt bredere end skuldrene med fingrene frem. Fødderne samlet bag dig på tæerne, så kroppen er lige fra hæl til hoved.",
+      "start": "Hænderne i gulvet lidt bredere end skuldrene med fingrene frem og strakte arme. Fødderne samlet bag dig på tæerne, så kroppen er lige fra hæl til hoved.",
       "steps": [
-        "Sænk dig, til brystet er en knytnæve over gulvet, med albuerne ca. 45° ud fra kroppen.",
-        "Pres op til strakte arme, og hold kroppen lige hele vejen.",
-        "Tæl kun rene gentagelser, og stop, når formen knækker.",
-        "Skriv antallet. Målingen er almindelige push-ups, uanset dit trin."
+        "Sænk dig, til brystet er en knytnæve (ca. 10 cm) over gulvet, med albuerne ca. 45° ud fra kroppen.",
+        "Pres op til strakte arme. Kroppen er lige fra hæl til hoved i hver gentagelse.",
+        "Tæl kun rene gentagelser. Du må puste ud i toppen, men sættet er slut, når formen knækker, eller du lægger dig.",
+        "Skriv antallet, og tryk »Gem målingen«. Resten af pres-sættene tager du på dit trin."
       ],
-      "tempo": "Jævnt og kontrolleret uden at hvile på gulvet. Sættet slutter, når formen knækker.",
+      "tempo": "Jævnt og kontrolleret, uden at hoppe op eller hvile i bunden. Sættet slutter, når formen knækker.",
       "breathing": "Ånd ind på vej ned, og pust ud på vej op.",
-      "cues": ["Brystet til knytnæve-højde", "Kroppen lige fra hæl til hoved", "Tæl kun de rene"],
+      "cues": ["Brystet til knytnæve-højde", "Helt op til strakte arme", "Tæl kun de rene"],
+      "feel": "Bryst, skuldre og armenes bagside brænder mod slutningen, men skulder, albue og håndled må ikke gøre ondt.",
       "mistakes": [
         {
           "mistake": "Brystet når ikke ned, når du bliver træt.",
-          "fix": "Tæl kun gentagelser, hvor brystet når en knytnæve over gulvet. Når det ikke kan mere, er sættet slut."
+          "fix": "Den gentagelse tæller ikke. Når du ikke kan nå knytnæve-højde mere, er sættet slut."
+        },
+        {
+          "mistake": "Du kommer ikke helt op til strakte arme.",
+          "fix": "Pres helt op i hver gentagelse. Halve gentagelser tæller ikke."
         },
         {
           "mistake": "Hoften hænger eller stikker op.",
-          "fix": "Spænd maven, og klem ballerne. Knækker kroppen, er sættet slut."
-        },
-        {
-          "mistake": "Du lægger dig på gulvet for at hvile.",
-          "fix": "Bliv i planken. Lægger du dig ned, er sættet slut."
+          "fix": "Spænd maven, og klem ballerne. Knækker kroppen, tæller gentagelsen ikke, og sættet er slut."
         }
       ],
-      "easier": "Gør push-ups ondt i håndleddet, så tag målingen på knoerne med lige håndled. Vælg knoer eller flade hænder, og tag den sådan hver gang.",
-      "harder": "Ingen sværere udgave. Målingen er altid almindelige push-ups, så tallene kan sammenlignes.",
+      "easier": "Ingen lettere udgave. Gentagelser på knæ, med hænderne på sofaen eller uden dybde tæller ikke. Ondt i håndleddet: tag den på knoer hver gang.",
+      "harder": "Ingen sværere udgave: du går til grænsen. Stop, når du ikke kan lave en ren gentagelse mere, og skriv kun de rene.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, hvor du kan ligge i hele din længde.",
       "movements": [
@@ -122,7 +124,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Brystet en knytnæve over gulvet, albuerne bøjet og ca. 45° ud fra kroppen. Kroppen er stadig lige fra hæl til hoved, og hænder og fødder står samme sted.",
+              "text": "Brystet en knytnæve (ca. 10 cm) over gulvet, albuerne bøjet og ca. 45° ud fra kroppen. Kroppen er stadig lige fra hæl til hoved, og hænder og fødder står samme sted.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "toes", "on": "floor" }
@@ -139,32 +141,37 @@
     {
       "id": "measures.table_rows",
       "trains": "Måler, hvor mange rene bord-rows du kan i ét sæt: trækket i ryg og arme, som du bruger i clinchen.",
-      "start": "Lig på ryggen under langsiden af et tungt bord, og grib kanten i skulderbredde. Strakte ben med hælene i gulvet, så kroppen er lige fra hæl til hoved.",
+      "start": "Lig på ryggen under langsiden af et tungt bord med brystet lige under kanten. Grib kanten i skulderbredde med fingrene over den, og stræk benene med hælene i gulvet.",
       "steps": [
-        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop, og spring målingen over.",
-        "Træk brystet op til kanten med albuerne tæt langs siden, og sænk dig til strakte arme.",
-        "Tæl kun rene gentagelser, og stop, når kroppen knækker, eller brystet ikke når kanten.",
-        "Skriv antallet. Målingen er altid bord-rows med kroppen lige, uanset dit trin."
+        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop, og tryk »Spring målingen over«.",
+        "Træk brystet op til kanten med albuerne tæt langs siden, og sænk dig til helt strakte arme.",
+        "Tæl kun rene gentagelser med kroppen lige. Sættet er slut, når brystet ikke når kanten, eller hoften hænger.",
+        "Skriv antallet, og tryk »Gem målingen«. Resten af træk-sættene tager du på dit trin."
       ],
       "tempo": "Jævnt og kontrolleret, uden at rykke. Sættet slutter, når formen knækker.",
       "breathing": "Pust ud, når du trækker op, og ånd ind på vej ned.",
-      "cues": ["Brystet op til kanten", "Kroppen lige som en planke", "Tæl kun de rene"],
+      "cues": [
+        "Brystet op til kanten",
+        "Helt ned til strakte arme",
+        "Kroppen lige, tæl kun de rene"
+      ],
+      "feel": "Mellem skulderbladene, bag på skuldrene og i armene; balder og mave holder kroppen lige, og lænden mærker intet.",
       "mistakes": [
         {
           "mistake": "Hoften hænger ned mod gulvet.",
-          "fix": "Klem ballerne, så kroppen er lige fra hæl til hoved. Hænger den, er sættet slut."
+          "fix": "Klem ballerne, så kroppen er lige fra hæl til hoved. Hænger hoften, tæller gentagelsen ikke."
         },
         {
-          "mistake": "Brystet når ikke kanten.",
-          "fix": "Tæl kun gentagelser, hvor brystet når op til kanten."
+          "mistake": "Du sparker eller svinger hoften op.",
+          "fix": "Hold kroppen stiv, og træk kun med armene og ryggen. En gentagelse med sving tæller ikke."
         },
         {
-          "mistake": "Du rykker dig op med et sving i hoften.",
-          "fix": "Hold kroppen stiv, og træk med armene og ryggen."
+          "mistake": "Armene bliver ikke helt strakte i bunden.",
+          "fix": "Sænk dig helt ned til strakte arme før hver ny gentagelse, ellers tæller den ikke."
         }
       ],
-      "easier": "Ingen lettere udgave, så tallene kan sammenlignes. Har du ikke et bord, der står fast, så spring målingen over.",
-      "harder": "Ingen sværere udgave. Målingen er altid bord-rows med kroppen lige.",
+      "easier": "Ingen lettere udgave. Gentagelser med bøjede knæ, hængende hofte eller brystet under kanten tæller ikke. Står bordet ikke fast, så spring målingen over.",
+      "harder": "Ingen sværere udgave: du går til grænsen. Stop, når brystet ikke når kanten mere, eller kroppen knækker, og skriv kun de rene.",
       "equipment": ["table"],
       "getReady": "Find et tungt spisebord, ikke et klapbord, og gør plads på gulvet ved langsiden.",
       "movements": [
@@ -199,16 +206,17 @@
     {
       "id": "measures.burpee_3min",
       "trains": "Måler, hvor mange rene burpees du kan lave på 3 min: evnen til at holde tempoet, når pulsen er høj.",
-      "start": "Stå oprejst med fødderne i hoftebredde og armene langs siden, klar til at trykke »Start 3 minutter«.",
+      "start": "Stå oprejst med fødderne i hoftebredde og plads til at ligge strakt ud bag dig. Læg telefonen, så du kan se uret.",
       "steps": [
-        "Tryk »Start 3 minutter«, og lav så mange rene burpees, du kan, til tiden er gået.",
-        "Hver burpee: hænderne ned foran fødderne, hop tilbage, brystet i gulvet, fødderne ind og et hop med strakt hofte.",
-        "Tæl højt for hver ren burpee. Når brystet ikke når gulvet, eller hoppet udebliver, tæller den ikke.",
-        "Skriv antallet, når tiden er gået."
+        "I de lette uger afløser testen EMOM'en med burpees hvert minut. Tryk »Start 3 minutter«, og lav så mange rene burpees, du kan.",
+        "Hver burpee: hænderne lige foran fødderne, hop tilbage, brystet i gulvet, pres op, fødderne ind og hop med strakt hofte.",
+        "Sig tallet højt, når du lander. Når brystet ikke når gulvet, eller hoppet udebliver, tæller den ikke.",
+        "Du må puste ud stående, men uret går videre. Skriv antallet, når tiden er gået, og tryk »Gem målingen«."
       ],
       "tempo": "Find et tempo, du kan holde, og sæt farten op i det sidste minut.",
       "breathing": "Pust ud på vej ned, og ånd ind på vej op.",
       "cues": ["Brystet i gulvet hver gang", "Hop med strakt hofte", "Tæl højt, kun de rene"],
+      "feel": "Pulsen er helt oppe, og ben, bryst og arme brænder til sidst, men skarp smerte i et led betyder stop.",
       "mistakes": [
         {
           "mistake": "Du starter for hurtigt og går død efter et minut.",
@@ -223,10 +231,10 @@
           "fix": "Sig tallet højt, hver gang du lander fra hoppet."
         }
       ],
-      "easier": "Ingen lettere udgave. Testen er altid den samme burpee, så tallene kan sammenlignes.",
-      "harder": "Ingen sværere udgave. Testen er altid teknik-burpees med brystet i gulvet.",
+      "easier": "Ingen lettere udgave. En burpee uden brystet i gulvet eller uden hop med strakt hofte og hænderne over hovedet tæller ikke.",
+      "harder": "Ingen sværere udgave: du arbejder, til uret står på 0. Testen er altid den samme burpee, så tallene kan sammenlignes.",
       "equipment": [],
-      "getReady": "Find en fri plads, hvor du kan ligge strakt ud, og stil dig klar til at trykke start.",
+      "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og læg telefonen, så du kan se uret.",
       "movements": [
         {
           "positions": [
@@ -239,7 +247,7 @@
             {
               "id": "squat",
               "name": "Hænder i gulvet",
-              "text": "På hug med fødderne flade og knæene dybt bøjede. Overkroppen hælder frem, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
+              "text": "På hug med fødderne flade, lidt bredere end hofterne, og hoften lidt under knæhøjde. Overkroppen er næsten vandret (ca. 25°) med hovedet i forlængelse, og hænderne står i skulderbredde i gulvet lige foran fødderne med strakte arme.",
               "contacts": [
                 { "part": "foot", "on": "floor" },
                 { "part": "hand", "on": "floor" }
@@ -248,7 +256,7 @@
             {
               "id": "chest",
               "name": "Brystet i gulvet",
-              "text": "Kroppen er lige og stram fra hæl til hoved, og brystet rører gulvet. Hænderne står under brystet med albuerne skråt bagud, og tæerne er i gulvet.",
+              "text": "Kroppen er lige og stram fra hæl til hoved. Brystet rører gulvet, hoften er lige over gulvet, og hovedet er i forlængelse af kroppen. Hænderne står under brystet med albuerne skråt bagud, og tæerne er i gulvet.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "toes", "on": "floor" },
@@ -258,7 +266,7 @@
             {
               "id": "plank",
               "name": "Planke",
-              "text": "Strakte arme med hænderne under skuldrene. Kroppen er lige fra hæl til hoved med spændt mave og tæerne i gulvet.",
+              "text": "Strakte arme med hænderne under skuldrene, lidt bredere end dem. Kroppen er lige fra hæl til hoved med spændt mave, hovedet i forlængelse af ryggen og tæerne i gulvet i hoftebredde.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "toes", "on": "floor" }
@@ -267,7 +275,7 @@
             {
               "id": "jump",
               "name": "Hop",
-              "text": "I luften med strakt hofte og strakte knæ, så kroppen er lodret. Armene er strakt op over hovedet, og fødderne er en håndsbredde over gulvet.",
+              "text": "I luften med strakt hofte og strakte knæ, så kroppen er lodret. Armene er strakt op over hovedet, og fødderne er en håndsbredde over gulvet med tæerne pegende ned.",
               "contacts": []
             }
           ],
@@ -285,30 +293,32 @@
     {
       "id": "measures.base_check",
       "trains": "Måler din grundkondition: hvor langt du kommer på 30 min i tale-tempo, den motor, der lader dig op mellem runderne.",
-      "start": "Løb, cykl eller gå rask op ad bakke. Start dit løbeur eller en app, der måler distancen, eller vælg en rute, hvor du kender længden.",
+      "start": "Løb, cykl eller gå rask op ad bakke, og vælg samme form og samme rute hver gang. Hav dit løbeur eller en app, der måler distancen, klar.",
       "steps": [
-        "Bevæg dig i 30 min i tale-tempo, så du kan tale i hele sætninger hele vejen.",
+        "Tryk »Start uret« i passet, og start samtidig dit løbeur eller en app, der måler distancen.",
+        "Bevæg dig i 30 min i tale-tempo: du kan tale i hele sætninger hele vejen.",
         "Hold samme rolige fart fra start til slut. Det er ikke et kapløb.",
-        "Notér distancen, og skriv den i meter: 4,5 km er 4.500 m."
+        "Skriv distancen i meter uden punktum, fx 4500 for 4,5 km, og tryk »Gem målingen«."
       ],
       "tempo": "Tale-tempo hele vejen: du kan tale i hele sætninger.",
       "breathing": "Træk vejret roligt og jævnt. Kan du ikke tale i hele sætninger, så sæt farten ned.",
       "cues": ["Tale-tempo hele vejen", "Samme fart fra start til slut", "Distancen i meter"],
+      "feel": "Let til moderat: du bliver varm og trækker vejret dybere, men kan tale i hele sætninger hele vejen.",
       "mistakes": [
         {
           "mistake": "Du løber hurtigere, fordi det er en måling.",
           "fix": "Hold tale-tempo, også selv om distancen bliver kortere. Det er grundformen, der måles."
         },
         {
-          "mistake": "Du glemmer at måle distancen.",
-          "fix": "Start dit løbeur eller en app, der måler distancen, før du går i gang, eller vælg en rute, du kender længden af."
+          "mistake": "Du skifter mellem løb, cykel og gang fra gang til gang.",
+          "fix": "Vælg én form og én rute, og brug dem hver gang, så tallene kan sammenlignes."
         },
         {
-          "mistake": "Du skriver distancen i km.",
-          "fix": "Skriv den i meter: 4,5 km er 4.500 m."
+          "mistake": "Du skriver distancen i km eller med punktum.",
+          "fix": "Skriv den i meter uden punktum: 4,5 km skrives 4500."
         }
       ],
-      "easier": "Ingen lettere udgave. Tale-tempo passer sig selv: kan du tale i hele sætninger, er farten rigtig.",
+      "easier": "Ingen lettere udgave: tale-tempo passer sig selv. Bliver du forpustet, så sæt farten ned, også selv om distancen bliver kortere.",
       "harder": "Ingen sværere udgave. Går det hurtigere, er det ikke længere tale-tempo.",
       "equipment": [],
       "getReady": "Tag løbetøj på, og gør dit løbeur eller en app, der måler distancen, klar, eller find en rute, du kender længden af.",
@@ -338,23 +348,25 @@
     {
       "id": "measures.cooper",
       "trains": "Måler din kondition: hvor langt du kan løbe på 12 min med alt, hvad du har.",
-      "start": "Find en flad rute uden stop, hvor du kan måle distancen, og varm op, som uret viser.",
+      "start": "Find en flad rute uden stop, og brug den samme hver gang. Hav dit løbeur eller en app, der måler distancen, klar.",
       "steps": [
-        "Varm op, som uret viser: 10 min let opvarmning og 3 korte stigningsløb.",
-        "Løb så langt, du kan, på 12 min. Fordel kræfterne, så du kan holde farten hele vejen.",
-        "Jog roligt ned i 5 min, og skriv distancen i meter: 2,6 km er 2.600 m."
+        "Tryk »Start uret«: 10 min let opvarmning og 3 korte stigningsløb. Tryk »Videre«, når stigningsløbene er taget.",
+        "Start en ny omgang på løbeuret, når de 12 min begynder, og løb så langt, du kan. Fordel kræfterne.",
+        "Notér distancen for de 12 min, og jog roligt ned i 5 min.",
+        "Skriv kun distancen fra de 12 min, i meter uden punktum (2,6 km skrives 2600), og tryk »Gem målingen«."
       ],
       "tempo": "Længst mulig distance på 12 min: hurtigt, men en fart, du kan holde hele vejen.",
       "breathing": "Find en rytme, hvor vejrtrækningen følger skridtene, og pust helt ud.",
-      "cues": ["Fordel kræfterne over 12 min", "Flad rute uden stop", "Distancen i meter"],
+      "cues": ["Fordel kræfterne over 12 min", "Flad rute uden stop", "Kun de 12 min tæller"],
+      "feel": "Hårdt og jævnt: tung vejrtrækning og tunge ben de sidste minutter, men skarp smerte i et led betyder stop.",
       "mistakes": [
         {
           "mistake": "Du starter for hurtigt og må gå efter få minutter.",
           "fix": "Start i en fart, du kan holde, og sæt den op, når der er få minutter tilbage."
         },
         {
-          "mistake": "Du springer opvarmningen over.",
-          "fix": "Tag de 10 min let opvarmning og de 3 stigningsløb først, så kroppen er klar til at løbe hårdt."
+          "mistake": "Du skriver hele turens distance med opvarmning og nedjog.",
+          "fix": "Skriv kun distancen fra de 12 min. Start en ny omgang på løbeuret, når testen begynder."
         },
         {
           "mistake": "Ruten har bakker eller lyskryds.",
@@ -362,9 +374,9 @@
         }
       ],
       "easier": "Testen er valgfri. Vil du ikke presse dig i dag, så løb roligt, og tryk »Spring målingen over« bagefter.",
-      "harder": "Ingen sværere udgave. Det er dit bedste på 12 min.",
+      "harder": "Ingen sværere udgave: det er dit bedste på 12 min. Kun distancen i de 12 min tæller.",
       "equipment": [],
-      "getReady": "Tag løbesko på, og find en flad rute, hvor du kan måle distancen bagefter.",
+      "getReady": "Tag løbesko på, gør løbeuret eller en app klar, og find en flad rute uden stop.",
       "movements": [
         {
           "positions": [
@@ -391,20 +403,21 @@
     {
       "id": "measures.pike",
       "trains": "Måler, hvor mange rene pike push-ups du kan i ét sæt: skulderstyrken bag en garde, der bliver oppe.",
-      "start": "Start i push-up-stilling med hænderne i skulderbredde. Gå fødderne ind, til hoften er højt, og kroppen er et omvendt V.",
+      "start": "Start i push-up-stilling med hænderne i skulderbredde. Gå fødderne ind, til hoften er højt, og kroppen er et omvendt V med strakte arme og ben.",
       "steps": [
-        "Bøj albuerne skråt bagud, og sænk hovedet let ned mod gulvet foran hænderne.",
-        "Stop lige over gulvet, så hoved og hænder danner en trekant, og pres op til strakte arme.",
-        "Tæl kun rene gentagelser med hoften højt, og stop, når formen knækker.",
-        "Skriv antallet. Målingen er altid pike push-ups med fødderne i gulvet."
+        "Bøj albuerne skråt bagud, og sænk hovedet mod et punkt foran fingrene, til det er lige over gulvet.",
+        "Pres op til strakte arme, så hovedet er mellem armene igen. Hoften bliver højt hele vejen.",
+        "Tæl kun rene gentagelser. Sættet er slut, når hoften falder, eller hovedet ikke når ned foran hænderne.",
+        "Skriv antallet, og tryk »Gem målingen«. Resten af skulder-sættene tager du på dit trin."
       ],
       "tempo": "Jævnt og kontrolleret, uden at hovedet rammer gulvet. Sættet slutter, når formen knækker.",
       "breathing": "Ånd ind på vej ned, og pust ud, når du presser op.",
       "cues": ["Hoften højt", "Hoved og hænder i en trekant", "Tæl kun de rene"],
+      "feel": "Skuldrene og armenes bagside brænder mod slutningen, men skulder og nakke må ikke gøre ondt.",
       "mistakes": [
         {
           "mistake": "Hoften falder, så det bliver en almindelig push-up.",
-          "fix": "Gå fødderne tættere på hænderne. Falder hoften, er sættet slut."
+          "fix": "Gå fødderne tættere på hænderne. Falder hoften, tæller gentagelsen ikke, og sættet er slut."
         },
         {
           "mistake": "Hovedet når ikke ned foran hænderne.",
@@ -415,8 +428,8 @@
           "fix": "Sænk dig roligt, og stop sættet, før du mister kontrollen."
         }
       ],
-      "easier": "Ingen lettere udgave. Målingen er den samme hver gang, så tallene kan sammenlignes.",
-      "harder": "Ingen sværere udgave. Fødderne bliver i gulvet, uanset dit trin.",
+      "easier": "Ingen lettere udgave. Gentagelser med hoften nede, knæene i gulvet eller hovedet kun halvvejs ned tæller ikke.",
+      "harder": "Ingen sværere udgave: fødderne bliver i gulvet. Stop, når du ikke kan lave en ren gentagelse mere, og skriv kun de rene.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet med plads til en push-up.",
       "movements": [
@@ -451,24 +464,25 @@
     {
       "id": "measures.hollow",
       "trains": "Måler, hvor længe du kan holde hollow hold med lænden i gulvet: spændingen i maven, der tager imod slag og spark.",
-      "start": "Lig på ryggen med strakte, samlede ben og armene strakt bagud over hovedet. Læg telefonen, så du kan nå den.",
+      "start": "Lig på ryggen med strakte, samlede ben og armene strakt bagud over hovedet. Læg telefonen ved hovedet, så du kan nå den.",
       "steps": [
         "Pres lænden mod gulvet, tryk »Start uret«, og løft straks skuldre, arme og ben.",
-        "Hold benene strakte med hælene ca. 20 cm over gulvet og lænden presset ned.",
-        "Løfter lænden sig, og kan du ikke presse den ned igen, så læg dig ned, og tryk »Stop«.",
-        "Tryk »Gem målingen«. Målingen er altid med strakte ben, så tallene kan sammenlignes."
+        "Hold benene strakte med hælene ca. 20 cm over gulvet og armene ved ørerne.",
+        "Løfter lænden sig, og kan du ikke presse den ned igen med det samme, så læg dig ned, og tryk »Stop«.",
+        "Tjek tiden, og tryk »Gem målingen«. Målingen er altid med strakte ben, så tallene kan sammenlignes."
       ],
-      "tempo": "Løft dig roligt op, og hold stillingen stille, til lænden løfter sig.",
+      "tempo": "Løft dig roligt op, og hold stillingen helt stille, til lænden løfter sig.",
       "breathing": "Træk vejret kort og roligt gennem hele holdet. Hold ikke vejret.",
       "cues": [
         "Lænden presset mod gulvet",
         "Strakte ben, armene ved ørerne",
         "Stop, når lænden løfter sig"
       ],
+      "feel": "Maven ryster og brænder, mens lænden presser mod gulvet; begynder det at trække i lænden, er holdet slut.",
       "mistakes": [
         {
           "mistake": "Lænden løfter sig, men du bliver ved.",
-          "fix": "Stop uret, så snart du ikke kan holde lænden mod gulvet."
+          "fix": "Stop uret, så snart lænden slipper gulvet og ikke kommer ned igen med det samme."
         },
         {
           "mistake": "Benene kryber op mod loftet, når du bliver træt.",
@@ -479,8 +493,8 @@
           "fix": "Løft med maven, og hold en knytnæves plads mellem hage og bryst."
         }
       ],
-      "easier": "Ingen lettere udgave. Tag altid målingen med strakte ben, også hvis tiden bliver kort.",
-      "harder": "Ingen sværere udgave. Holder lænden, kommer tiden af sig selv.",
+      "easier": "Ingen lettere udgave: altid med strakte ben. Tid med bøjede knæ, benene højt eller lænden løftet tæller ikke.",
+      "harder": "Ingen sværere udgave: holder lænden, kommer tiden af sig selv. Lægger du dig for at hvile, er målingen slut.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, og læg telefonen ved hovedet, så du kan nå uret.",
       "movements": [
@@ -519,19 +533,21 @@
     {
       "id": "measures.side_plank",
       "trains": "Måler, hvor længe siden af maven og hoften holder dig på linje: den stabilitet, du står på, når du sparker.",
-      "start": "Lig på venstre side med albuen lige under skulderen og underarmen pegende frem. Benene strakte og fødderne oven på hinanden.",
+      "start": "Lig på venstre side med albuen lige under skulderen og underarmen pegende frem. Benene strakte, fødderne oven på hinanden og telefonen foran dig.",
       "steps": [
-        "Start uret, når du løfter hoften på venstre side, og hold hoved, hofte og fødder på én linje.",
-        "Stop uret, når hoften synker, og du ikke kan løfte den tilbage på linje.",
-        "Gør det samme på højre side. Appen gemmer selv den korteste af de to tider."
+        "Ved »Venstre side«: tryk »Start uret«, og løft straks hoften, så hoved, hofte og fødder er på én linje.",
+        "Synker hoften, og kan du ikke løfte den på linje igen med det samme, så læg dig, og tryk »Stop«.",
+        "Vend dig om på højre side, og gør det samme ved »Højre side«, når du er klar.",
+        "Tryk »Gem målingen«. Appen gemmer selv den korteste af de to tider."
       ],
-      "tempo": "Løft hoften roligt, og hold stillingen stille, til hoften synker.",
+      "tempo": "Løft hoften roligt, og hold stillingen helt stille, til hoften synker.",
       "breathing": "Træk vejret roligt og jævnt gennem hele holdet.",
       "cues": [
         "Hoved, hofte og fødder på linje",
         "Skub gulvet væk med albuen",
         "Stop, når hoften synker"
       ],
+      "feel": "Siden af maven og hoften nærmest gulvet brænder, mens skulderen bærer uden at gøre ondt.",
       "mistakes": [
         {
           "mistake": "Hoften synker, men du bliver ved.",
@@ -546,10 +562,10 @@
           "fix": "Hold fødderne oven på hinanden hele målingen, så tallene kan sammenlignes."
         }
       ],
-      "easier": "Ingen lettere udgave. Målingen er altid på albuen med fødderne oven på hinanden.",
-      "harder": "Ingen sværere udgave. Den er den samme, uanset dit trin.",
+      "easier": "Ingen lettere udgave: altid på albuen med fødderne oven på hinanden. Tid med knæet eller den øverste fod i gulvet tæller ikke.",
+      "harder": "Ingen sværere udgave. Den korteste side gemmes, så giv begge sider fuld indsats.",
       "equipment": [],
-      "getReady": "Find en fri plads, læg telefonen inden for rækkevidde, og læg dig på venstre side.",
+      "getReady": "Find en fri plads, læg telefonen foran dig på gulvet, og læg dig på venstre side.",
       "movements": [
         {
           "positions": [
@@ -586,14 +602,15 @@
       "trains": "Måler lårenes udholdenhed: hvor længe du kan holde en wall sit med lårene vandrette, når benene skal holde en hel runde.",
       "start": "Stå med ryggen mod væggen, og gå fødderne ca. to fodlængder frem i hoftebredde. Kryds armene over brystet med telefonen i hånden.",
       "steps": [
-        "Tryk »Start uret«, og glid ned ad væggen, til lårene er vandrette og knæene over anklerne.",
+        "Tryk »Start uret«, og glid straks ned ad væggen, til lårene er vandrette og knæene over anklerne.",
         "Hold ryggen flad mod væggen og lårene vandrette så længe, du kan.",
-        "Stop uret, når hoften glider op, og du ikke kan holde lårene vandrette.",
-        "Tryk »Gem målingen«. Målingen er altid på begge ben og uden slag."
+        "Glider hoften op, og kan du ikke komme ned til vandret igen med det samme, så rejs dig, og tryk »Stop«.",
+        "Tjek tiden, og tryk »Gem målingen«. Målingen er altid på begge ben og uden slag."
       ],
       "tempo": "Glid roligt ned, og hold stillingen stille, så længe lårene kan holde vandret.",
       "breathing": "Træk vejret roligt og jævnt hele vejen. Hold ikke vejret.",
       "cues": ["Lårene vandrette", "Ryggen flad mod væggen", "Stop, når hoften glider op"],
+      "feel": "Forsiden af lårene brænder og ryster til sidst, men knæene må ikke gøre ondt.",
       "mistakes": [
         {
           "mistake": "Hoften glider langsomt op, men du bliver ved.",
@@ -608,10 +625,10 @@
           "fix": "Gå fødderne lidt længere frem, så knæene er lige over anklerne."
         }
       ],
-      "easier": "Ingen lettere udgave. Målingen er altid med lårene vandrette, så tallene kan sammenlignes.",
-      "harder": "Ingen sværere udgave. Garde, slag og ét ben hører til stigen, ikke til målingen.",
+      "easier": "Ingen lettere udgave. Tid med hoften over knæhøjde eller hænderne på lårene tæller ikke.",
+      "harder": "Ingen sværere udgave: garde, slag og ét ben hører til stigen. Her holder du bare så længe, du kan.",
       "equipment": ["wall"],
-      "getReady": "Find et stykke fri væg, og hold telefonen i hånden, så du kan stoppe uret.",
+      "getReady": "Find et stykke fri væg, og hold telefonen i hånden, så du kan starte og stoppe uret.",
       "movements": [
         {
           "positions": [
@@ -647,32 +664,33 @@
     {
       "id": "measures.balance",
       "trains": "Måler balancen på ét ben uden hjælp fra øjnene: den kontrol, du står på, når du sparker og checker et spark.",
-      "start": "Stå tæt ved en væg med fødderne samlet og hænderne på hofterne. Ryd pladsen omkring dig.",
+      "start": "Stå på bare fødder tæt ved en væg med fødderne samlet og hænderne på hofterne, telefonen i den ene hånd. Ryd pladsen omkring dig.",
       "steps": [
-        "Stå på venstre ben først: start uret, løft højre fod en håndsbredde over gulvet, og luk øjnene.",
+        "Ved »Venstre ben«: tryk »Start uret«, løft højre fod en håndsbredde over gulvet, og luk øjnene.",
         "Stå så stille, du kan, og tæl roligt til 60 i tankerne.",
-        "Flytter standfoden sig, eller rører den løftede fod gulvet, så åbn øjnene, og stop uret. Gør det også ved 60.",
-        "Gør det samme på højre ben. Appen gemmer selv den korteste af de to tider."
+        "Flytter standfoden sig, rører den løftede fod gulvet, eller når du 60, så åbn øjnene, og tryk »Stop«.",
+        "Gør det samme på højre ben, og tryk »Gem målingen«. Appen gemmer selv den korteste tid."
       ],
       "tempo": "Hold stillingen, til foden flytter sig, dog højst 60 sek pr. ben.",
       "breathing": "Træk vejret roligt, og lad skuldrene hænge.",
       "cues": ["Øjnene lukket hele tiden", "Hænderne på hofterne", "Højst 60 sek pr. ben"],
+      "feel": "Små rystelser i anklen og foden på standbenet er rigtige, mens hofte og overkrop holdes rolige.",
       "mistakes": [
         {
           "mistake": "Du åbner øjnene eller tager fat i væggen.",
-          "fix": "Så er målingen slut på det ben. Stop uret med det samme."
+          "fix": "Så er målingen slut på det ben. Tryk »Stop« med det samme."
         },
         {
           "mistake": "Den løftede fod hviler mod standbenet.",
           "fix": "Hold foden fri af standbenet, en håndsbredde over gulvet."
         },
         {
-          "mistake": "Du står længere end 60 sek.",
-          "fix": "Stop uret ved 60. Målingen stopper ved 60 sek pr. ben."
+          "mistake": "Uret viser mere end 60 sek.",
+          "fix": "Ret tiden til 60 i feltet. Målingen stopper ved 60 sek pr. ben."
         }
       ],
-      "easier": "Ingen lettere udgave. Målingen er altid med lukkede øjne, så tallene kan sammenlignes.",
-      "harder": "Ingen sværere udgave. 60 sek pr. ben er målingens top.",
+      "easier": "Ingen lettere udgave. Tid med åbne øjne, hænderne væk fra hofterne eller foden mod standbenet tæller ikke.",
+      "harder": "Ingen sværere udgave: 60 sek pr. ben er målingens top.",
       "equipment": ["wall"],
       "getReady": "Stil dig tæt ved en væg, så du kan tage fat, hvis du mister balancen, og ryd pladsen omkring dig.",
       "movements": [
@@ -716,6 +734,7 @@
         "Kroppen lige fra knæ til hoved",
         "Halvvejs er ca. 45°"
       ],
+      "feel": "Du mærker, hvor baglårene ikke kan bremse mere: der, hvor du begynder at falde, er din grænse.",
       "mistakes": [
         {
           "mistake": "Du regner faldet med.",
@@ -725,13 +744,10 @@
           "mistake": "Hoften knækker, så du kommer længere ned.",
           "fix": "Kun gentagelser med kroppen lige fra knæ til hoved tæller."
         },
-        {
-          "mistake": "Du svarer ud fra din bedste dag.",
-          "fix": "Svar ud fra gentagelserne i dag."
-        }
+        { "mistake": "Du svarer ud fra din bedste dag.", "fix": "Svar ud fra gentagelserne i dag." }
       ],
-      "easier": "Ingen lettere udgave. Svar ærligt: kun det stykke, du styrede, tæller.",
-      "harder": "Ingen sværere udgave. »Helt ned« er målingens top.",
+      "easier": "Ingen lettere udgave. Stykket, hvor du faldt, eller hvor hoften knækkede, tæller ikke med.",
+      "harder": "Ingen sværere udgave: »Helt ned« er målingens top.",
       "equipment": ["sofa", "pillow"],
       "getReady": "Tænk tilbage på dine Nordic-gentagelser, og vælg, hvor langt du styrede dig ned.",
       "movements": [

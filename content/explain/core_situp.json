@@ -11,14 +11,15 @@
       "trains": "Den nederste del af maven og kontrol over bækkenet, som du bruger, når du trækker knæet op til knæspark og teep.",
       "start": "Lig på ryggen med armene langs siden og håndfladerne i gulvet. Løft benene, så hofte og knæ er bøjet ca. 90° med knæene over hoften.",
       "steps": [
-        "Hold vinklen i knæene, og lad armene ligge let i gulvet.",
-        "Rul hoften op fra gulvet, så knæene kommer ind mod brystet.",
+        "Lad armene ligge let i gulvet, og hold vinklen i knæene hele sættet.",
+        "Rul hoften og den nederste del af lænden op fra gulvet med maven, så knæene kommer ind over brystet.",
         "Sænk hoften langsomt på 3 sek, til bagdelen rører gulvet.",
         "Hold 1 sek stille med knæene over hoften, og rul op igen."
       ],
       "tempo": "Rul op roligt uden sving, 3 sek ned og 1 sek stille i bunden.",
       "breathing": "Pust ud, når du ruller op, og træk vejret ind på vej ned.",
       "cues": ["Rul op uden sving", "3 sek ned, 1 sek stille", "Knæene bliver bøjede"],
+      "feel": "Nederst i maven under navlen, ikke forsiden af hoften eller lænden.",
       "mistakes": [
         {
           "mistake": "Du svinger benene op.",
@@ -33,10 +34,10 @@
           "fix": "Lad armene ligge let i gulvet. De holder balancen, og maven gør arbejdet."
         }
       ],
-      "easier": "Rul hoften en kortere vej op, og sænk den stadig langsomt.",
-      "harder": "Trin 2: strikt sit-up.",
+      "easier": "Rul kun bagdelen lige fri af gulvet, og sænk den stadig på 3 sek. Tag den, hvis du skal svinge benene for at komme op.",
+      "harder": "Trin 2: strikt sit-up. Appen rykker dig op, når alle sæt rammer 15 rene gentagelser med 2 i reserve to pas i træk.",
       "equipment": [],
-      "getReady": "Find en fri plads på gulvet, og læg dig på ryggen med armene langs siden.",
+      "getReady": "Læg dig på ryggen på et tæppe eller en måtte med armene langs siden.",
       "movements": [
         {
           "positions": [
@@ -83,6 +84,7 @@
       "tempo": "Op i ét roligt stræk, 3 sek ned og 1 sek stille i bunden.",
       "breathing": "Pust ud på vej op, og træk vejret ind på vej ned.",
       "cues": ["Armene krydset, 3 sek ned", "Fødderne bliver i gulvet", "Rul op uden sving"],
+      "feel": "Hele maven, mest på vej ned, ikke nakken eller lænden.",
       "mistakes": [
         {
           "mistake": "Fødderne løfter sig fra gulvet.",
@@ -97,10 +99,10 @@
           "fix": "Tæl 3 sek ned, og stop 1 sek, når skulderbladene rører gulvet."
         }
       ],
-      "easier": "Trin 1: omvendt crunch.",
-      "harder": "Trin 3: hollow rocks.",
+      "easier": "Trin 1: omvendt crunch. Vælg det selv under Stiger, hvis fødderne løfter sig, før du har 8 gentagelser.",
+      "harder": "Trin 3: hollow rocks. Appen rykker dig op, når alle sæt rammer 15 rene gentagelser med 2 i reserve to pas i træk.",
       "equipment": [],
-      "getReady": "Find en fri plads på gulvet, og sæt dig med bøjede knæ og fødderne i gulvet.",
+      "getReady": "Sæt dig på et tæppe eller en måtte med bøjede knæ og fødderne fladt i gulvet.",
       "movements": [
         {
           "positions": [
@@ -150,6 +152,7 @@
         "Armene ved ørerne, strakte ben",
         "Ribbenene ned mod hoften"
       ],
+      "feel": "Hele forsiden af kroppen spændt som en bue, ikke lænden eller nakken.",
       "mistakes": [
         {
           "mistake": "Du svinger arme eller ben for at få fart.",
@@ -164,10 +167,10 @@
           "fix": "Løft med maven, og hold en knytnæves plads mellem hage og bryst."
         }
       ],
-      "easier": "Trin 2: strikt sit-up.",
-      "harder": "Trin 4: V-ups.",
+      "easier": "Trin 2: strikt sit-up. Vælg det selv under Stiger, hvis du ikke kan holde hollow-formen i 10 gyng.",
+      "harder": "Trin 4: V-ups. Appen rykker dig op, når alle sæt rammer 20 rene gyng med 2 i reserve to pas i træk.",
       "equipment": [],
-      "getReady": "Find en fri plads på gulvet, og læg dig på ryggen med armene strakt over hovedet.",
+      "getReady": "Læg dig på ryggen på et tæppe eller en måtte med armene strakt over hovedet.",
       "movements": [
         {
           "positions": [
@@ -208,6 +211,7 @@
         "Hænderne rører tæerne i toppen",
         "3 sek ned, 1 sek stille"
       ],
+      "feel": "Hele maven og forsiden af hofterne, ikke lænden.",
       "mistakes": [
         {
           "mistake": "Knæene bøjer, når du rækker mod tæerne.",
@@ -222,10 +226,10 @@
           "fix": "Pres lænden mod gulvet, og sænk roligt. Svajer den stadig, er sættet slut."
         }
       ],
-      "easier": "Trin 3: hollow rocks.",
-      "harder": "Trin 5: dragon flag-negativer.",
+      "easier": "Trin 3: hollow rocks. Vælg det selv under Stiger, hvis du ikke kan nå tæerne med strakte ben 8 gange.",
+      "harder": "Trin 5: dragon flag-negativer. Appen rykker dig op, når alle sæt rammer 15 rene gentagelser med 2 i reserve to pas i træk.",
       "equipment": [],
-      "getReady": "Find en fri plads på gulvet, hvor du kan ligge helt strakt med armene over hovedet.",
+      "getReady": "Læg dig på ryggen på et tæppe eller en måtte, hvor du kan ligge helt strakt med armene over hovedet.",
       "movements": [
         {
           "positions": [
@@ -269,6 +273,7 @@
       "tempo": "Rul op roligt med bøjede knæ, og sænk den strakte krop på 5 sek.",
       "breathing": "Træk vejret ind i toppen, og pust langsomt ud hele vejen ned.",
       "cues": ["Vægten på skulderbladene", "Strakt krop, 5 sek ned", "Ingen knæk i hoften"],
+      "feel": "Hele maven, mest i bunden; tryk i nakken betyder stop, for vægten skal på skulderbladene.",
       "mistakes": [
         {
           "mistake": "Kroppen knækker i hoften eller svajer i lænden.",
@@ -283,8 +288,8 @@
           "fix": "Stop, når kroppen er næsten lodret, og hold vægten på skulderbladene. Pres ikke hovedet ned i gulvet."
         }
       ],
-      "easier": "Trin 4: V-ups.",
-      "harder": "Trin 6: dragon flag.",
+      "easier": "Trin 4: V-ups. Vælg det selv under Stiger, hvis du ikke kan bremse den strakte krop hele vejen ned 3 gange.",
+      "harder": "Trin 6: dragon flag. Appen rykker dig op, når alle sæt rammer 5 rene gentagelser med 2 i reserve to pas i træk.",
       "equipment": ["sofa"],
       "getReady": "Læg dig med hovedet ind mod en tung sofa, og prøv, at den står fast, når du trækker i den.",
       "movements": [
@@ -355,6 +360,7 @@
       "tempo": "3 sek ned og op igen i ét roligt stræk, hele tiden som én planke.",
       "breathing": "Træk vejret ind i toppen, og pust langsomt ud på vej ned og op igen.",
       "cues": ["Op og ned som én planke", "Vægten på skulderbladene", "Ingen knæk i hoften"],
+      "feel": "Hele maven og ballerne holder kroppen som én planke; mærker du tryk i nakken, så stop.",
       "mistakes": [
         {
           "mistake": "Du bøjer i hoften for at komme op.",
@@ -369,8 +375,8 @@
           "fix": "Stop, når kroppen er næsten lodret, så vægten bliver på skulderbladene."
         }
       ],
-      "easier": "Trin 5: dragon flag-negativer.",
-      "harder": "Trin 7: dragon flag med pause.",
+      "easier": "Trin 5: dragon flag-negativer. Vælg det selv under Stiger, hvis du ikke kan løfte dig op som én planke 3 gange.",
+      "harder": "Trin 7: dragon flag med pause. Appen rykker dig op, når alle sæt rammer 6 rene gentagelser med 2 i reserve to pas i træk.",
       "equipment": ["sofa"],
       "getReady": "Læg dig med hovedet ind mod en tung sofa, og prøv, at den står fast, når du trækker i den.",
       "movements": [
@@ -410,13 +416,14 @@
       "start": "Lig på ryggen med hovedet en håndsbredde fra en tung sofa, og grib om sofaens ben eller nederste kant bag hovedet. Rul op med bøjede knæ, og stræk kroppen næsten lodret op.",
       "steps": [
         "Spænd mave og baller, så kroppen er én stiv planke fra skuldre til tæer.",
-        "Sænk den strakte krop langsomt til halvvejs, og hold 3 sek stille.",
+        "Sænk den strakte krop langsomt til halvvejs, ca. 45° fra gulvet, og hold 3 sek stille.",
         "Sænk dig langsomt resten af vejen, til hoften er en håndsbredde over gulvet.",
         "Løft den op igen i ét roligt stræk, til den er næsten lodret over skulderbladene."
       ],
       "tempo": "Langsomt ned med 3 sek pause halvvejs, og op igen i ét roligt stræk.",
       "breathing": "Træk vejret ind i toppen, pust langsomt ud på vej ned, og hold ikke vejret i pausen.",
       "cues": ["3 sek pause halvvejs nede", "Vægten på skulderbladene", "Ingen knæk i hoften"],
+      "feel": "Hele maven, mest i pausen halvvejs; mærker du tryk i nakken, så stop.",
       "mistakes": [
         {
           "mistake": "Hoften knækker, eller lænden svajer i pausen.",
@@ -431,8 +438,8 @@
           "fix": "Stop, når kroppen er næsten lodret, så vægten bliver på skulderbladene."
         }
       ],
-      "easier": "Trin 6: dragon flag.",
-      "harder": "Det er stigens sidste trin. Her bygger du videre med flere gentagelser op til toppen af intervallet.",
+      "easier": "Trin 6: dragon flag. Vælg det selv under Stiger, hvis du ikke kan holde pausen halvvejs 2 gange uden knæk i hoften.",
+      "harder": "Det er stigens sidste trin: appen rykker dig ikke videre. Hold hver pause lige så stille som den første.",
       "equipment": ["sofa"],
       "getReady": "Læg dig med hovedet ind mod en tung sofa, og prøv, at den står fast, når du trækker i den.",
       "movements": [

@@ -3,23 +3,24 @@
   "subject": "warmup",
   "why": [
     "Opvarmningen er de samme fire punkter hver gang: pulsen op, leddene i gang, de små muskler tændt og til sidst et par eksplosive gentagelser. Så er kroppen klar til at arbejde hurtigt og hårdt.",
-    "Den fortæller dig også, hvilken dag det er. Føles de første hop eller push-ups tunge og langsomme, er det en gul dag, og du svarer nej til trafiklysets sidste spørgsmål.",
-    "Hofter, ryg, skuldre og håndled får bevægelse, før de skal klare spark, knæ, clinch og push-ups. Håndleddene varmer du op hver gang."
+    "Den fortæller dig også, hvilken dag det er. Føles de første hop eller push-ups tunge og langsomme, er det en gul dag, og du svarer nej til trafiklysets spørgsmål 3.",
+    "Hofter, ryg, skuldre og håndled får bevægelse, før de skal klare spark, knæ, clinch og push-ups."
   ],
   "items": [
     {
       "id": "warmup.1",
-      "trains": "Puls og varme i hele kroppen og lette, hurtige fødder som i ringen.",
-      "start": "Til sjippe-trin står du let på forfødderne med fødderne tæt sammen og bløde knæ. Til skyggeboksning står du i din kampstilling med hænderne oppe.",
+      "trains": "Pulsen op og varme i hele kroppen med lette, hurtige fødder som i ringen.",
+      "start": "Sjippe-trin: stå på forfødderne med samlede fødder, bløde knæ og albuerne ind til siden. Skyggeboksning: stå i din kampstilling med hænderne oppe ved kinderne.",
       "steps": [
         "Vælg sjippe-trin uden tov eller let skyggeboksning.",
-        "Sjippe-trin: hop små hop på forfødderne, og drej håndleddene, som om du svinger et tov.",
-        "Skyggeboksning: bevæg dig let på fødderne, slå lette, lige slag, og før hånden straks tilbage i garden.",
-        "Start roligt, og sæt farten op hen ad vejen, så du slutter hurtigt."
+        "Sjippe-trin: hop et par centimeter op fra forfødderne, og drej håndleddene i små cirkler, som om du svinger et tov.",
+        "Skyggeboksning: tag lette skridt på forfødderne, og slå lette, lige slag. Før hånden tilbage til kinden efter hvert slag.",
+        "Start roligt, og sæt farten gradvist op, så du er hurtig det sidste halve minut."
       ],
       "tempo": "Fra roligt til hurtigt: start let, og sæt farten op hen ad vejen.",
       "breathing": "Træk vejret frit. Pust kort ud på hvert slag, når du skyggebokser.",
-      "cues": ["Let på forfødderne", "Roligt først, så hurtigt", "Hænderne tilbage i garden"],
+      "cues": ["Let på forfødderne", "Roligt først, så hurtigt", "Hånden tilbage til kinden"],
+      "feel": "Du bliver varm og let forpustet, men kan stadig tale, og læggene arbejder uden at blive trætte.",
       "mistakes": [
         {
           "mistake": "Du lander tungt på hælene.",
@@ -31,11 +32,11 @@
         },
         {
           "mistake": "Hænderne falder ned, når du skyggebokser.",
-          "fix": "Før hånden tilbage til kinden efter hvert slag."
+          "fix": "Før hånden tilbage til kinden efter hvert slag, også når du bliver træt."
         }
       ],
-      "easier": "Vælg let skyggeboksning, hvis hop er for hårdt for anklerne eller læggene i dag.",
-      "harder": "Hop fra fod til fod, når du er varm, men hold det let. Opvarmningen må ikke trætte dig.",
+      "easier": "Gør hop ondt i anklerne eller læggene, eller bliver du forpustet, så vælg let skyggeboksning, og hold farten lavere.",
+      "harder": "Er du stadig kold til sidst, så sæt farten mere op i det sidste minut. Opvarmningen må aldrig gøre dig træt.",
       "equipment": [],
       "getReady": "Find en fri plads, hvor du kan hoppe og slå uden at ramme noget.",
       "movements": [
@@ -107,13 +108,15 @@
       "trains": "Bevægelighed i hofter, lyske og ryg, som du bruger i knæ, spark og drejninger i clinchen.",
       "start": "Spiderman-udfald starter i planke med strakte arme, kosak-squat i bred stand og kat-ko på alle fire.",
       "steps": [
-        "Spiderman-udfald: træd den ene fod frem uden for hånden, drej brystet mod benet, og stræk armen på samme side mod loftet. 5 pr. side.",
-        "Kosak-squat: sæt dig ned på det ene ben, mens det andet er strakt med tæerne op. Skift side, til du har 5 på hver.",
+        "Spiderman-udfald: træd venstre fod frem uden for venstre hånd, drej brystet mod venstre, og stræk venstre arm mod loftet.",
+        "Sæt hånden ned, træd tilbage til planken, og tag højre side. Skift side hver gang, til du har 5 pr. side.",
+        "Kosak-squat: sæt dig dybt ned på det ene ben, mens det andet er strakt med tæerne op. Skift side, til du har 5 pr. side.",
         "Kat-ko: rund ryggen op mod loftet, og lad den derefter synke med brystet frem. 10 gange."
       ],
       "tempo": "Roligt og jævnt hele vejen, uden ryk.",
       "breathing": "Træk vejret roligt. I kat-ko puster du ud, når du runder ryggen, og ånder ind, når den synker.",
       "cues": ["Brystet drejer op mod loftet", "Hælen ned, tæerne op", "Rund op, og lad synke"],
+      "feel": "Et roligt stræk i hofte, lyske og inderlår og bevægelse i ryggen, men aldrig smerte i knæ eller lyske.",
       "mistakes": [
         {
           "mistake": "Udfaldet er kort, så hoften ikke kommer ned.",
@@ -128,8 +131,8 @@
           "fix": "Hold armene strakte, og lad bevægelsen komme fra ryggen og bækkenet."
         }
       ],
-      "easier": "Sæt bagerste knæ i gulvet i udfaldet, og gå mindre dybt i kosak-squat.",
-      "harder": "Gå lidt dybere i udfald og kosak-squat, men hold det roligt. Det er opvarmning, ikke træning.",
+      "easier": "Gør det ondt, eller løfter hælen sig, så gå mindre dybt. Sæt bagerste knæ i gulvet i udfaldet.",
+      "harder": "Mærker du intet stræk, så gå dybere i udfald og kosak-squat, men stadig roligt. Det er opvarmning, ikke træning.",
       "equipment": [],
       "getReady": "Ryd en plads på gulvet, hvor du kan ligge i planke og stå i bred stand.",
       "movements": [
@@ -261,9 +264,10 @@
       "trains": "Håndled, skulderblade og hofter klar til push-ups, slag og balancen på ét ben, når du sparker.",
       "start": "Håndledsvip starter på alle fire, skulderblads-push-ups i planke med strakte arme og hip airplanes stående på ét ben.",
       "steps": [
-        "Håndledsvip: vip skuldrene frem over hænderne og tilbage med håndfladerne fladt i gulvet. 10 gange.",
+        "Håndledsvip: vip skuldrene frem foran hænderne og tilbage med håndfladerne fladt i gulvet og fingrene frem. 10 gange.",
         "Skulderblads-push-ups: lad brystet synke mellem skulderbladene med strakte arme, og skub det op igen. 10 gange.",
-        "Hip airplanes: læn overkroppen frem på ét ben, og drej bækkenet op mod loftet og tilbage. 5 pr. side."
+        "Hip airplanes: stå på venstre ben med overkroppen lænet frem, og drej bækkenet op mod højre og tilbage. 5 gange.",
+        "Gør det samme stående på højre ben, så du har 5 pr. side."
       ],
       "tempo": "Roligt og kontrolleret. Bevægelsen skal komme fra det led, du varmer op.",
       "breathing": "Træk vejret roligt hele vejen, og pust ud, når du skubber op og drejer op.",
@@ -272,9 +276,10 @@
         "Armene strakte hele tiden",
         "Knæet peger frem, bækkenet drejer"
       ],
+      "feel": "Varme i håndled og underarme, arbejde mellem skulderbladene og i standbenets balde, aldrig skarp smerte i håndleddet.",
       "mistakes": [
         {
-          "mistake": "Fingrene eller håndfladen letter fra gulvet.",
+          "mistake": "Fingrene eller håndroden letter fra gulvet.",
           "fix": "Vip kun så langt frem, at hele håndfladen bliver i gulvet."
         },
         {
@@ -286,10 +291,10 @@
           "fix": "Hold knæet og foden pegende frem, og drej hoften op over dem."
         }
       ],
-      "easier": "Gør push-ups ondt i håndleddet, så tag skulderblads-push-ups på knoer, og vip mindre langt frem. Støt en hånd let mod væggen i hip airplanes.",
+      "easier": "Gør det ondt i håndleddet, så tag skulderblads-push-ups på knoerne, og vip mindre frem. Støt en hånd let mod væggen i hip airplanes.",
       "harder": "Læn overkroppen helt ned til vandret i hip airplanes, og drej bækkenet længere op.",
       "equipment": [],
-      "getReady": "Find en plads på gulvet, hvor du kan stå på alle fire og i planke.",
+      "getReady": "Find en plads på gulvet, hvor du kan stå på alle fire og i planke, gerne tæt ved en væg.",
       "movements": [
         {
           "id": "haandled",
@@ -376,15 +381,16 @@
     {
       "id": "warmup.4",
       "trains": "Kroppen klar til at være eksplosiv og et tjek af dagsformen, før passet går i gang.",
-      "start": "Stå klar til dagens første power-øvelse, som har sit eget kort. Til pogo-hop står du på forfødderne med fødderne i hoftebredde.",
+      "start": "Stå klar til dagens første power-øvelse; passet viser, hvilken det er. Til pogo-hop står du på forfødderne med fødderne i hoftebredde.",
       "steps": [
         "Lav 3 gentagelser af dagens første power-øvelse i halv fart og derefter 3 i fuld fart.",
-        "Tirsdag i Styrke A: lav også 2 × 10 pogo-hop, korte og hurtige hop fra anklerne med næsten strakte knæ.",
-        "Mærk efter: føles hop eller push-ups tunge og langsomme, er det en gul dag."
+        "I Styrke A: lav også 2 × 10 pogo-hop, korte og hurtige hop fra anklerne med næsten strakte knæ.",
+        "Bagefter kommer spørgsmål 3: føles hop eller push-ups tunge og langsomme, er det en gul dag, og du svarer nej."
       ],
       "tempo": "Første sæt i halv fart, andet sæt i fuld fart. Pogo-hop er korte og hurtige.",
       "breathing": "Pust kort ud på hver eksplosiv gentagelse. Hold aldrig vejret.",
       "cues": ["Halv fart, så fuld fart", "Korte hop fra anklerne", "Tungt og langsomt: gul dag"],
+      "feel": "Ben og arme føles lette, hurtige og spændstige, og kroppen er varm uden at være træt.",
       "mistakes": [
         {
           "mistake": "Du starter i fuld fart.",
@@ -399,8 +405,8 @@
           "fix": "Land på forfødderne, og gå straks op i næste hop."
         }
       ],
-      "easier": "Føles kroppen tung, så tag også andet sæt roligt, og svar ærligt på trafiklysets spørgsmål bagefter.",
-      "harder": "Ingen sværere variant. Potensér skal gøre dig klar, ikke trætte dig.",
+      "easier": "Føles kroppen tung, så tag også andet sæt roligt, og svar nej til spørgsmål 3 bagefter.",
+      "harder": "Ingen sværere udgave. Potensér skal gøre dig klar, ikke trætte dig: 3 gentagelser i fuld fart er nok.",
       "equipment": [],
       "getReady": "Stil dig med plads omkring dig til dagens første power-øvelse.",
       "movements": [

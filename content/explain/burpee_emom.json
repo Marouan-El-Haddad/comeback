@@ -15,29 +15,30 @@
         "Start, når et nyt minut begynder, og lav minuttets burpees i en jævn rytme.",
         "Gå ned på hug med hænderne lige foran fødderne, hop tilbage, og sænk brystet til gulvet.",
         "Pres op, spring fødderne ind tæt på hænderne, og hop med strakt hofte og hænderne over hovedet.",
-        "Hvil resten af minuttet, og start igen, når næste minut begynder."
+        "Hvil stående resten af minuttet, og start igen, når næste minut begynder."
       ],
       "tempo": "Find et tempo, du kan holde i alle minutter, og sæt farten op i det sidste minut.",
       "breathing": "Pust ud på vej ned, og ånd ind på vej op. I pausen: lange udåndinger, fx 2 sek ind og 4 sek ud.",
       "cues": ["Brystet i gulvet hver gang", "Hop med strakt hofte", "Jævn rytme, lang udånding"],
+      "feel": "Pulsen, der stiger i arbejdet og falder igen i pausen, så du er klar, når næste minut starter.",
       "mistakes": [
+        {
+          "mistake": "Brystet når ikke gulvet, når du bliver træt.",
+          "fix": "Et minut er kun rent, når hver burpee har brystet i gulvet og et hop med strakt hofte."
+        },
         {
           "mistake": "Du starter for hurtigt og har ingen pause tilbage i de sidste minutter.",
           "fix": "Find en rytme, du kan holde i alle minutter, og sæt først farten op i det sidste."
-        },
-        {
-          "mistake": "Brystet når ikke gulvet, eller hoppet bliver lavt, når du bliver træt.",
-          "fix": "Et minut er kun rent, når hver burpee har brystet i gulvet og et hop med strakt hofte."
         },
         {
           "mistake": "Hoften hænger, når fødderne lander bagud.",
           "fix": "Spænd maven, før fødderne lander, og sænk kroppen samlet som en planke."
         }
       ],
-      "easier": "Det er første trin. Er hoppene for hårde, så træd fødderne tilbage og ind ét ad gangen.",
-      "harder": "Trin E2: når alle minutter var rene, og du havde mindst 20 sek pause i det sidste minut, rykker du op i næste uges pas, højst til ugens loft.",
+      "easier": "Træd fødderne tilbage og ind ét ad gangen i stedet for at hoppe, og sænk stadig brystet til gulvet.",
+      "harder": "Trin E2. Først når alle minutter var rene med mindst 20 sek pause i det sidste, får du den ved næste EMOM, højst til ugens loft.",
       "equipment": [],
-      "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig klar til første minut.",
+      "getReady": "Find en fri plads uden lampe over dig, hvor du kan ligge strakt ud, og stil dig klar til første minut.",
       "movements": [
         {
           "positions": [
@@ -101,14 +102,15 @@
         "Start, når et nyt minut begynder, og lav minuttets burpees i en jævn rytme.",
         "Gå ned på hug med hænderne lige foran fødderne, hop tilbage, og sænk brystet til gulvet.",
         "Pres op, spring fødderne ind tæt på hænderne, og hop med strakt hofte og hænderne over hovedet.",
-        "Hvil resten af minuttet, og start igen, når næste minut begynder."
+        "Hvil stående resten af minuttet, og start igen, når næste minut begynder."
       ],
       "tempo": "Find et tempo, du kan holde i alle minutter, og sæt farten op i det sidste minut.",
       "breathing": "Pust ud på vej ned, og ånd ind på vej op. I pausen: lange udåndinger, fx 2 sek ind og 4 sek ud.",
       "cues": ["Brystet i gulvet hver gang", "Hop med strakt hofte", "Pust ud på vej ned"],
+      "feel": "Pulsen, der stiger i arbejdet og falder igen i pausen, så du er klar, når næste minut starter.",
       "mistakes": [
         {
-          "mistake": "Brystet når ikke gulvet, eller hoppet bliver lavt, når du bliver træt.",
+          "mistake": "Brystet når ikke gulvet, når du bliver træt.",
           "fix": "Et minut er kun rent, når hver burpee har brystet i gulvet og et hop med strakt hofte."
         },
         {
@@ -120,10 +122,10 @@
           "fix": "Find en rytme, du kan holde i alle minutter, og sæt først farten op i det sidste."
         }
       ],
-      "easier": "Trin E1.",
-      "harder": "Trin E3: når alle minutter var rene, og du havde mindst 20 sek pause i det sidste minut, rykker du op i næste uges pas, højst til ugens loft.",
+      "easier": "Trin E1. Vælg den under Stiger, hvis du ikke når minuttets burpees, før minuttet er gået. Er et minut bare ikke rent, bliver du på trinnet.",
+      "harder": "Trin E3. Først når alle minutter var rene med mindst 20 sek pause i det sidste, får du den ved næste EMOM, højst til ugens loft.",
       "equipment": [],
-      "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig klar til første minut.",
+      "getReady": "Find en fri plads uden lampe over dig, hvor du kan ligge strakt ud, og stil dig klar til første minut.",
       "movements": [
         {
           "positions": [
@@ -187,7 +189,7 @@
         "Start, når et nyt minut begynder, og lav minuttets burpees i en jævn rytme.",
         "Gå ned på hug med hænderne lige foran fødderne, hop tilbage, og sænk brystet til gulvet.",
         "Pres op, spring fødderne ind tæt på hænderne, og hop med strakt hofte og hænderne over hovedet.",
-        "Hvil resten af minuttet, og start igen, når næste minut begynder."
+        "Hvil stående resten af minuttet, og start igen, når næste minut begynder."
       ],
       "tempo": "Find et tempo, du kan holde i alle minutter, og sæt farten op i det sidste minut.",
       "breathing": "Pust ud på vej ned, og ånd ind på vej op. I pausen: lange udåndinger, fx 2 sek ind og 4 sek ud.",
@@ -196,9 +198,10 @@
         "Hop med strakt hofte",
         "Hænderne lige foran fødderne"
       ],
+      "feel": "Pulsen, der stiger i arbejdet og falder igen i pausen, så du er klar, når næste minut starter.",
       "mistakes": [
         {
-          "mistake": "Brystet når ikke gulvet, eller hoppet bliver lavt, når du bliver træt.",
+          "mistake": "Brystet når ikke gulvet, når du bliver træt.",
           "fix": "Et minut er kun rent, når hver burpee har brystet i gulvet og et hop med strakt hofte."
         },
         {
@@ -210,10 +213,10 @@
           "fix": "Sæt hænderne lige foran fødderne, så vejen ned og op igen er kort."
         }
       ],
-      "easier": "Trin E2.",
-      "harder": "Trin E4: når alle minutter var rene, og du havde mindst 20 sek pause i det sidste minut, rykker du op i næste uges pas, højst til ugens loft.",
+      "easier": "Trin E2. Vælg den under Stiger, hvis du ikke når minuttets burpees, før minuttet er gået. Er et minut bare ikke rent, bliver du på trinnet.",
+      "harder": "Trin E4. Først når alle minutter var rene med mindst 20 sek pause i det sidste, får du den ved næste EMOM, højst til ugens loft.",
       "equipment": [],
-      "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig klar til første minut.",
+      "getReady": "Find en fri plads uden lampe over dig, hvor du kan ligge strakt ud, og stil dig klar til første minut.",
       "movements": [
         {
           "positions": [
@@ -277,14 +280,15 @@
         "Start, når et nyt minut begynder, og lav minuttets burpees i en jævn rytme.",
         "Gå ned på hug med hænderne lige foran fødderne, hop tilbage, og sænk brystet til gulvet.",
         "Pres op, spring fødderne ind tæt på hænderne, og hop med strakt hofte og hænderne over hovedet.",
-        "Hvil resten af minuttet, og start igen, når næste minut begynder."
+        "Hvil stående resten af minuttet, og start igen, når næste minut begynder."
       ],
       "tempo": "Find et tempo, du kan holde i alle minutter, og sæt farten op i det sidste minut.",
       "breathing": "Pust ud på vej ned, og ånd ind på vej op. I pausen: lange udåndinger, fx 2 sek ind og 4 sek ud.",
       "cues": ["Brystet i gulvet hver gang", "Hop med strakt hofte", "Pust ud på vej ned"],
+      "feel": "Pulsen, der stiger i arbejdet og falder igen i pausen, så du er klar, når næste minut starter.",
       "mistakes": [
         {
-          "mistake": "Brystet når ikke gulvet, eller hoppet bliver lavt, når du bliver træt.",
+          "mistake": "Brystet når ikke gulvet, når du bliver træt.",
           "fix": "Et minut er kun rent, når hver burpee har brystet i gulvet og et hop med strakt hofte."
         },
         {
@@ -296,10 +300,10 @@
           "fix": "Spring fødderne flade og brede ind tæt på hænderne, og rejs dig med et hofteskub."
         }
       ],
-      "easier": "Trin E3.",
-      "harder": "Trin E5: når alle minutter var rene, og du havde mindst 20 sek pause i det sidste minut, rykker du op i næste uges pas, højst til ugens loft.",
+      "easier": "Trin E3. Vælg den under Stiger, hvis du ikke når minuttets burpees, før minuttet er gået. Er et minut bare ikke rent, bliver du på trinnet.",
+      "harder": "Trin E5. Først når alle minutter var rene med mindst 20 sek pause i det sidste, får du den ved næste EMOM, højst til ugens loft.",
       "equipment": [],
-      "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig klar til første minut.",
+      "getReady": "Find en fri plads uden lampe over dig, hvor du kan ligge strakt ud, og stil dig klar til første minut.",
       "movements": [
         {
           "positions": [
@@ -363,14 +367,15 @@
         "Start, når et nyt minut begynder, og lav minuttets burpees i en jævn rytme.",
         "Gå ned på hug med hænderne lige foran fødderne, hop tilbage, og sænk brystet til gulvet.",
         "Pres op, spring fødderne ind tæt på hænderne, og hop med strakt hofte og hænderne over hovedet.",
-        "Hvil resten af minuttet, og start igen, når næste minut begynder."
+        "Hvil stående resten af minuttet, og start igen, når næste minut begynder."
       ],
       "tempo": "Find et tempo, du kan holde i alle minutter, og sæt farten op i det sidste minut.",
       "breathing": "Pust ud på vej ned, og ånd ind på vej op. I pausen: lange udåndinger, fx 2 sek ind og 4 sek ud.",
       "cues": ["Brystet i gulvet hver gang", "Hop med strakt hofte", "Jævn rytme, lang udånding"],
+      "feel": "Pulsen, der stiger i arbejdet og falder igen i pausen, så du er klar, når næste minut starter.",
       "mistakes": [
         {
-          "mistake": "Brystet når ikke gulvet, eller hoppet bliver lavt, når du bliver træt.",
+          "mistake": "Brystet når ikke gulvet, når du bliver træt.",
           "fix": "Et minut er kun rent, når hver burpee har brystet i gulvet og et hop med strakt hofte."
         },
         {
@@ -382,10 +387,10 @@
           "fix": "Tag lange udåndinger, fx 2 sek ind og 4 sek ud, så du er klar til næste minut."
         }
       ],
-      "easier": "Trin E4.",
-      "harder": "Trin E6: når alle minutter var rene, og du havde mindst 20 sek pause i det sidste minut, rykker du op i næste uges pas, højst til ugens loft.",
+      "easier": "Trin E4. Vælg den under Stiger, hvis du ikke når minuttets burpees, før minuttet er gået. Er et minut bare ikke rent, bliver du på trinnet.",
+      "harder": "Trin E6. Først når alle minutter var rene med mindst 20 sek pause i det sidste, får du den ved næste EMOM, højst til ugens loft.",
       "equipment": [],
-      "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig klar til første minut.",
+      "getReady": "Find en fri plads uden lampe over dig, hvor du kan ligge strakt ud, og stil dig klar til første minut.",
       "movements": [
         {
           "positions": [
@@ -449,14 +454,15 @@
         "Start, når et nyt minut begynder, og lav minuttets burpees i en jævn rytme.",
         "Gå ned på hug med hænderne lige foran fødderne, hop tilbage, og sænk brystet til gulvet.",
         "Pres op, spring fødderne ind tæt på hænderne, og hop med strakt hofte og hænderne over hovedet.",
-        "Hvil resten af minuttet, og start igen, når næste minut begynder."
+        "Hvil stående resten af minuttet, og start igen, når næste minut begynder."
       ],
       "tempo": "Find et tempo, du kan holde i alle minutter, og sæt farten op i det sidste minut.",
       "breathing": "Pust ud på vej ned, og ånd ind på vej op. I pausen: lange udåndinger, fx 2 sek ind og 4 sek ud.",
       "cues": ["Brystet i gulvet hver gang", "Hop med strakt hofte", "Fødderne flade og brede ind"],
+      "feel": "Pulsen, der stiger i arbejdet og falder igen i pausen, så du er klar, når næste minut starter.",
       "mistakes": [
         {
-          "mistake": "Brystet når ikke gulvet, eller hoppet bliver lavt, når du bliver træt.",
+          "mistake": "Brystet når ikke gulvet, når du bliver træt.",
           "fix": "Et minut er kun rent, når hver burpee har brystet i gulvet og et hop med strakt hofte."
         },
         {
@@ -468,10 +474,10 @@
           "fix": "Sæt hænderne lige foran fødderne, så vejen ned og op igen er kort."
         }
       ],
-      "easier": "Trin E5.",
-      "harder": "Trin E7: når alle minutter var rene, og du havde mindst 20 sek pause i det sidste minut, rykker du op i næste uges pas, højst til ugens loft.",
+      "easier": "Trin E5. Vælg den under Stiger, hvis du ikke når minuttets burpees, før minuttet er gået. Er et minut bare ikke rent, bliver du på trinnet.",
+      "harder": "Trin E7. Først når alle minutter var rene med mindst 20 sek pause i det sidste, får du den ved næste EMOM, højst til ugens loft.",
       "equipment": [],
-      "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig klar til første minut.",
+      "getReady": "Find en fri plads uden lampe over dig, hvor du kan ligge strakt ud, og stil dig klar til første minut.",
       "movements": [
         {
           "positions": [
@@ -535,14 +541,15 @@
         "Start, når et nyt minut begynder, og lav minuttets burpees i en jævn rytme.",
         "Gå ned på hug med hænderne lige foran fødderne, hop tilbage, og sænk brystet til gulvet.",
         "Pres op, spring fødderne ind tæt på hænderne, og hop med strakt hofte og hænderne over hovedet.",
-        "Hvil resten af minuttet, og start igen, når næste minut begynder."
+        "Hvil stående resten af minuttet, og start igen, når næste minut begynder."
       ],
       "tempo": "Find et tempo, du kan holde i alle minutter, og sæt farten op i det sidste minut.",
       "breathing": "Pust ud på vej ned, og ånd ind på vej op. I pausen: lange udåndinger, fx 2 sek ind og 4 sek ud.",
       "cues": ["Brystet i gulvet hver gang", "Hop med strakt hofte", "Jævn rytme, lang udånding"],
+      "feel": "Pulsen, der stiger i arbejdet og falder igen i pausen, så du er klar, når næste minut starter.",
       "mistakes": [
         {
-          "mistake": "Brystet når ikke gulvet, eller hoppet bliver lavt, når du bliver træt.",
+          "mistake": "Brystet når ikke gulvet, når du bliver træt.",
           "fix": "Et minut er kun rent, når hver burpee har brystet i gulvet og et hop med strakt hofte."
         },
         {
@@ -554,10 +561,10 @@
           "fix": "Spring fødderne flade og brede ind tæt på hænderne, og rejs dig med et hofteskub."
         }
       ],
-      "easier": "Trin E6.",
-      "harder": "Trin E8: når alle minutter var rene, og du havde mindst 20 sek pause i det sidste minut, rykker du op i næste uges pas, højst til ugens loft.",
+      "easier": "Trin E6. Vælg den under Stiger, hvis du ikke når minuttets burpees, før minuttet er gået. Er et minut bare ikke rent, bliver du på trinnet.",
+      "harder": "Trin E8. Først når alle minutter var rene med mindst 20 sek pause i det sidste, får du den ved næste EMOM, højst til ugens loft.",
       "equipment": [],
-      "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig klar til første minut.",
+      "getReady": "Find en fri plads uden lampe over dig, hvor du kan ligge strakt ud, og stil dig klar til første minut.",
       "movements": [
         {
           "positions": [
@@ -621,14 +628,15 @@
         "Start, når et nyt minut begynder, og lav minuttets burpees i en jævn rytme.",
         "Gå ned på hug med hænderne lige foran fødderne, hop tilbage, og sænk brystet til gulvet.",
         "Pres op, spring fødderne ind tæt på hænderne, og hop med strakt hofte og hænderne over hovedet.",
-        "Hvil resten af minuttet, og start igen, når næste minut begynder."
+        "Hvil stående resten af minuttet, og start igen, når næste minut begynder."
       ],
       "tempo": "Find et tempo, du kan holde i alle minutter, og sæt farten op i det sidste minut.",
       "breathing": "Pust ud på vej ned, og ånd ind på vej op. I pausen: lange udåndinger, fx 2 sek ind og 4 sek ud.",
       "cues": ["Brystet i gulvet hver gang", "Hop med strakt hofte", "Pust ud på vej ned"],
+      "feel": "Pulsen, der stiger i arbejdet og falder igen i pausen, så du er klar, når næste minut starter.",
       "mistakes": [
         {
-          "mistake": "Brystet når ikke gulvet, eller hoppet bliver lavt, når du bliver træt.",
+          "mistake": "Brystet når ikke gulvet, når du bliver træt.",
           "fix": "Et minut er kun rent, når hver burpee har brystet i gulvet og et hop med strakt hofte."
         },
         {
@@ -640,10 +648,10 @@
           "fix": "Find en rytme, du kan holde i alle minutter, og sæt først farten op i det sidste."
         }
       ],
-      "easier": "Trin E7.",
-      "harder": "Trin E9: når alle minutter var rene, og du havde mindst 20 sek pause i det sidste minut, rykker du op i næste uges pas, højst til ugens loft.",
+      "easier": "Trin E7. Vælg den under Stiger, hvis du ikke når minuttets burpees, før minuttet er gået. Er et minut bare ikke rent, bliver du på trinnet.",
+      "harder": "Trin E9. Først når alle minutter var rene med mindst 20 sek pause i det sidste, får du den ved næste EMOM, højst til ugens loft.",
       "equipment": [],
-      "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig klar til første minut.",
+      "getReady": "Find en fri plads uden lampe over dig, hvor du kan ligge strakt ud, og stil dig klar til første minut.",
       "movements": [
         {
           "positions": [
@@ -707,14 +715,15 @@
         "Start, når et nyt minut begynder, og lav minuttets burpees i en jævn rytme.",
         "Gå ned på hug med hænderne lige foran fødderne, hop tilbage, og sænk brystet til gulvet.",
         "Pres op, spring fødderne ind tæt på hænderne, og hop med strakt hofte og hænderne over hovedet.",
-        "Hvil resten af minuttet, og start igen, når næste minut begynder."
+        "Hvil stående resten af minuttet, og start igen, når næste minut begynder."
       ],
       "tempo": "Find et tempo, du kan holde i alle minutter, og sæt farten op i det sidste minut.",
       "breathing": "Pust ud på vej ned, og ånd ind på vej op. I pausen: lange udåndinger, fx 2 sek ind og 4 sek ud.",
       "cues": ["Brystet i gulvet hver gang", "Hop med strakt hofte", "Jævn rytme, lang udånding"],
+      "feel": "Pulsen, der stiger i arbejdet og falder igen i pausen, så du er klar, når næste minut starter.",
       "mistakes": [
         {
-          "mistake": "Brystet når ikke gulvet, eller hoppet bliver lavt, når du bliver træt.",
+          "mistake": "Brystet når ikke gulvet, når du bliver træt.",
           "fix": "Et minut er kun rent, når hver burpee har brystet i gulvet og et hop med strakt hofte."
         },
         {
@@ -726,10 +735,10 @@
           "fix": "Pust ud hver gang, du går ned, og ånd ind på vej op. Hold aldrig vejret under belastning."
         }
       ],
-      "easier": "Trin E8.",
+      "easier": "Trin E8. Vælg den under Stiger, hvis du ikke når minuttets burpees, før minuttet er gået. Er et minut bare ikke rent, bliver du på trinnet.",
       "harder": "Det er stigens sidste trin. Sværere bliver det kun med burpee-varianterne, som du øver i EMOM'ens 2 sidste minutter.",
       "equipment": [],
-      "getReady": "Find en fri plads, hvor du kan ligge strakt ud bag dig, og stil dig klar til første minut.",
+      "getReady": "Find en fri plads uden lampe over dig, hvor du kan ligge strakt ud, og stil dig klar til første minut.",
       "movements": [
         {
           "positions": [

@@ -10,16 +10,17 @@
     {
       "id": "neck.N1",
       "trains": "De dybe muskler foran på halsen, som holder hovedet i ro, når du bliver ramt eller trukket i clinchen.",
-      "start": "Lig på ryggen på gulvet med bøjede knæ, fødderne i gulvet og armene langs siden. Baghovedet hviler på gulvet, og blikket peger mod loftet.",
+      "start": "Lig på ryggen på gulvet uden pude med bøjede knæ, fødderne i gulvet og armene langs siden. Baghovedet hviler på gulvet, og blikket peger mod loftet.",
       "steps": [
-        "Træk hagen ind, som om du laver en dobbelthage. Hovedet bliver i gulvet.",
-        "Pres baghovedet blidt mod gulvet, og hold trykket roligt.",
+        "Træk hagen ind som en dobbelthage, så nakken bliver lang. Baghovedet bliver i gulvet.",
+        "Pres baghovedet blidt ned i gulvet, så let, at kæben og skuldrene stadig er slappe, og hold.",
         "Slip roligt, og lig stille i pausen før næste hold.",
-        "Stop ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+        "Snurren, svimmelhed eller smerte ud i armen: tryk »Stop«, og søg læge, hvis det ikke går over."
       ],
       "tempo": "Træk hagen roligt ind, hold trykket jævnt hele holdet, og slip roligt.",
       "breathing": "Træk vejret roligt gennem næsen hele vejen. Hold ikke vejret.",
       "cues": ["Hagen ind, nakken lang", "Blidt tryk i gulvet", "Slap kæbe og skuldre"],
+      "feel": "Et let arbejde dybt foran på halsen og et blidt stræk bag i nakken; kæben og skuldrene er slappe.",
       "mistakes": [
         {
           "mistake": "Hagen peger op mod loftet, når du presser.",
@@ -34,8 +35,8 @@
           "fix": "Træk vejret roligt gennem næsen hele tiden."
         }
       ],
-      "easier": "Pres endnu blidere, så kæben og skuldrene er helt slappe hele holdet.",
-      "harder": "Trin N2: hage-ind og løft, hvor du løfter hovedet 2 cm fra gulvet med hagen inde.",
+      "easier": "Læg et foldet håndklæde under hovedet, og træk kun hagen ind uden at presse. Tag den også, hvis du ikke kan presse uden at spænde kæben.",
+      "harder": "Trin N2: hage-ind og løft. Appen rykker dig op, når du har svaret »Let« efter nakken to pas i træk.",
       "equipment": [],
       "getReady": "Læg dig på ryggen på gulvet med bøjede knæ, og lad pulsen falde lidt.",
       "movements": [
@@ -44,7 +45,7 @@
             {
               "id": "rest",
               "name": "Hvile",
-              "text": "Liggende på ryggen med knæene bøjet ca. 90° og fødderne fladt i gulvet i hoftebredde. Armene langs siden med håndfladerne ned. Baghovedet i gulvet, blikket mod loftet og nakken i sin naturlige bue.",
+              "text": "Liggende på ryggen med knæene bøjet ca. 90° og fødderne fladt i gulvet i hoftebredde. Armene langs siden med håndfladerne ned. Baghovedet i gulvet, ansigtet vender lige op, og nakken har sin naturlige bue.",
               "contacts": [
                 { "part": "back", "on": "floor" },
                 { "part": "head", "on": "floor" },
@@ -55,7 +56,7 @@
             {
               "id": "tuck",
               "name": "Hagen inde",
-              "text": "Som hvile, men hagen er trukket ind mod halsen som en dobbelthage, og baghovedet presser blidt mod gulvet. Nakken er lang og tættere på gulvet. Hovedet løfter sig ikke.",
+              "text": "Som hvile, men hagen er trukket ind som en dobbelthage, så ansigtet vipper en anelse ned mod brystet. Baghovedet presser blidt i gulvet, og nakken er lang og tættere på gulvet. Hovedet løfter sig ikke.",
               "contacts": [
                 { "part": "back", "on": "floor" },
                 { "part": "head", "on": "floor" },
@@ -75,16 +76,17 @@
     {
       "id": "neck.N2",
       "trains": "Musklerne foran på halsen, som bærer hovedets vægt og holder det stille, når du tager imod et slag eller et træk i clinchen.",
-      "start": "Lig på ryggen på gulvet med bøjede knæ, fødderne i gulvet og armene langs siden. Baghovedet hviler på gulvet.",
+      "start": "Lig på ryggen på gulvet uden pude med bøjede knæ, fødderne i gulvet og armene langs siden. Baghovedet hviler på gulvet.",
       "steps": [
         "Træk hagen ind som en dobbelthage, mens baghovedet stadig ligger i gulvet.",
-        "Løft hovedet 2 cm fra gulvet, så der lige er luft under baghovedet, og hold.",
+        "Løft hovedet 2 cm, så en finger lige kan komme ind under baghovedet, og hold det stille.",
         "Læg hovedet roligt ned, og slip hagen i pausen.",
-        "Stop ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+        "Snurren, svimmelhed eller smerte ud i armen: tryk »Stop«, og søg læge, hvis det ikke går over."
       ],
       "tempo": "Løft roligt, hold hovedet helt stille hele holdet, og læg det roligt ned.",
       "breathing": "Træk vejret roligt gennem næsen. Hold ikke vejret, mens hovedet er løftet.",
       "cues": ["Hagen ind, så løft", "Kun 2 cm op", "Skuldrene bliver i gulvet"],
+      "feel": "Halsens forside arbejder og må gerne blive træt; kæben, skuldrene og maven skal ikke tage over.",
       "mistakes": [
         {
           "mistake": "Hagen skyder frem, når hovedet løfter sig.",
@@ -99,8 +101,8 @@
           "fix": "Læg hovedet ned, og stop holdet dér. Formen er vigtigere end tiden."
         }
       ],
-      "easier": "Trin N1: hage-ind liggende, hvor hovedet bliver i gulvet.",
-      "harder": "Trin N3: isometri med halv kraft, hvor du presser hånden mod hovedet i fire retninger.",
+      "easier": "Trin N1: hage-ind liggende. Vælg den under Stiger, hvis hagen glider frem, før holdet er slut.",
+      "harder": "Trin N3: isometri med halv kraft mod din hånd. Appen rykker dig op, når du har svaret »Let« efter nakken to pas i træk.",
       "equipment": [],
       "getReady": "Læg dig på ryggen på gulvet med bøjede knæ, og lad pulsen falde lidt.",
       "movements": [
@@ -109,7 +111,7 @@
             {
               "id": "rest",
               "name": "Hvile",
-              "text": "Liggende på ryggen med knæene bøjet ca. 90° og fødderne fladt i gulvet i hoftebredde. Armene langs siden med håndfladerne ned. Baghovedet i gulvet og blikket mod loftet.",
+              "text": "Liggende på ryggen med knæene bøjet ca. 90° og fødderne fladt i gulvet i hoftebredde. Armene langs siden med håndfladerne ned. Baghovedet i gulvet, og ansigtet vender lige op mod loftet.",
               "contacts": [
                 { "part": "back", "on": "floor" },
                 { "part": "head", "on": "floor" },
@@ -120,7 +122,7 @@
             {
               "id": "tuck",
               "name": "Hagen inde",
-              "text": "Som hvile, men hagen er trukket ind mod halsen som en dobbelthage. Baghovedet ligger stadig i gulvet, og nakken er lang.",
+              "text": "Som hvile, men hagen er trukket ind som en dobbelthage, så ansigtet vipper en anelse ned mod brystet. Baghovedet ligger stadig i gulvet, og nakken er lang.",
               "contacts": [
                 { "part": "back", "on": "floor" },
                 { "part": "head", "on": "floor" },
@@ -131,7 +133,7 @@
             {
               "id": "lift",
               "name": "Løftet",
-              "text": "Hagen inde og hovedet løftet 2 cm, så baghovedet svæver lige over gulvet. Skuldrene og skulderbladene ligger i gulvet, blikket mod loftet. Knæ, fødder og arme som i hvile.",
+              "text": "Hagen inde og hovedet løftet 2 cm, så baghovedet svæver lige over gulvet. Skuldrene og skulderbladene ligger i gulvet, og ansigtet vender op. Knæ, fødder og arme som i hvile.",
               "contacts": [
                 { "part": "back", "on": "floor" },
                 { "part": "foot", "on": "floor" },
@@ -153,14 +155,15 @@
       "trains": "Nakken i fire retninger med isometri, dvs. tryk uden bevægelse, så hovedet holder sig stille i clinchen og mod slag.",
       "start": "Stå oprejst med fødderne i hoftebredde og armene langs siden. Hovedet er lige, og blikket vandret.",
       "steps": [
-        "Læg hånden mod panden, og pres med halv kraft, mens nakken holder imod, så hovedet står stille.",
+        "Læg håndfladen mod panden, og pres hånd og hoved mod hinanden med halv kraft, så hovedet står stille.",
         "Slip roligt efter holdet, og flyt hånden til næste retning i pausen.",
-        "Tag retningerne i rækkefølgen pande, baghoved, venstre og højre side med hånden over øret.",
-        "Stop ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+        "Retningerne er pande, baghoved, venstre side og højre side, med hånden over øret på samme side.",
+        "Snurren, svimmelhed eller smerte ud i armen: tryk »Stop«, og søg læge, hvis det ikke går over."
       ],
       "tempo": "Byg trykket roligt op, hold det jævnt hele holdet, og slip det roligt igen.",
       "breathing": "Træk vejret roligt hele vejen. Hold ikke vejret, mens du presser.",
       "cues": ["Halv kraft, hovedet står stille", "Byg op, og slip roligt", "Blikket vandret"],
+      "feel": "Musklerne rundt om nakken spænder jævnt mod hånden, uden at hovedet flytter sig eller noget gør ondt.",
       "mistakes": [
         {
           "mistake": "Hovedet giver efter og bevæger sig.",
@@ -175,8 +178,8 @@
           "fix": "Sænk skuldrene, og lad den frie arm hænge løst."
         }
       ],
-      "easier": "Trin N2: hage-ind og løft, liggende på ryggen.",
-      "harder": "Trin N4: de samme fire retninger med 80 % kraft og længere hold.",
+      "easier": "Trin N2: hage-ind og løft, liggende. Vælg den under Stiger, hvis hovedet ikke kan stå stille, selv når du presser mindre.",
+      "harder": "Trin N4: samme fire retninger med 80 % kraft. Appen rykker dig op, når du har svaret »Let« efter nakken to pas i træk.",
       "equipment": [],
       "getReady": "Stil dig oprejst med fødderne i hoftebredde og armene fri.",
       "movements": [
@@ -193,7 +196,7 @@
             {
               "id": "pres",
               "name": "Pres",
-              "text": "Som klar, men den ene hånd ligger fladt mod panden med albuen bøjet og pegende frem. Hånd og hoved presser mod hinanden med halv kraft, og hovedet står stille. Den anden arm hænger løst.",
+              "text": "Som klar, men den ene håndflade ligger mod panden med albuen bøjet og pegende frem. Hånd og hoved presser mod hinanden med halv kraft, og hovedet står stille. Den anden arm hænger løst.",
               "contacts": [{ "part": "foot", "on": "floor" }]
             }
           ],
@@ -216,7 +219,7 @@
             {
               "id": "pres",
               "name": "Pres",
-              "text": "Som klar, men den ene hånd ligger på baghovedet med albuen bøjet og pegende ud til siden. Hånd og hoved presser mod hinanden med halv kraft, og hovedet står stille med blikket vandret.",
+              "text": "Som klar, men den ene håndflade ligger på baghovedet med albuen bøjet og pegende ud til siden. Hånd og hoved presser mod hinanden med halv kraft, og hovedet står stille med blikket vandret.",
               "contacts": [{ "part": "foot", "on": "floor" }]
             }
           ],
@@ -239,7 +242,7 @@
             {
               "id": "pres",
               "name": "Pres til siden",
-              "text": "Som klar, men venstre hånd ligger fladt mod hovedet lige over venstre øre med albuen ud til siden. Hånd og hoved presser mod hinanden med halv kraft, og hovedet står lodret. Højre side tager du med højre hånd.",
+              "text": "Som klar, men venstre håndflade ligger mod hovedet lige over venstre øre med albuen ud til siden. Hånd og hoved presser mod hinanden med halv kraft, og hovedet står lodret. Højre side tager du med højre hånd.",
               "contacts": [{ "part": "foot", "on": "floor" }]
             }
           ],
@@ -256,14 +259,15 @@
       "trains": "Den samme isometri som trin N3, men hårdere og længere, så nakken holder hovedet stille under større pres i clinchen.",
       "start": "Stå oprejst med fødderne i hoftebredde og armene langs siden. Hovedet er lige, og blikket vandret.",
       "steps": [
-        "Læg hånden mod panden, og pres med 80 % kraft: hårdt, men ikke alt, hvad du har. Hovedet står stille.",
+        "Læg håndfladen mod panden, og pres med 80 % kraft: hårdt, men ikke alt, hvad du har. Hovedet står stille.",
         "Byg trykket roligt op, og slip det lige så roligt efter holdet.",
-        "Tag retningerne i rækkefølgen pande, baghoved, venstre og højre side med hånden over øret.",
-        "Stop ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+        "Retningerne er pande, baghoved, venstre side og højre side, med hånden over øret på samme side.",
+        "Snurren, svimmelhed eller smerte ud i armen: tryk »Stop«, og søg læge, hvis det ikke går over."
       ],
       "tempo": "Byg trykket roligt op, hold det jævnt hele holdet, og slip det roligt igen.",
       "breathing": "Træk vejret kort og roligt, mens du presser. Hold ikke vejret.",
       "cues": ["80 %, hovedet står stille", "Byg op, og slip roligt", "Skuldrene nede, kæben slap"],
+      "feel": "Nakken spænder hårdt og jævnt mod hånden, uden smerte, snurren eller noget, der stråler ud i armen.",
       "mistakes": [
         {
           "mistake": "Hovedet giver efter eller drejer, når trykket bliver hårdt.",
@@ -278,8 +282,8 @@
           "fix": "Træk vejret kort og roligt, og lad tænderne være let adskilt."
         }
       ],
-      "easier": "Trin N3: de samme fire retninger med halv kraft og kortere hold.",
-      "harder": "Trin N5: over sengekanten, hvor hovedets egen vægt er modstanden.",
+      "easier": "Trin N3: samme fire retninger med halv kraft. Vælg den under Stiger, hvis hovedet giver efter, før holdet er slut.",
+      "harder": "Trin N5: over sengekanten med hovedets egen vægt. Appen rykker dig op, når du har svaret »Let« efter nakken to pas i træk.",
       "equipment": [],
       "getReady": "Stil dig oprejst med fødderne i hoftebredde og armene fri.",
       "movements": [
@@ -296,7 +300,7 @@
             {
               "id": "pres",
               "name": "Pres",
-              "text": "Som klar, men den ene hånd ligger fladt mod panden med albuen bøjet og pegende frem. Hånd og hoved presser mod hinanden med 80 % kraft, og hovedet står stille. Den anden arm hænger løst.",
+              "text": "Som klar, men den ene håndflade ligger mod panden med albuen bøjet og pegende frem. Hånd og hoved presser mod hinanden med 80 % kraft, og hovedet står stille. Den anden arm hænger løst.",
               "contacts": [{ "part": "foot", "on": "floor" }]
             }
           ],
@@ -319,7 +323,7 @@
             {
               "id": "pres",
               "name": "Pres",
-              "text": "Som klar, men den ene hånd ligger på baghovedet med albuen bøjet og pegende ud til siden. Hånd og hoved presser mod hinanden med 80 % kraft, og hovedet står stille med blikket vandret.",
+              "text": "Som klar, men den ene håndflade ligger på baghovedet med albuen bøjet og pegende ud til siden. Hånd og hoved presser mod hinanden med 80 % kraft, og hovedet står stille med blikket vandret.",
               "contacts": [{ "part": "foot", "on": "floor" }]
             }
           ],
@@ -342,7 +346,7 @@
             {
               "id": "pres",
               "name": "Pres til siden",
-              "text": "Som klar, men venstre hånd ligger fladt mod hovedet lige over venstre øre med albuen ud til siden. Hånd og hoved presser mod hinanden med 80 % kraft, og hovedet står lodret. Højre side tager du med højre hånd.",
+              "text": "Som klar, men venstre håndflade ligger mod hovedet lige over venstre øre med albuen ud til siden. Hånd og hoved presser mod hinanden med 80 % kraft, og hovedet står lodret. Højre side tager du med højre hånd.",
               "contacts": [{ "part": "foot", "on": "floor" }]
             }
           ],
@@ -362,11 +366,12 @@
         "Før hovedet op med hånden, så nakken er neutral: i lige linje med kroppen, som når du står oprejst.",
         "Tag hånden væk, og hold hovedet helt stille hele holdet.",
         "Støt hovedet, ryk lidt ind, og vend dig i pausen. Rækkefølgen er ryg, mave, venstre side og højre side.",
-        "Stop ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+        "Snurren, svimmelhed eller smerte ud i armen: tryk »Stop«, og søg læge, hvis det ikke går over."
       ],
       "tempo": "Gå roligt ind i stillingen, hold hovedet helt stille, og støt det med hånden, når holdet er slut.",
       "breathing": "Træk vejret roligt gennem næsen. Hold ikke vejret, mens hovedet er frit.",
       "cues": ["Hovedet i lige linje", "Hagen let inde", "Støt hovedet ved hvert skift"],
+      "feel": "Den del af halsen, der vender op mod loftet, bærer hovedet; du må ikke blive svimmel.",
       "mistakes": [
         {
           "mistake": "Hovedet hænger ned under kanten.",
@@ -381,10 +386,10 @@
           "fix": "Støt altid hovedet med hånden, når du går ind i og ud af stillingen."
         }
       ],
-      "easier": "Trin N4: isometri med 80 % kraft mod din egen hånd, stående.",
-      "harder": "Trin N6: langsomme bevægelser mod modstand fra din egen hånd.",
+      "easier": "Trin N4: isometri med 80 % kraft, stående. Vælg den under Stiger, hvis hovedet synker under kanten, før holdet er slut.",
+      "harder": "Trin N6: langsomme bevægelser mod din egen hånd. Appen rykker dig op, når du har svaret »Let« efter nakken to pas i træk.",
       "equipment": ["bed"],
-      "getReady": "Gå hen til sengen, og læg dig på ryggen med skuldrene lige ved kanten og en hånd klar under hovedet.",
+      "getReady": "Gå hen til sengen, og læg dig på ryggen, på tværs eller ved fodenden, med skuldrene lige ved kanten og en hånd klar under hovedet.",
       "movements": [
         {
           "id": "ryg",
@@ -403,7 +408,7 @@
             {
               "id": "hold",
               "name": "Hold",
-              "text": "Som med støtte, men begge arme ligger langs siden på sengen. Hovedet holder sig selv i lige linje med kroppen med hagen let inde og blikket mod loftet. Intet støtter hovedet.",
+              "text": "Som med støtte, men begge arme ligger langs siden på sengen. Hovedet holder sig selv i lige linje med kroppen med hagen let inde og ansigtet mod loftet. Intet støtter hovedet.",
               "contacts": [
                 { "part": "back", "on": "bed" },
                 { "part": "foot", "on": "bed" },
@@ -433,7 +438,7 @@
             {
               "id": "hold",
               "name": "Hold",
-              "text": "Som med støtte, men begge arme ligger langs siden. Hovedet holder sig selv i lige linje med kroppen med blikket lodret ned mod gulvet. Nakken er lang og svajer ikke op.",
+              "text": "Som med støtte, men begge arme ligger langs siden. Hovedet holder sig selv i lige linje med kroppen med ansigtet lodret ned mod gulvet. Nakken er lang og svajer ikke op.",
               "contacts": [
                 { "part": "belly", "on": "bed" },
                 { "part": "hand", "on": "bed" }
@@ -484,14 +489,15 @@
       "trains": "Nakkens styrke gennem hele bevægelsen i fire retninger, så den også holder, når hovedet bliver trukket ud af stilling i clinchen.",
       "start": "Stå oprejst med fødderne i hoftebredde og armene langs siden. Hovedet er lige, og blikket vandret.",
       "steps": [
-        "Læg hånden mod panden, og bøj hovedet langsomt frem mod brystet, mens hånden holder imod.",
+        "Læg hånden mod panden, og bøj hovedet langsomt frem mod brystet, mens hånden holder imod med ca. halv kraft.",
         "Før hovedet langsomt tilbage til lodret. Hånden holder imod hele vejen.",
         "Gør det samme bagud med hånden på baghovedet og derefter til venstre og højre med hånden over øret.",
-        "Stop ved snurren, svimmelhed eller smerte ud i armen, og søg læge, hvis det ikke går over."
+        "Snurren, svimmelhed eller smerte ud i armen: tryk »Stop«, og søg læge, hvis det ikke går over."
       ],
       "tempo": "Langsomt og jævnt begge veje, uden ryk. Hånden holder imod hele vejen ud og tilbage.",
       "breathing": "Pust roligt ud, mens hovedet bevæger sig ud, og ånd ind på vej tilbage til lodret.",
       "cues": ["Langsomt, ingen ryk", "Hånden holder imod hele vejen", "Kun hovedet bevæger sig"],
+      "feel": "Musklerne på den side, hovedet bevæger sig mod, arbejder jævnt hele vejen ud og tilbage; ingen ryk eller smerte.",
       "mistakes": [
         {
           "mistake": "Du bevæger hovedet hurtigt eller med ryk.",
@@ -506,7 +512,7 @@
           "fix": "Stå stille med overkroppen og skuldrene, og lad kun hovedet bevæge sig."
         }
       ],
-      "easier": "Trin N5: over sengekanten, hvor du holder hovedet stille mod dets egen vægt.",
+      "easier": "Trin N5: over sengekanten, hvor hovedet holdes stille. Vælg den under Stiger, hvis bevægelsen hakker, selv med mindre modstand.",
       "harder": "Det er stigens sidste trin. Nakkebroer laver du kun sammen med en træner.",
       "equipment": [],
       "getReady": "Stil dig oprejst med fødderne i hoftebredde og armene fri.",

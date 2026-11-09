@@ -4,7 +4,7 @@
   "why": [
     "Klubsekvensen er klubbens pause-push-up. Den kræver styrke i alle positioner af push-uppen og viljen til at blive i dem, også når armene brænder.",
     "Jo stærkere du er i den hjemme, jo mindre koster den i klassen, og overskuddet går til teknikken. Den ligger sidst i Styrke B, hvor den ikke kan ødelægge resten af passet.",
-    "Trinene går fra én runde pr. sæt til fem runder i træk og derefter på knoer og som diamond."
+    "Trinene går fra én runde pr. sæt til fem runder i træk og derefter på knoer og som diamond. Du rykker et trin op, når runderne har været rene to pas i træk."
   ],
   "items": [
     {
@@ -12,14 +12,15 @@
       "trains": "Styrke i alle dele af push-uppen og viljen til at blive der, så klubbens pause-push-ups bliver lettere.",
       "start": "Planke på strakte arme med flade hænder lidt bredere end skuldrene og fingrene frem. Kroppen er lige fra hæl til hoved.",
       "steps": [
-        "Gå ned til midten, og hold 3 sek.",
-        "Gå helt ned, og hold 3 sek lige over gulvet.",
+        "Gå ned til midten med albuerne ca. 90°, og hold 3 sek. Gå helt ned, og hold 3 sek lige over gulvet.",
         "Pres op til midten, hold 3 sek, og lav 10 hurtige mikro-pumps: få cm ned og op.",
-        "Gå helt ned og helt op. Det er én runde."
+        "Gå helt ned og helt op. Det er én runde, og passet viser hver del med sin tid.",
+        "Svar ja til »Ren runde?«, når alle hold og pumps var i rette højde med kroppen lige."
       ],
       "tempo": "Hvert hold er 3 sek, mikro-pumpene er hurtige, og runden slutter helt ned og helt op.",
       "breathing": "Træk vejret kort og roligt i holdene, og pust ud, når du presser op.",
-      "cues": ["Kroppen som en planke", "Træk vejret i holdene", "Små, hurtige mikro-pumps"],
+      "cues": ["Midten: albuerne ca. 90°", "Kroppen som en planke", "Træk vejret i holdene"],
+      "feel": "Bryst, skuldre og armenes bagside brænder, mest i holdene; maven holder kroppen lige, og lænden mærker intet.",
       "mistakes": [
         {
           "mistake": "Hoften hænger i holdene.",
@@ -35,7 +36,7 @@
         }
       ],
       "easier": "Hænderne på sofaen, til du kan lave en ren runde i gulvet. Så længe du bruger sofaen, svarer du nej til »Ren runde?«.",
-      "harder": "Trin C2: to runder i træk i hvert sæt.",
+      "harder": "Trin C2: to runder i træk i hvert sæt. Appen rykker dig op efter to pas i træk med ja til »Ren runde?«.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, og læg dig i planke på strakte arme med flade hænder.",
       "movements": [
@@ -97,13 +98,15 @@
       "trains": "Udholdenhed i push-uppens positioner, så formen holder i to runder i træk, også når armene brænder.",
       "start": "Planke på strakte arme med flade hænder lidt bredere end skuldrene og fingrene frem. Kroppen er lige fra hæl til hoved.",
       "steps": [
-        "Gå ned til midten, helt ned og op til midten igen, og hold 3 sek hvert sted.",
-        "Lav 10 hurtige mikro-pumps i midten, og gå helt ned og helt op.",
-        "Start runde to med det samme fra toppen, uden at lægge dig ned."
+        "Gå ned til midten, helt ned og op til midten igen, og hold 3 sek hvert sted. Midten er albuerne ca. 90°.",
+        "Lav 10 hurtige mikro-pumps i midten, og gå helt ned og helt op. Det er én runde.",
+        "Start runde to med det samme fra toppen, uden at lægge dig ned.",
+        "Svar ja til »Ren runde?«, når alle hold og pumps i begge runder var i rette højde med kroppen lige."
       ],
       "tempo": "Hvert hold er 3 sek, mikro-pumpene er hurtige, og hver runde slutter helt ned og helt op.",
       "breathing": "Træk vejret roligt i holdene, og tag et dybt åndedrag i toppen, før runde to.",
-      "cues": ["Direkte videre til runde to", "Kroppen som en planke", "Træk vejret i holdene"],
+      "cues": ["Direkte videre til runde to", "Midten: albuerne ca. 90°", "Kroppen som en planke"],
+      "feel": "Bryst, skuldre og armenes bagside brænder, mest i anden runde; maven holder kroppen lige, og lænden mærker intet.",
       "mistakes": [
         {
           "mistake": "Du lægger dig ned mellem runderne.",
@@ -118,8 +121,8 @@
           "fix": "Klem ballerne, og træk navlen ind. Formen skal holde i begge runder."
         }
       ],
-      "easier": "Trin C1: én runde i hvert sæt.",
-      "harder": "Trin C3: tre runder i træk i ét sæt.",
+      "easier": "Trin C1: én runde i hvert sæt. Knækker formen i anden runde pas efter pas, så vælg C1 under Stiger.",
+      "harder": "Trin C3: tre runder i træk i ét sæt. Appen rykker dig op efter to pas i træk med ja til »Ren runde?«.",
       "equipment": [],
       "getReady": "Læg dig i planke på strakte arme med flade hænder, og gør dig klar til to runder i træk.",
       "movements": [
@@ -181,14 +184,15 @@
       "trains": "Mere udholdenhed i alle positioner, så du kan blive i dem i tre runder uden at hvile.",
       "start": "Planke på strakte arme med flade hænder lidt bredere end skuldrene og fingrene frem. Kroppen er lige fra hæl til hoved.",
       "steps": [
-        "Gå ned til midten, helt ned og op til midten igen, og hold 3 sek hvert sted.",
-        "Lav 10 hurtige mikro-pumps i midten, og gå helt ned og helt op.",
-        "Start næste runde med det samme fra toppen, uden at lægge dig ned.",
-        "Bliv ved, til du har lavet tre runder. Passet viser, hvilken runde du er i."
+        "Gå ned til midten, helt ned og op til midten igen, og hold 3 sek hvert sted. Midten er albuerne ca. 90°.",
+        "Lav 10 hurtige mikro-pumps i midten, og gå helt ned og helt op. Det er én runde.",
+        "Start næste runde med det samme fra toppen, uden at lægge dig ned, til du har lavet tre runder.",
+        "Svar ja til »Ren runde?«, når alle hold og pumps i alle tre runder var i rette højde med kroppen lige."
       ],
       "tempo": "Hvert hold er 3 sek, mikro-pumpene er hurtige, og hver runde slutter helt ned og helt op.",
       "breathing": "Træk vejret roligt i holdene, og tag et dybt åndedrag i toppen før hver ny runde.",
-      "cues": ["Tre runder uden at hvile", "Kroppen som en planke", "Træk vejret i holdene"],
+      "cues": ["Tre runder uden at hvile", "Midten: albuerne ca. 90°", "Kroppen som en planke"],
+      "feel": "Bryst, skuldre og armenes bagside brænder mere for hver runde; maven holder kroppen lige, og lænden mærker intet.",
       "mistakes": [
         {
           "mistake": "Du lægger dig ned mellem runderne.",
@@ -203,8 +207,8 @@
           "fix": "Klem ballerne, og træk navlen ind. Formen skal holde i alle tre runder."
         }
       ],
-      "easier": "Trin C2: to runder i træk i hvert sæt.",
-      "harder": "Trin C4: fem runder i træk.",
+      "easier": "Trin C2: to runder i træk i hvert sæt. Knækker formen i tredje runde pas efter pas, så vælg C2 under Stiger.",
+      "harder": "Trin C4: fem runder i træk. Appen rykker dig op efter to pas i træk med ja til »Ren runde?«.",
       "equipment": [],
       "getReady": "Læg dig i planke på strakte arme med flade hænder, og gør dig klar til tre runder i træk.",
       "movements": [
@@ -266,14 +270,15 @@
       "trains": "Udholdenhed og vilje til at blive i alle positioner i fem runder, så klubbens pause-push-ups bliver lettere.",
       "start": "Planke på strakte arme med flade hænder lidt bredere end skuldrene og fingrene frem. Kroppen er lige fra hæl til hoved.",
       "steps": [
-        "Gå ned til midten, helt ned og op til midten igen, og hold 3 sek hvert sted.",
-        "Lav 10 hurtige mikro-pumps i midten, og gå helt ned og helt op.",
-        "Start næste runde med det samme fra toppen, uden at lægge dig ned.",
-        "Bliv ved, til du har lavet fem runder. Passet viser, hvilken runde du er i."
+        "Gå ned til midten, helt ned og op til midten igen, og hold 3 sek hvert sted. Midten er albuerne ca. 90°.",
+        "Lav 10 hurtige mikro-pumps i midten, og gå helt ned og helt op. Det er én runde.",
+        "Start næste runde med det samme fra toppen, uden at lægge dig ned, til du har lavet fem runder.",
+        "Svar ja til »Ren runde?«, når alle hold og pumps i alle fem runder var i rette højde med kroppen lige."
       ],
       "tempo": "Hvert hold er 3 sek, mikro-pumpene er hurtige, og hver runde slutter helt ned og helt op.",
       "breathing": "Træk vejret roligt i holdene, og tag et dybt åndedrag i toppen før hver ny runde.",
-      "cues": ["Fem runder uden at hvile", "Kroppen som en planke", "Træk vejret i holdene"],
+      "cues": ["Fem runder uden at hvile", "Midten: albuerne ca. 90°", "Kroppen som en planke"],
+      "feel": "Bryst, skuldre og armenes bagside brænder mere for hver runde; maven holder kroppen lige, og lænden mærker intet.",
       "mistakes": [
         {
           "mistake": "Du lægger dig ned mellem runderne.",
@@ -288,8 +293,8 @@
           "fix": "Klem ballerne, og træk navlen ind. Formen skal holde i alle fem runder."
         }
       ],
-      "easier": "Trin C3: tre runder i træk.",
-      "harder": "Trin C5: fem runder i træk på knoer.",
+      "easier": "Trin C3: tre runder i træk. Knækker formen i de sidste runder pas efter pas, så vælg C3 under Stiger.",
+      "harder": "Trin C5: fem runder i træk på knoer. Appen rykker dig op efter to pas i træk med ja til »Ren runde?«.",
       "equipment": [],
       "getReady": "Læg dig i planke på strakte arme med flade hænder, og gør dig klar til fem runder i træk.",
       "movements": [
@@ -352,13 +357,14 @@
       "start": "Planke på strakte arme med knyttede næver lidt bredere end skuldrene og håndleddene lige. Kroppen er lige fra hæl til hoved.",
       "steps": [
         "Knyt hænderne, og sæt pege- og langfingerens knoer i gulvet med lige håndled, som når du slår.",
-        "Gå ned til midten, helt ned og op til midten igen, og hold 3 sek hvert sted.",
-        "Lav 10 hurtige mikro-pumps i midten, gå helt ned og helt op, og start straks næste runde.",
-        "Bliv ved, til du har lavet fem runder. Passet viser, hvilken runde du er i."
+        "Gå ned til midten, helt ned og op til midten igen, hold 3 sek hvert sted, og lav 10 mikro-pumps i midten.",
+        "Gå helt ned og helt op, og start straks næste runde, til du har lavet fem runder.",
+        "Svar ja til »Ren runde?«, når hold og pumps var i rette højde, og håndleddene holdt sig lige."
       ],
       "tempo": "Hvert hold er 3 sek, mikro-pumpene er hurtige, og hver runde slutter helt ned og helt op.",
       "breathing": "Træk vejret roligt i holdene, og tag et dybt åndedrag i toppen før hver ny runde.",
-      "cues": ["Lige håndled som i et slag", "Kroppen som en planke", "Træk vejret i holdene"],
+      "cues": ["Lige håndled som i et slag", "Midten: albuerne ca. 90°", "Kroppen som en planke"],
+      "feel": "Knoerne trykker, og bryst, skuldre og armenes bagside brænder, men håndleddet må aldrig gøre ondt.",
       "mistakes": [
         {
           "mistake": "Håndleddet knækker, så næven vipper.",
@@ -373,8 +379,8 @@
           "fix": "Hold albuerne bøjet ca. 90° i holdene i midten og under mikro-pumpene."
         }
       ],
-      "easier": "Trin C4: fem runder i træk med flade hænder.",
-      "harder": "Trin C6: fem runder i træk som diamond.",
+      "easier": "Trin C4: fem runder i træk med flade hænder. Knækker håndleddet i de sidste runder pas efter pas, så vælg C4 under Stiger.",
+      "harder": "Trin C6: fem runder i træk som diamond. Appen rykker dig op efter to pas i træk med ja til »Ren runde?«.",
       "equipment": [],
       "getReady": "Find en plads, gerne på et tæppe, og læg dig i planke på knyttede næver med lige håndled.",
       "movements": [
@@ -437,13 +443,18 @@
       "start": "Planke på strakte arme med hænderne samlet under brystbenet, så tommel- og pegefingre danner en diamant. Kroppen er lige fra hæl til hoved.",
       "steps": [
         "Saml hænderne under brystbenet, så tommel- og pegefingre danner en diamant.",
-        "Gå ned til midten, helt ned og op til midten igen med albuerne tæt ind, og hold 3 sek hvert sted.",
-        "Lav 10 hurtige mikro-pumps i midten, gå helt ned og helt op, og start straks næste runde.",
-        "Bliv ved, til du har lavet fem runder. Passet viser, hvilken runde du er i."
+        "Gå ned til midten, helt ned og op til midten igen med albuerne tæt ind, hold 3 sek hvert sted, og lav 10 mikro-pumps i midten.",
+        "Gå helt ned og helt op, og start straks næste runde, til du har lavet fem runder.",
+        "Svar ja til »Ren runde?«, når hold og pumps var i rette højde, og albuerne blev tæt ind."
       ],
       "tempo": "Hvert hold er 3 sek, mikro-pumpene er hurtige, og hver runde slutter helt ned og helt op.",
       "breathing": "Træk vejret roligt i holdene, og tag et dybt åndedrag i toppen før hver ny runde.",
-      "cues": ["Albuerne tæt langs kroppen", "Brystet ned mod hænderne", "Træk vejret i holdene"],
+      "cues": [
+        "Albuerne tæt langs kroppen",
+        "Brystet ned mod hænderne",
+        "Midten: albuerne ca. 90°"
+      ],
+      "feel": "Armenes bagside brænder mest, og brystet arbejder, men albuer og håndled må ikke gøre ondt.",
       "mistakes": [
         {
           "mistake": "Albuerne flyver ud til siden.",
@@ -458,7 +469,7 @@
           "fix": "Hold albuerne bøjet ca. 90° i holdene i midten og under mikro-pumpene."
         }
       ],
-      "easier": "Trin C5: fem runder i træk på knoer.",
+      "easier": "Trin C5: fem runder i træk på knoer. Flyver albuerne ud i de sidste runder pas efter pas, så vælg C5 under Stiger.",
       "harder": "Det er stigens sidste trin. Hold formen lige god i alle fem runder.",
       "equipment": [],
       "getReady": "Læg dig i planke på strakte arme med hænderne samlet under brystbenet.",

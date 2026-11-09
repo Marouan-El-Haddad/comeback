@@ -12,18 +12,19 @@
       "trains": "Lårenes udholdenhed, så benene holder til fodarbejde og spark sidst i runden.",
       "start": "Stå med ryggen mod væggen, og gå fødderne ca. to fodlængder frem i hoftebredde. Kryds armene over brystet.",
       "steps": [
-        "Glid ned ad væggen, til lårene er vandrette og knæene er lige over anklerne.",
-        "Hold ryggen flad mod væggen og vægten på hælene.",
-        "Hold stillingen helt stille, til tiden er gået.",
+        "Glid ned ad væggen, til hoften er i knæhøjde, så lårene er vandrette.",
+        "Ryk fødderne, til knæene står lige over anklerne, og hold ryggen flad mod væggen.",
+        "Hold stillingen helt stille med vægten på hælene, til tiden er gået.",
         "Glid op ad væggen igen, og gå fødderne ind under dig."
       ],
       "tempo": "Glid roligt ned, hold stillingen helt stille, og glid roligt op.",
       "breathing": "Træk vejret roligt og jævnt, også når lårene begynder at brænde.",
       "cues": ["Ryggen flad mod væggen", "Lårene vandrette", "Knæene over anklerne"],
+      "feel": "Forsiden af lårene, der brænder mere og mere, ikke smerte i knæene.",
       "mistakes": [
         {
           "mistake": "Hoften glider op, så lårene ikke er vandrette.",
-          "fix": "Glid ned til vandret igen; kan du ikke holde det, er sættet slut."
+          "fix": "Glid ned til vandret igen. Kan du ikke holde det, så stop, og tryk »Stoppede før tid«."
         },
         {
           "mistake": "Knæene står foran tæerne.",
@@ -35,9 +36,9 @@
         }
       ],
       "easier": "Sæt dig højere op ad væggen, så knæene er mindre bøjede end 90°.",
-      "harder": "Trin W2: samme wall sit med garde og rolige lige slag.",
+      "harder": "Trin W2: samme wall sit med garde og rolige lige slag. Appen rykker dig op, når du holder toppen af intervallet i alle sæt to pas i træk.",
       "equipment": ["wall"],
-      "getReady": "Find et stykke fri væg, og stil dig med ryggen mod den.",
+      "getReady": "Find et stykke fri væg, og stå på bare fødder eller i sko, så fødderne ikke glider.",
       "movements": [
         {
           "positions": [
@@ -76,13 +77,14 @@
       "start": "Sæt dig i wall sit med ryggen flad mod væggen, lårene vandrette og knæene over anklerne. Løft hænderne op i garde foran ansigtet med albuerne ind mod kroppen.",
       "steps": [
         "Hold garden med hænderne foran ansigtet, albuerne ind og hagen lidt ned.",
-        "Slå et roligt lige slag, og træk hånden hurtigt tilbage i garden.",
-        "Skift arm fra slag til slag, og pust ud på hvert slag.",
-        "Bliv i wall sit med ryggen mod væggen, til tiden er gået."
+        "Slå et roligt lige slag i skulderhøjde, og træk hånden hurtigt tilbage i garden.",
+        "Skift arm fra slag til slag, og pust kort ud på hvert slag.",
+        "Bliv i wall sit med lårene vandrette og ryggen mod væggen, til tiden er gået."
       ],
       "tempo": "Hold wall sit stille hele tiden, og slå rolige lige slag i en jævn rytme.",
       "breathing": "Pust kort ud på hvert slag, og træk vejret ind, når hånden er tilbage i garden.",
       "cues": ["Ryggen mod væggen", "Hånden tilbage i garden", "Pust ud på hvert slag"],
+      "feel": "Forsiden af lårene og skuldrene i garden, ikke smerte i knæene.",
       "mistakes": [
         {
           "mistake": "Hoften glider op ad væggen, når du slår.",
@@ -97,10 +99,10 @@
           "fix": "Slå roligt, og pust kort ud på hvert slag."
         }
       ],
-      "easier": "Trin W1: wall sit, 90°, med armene krydset over brystet.",
-      "harder": "Trin W3: wall sit til squats, 45 sek wall sit og direkte 20 kontrollerede squats.",
+      "easier": "Trin W1: wall sit med armene over kors. Vælg trinnet under Stiger, hvis lårene glider op, før du når bunden af intervallet.",
+      "harder": "Trin W3: 45 sek wall sit og direkte 20 kontrollerede squats. Appen rykker dig op, når du holder toppen af intervallet i alle sæt to pas i træk.",
       "equipment": ["wall"],
-      "getReady": "Find et stykke fri væg, og stil dig med ryggen mod den, klar til at glide ned.",
+      "getReady": "Find et stykke fri væg med plads til slagene, og stå på bare fødder eller i sko, så fødderne ikke glider.",
       "movements": [
         {
           "positions": [
@@ -156,6 +158,7 @@
       "tempo": "Hold wall sit stille i 45 sek, og tag squatsene roligt og kontrolleret.",
       "breathing": "Træk vejret roligt i wall sit, og pust ud på vej op i hver squat.",
       "cues": ["Lårene vandrette", "Direkte videre til squats", "Hælene bliver i gulvet"],
+      "feel": "Forsiden af lårene i wall sit og squats, og pulsen stiger, ikke smerte i knæene.",
       "mistakes": [
         {
           "mistake": "Du holder pause mellem wall sit og squats.",
@@ -170,8 +173,8 @@
           "fix": "Hold vægten på hele foden, og lad knæene pege samme vej som tæerne."
         }
       ],
-      "easier": "Trin W2: wall sit med garde og lige slag.",
-      "harder": "Trin W4: etbens wall sit. Du rykker op efter to pas i træk med 3 rene runder.",
+      "easier": "Trin W2: wall sit med garde og lige slag. Vælg trinnet under Stiger, hvis du ikke kan tage de 20 squats rent efter wall sit.",
+      "harder": "Trin W4: etbens wall sit. Appen rykker dig op efter to pas i træk med 3 rene runder.",
       "equipment": ["wall"],
       "getReady": "Stil dig med ryggen mod væggen, så du har plads foran dig til squats.",
       "movements": [
@@ -226,12 +229,13 @@
       "steps": [
         "Glid ned i wall sit med ryggen flad mod væggen og lårene vandrette.",
         "Stræk det ene ben lige frem i hoftehøjde, og hold hoften i niveau.",
-        "Ved »Venstre ben« står du på venstre ben og strækker højre frem. Ved »Højre ben« omvendt.",
-        "Sæt foden ned, når tiden er gået, og skift ben i nedtællingen til »Højre ben«."
+        "Ved »Venstre ben« står du på venstre ben og strækker højre frem; ved »Højre ben« omvendt.",
+        "Sæt foden ned, når tiden er gået, og skift ben i de 5 sek »Klar« før »Højre ben«."
       ],
       "tempo": "Glid roligt ned, og hold stillingen helt stille. Venstre og højre ben kommer lige efter hinanden.",
       "breathing": "Træk vejret roligt og jævnt, også når låret begynder at brænde.",
       "cues": ["Hoften i niveau", "Benet strakt frem", "Knæet over anklen"],
+      "feel": "Forsiden af låret på standbenet, og maven holder hoften i niveau, ikke i knæet.",
       "mistakes": [
         {
           "mistake": "Hoften på det strakte bens side falder eller drejer.",
@@ -246,8 +250,8 @@
           "fix": "Glid ned til vandret igen. Kan du ikke holde det, så stop, og tryk »Stoppede før tid«."
         }
       ],
-      "easier": "Trin W3: wall sit til squats. Eller løft kun foden lidt fra gulvet i stedet for at strække benet frem.",
-      "harder": "Trin W5: wall sit-runden, 3 min med garde og slag og det sidste minut på ét ben.",
+      "easier": "Trin W3: wall sit til squats. Vælg trinnet under Stiger, hvis du ikke kan holde hoften i niveau i bunden af intervallet.",
+      "harder": "Trin W5: wall sit-runden. Appen rykker dig op, når du holder toppen af intervallet på begge ben i alle sæt to pas i træk.",
       "equipment": ["wall"],
       "getReady": "Stil dig med ryggen mod væggen og fødderne to fodlængder fremme, klar til at glide ned.",
       "movements": [
@@ -311,6 +315,7 @@
         "Pust ud på hvert slag",
         "Hoften i niveau på ét ben"
       ],
+      "feel": "Lårene og skuldrene hele runden, mest det sidste minut på ét ben, ikke smerte i knæene.",
       "mistakes": [
         {
           "mistake": "Hoften glider op ad væggen, når lårene brænder.",
@@ -325,7 +330,7 @@
           "fix": "Hold begge hofter i samme højde, og lad det standende knæ pege samme vej som tæerne."
         }
       ],
-      "easier": "Trin W4: etbens wall sit.",
+      "easier": "Trin W4: etbens wall sit. Vælg trinnet under Stiger, hvis lårene glider op, eller garden falder, før runden er slut.",
       "harder": "Det er stigens sidste trin. Etbens wall sit med garde og lige slag er en imponer-variant, som kræver trin W4.",
       "equipment": ["wall"],
       "getReady": "Stil dig med ryggen mod væggen, klar til at glide ned og løfte garden.",

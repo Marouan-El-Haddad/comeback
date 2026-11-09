@@ -10,16 +10,17 @@
     {
       "id": "power_legs.1",
       "trains": "Eksplosiv kraft i hofter, knæ og ankler, så spark, knæ og fodarbejde får mere fart.",
-      "start": "Stå med fødderne i hoftebredde og tæerne let udad. Armene hænger løst langs siden, og blikket er frem.",
+      "start": "Stå med fødderne i hoftebredde, tæerne let udad og armene langs siden.",
       "steps": [
         "Sæt dig ned, til knæene er bøjet ca. 90°, og sving armene bagud.",
         "Spring eksplosivt så højt du kan, og sving armene frem og op.",
-        "Land blødt på forfoden og videre ned på hele foden med bøjede knæ, og frys 2 sek.",
-        "Rejs dig, find balancen, og spring igen."
+        "Land samme sted på forfoden og videre ned på hele foden med bøjede knæ, og frys 2 sek.",
+        "Rejs dig, og spring igen, når du står helt stille."
       ],
       "tempo": "Eksplosivt op til maks højde. Land blødt, og frys 2 sek.",
       "breathing": "Ånd ind, før du sætter dig ned, og pust ud, når du lander.",
       "cues": ["Maks højde", "Land stille, og frys 2 sek", "Knæene peger over tæerne"],
+      "feel": "Kraft i baller, lår og lægge, når du skyder op, og en blød landing uden stød i knæ eller lænd.",
       "mistakes": [
         {
           "mistake": "Knæene falder ind mod hinanden, når du lander.",
@@ -27,17 +28,17 @@
         },
         {
           "mistake": "Du lander tungt med strakte ben eller på hælene.",
-          "fix": "Land på forfoden, og lad ankler, knæ og hofte bøje sig, så landingen bliver stille."
+          "fix": "Land på forfoden, og lad ankler, knæ og hofte bøje, så landingen bliver stille."
         },
         {
           "mistake": "Hoppene bliver lavere hen ad sættet.",
           "fix": "Stop sættet, så snart højden eller farten falder. Et træt hop træner ikke fart."
         }
       ],
-      "easier": "Hop lavere og i halv fart, som i opvarmningen, til du kan lande stille. Imens svarer du nej til »Alle hop/reps lige høje og hurtige?«.",
-      "harder": "Trin 2: længdespring.",
+      "easier": "Hurtig squat op på tæerne uden at lette: sæt dig ned, og skyd op på tæerne så hurtigt du kan. Det giver fart uden landinger.",
+      "harder": "Trin 2: længdespring. Først når du to pas i træk har lavet 5 hop i alle sæt, og alle var lige høje og hurtige, rykker appen dig op.",
       "equipment": [],
-      "getReady": "Stil dig, hvor hænderne ikke kan ramme loft eller lampe, og hop på bare fødder eller i sko.",
+      "getReady": "Stå under et frit loft uden lampe, på et gulv, der ikke glider, og hop på bare fødder eller i sko.",
       "movements": [
         {
           "positions": [
@@ -68,7 +69,7 @@
             {
               "id": "land",
               "name": "Landing",
-              "text": "Hele foden i gulvet i hoftebredde. Knæene halvt bøjede over tæerne med lårene ca. 45° på skrå, hoften bagud og hænderne foran brystet som i garden.",
+              "text": "Samme sted som afsættet: hele foden i gulvet i hoftebredde, knæene halvt bøjede over tæerne med lårene ca. 45° på skrå, hoften bagud og hænderne foran brystet som i garden.",
               "contacts": [{ "part": "foot", "on": "floor" }]
             }
           ],
@@ -86,34 +87,35 @@
     {
       "id": "power_legs.2",
       "trains": "Eksplosiv kraft fremad fra hofter og ben, så du kommer hurtigere ind i afstand og ud igen.",
-      "start": "Stå med fødderne i hoftebredde og tæerne ved en streg eller kant på gulvet. Foran dig er der mindst 3 meter fri plads.",
+      "start": "Stå med fødderne i hoftebredde, tæerne ved en streg, fx en fuge i gulvet, og armene langs siden.",
       "steps": [
         "Skub hoften bagud, til knæene er bøjet ca. 90°, og sving armene bagud.",
-        "Sving armene frem, og spring så langt frem du kan.",
-        "Land blødt på hele foden med bøjede knæ, og stå stille uden at tage et skridt.",
-        "Rejs dig, gå tilbage til stregen, og spring igen."
+        "Sving armene frem, og spring skråt op og frem så langt du kan.",
+        "Land på hele foden med bøjede knæ og hoften bagud, og stå stille uden at tage et skridt.",
+        "Se, hvor hælene landede, og gå tilbage til stregen. Bliver et spring tydeligt kortere, stopper du sættet."
       ],
       "tempo": "Eksplosivt frem, så langt du kan, og en stille landing.",
       "breathing": "Ånd ind, når du svinger armene bagud, og pust ud, når du lander.",
       "cues": ["Så langt du kan", "Sving armene med", "Land stille uden ekstra skridt"],
+      "feel": "Afsættet i baller og baglår og landingen i lårene, uden stød i knæ eller lænd.",
       "mistakes": [
-        {
-          "mistake": "Du tager et ekstra skridt eller vakler på landingen.",
-          "fix": "Spring lidt kortere, til du kan lande og stå stille hver gang."
-        },
         {
           "mistake": "Du lander med strakte ben.",
           "fix": "Bøj knæ og hofte, så snart fødderne rammer, og lad benene tage imod som fjedre."
+        },
+        {
+          "mistake": "Du tager et ekstra skridt eller vakler på landingen.",
+          "fix": "Spring lidt kortere, til du kan lande og stå stille hver gang."
         },
         {
           "mistake": "Knæene falder ind mod hinanden, når du lander.",
           "fix": "Pres knæene lidt ud, så de peger samme vej som tæerne."
         }
       ],
-      "easier": "Trin 1: squat jump.",
-      "harder": "Trin 3: skater-hop.",
+      "easier": "Trin 1: squat jump. Vælg den under Stiger, hvis du stadig tager ekstra skridt eller lander med strakte ben, når du springer kortere.",
+      "harder": "Trin 3: skater-hop. Først når alle spring i to pas i træk var lige lange og hurtige, rykker appen dig op.",
       "equipment": [],
-      "getReady": "Find mindst 3 meter fri plads, og hop på bare fødder eller i sko, ikke i strømper.",
+      "getReady": "Find mindst 3 meter fri plads foran dig på et gulv, der ikke glider, og hop på bare fødder eller i sko.",
       "movements": [
         {
           "positions": [
@@ -144,7 +146,7 @@
             {
               "id": "land",
               "name": "Landing",
-              "text": "Ca. 1,5–2 m foran stregen. Hele foden i gulvet i hoftebredde, knæene bøjet ca. 90° over tæerne, hoften bagud og armene strakt frem i skulderhøjde.",
+              "text": "Ca. 1,5–2 m foran stregen: hele foden i gulvet i hoftebredde, knæene bøjet ca. 90° over tæerne, hoften bagud og armene strakt frem i skulderhøjde.",
               "contacts": [{ "part": "foot", "on": "floor" }]
             }
           ],
@@ -161,12 +163,11 @@
     {
       "id": "power_legs.3",
       "trains": "Kraft sidelæns og balance på ét ben, så du hurtigt kan træde ud til siden og stå stabilt efter et spark.",
-      "start": "Stå på højre ben med let bøjet knæ, venstre fod løftet bag højre ankel og overkroppen lænet lidt frem. Hop på bare fødder eller i sko, ikke i strømper.",
+      "start": "Stå på højre ben med let bøjet knæ, venstre fod løftet bag højre ankel og overkroppen lænet lidt frem.",
       "steps": [
-        "Bøj højre knæ og hofte, og spring så langt til venstre du kan.",
-        "Land på venstre ben med bøjet knæ og hofte, og frys på landingen.",
-        "Spring tilbage til højre ben, og bliv ved, til du har landet målet på hvert ben, fx 3 gange på hvert.",
-        "Tryk så »Som planlagt« én gang for hele sættet."
+        "Bøj højre knæ, og spring sidelæns til venstre, så langt du kan og stadig kan fryse på landingen.",
+        "Land på venstre forfod og videre ned på hele foden med bøjet knæ og hofte, og frys med højre fod i luften.",
+        "Spring tilbage til højre ben på samme måde. Bliv ved skiftevis, til du har landet målet på hvert ben: det er ét sæt."
       ],
       "tempo": "Eksplosivt sidelæns og en stille landing, hvor du fryser på hvert ben.",
       "breathing": "Pust ud, når du lander, og træk vejret, før du springer igen.",
@@ -175,6 +176,7 @@
         "Langt til siden, og frys",
         "Knæet peger over tæerne"
       ],
+      "feel": "Ballen og ydersiden af hoften, når du lander og fryser; knæ og ankel skal føles stabile.",
       "mistakes": [
         {
           "mistake": "Knæet falder ind, når du lander.",
@@ -189,10 +191,10 @@
           "fix": "Bøj knæ og hofte, så snart foden rammer, og skub hoften lidt bagud."
         }
       ],
-      "easier": "Trin 2: længdespring.",
-      "harder": "Trin 4: split jumps.",
+      "easier": "Trin 2: længdespring. Vælg den under Stiger, hvis du ikke kan fryse på ét ben, selv når du springer kortere.",
+      "harder": "Trin 4: split jumps. Først når du to pas i træk har landet 4 på hvert ben i alle sæt, og alle hop var lige lange og hurtige, rykker appen dig op.",
       "equipment": [],
-      "getReady": "Find 3 meter fri plads til siden.",
+      "getReady": "Find 3 meter fri plads til siden på et gulv, der ikke glider, og stil dig på højre ben midt på pladsen.",
       "movements": [
         {
           "positions": [
@@ -211,7 +213,7 @@
             {
               "id": "left",
               "name": "På venstre ben",
-              "text": "Landet ca. 1 m til venstre på venstre ben med knæet halvt bøjet over tæerne, hoften bagud og overkroppen lænet ca. 30° frem. Højre fod er løftet bag venstre ankel.",
+              "text": "Landet ca. 1 m til venstre for afsættet på venstre ben med knæet halvt bøjet over tæerne, hoften bagud og overkroppen lænet ca. 30° frem. Højre fod er løftet bag venstre ankel.",
               "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
             },
             {
@@ -235,12 +237,11 @@
     {
       "id": "power_legs.4",
       "trains": "Hurtige skift mellem benene i balance, som giver fart i stillingsskift, fodarbejde og switch kick.",
-      "start": "Stå i et udfald med venstre fod foran og højre fod et langt skridt bagud på tæerne, på bare fødder eller i sko. Begge knæ er let bøjede, overkroppen er oprejst, og hænderne er i garden.",
+      "start": "Stå i et lavt udfald med venstre fod foran og fødderne i hoftebredde. Forreste knæ er bøjet ca. 90°, bageste knæ er en håndsbredde over gulvet, og hænderne er i garden.",
       "steps": [
-        "Hop op, kun lige højt nok til at skifte ben, og byt ben i luften.",
-        "Land blødt og i balance med højre fod foran, og hop straks igen til venstre fod foran.",
-        "Bliv ved, til du har landet målet med hvert ben foran, fx 3 gange med hvert.",
-        "Tryk så »Som planlagt« én gang for hele sættet."
+        "Hop lige op, kun højt nok til at skifte ben, og byt ben i luften.",
+        "Land blødt med højre fod foran i samme lave udfald, og hop straks igen.",
+        "Bliv ved skiftevis, til du har landet målet med hvert ben foran: det er ét sæt."
       ],
       "tempo": "Lavt, hurtigt og i balance: hop straks igen, når du lander.",
       "breathing": "Pust kort ud ved hver landing, og hold rytmen.",
@@ -249,6 +250,7 @@
         "Lavt, hurtigt og i balance",
         "Hænderne oppe i garden"
       ],
+      "feel": "Lår og baller på begge ben og hurtige, lette landinger uden stød i knæene.",
       "mistakes": [
         {
           "mistake": "Du hopper højt og lander tungt.",
@@ -263,10 +265,10 @@
           "fix": "Pres forreste knæ ud over tæerne, og hold fødderne i hoftebredde, ikke på en streg."
         }
       ],
-      "easier": "Trin 3: skater-hop.",
-      "harder": "Trin 5: tuck jumps.",
+      "easier": "Trin 3: skater-hop. Vælg den under Stiger, hvis bageste knæ rammer gulvet, eller du ikke kan lande i balance.",
+      "harder": "Trin 5: tuck jumps. Først når du to pas i træk har landet 4 med hvert ben foran i alle sæt, og alle hop var lige hurtige, rykker appen dig op.",
       "equipment": [],
-      "getReady": "Stil dig i et udfald med venstre fod foran.",
+      "getReady": "Find en fri plads på et gulv, der ikke glider, og stil dig i et lavt udfald med venstre fod foran.",
       "movements": [
         {
           "positions": [
@@ -307,16 +309,17 @@
     {
       "id": "power_legs.5",
       "trains": "Eksplosiv kraft i benene og hurtige knæløft, som giver fart i knæspark og det flyvende knæ.",
-      "start": "Stå med fødderne i hoftebredde og albuerne bøjede med hænderne foran brystet. Blikket er frem.",
+      "start": "Stå med fødderne i hoftebredde og hænderne foran brystet med bøjede albuer.",
       "steps": [
         "Sæt dig ned, til knæene er bøjet ca. 90°, og sving armene bagud.",
         "Spring eksplosivt lige op, og træk knæene op mod brystet i toppen af hoppet.",
-        "Stræk benene ned igen, før du lander, og land blødt på forfoden med bøjede knæ.",
+        "Stræk benene ned igen, før du lander, og land samme sted på forfoden med bøjede knæ.",
         "Find balancen, og spring igen."
       ],
       "tempo": "Eksplosivt op, knæene op mod brystet i luften og en blød landing.",
       "breathing": "Ånd ind, før du sætter dig ned, og pust ud, når du lander.",
       "cues": ["Knæene op mod brystet", "Stræk benene før landing", "Land stille som en kat"],
+      "feel": "Afsættet i baller og lægge og knæløftet i maven og forsiden af hoften, uden stød ved landing.",
       "mistakes": [
         {
           "mistake": "Du krummer overkroppen ned mod knæene.",
@@ -331,10 +334,10 @@
           "fix": "Stop sættet, så snart højden eller farten falder."
         }
       ],
-      "easier": "Trin 4: split jumps.",
-      "harder": "Trin 6: etbens bounds.",
+      "easier": "Trin 4: split jumps. Vælg den under Stiger, hvis du ikke når at strække benene, før du lander.",
+      "harder": "Trin 6: etbens bounds. Først når du to pas i træk har lavet 5 hop i alle sæt, og alle var lige høje og hurtige, rykker appen dig op.",
       "equipment": [],
-      "getReady": "Find en fri plads på et skridsikkert gulv, og hop på bare fødder eller i sko.",
+      "getReady": "Stå under et frit loft på et gulv, der ikke glider, og hop på bare fødder eller i sko.",
       "movements": [
         {
           "positions": [
@@ -365,7 +368,7 @@
             {
               "id": "land",
               "name": "Landing",
-              "text": "Hele foden i gulvet i hoftebredde. Knæene halvt bøjede over tæerne med lårene ca. 45° på skrå, hoften bagud og hænderne foran brystet.",
+              "text": "Samme sted som afsættet: hele foden i gulvet i hoftebredde, knæene halvt bøjede over tæerne med lårene ca. 45° på skrå, hoften bagud og hænderne foran brystet.",
               "contacts": [{ "part": "foot", "on": "floor" }]
             }
           ],
@@ -382,16 +385,17 @@
     {
       "id": "power_legs.6",
       "trains": "Kraft og kontrol i ét ben ad gangen, så standbenet holder, og du kan skyde dig frem i et angreb.",
-      "start": "Stå på venstre ben med let bøjet knæ og højre fod løftet bag dig. Har du ikke plads til tre lange spring, så stil dig på et trappetrin.",
+      "start": "Stå på venstre ben for enden af ca. 6 m fri plads med let bøjet knæ og højre fod løftet bag dig. Mangler pladsen, så stå på nederste trappetrin.",
       "steps": [
-        "Spring så langt frem du kan på venstre ben, tre gange i træk.",
-        "Land blødt på forfoden og videre ned på hele foden, og spring straks videre. Stå stille på den sidste landing.",
-        "Tag alle tre spring på venstre ben, og skift så til højre ben.",
-        "Mangler du plads, så lav tre drop-hop pr. ben: træd ud fra trappetrinnet på ét ben, land på samme ben, og hop straks op igen."
+        "Spring så langt frem du kan på venstre ben, tre gange i træk, og land på samme ben hver gang.",
+        "Land på forfoden og videre ned på hele foden, og spring straks videre. Stå stille på den sidste landing.",
+        "Tag de tre spring på venstre ben først og så på højre ben.",
+        "Mangler du plads, så lav drop-hop: træd ud fra trappetrinnet på ét ben, land på samme ben, og hop straks op igen."
       ],
       "tempo": "Tre lange spring i træk og en stille landing på det sidste.",
       "breathing": "Ånd ind, før du starter, og pust ud på den sidste landing.",
       "cues": ["Tre lange spring i træk", "Land stille på det sidste", "Knæet peger over tæerne"],
+      "feel": "Ballen, baglåret og læggen på standbenet; knæ og ankel skal føles stabile ved hver landing.",
       "mistakes": [
         {
           "mistake": "Knæet falder ind, når du lander.",
@@ -406,10 +410,10 @@
           "fix": "Land på forfoden og videre ned på hele foden med bøjet knæ."
         }
       ],
-      "easier": "Trin 5: tuck jumps.",
+      "easier": "Trin 5: tuck jumps. Vælg den under Stiger, hvis du ikke kan stå stille på ét ben efter tredje spring.",
       "harder": "Det er stigens sidste trin. Gør hvert spring lige langt, og land lige stille.",
       "equipment": ["step"],
-      "getReady": "Find ca. 6 meter fri plads eller et trappetrin, og hop på bare fødder eller i sko.",
+      "getReady": "Find ca. 6 meter fri plads, fx i en gang eller udenfor, eller et trappetrin, og hop på bare fødder eller i sko.",
       "movements": [
         {
           "id": "bounds",
@@ -418,7 +422,7 @@
             {
               "id": "stand",
               "name": "Klar",
-              "text": "Stående på venstre ben med let bøjet knæ og højre fod løftet bag dig. Overkroppen er lænet lidt frem, og armene hænger langs siden.",
+              "text": "Stående på venstre ben ved startstedet med let bøjet knæ og højre fod løftet bag dig. Overkroppen er lænet lidt frem, og armene hænger langs siden.",
               "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
             },
             {
@@ -436,7 +440,7 @@
             {
               "id": "land",
               "name": "Landing",
-              "text": "Venstre fod lander under hoften og videre ned på hele foden. Knæet er halvt bøjet over tæerne, hoften bagud, og højre fod er løftet bag dig.",
+              "text": "Ca. 1–1,5 m foran afsættet lander venstre fod under hoften og ruller ned på hele foden. Knæet er halvt bøjet over tæerne, hoften bagud, og højre fod er løftet bag dig.",
               "contacts": [{ "part": "foot", "on": "floor", "count": 1 }]
             }
           ],
@@ -461,7 +465,7 @@
             {
               "id": "on_step",
               "name": "På trinnet",
-              "text": "Stående på venstre ben på et trappetrin med knæet let bøjet og højre fod løftet. Armene hænger langs siden, og blikket er frem.",
+              "text": "Stående på venstre ben på nederste trappetrin med knæet let bøjet og højre fod løftet. Armene hænger langs siden, og blikket er frem.",
               "contacts": [{ "part": "foot", "on": "step", "count": 1 }]
             },
             {

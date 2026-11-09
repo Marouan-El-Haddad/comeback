@@ -4,38 +4,39 @@
   "why": [
     "Adduktorerne er musklerne på indersiden af låret. Stærke adduktorer hjælper dig i clinchen, i teep og i kampstillingen og holder lysken hel. Copenhagen-øvelsen er en sideplanke med det øverste ben oppe på sofaen.",
     "Copenhagen-øvelsen gør adduktorerne meget stærkere. Den kan også give færre lyskeproblemer, men det er ikke sikkert. Styrken er gevinsten under alle omstændigheder.",
-    "Smerte op til 3 ud af 10 under en øvelse er i orden, hvis den er væk næste morgen. Skarp eller stigende smerte i et led: stop øvelsen, og gå et trin ned i en uge."
+    "Smerte op til 3 ud af 10 under en øvelse er i orden, hvis den er væk næste morgen. Skarp eller stigende smerte i et led: stop øvelsen, og gå et trin ned i en uge. Det gør appen, når du trykker »Smerte« og »Skarp eller i et led«; på trin 1 får du den lettere variant."
   ],
   "items": [
     {
       "id": "groin.1",
       "trains": "Adduktorerne på indersiden af låret, som samler benene i clinchen og holder dig stabil i kampstillingen.",
-      "start": "Lig på siden med hovedet på den nederste arm og det nederste ben strakt. Bøj det øverste ben, og sæt foden fladt i gulvet foran det nederste knæ.",
+      "start": "Lig på siden på gulvet med hovedet på den nederste arm og det nederste ben strakt. Bøj det øverste ben, og sæt foden fladt i gulvet foran det nederste knæ.",
       "steps": [
-        "Hold hofterne lige over hinanden, og støt den øverste hånd i gulvet foran brystet.",
-        "Løft det nederste ben langsomt så højt, du kan, med strakt knæ og tæerne pegende frem.",
-        "Sænk benet på 3 sek, til foden lige rører gulvet.",
-        "I »Venstre side« ligger du på venstre side og løfter venstre ben. I »Højre side« er det omvendt."
+        "Stil hofterne lodret over hinanden, og støt den øverste hånd i gulvet foran brystet.",
+        "Løft det nederste ben langsomt med strakt knæ og tæerne pegende frem, så højt du kan uden at rulle bagud.",
+        "Sænk benet på 3 sek, til foden lige rører gulvet, og løft igen.",
+        "I »Venstre side« ligger du på venstre side og løfter venstre ben. I »Højre side« omvendt."
       ],
       "tempo": "Løft langsomt, og sænk på 3 sek.",
       "breathing": "Pust ud, når benet går op, og træk vejret ind på vej ned.",
       "cues": ["Løft langsomt, sænk på 3 sek", "Hofterne over hinanden", "Tæerne peger frem"],
+      "feel": "Indersiden af det nederste lår arbejder helt op i lysken, ikke forsiden af hoften eller lænden.",
       "mistakes": [
         {
           "mistake": "Du ruller bagud for at få benet højere op.",
-          "fix": "Hold hofterne lige over hinanden; et lavere løft er bedre end et skævt."
+          "fix": "Hold hofterne lodret over hinanden. Et lavere løft er bedre end et skævt."
+        },
+        {
+          "mistake": "Tæerne drejer op mod loftet.",
+          "fix": "Hold foden vandret med tæerne frem, så indersiden af låret løfter og ikke forsiden af hoften."
         },
         {
           "mistake": "Benet svinger op og falder ned.",
           "fix": "Løft langsomt, og tæl 3 sek på vej ned."
-        },
-        {
-          "mistake": "Tæerne drejer op mod loftet.",
-          "fix": "Hold foden vandret med tæerne pegende frem, så det er indersiden af låret, der løfter."
         }
       ],
-      "easier": "Bøj det nederste knæ lidt, så benet bliver kortere, eller løft lidt lavere.",
-      "harder": "Trin 2: kort Copenhagen, hold, med knæet på sofaen.",
+      "easier": "Bøj det nederste knæ ca. 90°, og løft kun en håndsbredde. Tag den også, hvis du ikke kan løfte benet uden at rulle bagud.",
+      "harder": "Trin 2: kort Copenhagen med knæet på sofaen. Appen rykker dig op, når alle sæt når 15 med 2 i reserve to pas i træk.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, og læg dig på venstre side med hovedet på armen.",
       "movements": [
@@ -44,7 +45,7 @@
             {
               "id": "down",
               "name": "Nede",
-              "text": "Liggende på siden med hofterne over hinanden og hovedet på den nederste arm, strakt i gulvet. Den øverste hånd støtter foran brystet. Nederste ben strakt i gulvet, øverste bøjet med foden foran det nederste knæ.",
+              "text": "Liggende på siden med hofterne lodret over hinanden og hovedet på den nederste arm, strakt i gulvet. Den øverste hånd støtter foran brystet. Nederste ben strakt i gulvet, øverste bøjet med foden foran det nederste knæ.",
               "contacts": [
                 { "part": "side", "on": "floor" },
                 { "part": "forearm", "on": "floor", "count": 1 },
@@ -56,7 +57,7 @@
             {
               "id": "up",
               "name": "Løftet",
-              "text": "Det nederste ben er løftet ca. 20 cm fra gulvet med strakt knæ og foden vandret. Hovedet hviler stadig på armen, hofterne er over hinanden, og det øverste ben står med foden i gulvet.",
+              "text": "Det nederste ben er løftet ca. 20 cm fra gulvet med strakt knæ, foden vandret og tæerne pegende frem. Hovedet hviler stadig på armen, hofterne er over hinanden, og det øverste ben står med foden i gulvet.",
               "contacts": [
                 { "part": "side", "on": "floor" },
                 { "part": "forearm", "on": "floor", "count": 1 },
@@ -75,16 +76,17 @@
     {
       "id": "groin.2",
       "trains": "Adduktorerne på indersiden af låret og siden af maven, som holder dig stabil i clinch og kampstilling.",
-      "start": "Lig på siden foran sofaen med albuen lige under skulderen og fødderne mod sofaen. Læg det øverste ben op, så indersiden af knæet hviler på sofakanten og underbenet på sædet.",
+      "start": "Lig på siden på gulvet med fødderne mod sofaen og albuen lige under skulderen. Læg det øverste ben op, så indersiden af knæet hviler på sofakanten og underbenet på sædet.",
       "steps": [
         "Spænd maven, og pres indersiden af knæet ned i sofaen.",
         "Løft hoften, til kroppen er lige fra hoved til knæ, og lad det nederste ben hænge frit.",
-        "Hold stillingen stille, træk vejret roligt, og sænk hoften roligt, når tiden er gået.",
-        "I »Venstre side« ligger du på venstre side med højre knæ på sofaen, og højre lyske bærer dig. I »Højre side« er det omvendt."
+        "Hold stille, træk vejret roligt, og sænk hoften roligt, når tiden er gået.",
+        "I »Venstre side« ligger du på venstre side med højre knæ på sofaen, og højre lyske bærer dig. I »Højre side« omvendt."
       ],
       "tempo": "Løft dig roligt op, hold stillingen helt stille, og sænk dig roligt.",
       "breathing": "Træk vejret kort og roligt gennem hele holdet, og hold ikke vejret.",
       "cues": ["Albuen under skulderen", "Kroppen som en planke", "Pres knæet ned i sofaen"],
+      "feel": "Indersiden af det øverste lår og siden af maven mod gulvet arbejder; knæet på sofaen må ikke gøre ondt.",
       "mistakes": [
         {
           "mistake": "Hoften hænger ned mod gulvet.",
@@ -99,10 +101,10 @@
           "fix": "Pres underarmen i gulvet, og hold afstand mellem skulder og øre."
         }
       ],
-      "easier": "Trin 1: liggende adduktorløft. Eller lad den nederste fod hvile let i gulvet.",
-      "harder": "Trin 3: kort Copenhagen med hoften langsomt op og ned.",
+      "easier": "Lad den nederste fod hvile let i gulvet, hvis hoften synker, før tiden er gået. Hjælper det ikke, så vælg trin 1 under Stiger.",
+      "harder": "Trin 3: kort Copenhagen med hoften op og ned. Appen rykker dig op, når alle sæt holder 30 sek med 2 i reserve to pas i træk.",
       "equipment": ["sofa"],
-      "getReady": "Læg dig på venstre side foran sofaen med fødderne mod den og albuen lige under skulderen.",
+      "getReady": "Læg dig på venstre side med fødderne mod sofaen, så tæt på, at det øverste knæ kan hvile på sofakanten.",
       "movements": [
         {
           "positions": [
@@ -140,16 +142,17 @@
     {
       "id": "groin.3",
       "trains": "Adduktorerne på indersiden af låret, der både løfter og bremser hele kroppen, som når du står fast i clinchen.",
-      "start": "Lig på siden foran sofaen med albuen lige under skulderen og fødderne mod sofaen. Læg det øverste ben op, så indersiden af knæet hviler på sofakanten og underbenet på sædet.",
+      "start": "Lig på siden på gulvet med fødderne mod sofaen og albuen lige under skulderen. Læg det øverste ben op, så indersiden af knæet hviler på sofakanten og underbenet på sædet.",
       "steps": [
         "Spænd maven, pres knæet ned i sofaen, og løft hoften, til kroppen er lige fra hoved til knæ.",
         "Sænk hoften på 3 sek, til den er en håndsbredde over gulvet, og hold 1 sek stille.",
         "Lad lysken løfte dig kontrolleret op igen, til kroppen er lige.",
-        "I »Venstre side« ligger du på venstre side med højre knæ på sofaen, og højre lyske løfter dig. I »Højre side« er det omvendt."
+        "I »Venstre side« ligger du på venstre side med højre knæ på sofaen, og højre lyske løfter dig. I »Højre side« omvendt."
       ],
       "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
       "breathing": "Træk vejret ind på vej ned, og pust ud, når lysken løfter dig.",
       "cues": ["3 sek ned, 1 sek stille", "Lysken løfter dig", "Kroppen som en planke"],
+      "feel": "Indersiden af det øverste lår løfter og bremser dig hele vejen; knæet på sofaen må ikke gøre ondt.",
       "mistakes": [
         {
           "mistake": "Du falder ned og skubber dig op igen i et ryk.",
@@ -164,10 +167,10 @@
           "fix": "Pres underarmen i gulvet, og hold afstand mellem skulder og øre."
         }
       ],
-      "easier": "Trin 2: kort Copenhagen, hold.",
-      "harder": "Trin 4: lang Copenhagen, hold, med foden på sofaen i stedet for knæet.",
+      "easier": "Trin 2: kort Copenhagen, hold. Vælg den under Stiger, hvis du ikke kan komme op fra bunden uden et ryk.",
+      "harder": "Trin 4: lang Copenhagen med foden på sofaen. Appen rykker dig op, når alle sæt når 10 med 2 i reserve to pas i træk.",
       "equipment": ["sofa"],
-      "getReady": "Læg dig på venstre side foran sofaen med fødderne mod den og albuen lige under skulderen.",
+      "getReady": "Læg dig på venstre side med fødderne mod sofaen, så tæt på, at det øverste knæ kan hvile på sofakanten.",
       "movements": [
         {
           "positions": [
@@ -203,12 +206,12 @@
     {
       "id": "groin.4",
       "trains": "Adduktorerne og siden af maven i den svære udgave, hvor kun foden støtter, så lysken skal bære hele kroppen.",
-      "start": "Lig på siden foran sofaen med albuen lige under skulderen. Læg det øverste ben op, så indersiden af foden og anklen hviler på sofakanten med strakt knæ.",
+      "start": "Lig på siden på gulvet med fødderne mod sofaen og albuen lige under skulderen. Læg det øverste ben op, så indersiden af foden og anklen hviler på sofakanten med strakt knæ.",
       "steps": [
         "Spænd maven, og pres indersiden af foden ned i sofaen.",
         "Løft hoften, til kroppen er lige fra hoved til fod, og lad det nederste ben hænge frit.",
-        "Hold stillingen stille, træk vejret roligt, og sænk hoften roligt, når tiden er gået.",
-        "I »Venstre side« ligger du på venstre side med højre fod på sofaen, og højre lyske bærer dig. I »Højre side« er det omvendt."
+        "Hold stille, træk vejret roligt, og sænk hoften roligt, når tiden er gået.",
+        "I »Venstre side« ligger du på venstre side med højre fod på sofaen, og højre lyske bærer dig. I »Højre side« omvendt."
       ],
       "tempo": "Løft dig roligt op, hold stillingen helt stille, og sænk dig roligt.",
       "breathing": "Træk vejret kort og roligt gennem hele holdet, og hold ikke vejret.",
@@ -217,6 +220,7 @@
         "Pres foden ned i sofaen",
         "Kroppen lige fra hoved til fod"
       ],
+      "feel": "Indersiden af det øverste lår bærer dig, og siden af maven holder; indersiden af knæet må ikke gøre ondt.",
       "mistakes": [
         {
           "mistake": "Hoften hænger ned mod gulvet.",
@@ -231,8 +235,8 @@
           "fix": "Hold skuldre og hofter lige over hinanden, som om du ligger mellem to vægge."
         }
       ],
-      "easier": "Trin 3: kort Copenhagen med hoften op og ned. Eller lad den nederste fod hvile let i gulvet.",
-      "harder": "Trin 5: lang Copenhagen med det nederste ben op og ned.",
+      "easier": "Lad den nederste fod hvile let i gulvet, hvis hoften synker, før tiden er gået. Hjælper det ikke, så vælg trin 3 under Stiger.",
+      "harder": "Trin 5: lang Copenhagen med benet op og ned. Appen rykker dig op, når alle sæt holder 45 sek med 2 i reserve to pas i træk.",
       "equipment": ["sofa"],
       "getReady": "Tjek, at sofaen står fast, og læg dig på venstre side foran den, så den øverste fod kan nå sofakanten.",
       "movements": [
@@ -270,16 +274,17 @@
     {
       "id": "groin.5",
       "trains": "Begge lysker på én gang: det øverste ben holder dig oppe, og det nederste løfter sig op mod sofaen.",
-      "start": "Lig på siden foran sofaen med albuen under skulderen og indersiden af den øverste fod på sofakanten. Løft hoften op i lang Copenhagen, så kroppen er lige fra hoved til fod.",
+      "start": "Lig på siden på gulvet med fødderne mod sofaen, albuen under skulderen og indersiden af den øverste fod på sofakanten. Løft hoften op i lang Copenhagen, så kroppen er lige fra hoved til fod.",
       "steps": [
         "Lad det nederste ben hænge strakt lige over gulvet, og hold hoften oppe hele sættet.",
         "Løft det nederste ben kontrolleret op, til foden rører sofaen under den øverste fod.",
         "Sænk benet på 3 sek, og hold det 1 sek stille lige over gulvet.",
-        "I »Venstre side« ligger du på venstre side med højre fod på sofaen og løfter venstre ben. I »Højre side« er det omvendt."
+        "I »Venstre side« ligger du på venstre side med højre fod på sofaen og løfter venstre ben. I »Højre side« omvendt."
       ],
       "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
       "breathing": "Pust ud, når benet går op, og træk vejret ind på vej ned.",
       "cues": ["Hoften oppe hele tiden", "3 sek ned, 1 sek stille", "Benet strakt, tæerne frem"],
+      "feel": "Begge inderlår arbejder: det øverste holder dig oppe, og det nederste løfter; knæene må ikke gøre ondt.",
       "mistakes": [
         {
           "mistake": "Hoften falder, når det nederste ben går ned.",
@@ -294,8 +299,8 @@
           "fix": "Hold benet strakt med tæerne pegende frem, så det er indersiden af låret, der løfter."
         }
       ],
-      "easier": "Trin 4: lang Copenhagen, hold.",
-      "harder": "Det er stigens sidste trin. Her arbejder du dig op til toppen af intervallet og bliver der.",
+      "easier": "Trin 4: lang Copenhagen, hold. Vælg den under Stiger, hvis hoften falder, når det nederste ben går ned.",
+      "harder": "Det er stigens sidste trin. Appen lægger gentagelser til, indtil alle sæt når 10, og der bliver du.",
       "equipment": ["sofa"],
       "getReady": "Tjek, at sofaen står fast, og læg dig på venstre side foran den, så den øverste fod kan nå sofakanten.",
       "movements": [

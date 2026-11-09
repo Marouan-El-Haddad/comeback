@@ -9,17 +9,22 @@
     {
       "id": "calf.1",
       "trains": "Lægge og akillessener, der bærer dig på forfoden, når du hopper i stillingen, drejer på standbenet og sparker.",
-      "start": "Stå på ét ben med forfoden på kanten af et trappetrin og hælen ude over kanten. Hold let i væggen eller gelænderet med fingerspidserne, og bøj det frie ben bag dig.",
+      "start": "Stå på ét ben med forfoden yderst på trinnet og hælen ude over kanten. Hold let i væggen eller gelænderet med fingerspidserne, og bøj det frie ben bag dig.",
       "steps": [
         "Løft dig op på tæerne, så højt du kan, med strakt knæ.",
         "Sænk hælen på 3 sek, til den er under trinnets kant, og du mærker et stræk i læggen.",
-        "Pres dig op igen i ét roligt stræk, og hold 1 sek stop i toppen.",
-        "Tag alle gentagelser på samme ben, og skift så."
+        "Pres dig op igen i én rolig bevægelse, og hold 1 sek stop helt oppe.",
+        "I »Venstre ben« står du på venstre ben; i »Højre ben« på højre."
       ],
-      "tempo": "3 sek ned, op i ét roligt stræk og 1 sek stop i toppen.",
+      "tempo": "3 sek ned, roligt op og 1 sek stop i toppen.",
       "breathing": "Træk vejret ind på vej ned, og pust ud på vej op.",
       "cues": ["3 sek ned, 1 sek stop", "Helt op på tæerne", "Vægten over storetåen"],
+      "feel": "Læggen arbejder og strækkes i bunden, ikke stikkende smerte i akillessenen.",
       "mistakes": [
+        {
+          "mistake": "Du går kun halvt op og ned.",
+          "fix": "Sænk hælen, til du mærker stræk under kanten, og løft dig helt op på tæerne hver gang."
+        },
         {
           "mistake": "Du ruller ud på lilletåsiden af foden.",
           "fix": "Hold vægten over storetåen og anden tå hele vejen op og ned."
@@ -27,16 +32,12 @@
         {
           "mistake": "Du vipper hurtigt op og ned.",
           "fix": "Tæl 3 sek ned, og stop helt i toppen før næste gentagelse."
-        },
-        {
-          "mistake": "Du trækker dig op med armen.",
-          "fix": "Hold kun let med fingerspidserne, så det er læggen, der løfter dig."
         }
       ],
-      "easier": "Tåløft på begge ben på trinnet i samme tempo.",
-      "harder": "Med rygsæk på ryggen: rammer du toppen i alle sæt med 2 i reserve to pas i træk, beder appen dig lægge 2 kg i.",
+      "easier": "Tåløft på begge ben i samme tempo, og sænk kun hælene, til fødderne er vandrette, ikke under kanten.",
+      "harder": "Når alle sæt rammer toppen af intervallet med 2 i reserve to pas i træk, beder appen dig lægge 2 kg i rygsækken. Bær den på ryggen.",
       "equipment": ["step", "wall", "backpack"],
-      "getReady": "Stil dig ved et trappetrin, hvor du kan holde let i væggen, og tag rygsækken på, hvis passet viser vægt til den.",
+      "getReady": "Stil dig ved et trappetrin, eller læg en stabel tykke bøger mod væggen, og tag rygsækken på, hvis passet viser »Rygsæk«.",
       "movements": [
         {
           "positions": [

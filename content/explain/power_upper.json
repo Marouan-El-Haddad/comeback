@@ -2,20 +2,20 @@
   "format": 1,
   "subject": "power_upper",
   "why": [
-    "Eksplosive push-ups lærer bryst, skuldre og triceps at give kraften fra sig på et splitsekund, som når et lige slag skal ramme hårdt. Her tæller kvalitet, ikke mængde.",
+    "Eksplosive push-ups lærer bryst, skuldre og bagsiden af overarmene at give kraften fra sig på et splitsekund, som når et lige slag skal ramme hårdt. Her tæller kvalitet, ikke mængde.",
     "Hver gentagelse skal være lige hurtig og lige høj, og bliver den tydeligt langsommere, stopper du sættet. Eksplosive push-ups belaster senerne mest, så land med bløde albuer, gerne på et tæppe.",
     "Smerte op til 3 ud af 10 under en øvelse er i orden, hvis den er væk næste morgen. Skarp eller stigende smerte i et led: stop øvelsen, og gå et trin ned i en uge. I passet trykker du »Smerte« og så »Let (≤3)« eller »Skarp eller i et led«."
   ],
   "items": [
     {
       "id": "power_upper.1",
-      "trains": "Fart i bryst, skuldre og triceps, så kraften fra presset går hurtigt ud i slagene.",
+      "trains": "Fart i bryst, skuldre og bagsiden af overarmene, så kraften fra presset går hurtigt ud i slagene.",
       "start": "Planke på strakte arme med hænderne lidt bredere end skuldrene og fingrene frem. Kroppen er lige fra hæl til hoved.",
       "steps": [
         "Spænd mave og baller, så kroppen er som én planke.",
         "Sænk dig kontrolleret, til brystet er lige over gulvet.",
         "Pres dig op så hurtigt og hårdt du kan, men lad hænderne blive i gulvet.",
-        "Lav næste gentagelse lige så eksplosivt, og stop sættet, hvis farten falder."
+        "Stop sættet, så snart en gentagelse bliver langsommere end de første."
       ],
       "tempo": "Kontrolleret ned, eksplosivt op.",
       "breathing": "Ånd ind på vej ned, og pust kort og hårdt ud på vej op, som når du slår.",
@@ -24,6 +24,7 @@
         "Hænderne bliver i gulvet",
         "Kroppen som en planke"
       ],
+      "feel": "Bryst, skuldre og bagsiden af overarmene og en stram mave, ikke smerte i håndled eller lænd.",
       "mistakes": [
         {
           "mistake": "Hoften hænger eller kommer op før brystet.",
@@ -34,14 +35,14 @@
           "fix": "Peg albuerne skråt bagud, ca. 45° fra kroppen."
         },
         {
-          "mistake": "Farten falder i de sidste gentagelser.",
-          "fix": "Stop sættet der. Hver gentagelse skal være lige hurtig."
+          "mistake": "Du falder ned i bunden og fjedrer op igen.",
+          "fix": "Sænk dig kontrolleret, stop lige over gulvet, og pres først eksplosivt op derfra."
         }
       ],
-      "easier": "Hænderne på sofaen, til du kan presse dig hurtigt op fra gulvet. Imens svarer du nej til »Alle hop/reps lige høje og hurtige?«.",
-      "harder": "Trin 2: plyo push-up på skrå, hvor hænderne slipper sofaen.",
+      "easier": "Hænderne på sofakanten: samme hurtige push-up på skrå, hvor hænderne bliver på sofaen, så du løfter mindre af din vægt.",
+      "harder": "Trin 2: plyo push-up på skrå. Først når du to pas i træk har lavet 5 i alle sæt, og alle var lige hurtige, rykker appen dig op.",
       "equipment": [],
-      "getReady": "Find en fri plads, gerne på et tæppe, og læg dig i planke på strakte arme.",
+      "getReady": "Find en fri plads, gerne på et tæppe, der ligger fast, og læg dig i planke på strakte arme.",
       "movements": [
         {
           "positions": [
@@ -84,6 +85,7 @@
       "tempo": "Kontrolleret ned, eksplosivt op, så hænderne slipper, og en blød landing.",
       "breathing": "Ånd ind på vej ned, og pust kort og hårdt ud, når du skubber dig fri.",
       "cues": ["Skub dig fri", "Land med bløde albuer", "Kroppen som en planke"],
+      "feel": "Bryst og bagsiden af overarmene, og albuer, der tager blødt imod uden stød i håndled eller skuldre.",
       "mistakes": [
         {
           "mistake": "Du lander med strakte, låste arme.",
@@ -98,10 +100,10 @@
           "fix": "Pres op med det samme fra bunden, så hurtigt og hårdt du kan."
         }
       ],
-      "easier": "Trin 1: hurtig push-up, hvor hænderne bliver i gulvet.",
-      "harder": "Trin 3: plyo push-up fra gulvet, hvor hænderne letter.",
+      "easier": "Trin 1: hurtig push-up. Vælg den under Stiger, hvis hænderne ikke slipper sofaen, eller du lander med låste arme.",
+      "harder": "Trin 3: plyo push-up. Først når du to pas i træk har lavet 5 i alle sæt, og hænderne slap lige højt hver gang, rykker appen dig op.",
       "equipment": ["sofa"],
-      "getReady": "Tjek, at sofaen står fast og ikke kan glide, og stil dig foran den.",
+      "getReady": "Tjek, at sofaen står fast og ikke kan glide, fx mod en væg, og stil dig foran den.",
       "movements": [
         {
           "positions": [
@@ -161,6 +163,7 @@
       "tempo": "Kontrolleret ned, eksplosivt op, så hænderne letter, og en blød landing.",
       "breathing": "Ånd ind på vej ned, og pust kort og hårdt ud, når du skubber dig fri.",
       "cues": ["Hænderne letter", "Land med bløde albuer", "Kroppen som en planke"],
+      "feel": "Eksplosionen i bryst, skuldre og bagsiden af overarmene og en blød landing uden stød i albuer eller håndled.",
       "mistakes": [
         {
           "mistake": "Du lander med strakte, låste arme.",
@@ -175,10 +178,10 @@
           "fix": "Stop sættet der. Hver gentagelse skal have samme højde."
         }
       ],
-      "easier": "Trin 2: plyo push-up på skrå med hænderne på sofaen.",
-      "harder": "Trin 4: klap push-up.",
+      "easier": "Trin 2: plyo push-up på skrå. Vælg den under Stiger, hvis hænderne ikke letter, eller du lander med låste arme.",
+      "harder": "Trin 4: klap push-up. Først når du to pas i træk har lavet 5 i alle sæt, og hænderne lettede lige højt hver gang, rykker appen dig op.",
       "equipment": [],
-      "getReady": "Find en fri plads, gerne på et tæppe, og læg dig i planke på strakte arme.",
+      "getReady": "Find en fri plads, gerne på et tæppe, der ligger fast, og læg dig i planke på strakte arme.",
       "movements": [
         {
           "positions": [
@@ -238,6 +241,7 @@
       "tempo": "Kontrolleret ned, eksplosivt op med ét klap i luften og en blød landing.",
       "breathing": "Ånd ind på vej ned, og pust kort og hårdt ud, når du skubber dig op.",
       "cues": ["Ét klap, blød landing", "Hænderne hurtigt tilbage", "Kroppen som en planke"],
+      "feel": "Bryst, bagsiden af overarmene og hurtige hænder; landingen må ikke give stød i håndled eller albuer.",
       "mistakes": [
         {
           "mistake": "Du klapper, før hænderne er fri af gulvet.",
@@ -252,10 +256,10 @@
           "fix": "Spænd mave og baller, så hele kroppen letter som én planke."
         }
       ],
-      "easier": "Trin 3: plyo push-up, hvor hænderne letter uden klap.",
-      "harder": "Trin 5: helkrops-plyo, hvor hænder og fødder letter samtidig.",
+      "easier": "Trin 3: plyo push-up. Vælg den under Stiger, hvis hænderne ikke er flade under skuldrene, før du lander.",
+      "harder": "Trin 5: helkrops-plyo. Først når du to pas i træk har lavet 5 i alle sæt, og alle klap var lige høje og hurtige, rykker appen dig op.",
       "equipment": [],
-      "getReady": "Find en fri plads, gerne på et tæppe, og læg dig i planke på strakte arme.",
+      "getReady": "Find en fri plads, gerne på et tæppe, der ligger fast, og læg dig i planke på strakte arme.",
       "movements": [
         {
           "positions": [
@@ -319,6 +323,7 @@
         "Kroppen stiv som en planke",
         "Land med bløde albuer"
       ],
+      "feel": "Bryst, bagsiden af overarmene og en stiv mave, der holder kroppen samlet, uden stød i lænd eller håndled.",
       "mistakes": [
         {
           "mistake": "Hoften knækker, så kroppen letter i to dele.",
@@ -333,10 +338,10 @@
           "fix": "Tag imod med let bøjede albuer, og lad dem give efter som en fjeder."
         }
       ],
-      "easier": "Trin 4: klap push-up.",
+      "easier": "Trin 4: klap push-up. Vælg den under Stiger, hvis hoften knækker, eller du lander med strakte arme.",
       "harder": "Det er stigens sidste trin. Superman, Aztec og dobbeltklap hører til imponer-kataloget og koster meget for lidt ekstra.",
       "equipment": [],
-      "getReady": "Find en fri plads, gerne på et tæppe, og læg dig i planke på strakte arme.",
+      "getReady": "Find en fri plads, gerne på et tæppe, der ligger fast, og læg dig i planke på strakte arme.",
       "movements": [
         {
           "positions": [

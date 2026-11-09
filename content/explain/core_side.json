@@ -9,10 +9,10 @@
     {
       "id": "core_side.S1",
       "trains": "Siden af maven og hoften, som holder dig stabil på ét ben, når du sparker eller checker et spark.",
-      "start": "Lig på siden med albuen lige under skulderen og underarmen i gulvet pegende frem. Benene strakte og fødderne oven på hinanden.",
+      "start": "Lig på siden med albuen lige under skulderen og underarmen i gulvet pegende frem. Benene strakte, fødderne oven på hinanden og den øverste hånd på hoften.",
       "steps": [
-        "Spænd maven og ballerne, og løft hoften fra gulvet.",
-        "Skub gulvet væk med albuen, så hoved, hofte og fødder er på én linje.",
+        "Spænd maven og ballerne, og løft hoften, til kun underarmen og den nederste fods yderside rører gulvet.",
+        "Skub gulvet væk med albuen, og skub hoften lidt frem, så hoved, hofte og fødder er på én linje.",
         "Hold stillingen, og sænk hoften roligt, når tiden er gået.",
         "Tag sæt 1 på venstre side og sæt 2 på højre side."
       ],
@@ -23,6 +23,7 @@
         "Skub gulvet væk med albuen",
         "Hoften frem, ikke bagud"
       ],
+      "feel": "Siden af livet og hoften nærmest gulvet, ikke lænden eller skulderen.",
       "mistakes": [
         {
           "mistake": "Hoften synker mod gulvet.",
@@ -37,10 +38,10 @@
           "fix": "Skub gulvet væk med albuen, og hold albuen lige under skulderen."
         }
       ],
-      "easier": "Sæt den øverste fod i gulvet lige foran den nederste, så du står mere stabilt.",
-      "harder": "Trin S2: med benløft.",
+      "easier": "Bøj knæene, så det nederste knæ og underarmen bærer dig, med hoved, hofte og knæ på én linje. Tag den, hvis hoften synker før 20 sek.",
+      "harder": "Trin S2: med benløft. Appen rykker dig op, når begge sider holder 45 sek med 2 i reserve to pas i træk.",
       "equipment": [],
-      "getReady": "Find en fri plads, og læg dig med albuen under skulderen: på venstre side i sæt 1 og på højre side i sæt 2.",
+      "getReady": "Læg dig på venstre side på et tæppe eller en måtte med albuen under skulderen; sæt 2 tager du på højre side.",
       "movements": [
         {
           "positions": [
@@ -75,7 +76,7 @@
     {
       "id": "core_side.S2",
       "trains": "Siden af maven og ydersiden af hoften, som holder bækkenet vandret, når du står på ét ben og sparker.",
-      "start": "Sideplanke på albuen: underarmen i gulvet med albuen under skulderen, hoften løftet og hoved, hofte og fødder på én linje.",
+      "start": "Sideplanke på albuen: underarmen i gulvet med albuen under skulderen, hoften løftet og hoved, hofte og fødder på én linje. Den øverste hånd på hoften.",
       "steps": [
         "Læg dig på venstre side, og løft hoften op i sideplanke på albuen.",
         "Løft det øverste ben langsomt op, strakt og med tæerne pegende frem.",
@@ -85,6 +86,7 @@
       "tempo": "Løft langsomt, og sænk på 3 sek. Hoften bliver oppe hele sættet.",
       "breathing": "Pust ud, når benet løftes, og træk vejret ind, når det sænkes.",
       "cues": ["Hoften oppe hele sættet", "Tæerne peger frem", "Løft langsomt, sænk på 3 sek"],
+      "feel": "Siden af livet mod gulvet og ydersiden af hoften på det løftede ben.",
       "mistakes": [
         {
           "mistake": "Hoften synker, når benet løftes.",
@@ -99,10 +101,10 @@
           "fix": "Løft langsomt, og sænk på 3 sek, så siden arbejder hele vejen."
         }
       ],
-      "easier": "Trin S1: sideplanke på albuen.",
-      "harder": "Trin S3: stjerne-sideplanke.",
+      "easier": "Trin S1: sideplanke på albuen. Vælg det selv under Stiger, hvis hoften synker, før du har 8 løft pr. side.",
+      "harder": "Trin S3: stjerne-sideplanke. Appen rykker dig op, når alle sæt rammer 12 rene løft pr. side med 2 i reserve to pas i træk.",
       "equipment": [],
-      "getReady": "Find en fri plads, og læg dig på venstre side med albuen under skulderen.",
+      "getReady": "Læg dig på venstre side på et tæppe eller en måtte med albuen under skulderen.",
       "movements": [
         {
           "positions": [
@@ -135,9 +137,9 @@
     {
       "id": "core_side.S3",
       "trains": "Hele siden af kroppen og ydersiden af begge hofter, som holder bækkenet vandret, når du står på ét ben og sparker.",
-      "start": "Sideplanke på albuen med albuen lige under skulderen, hoften løftet og hoved, hofte og fødder på én linje.",
+      "start": "Lig på siden med albuen lige under skulderen og underarmen i gulvet. Benene strakte, fødderne oven på hinanden og den øverste hånd på hoften.",
       "steps": [
-        "Løft hoften op i sideplanke på albuen med hoved, hofte og fødder på én linje.",
+        "Løft hoften op i sideplanke på albuen, så hoved, hofte og fødder er på én linje.",
         "Stræk den øverste arm lodret op, og løft det øverste ben strakt op, så du står som en stjerne.",
         "Hold stillingen stille, og sænk arm, ben og hofte roligt, når tiden er gået.",
         "Tag sæt 1 på venstre side og sæt 2 på højre side."
@@ -145,6 +147,7 @@
       "tempo": "Løft dig roligt op i stjernen, og hold stillingen stille hele tiden.",
       "breathing": "Træk vejret roligt og jævnt gennem hele holdet.",
       "cues": ["Øverste arm og ben strakt op", "Hoften højt og frem", "Skub gulvet væk med albuen"],
+      "feel": "Hele siden af kroppen mod gulvet og ydersiden af begge hofter.",
       "mistakes": [
         {
           "mistake": "Hoften synker, når benet løftes.",
@@ -159,10 +162,10 @@
           "fix": "Løft benet lige op ud til siden med tæerne pegende frem."
         }
       ],
-      "easier": "Trin S2: med benløft.",
-      "harder": "Trin S4: stjerne på strakt arm.",
+      "easier": "Trin S2: med benløft. Vælg det selv under Stiger, hvis hoften synker, før du har holdt stjernen 15 sek.",
+      "harder": "Trin S4: stjerne på strakt arm. Appen rykker dig op, når begge sider holder 30 sek med 2 i reserve to pas i træk.",
       "equipment": [],
-      "getReady": "Find en fri plads, og læg dig med albuen under skulderen: på venstre side i sæt 1 og på højre side i sæt 2.",
+      "getReady": "Læg dig på venstre side på et tæppe eller en måtte med albuen under skulderen; sæt 2 tager du på højre side.",
       "movements": [
         {
           "positions": [
@@ -208,7 +211,7 @@
     {
       "id": "core_side.S4",
       "trains": "Siden af kroppen og skulderen, der bærer dig på én strakt arm, så du står stabilt, når du sparker og bliver presset i clinchen.",
-      "start": "Lig på siden med hånden fladt i gulvet lige under skulderen og strakt arm. Benene strakte og fødderne oven på hinanden.",
+      "start": "Lig på siden med overkroppen løftet på strakt arm og hånden fladt i gulvet lige under skulderen. Benene strakte og fødderne oven på hinanden.",
       "steps": [
         "Skub gulvet væk med hånden, og løft hoften, til hoved, hofte og fødder er på én linje.",
         "Stræk den øverste arm lodret op, og løft det øverste ben strakt op i en stjerne.",
@@ -218,6 +221,7 @@
       "tempo": "Løft dig roligt op i stjernen, og hold stillingen stille hele tiden.",
       "breathing": "Træk vejret roligt og jævnt gennem hele holdet.",
       "cues": ["Hånden lige under skulderen", "Skub gulvet væk", "Øverste arm og ben strakt op"],
+      "feel": "Siden af kroppen og skulderen, der bærer dig; smerte i håndled eller skulder betyder stop.",
       "mistakes": [
         {
           "mistake": "Hånden står foran eller bag skulderen.",
@@ -232,8 +236,8 @@
           "fix": "Løft hoften, og skub den frem på linje. Synker den igen, er sættet slut."
         }
       ],
-      "easier": "Trin S3: stjerne-sideplanke på albuen.",
-      "harder": "Trin S5: stjerne-teep.",
+      "easier": "Trin S3: stjerne-sideplanke på albuen. Vælg det selv under Stiger, hvis du ikke kan holde 15 sek med skulderen lige over hånden.",
+      "harder": "Trin S5: stjerne-teep. Appen rykker dig op, når begge sider holder 45 sek med 2 i reserve to pas i træk.",
       "equipment": [],
       "getReady": "Find en fri plads, og læg dig med hånden under skulderen: på venstre side i sæt 1 og på højre side i sæt 2.",
       "movements": [
@@ -281,16 +285,17 @@
     {
       "id": "core_side.S5",
       "trains": "Siden af kroppen holder dig stille, mens benet trækker op og sparker ud som en teep: kontrol over hoften midt i et spark.",
-      "start": "Stjerne på albuen: underarmen i gulvet med albuen lige under skulderen, hoften løftet, den øverste arm strakt op og det øverste ben løftet strakt.",
+      "start": "Lig på siden med albuen under skulderen, og løft dig op i stjernen: hoften oppe, den øverste arm lodret op og det øverste ben løftet strakt.",
       "steps": [
-        "Løft dig op i stjernen på albuen med hoved, hofte og fødder på én linje.",
         "Træk det øverste knæ op mod brystet, og hold hoften oppe.",
-        "Spark benet frem som en teep, træk knæet ind igen, og stræk benet tilbage i stjernen.",
+        "Spark benet strakt frem i hoftehøjde som en teep med trædepuden forrest.",
+        "Træk knæet ind igen, og stræk benet tilbage ud i stjernen.",
         "Tag alle gentagelser på venstre side, og skift så til højre side uden pause."
       ],
       "tempo": "Kontrolleret: knæet op, sparket ud og benet tilbage, mens hoften står stille.",
       "breathing": "Pust kort ud, når du sparker, og træk vejret ind, når benet kommer tilbage.",
       "cues": ["Knæ til brystet, spark ud", "Hoften oppe hele tiden", "Pust ud på sparket"],
+      "feel": "Siden af kroppen mod gulvet og forsiden af hoften på sparkebenet, mens hoften står stille.",
       "mistakes": [
         {
           "mistake": "Hoften synker, når knæet kommer op.",
@@ -305,8 +310,8 @@
           "fix": "Hold den øverste arm lodret og brystet fremad, mens benet arbejder."
         }
       ],
-      "easier": "Trin S4: stjerne på strakt arm.",
-      "harder": "Det er stigens sidste trin. Gør hvert spark lige så rent som det første, med hoften helt stille.",
+      "easier": "Trin S4: stjerne på strakt arm. Vælg det selv under Stiger, hvis hoften synker, før du har 5 rene spark pr. side.",
+      "harder": "Det er stigens sidste trin: appen rykker dig ikke videre. Gør hvert spark lige så rent som det første med hoften helt stille.",
       "equipment": [],
       "getReady": "Find en fri plads med luft foran dig, og læg dig på venstre side med albuen under skulderen.",
       "movements": [

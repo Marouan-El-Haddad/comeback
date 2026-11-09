@@ -9,12 +9,12 @@
     {
       "id": "sl_rdl.1",
       "trains": "Baglår, baller og balance på ét ben, så du står sikkert på standbenet, når du sparker.",
-      "start": "Stå på ét ben med knæet let bøjet og armene hængende ned foran lårene. Det frie ben er strakt med foden lidt over gulvet lige bag standbenet.",
+      "start": "Stå på ét ben med knæet let bøjet og det frie ben strakt med foden lidt over gulvet bag dig. Armene hænger ned foran lårene; med vægt holder du rygsækken i hånden på det frie bens side.",
       "steps": [
         "Skub hoften bagud på 3 sek med lang ryg, og lad det frie ben følge overkroppen bagud.",
         "Stop, når overkroppen er næsten vandret, eller før ryggen bliver rund, og hold 1 sek stille.",
-        "Rejs dig kontrolleret ved at skubbe hoften frem, og klem ballen i toppen.",
-        "Tag alle gentagelser på samme ben, og skift så."
+        "Rejs dig ved at skubbe hoften frem, og klem ballen i toppen uden at sætte foden ned.",
+        "I »Venstre ben« står du på venstre ben; i »Højre ben« på højre."
       ],
       "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
       "breathing": "Træk vejret ind på vej ned, og pust ud på vej op.",
@@ -23,6 +23,7 @@
         "Det frie ben følger med",
         "Begge hofter peger mod gulvet"
       ],
+      "feel": "Et stræk i baglåret og ballen på standbenet, ikke i lænden.",
       "mistakes": [
         {
           "mistake": "Ryggen bliver rund i bunden.",
@@ -37,10 +38,10 @@
           "fix": "Hold knæet let bøjet og stille hele vejen; bevægelsen sker i hoften."
         }
       ],
-      "easier": "Hold let i en stoleryg med den ene hånd, eller lad tæerne på det frie ben røre gulvet let bag dig.",
-      "harder": "Med rygsæk i hånden på det frie bens side: rammer du toppen i alle sæt med 2 i reserve to pas i træk, beder appen dig lægge 2 kg i.",
+      "easier": "Lad tæerne på det frie ben røre gulvet let bag dig, og hold let i en stoleryg. Gå kun ned, til du mærker et let stræk i baglåret.",
+      "harder": "Når alle sæt rammer toppen af intervallet med 2 i reserve to pas i træk, beder appen dig lægge 2 kg i rygsækken. Hold den i hånden på det frie bens side.",
       "equipment": ["backpack"],
-      "getReady": "Find en fri plads, og læg rygsækken klar, hvis passet viser vægt til den.",
+      "getReady": "Find en fri plads; viser passet »Rygsæk«, så pak den med den vægt (1 liter vand vejer 1 kg).",
       "movements": [
         {
           "positions": [

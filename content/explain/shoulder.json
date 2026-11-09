@@ -10,16 +10,17 @@
     {
       "id": "shoulder.1",
       "trains": "Skuldre og armenes bagside, når du presser over hovedet: styrke til en garde, der bliver oppe, og første trin mod håndstand.",
-      "start": "Start i push-up-stilling med hænderne i skulderbredde. Gå fødderne ind mod hænderne, til hoften er højt, og kroppen danner et omvendt V med strakte arme og ben.",
+      "start": "Start i push-up-stilling med hænderne i skulderbredde. Gå fødderne ind mod hænderne, til hoften er højt, og kroppen er et omvendt V med strakte arme og ben.",
       "steps": [
         "Hold hoften højt hele vejen.",
-        "Bøj albuerne skråt bagud, og sænk hovedet på 3 sek mod et punkt foran fingrene.",
+        "Bøj albuerne skråt bagud, og sænk hovedet på 3 sek mod et punkt lige foran fingerspidserne.",
         "Hold 1 sek stille med hovedet lige over gulvet, så hoved og hænder danner en trekant.",
         "Pres gulvet væk, til armene er strakte, og hovedet er mellem armene igen."
       ],
       "tempo": "3 sek ned, 1 sek stille med hovedet lige over gulvet, op i ét roligt stræk.",
       "breathing": "Ånd ind på vej ned, og pust ud, når du presser op.",
       "cues": ["Hoften højt", "Hoved og hænder i en trekant", "Albuerne skråt bagud"],
+      "feel": "Skuldrene og bagsiden af armene, ikke nakken; et stræk i baglårene er i orden.",
       "mistakes": [
         {
           "mistake": "Hoften falder, og øvelsen bliver en almindelig push-up.",
@@ -34,8 +35,8 @@
           "fix": "Bøj albuerne skråt bagud mod fødderne, ca. 45° ud fra kroppen."
         }
       ],
-      "easier": "Gå fødderne lidt længere ud, så overkroppen er mindre stejl, og gå kun så dybt, du kan styre.",
-      "harder": "Trin 2: fødderne på en stol, så hoften kommer over skuldrene.",
+      "easier": "Fødderne længere ud, så overkroppen er mindre stejl, og kun så dybt, du kan styre. Tag den, hvis du ikke kan lave 6 rene gentagelser i alle sæt.",
+      "harder": "Trin 2: fødderne på en stol. Først når alle sæt rammer 12 med 2 i reserve to pas i træk, rykker appen dig op.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet med plads til en push-up.",
       "movements": [
@@ -71,16 +72,17 @@
     {
       "id": "shoulder.2",
       "trains": "Mere af vægten over skuldrene end på trin 1: styrke til en garde, der bliver oppe, og til håndstand.",
-      "start": "Stå på alle fire med ryggen til stolen, og sæt tæerne op på sædet én fod ad gangen. Gå hænderne ind mod stolen, til hoften er lige over skuldrene.",
+      "start": "Stå på alle fire med fødderne mod stolen, og sæt tæerne midt på sædet én fod ad gangen. Gå hænderne ind mod stolen, til hoften er lige over skuldrene.",
       "steps": [
         "Spænd maven, og hold hoften lige over skuldrene og hovedet mellem armene.",
-        "Bøj albuerne skråt bagud, og sænk hovedet på 3 sek mod et punkt foran fingrene.",
+        "Bøj albuerne skråt bagud, og sænk hovedet på 3 sek mod et punkt lige foran fingerspidserne.",
         "Hold 1 sek stille med hovedet lige over gulvet.",
         "Pres gulvet væk til strakte arme. Gå fødderne ned én ad gangen, når sættet er slut."
       ],
       "tempo": "3 sek ned, 1 sek stille med hovedet lige over gulvet, op i ét roligt stræk.",
       "breathing": "Ånd ind på vej ned, og pust ud, når du presser op. Bliver du svimmel, så kom ned.",
       "cues": ["Hoften over skuldrene", "Hoved og hænder i en trekant", "Albuerne skråt bagud"],
+      "feel": "Skuldrene og bagsiden af armene, mere end på trin 1, ikke nakken.",
       "mistakes": [
         {
           "mistake": "Hænderne står for langt fra stolen, så det bliver en skrå push-up.",
@@ -92,20 +94,20 @@
         },
         {
           "mistake": "Stolen glider eller vipper.",
-          "fix": "Stil stolen med ryggen mod en væg, og sæt tæerne midt på sædet."
+          "fix": "Stil stolen med ryglænet mod en væg, og sæt tæerne midt på sædet."
         }
       ],
-      "easier": "Sæt fødderne lavere, fx på et trappetrin, eller gå tilbage til trin 1: pike push-up.",
-      "harder": "Trin 3: du laver stadig dette trin og lægger håndstand med maven mod væggen til.",
+      "easier": "Sæt fødderne lavere, fx på et trappetrin, eller vælg trin 1 under Stiger, hvis du ikke kan lave 5 rene gentagelser i alle sæt.",
+      "harder": "Trin 3: dette trin plus håndstand med maven mod væggen. Først når alle sæt rammer 10 med 2 i reserve to pas i træk, rykker appen dig op.",
       "equipment": ["chair", "wall"],
-      "getReady": "Stil en solid stol med ryggen mod en væg, så den ikke kan glide.",
+      "getReady": "Stil en solid stol uden hjul med ryglænet mod væggen, så den ikke kan glide.",
       "movements": [
         {
           "positions": [
             {
               "id": "top",
               "name": "Oppe",
-              "text": "Hænderne i gulvet i skulderbredde og armene strakte. Hoften er lige over skuldrene, så overkroppen er næsten lodret med hovedet mellem armene. Tæerne på stolesædet og benene næsten strakte, ca. 45° mellem overkrop og lår.",
+              "text": "Hænderne i gulvet i skulderbredde og armene strakte. Hoften er lige over skuldrene, så overkroppen er næsten lodret med hovedet mellem armene. Tæerne midt på stolesædet og benene næsten strakte, ca. 45° mellem overkrop og lår.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "toes", "on": "chair" }
@@ -142,6 +144,7 @@
       "tempo": "Gå roligt op, hold stillingen stille, og gå roligt ned igen.",
       "breathing": "Træk vejret roligt og jævnt, også i håndstanden.",
       "cues": ["Skub gulvet væk", "Ribbenene nede", "Kroppen lang og lige"],
+      "feel": "Skuldrene, der skubber dig op, og maven og ballerne, der holder dig lige, ikke lænden.",
       "mistakes": [
         {
           "mistake": "Lænden svajer, så kroppen bliver en banan.",
@@ -156,10 +159,10 @@
           "fix": "Gå ned samme vej, som du kom op. Skal det gå hurtigt, så drej ud til siden, og sæt fødderne i gulvet."
         }
       ],
-      "easier": "Gå kun halvt op med hænderne længere fra væggen, og hold der. Trin 2 med fødderne på stolen laver du stadig i samme pas.",
-      "harder": "Trin 4: HSPU-negativer, hvor du sænker dig langsomt med ryggen mod væggen.",
+      "easier": "Gå kun halvt op med hænderne længere fra væggen, og hold der. Tag den, hvis du ikke kan holde 20 sek med lige krop.",
+      "harder": "Trin 4: HSPU-negativer. Først når alle sæt rammer 45 sek med 2 i reserve to pas i træk, rykker appen dig op.",
       "equipment": ["wall"],
-      "getReady": "Læg dig i planke med fodsålerne mod en fri væg til sidst i pausen, og gå op, når nedtællingen starter.",
+      "getReady": "Læg dig i planke med fodsålerne mod en fri væg, og gå op ad væggen, så snart »Klar« begynder at tælle ned.",
       "movements": [
         {
           "positions": [
@@ -203,17 +206,18 @@
     },
     {
       "id": "shoulder.4",
-      "trains": "Bygger styrke i skuldre og triceps i den langsomme vej ned, hvor du kan styre mere, end du kan presse op.",
-      "start": "Stå med front mod væggen, og sæt hænderne i gulvet i skulderbredde en håndsbredde fra den. Puden ligger på gulvet mellem hænderne og dig.",
+      "trains": "Bygger styrke i skuldre og bagsiden af armene på den langsomme vej ned, hvor du kan styre mere, end du kan presse op.",
+      "start": "Front mod væggen med hænderne i gulvet i skulderbredde, en fodlængde fra væggen og fingrene mod den. Puden ligger mellem fingerspidserne og væggen.",
       "steps": [
         "Træd den ene fod frem, og spark roligt det andet ben strakt op. Det første ben følger, og hælene lander blødt på væggen.",
         "Stram kroppen, og sænk dig på 4–5 sek, til toppen af hovedet rører puden blødt.",
         "Bøj i hoften, og træd fødderne ned i gulvet én ad gangen uden at presse op.",
-        "Rejs dig, og spark op igen til næste gentagelse. Falder du tilbage, så spark lidt hårdere."
+        "Rejs dig, og spark op igen til næste gentagelse. Når du ikke op til væggen, så spark lidt hårdere."
       ],
       "tempo": "Sænk dig på 4–5 sek, og træd ned uden at presse op.",
       "breathing": "Ånd ind, før du sænker dig, og pust langsomt ud på vej ned.",
       "cues": ["Ned på 4–5 sek", "Hovedet lander blødt", "Ribbenene nede"],
+      "feel": "Skuldrene og bagsiden af armene, der bremser hele vejen ned, ikke nakken.",
       "mistakes": [
         {
           "mistake": "Du falder det sidste stykke ned på puden.",
@@ -228,17 +232,17 @@
           "fix": "Mister du balancen, så drej ud til siden, og træd ned. Giver armene efter, så lad hovedet lande blødt på puden uden vrid."
         }
       ],
-      "easier": "Trin 3: håndstand med maven mod væggen. Eller sænk dig til en tykkere pude.",
-      "harder": "Trin 5: HSPU til en pude, hvor du også presser dig op igen.",
+      "easier": "En tykkere pude. Tag den, hvis du ikke kan bremse hele vejen på 4–5 sek. Hjælper det ikke, så vælg trin 3 under Stiger.",
+      "harder": "Trin 5: HSPU til en pude, hvor du også presser op. Først når alle sæt rammer 5 med 2 i reserve to pas i træk, rykker appen dig op.",
       "equipment": ["wall", "pillow"],
-      "getReady": "Læg en foldet pude på gulvet ved en fri væg, og ryd plads ud til siderne.",
+      "getReady": "Læg en foldet pude på gulvet ind mod en fri væg, og ryd plads ud til siderne.",
       "movements": [
         {
           "positions": [
             {
               "id": "ready",
               "name": "Klar",
-              "text": "Front mod væggen med hænderne i gulvet i skulderbredde en håndsbredde fra den og puden mellem hænderne og fødderne. Den ene fod er trådt frem med bøjet knæ, og det andet ben er strakt bagud.",
+              "text": "Front mod væggen med hænderne i gulvet i skulderbredde en fodlængde fra den, fingrene mod væggen og puden mellem fingrene og væggen. Den ene fod er trådt frem med bøjet knæ, og det andet ben er strakt bagud.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "foot", "on": "floor", "count": 1 },
@@ -248,7 +252,7 @@
             {
               "id": "top",
               "name": "Håndstand",
-              "text": "Håndstand med ryggen mod væggen: hænderne i skulderbredde en håndsbredde fra den, armene strakte og hælene mod væggen. Ribbenene nede, kroppen lang og blikket på puden.",
+              "text": "Håndstand med ryggen mod væggen: hænderne i skulderbredde en fodlængde fra den, armene strakte og hælene mod væggen. Ribbenene nede, kroppen lang og blikket på puden.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "heel", "on": "wall" }
@@ -257,7 +261,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Albuerne bøjet ca. 90° og ca. 45° ud fra kroppen. Toppen af hovedet rører puden blødt, så hoved og hænder danner en trekant. Hælene er gledet ned ad væggen og rører den stadig.",
+              "text": "Albuerne bøjet ca. 90° og ca. 45° ud, så de peger skråt ud i rummet. Toppen af hovedet rører puden blødt mellem fingerspidserne og væggen, så hoved og hænder danner en trekant. Hælene er gledet ned ad væggen.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "head", "on": "pillow" },
@@ -276,10 +280,10 @@
     },
     {
       "id": "shoulder.5",
-      "trains": "Skuldre og triceps presser hele kroppen op fra puden: styrken til fuld HSPU og til en garde, der bliver oppe.",
-      "start": "Håndstand med ryggen mod væggen og hælene mod den. Hænderne står i skulderbredde en håndsbredde fra væggen, og puden ligger lige foran dem, væk fra væggen.",
+      "trains": "Skuldre og bagsiden af armene presser hele kroppen op fra puden: styrken til fuld HSPU og til en garde, der bliver oppe.",
+      "start": "Håndstand med ryggen og hælene mod væggen, hænderne i skulderbredde en fodlængde fra den og fingrene mod den. Puden ligger mellem fingerspidserne og væggen.",
       "steps": [
-        "Træd den ene fod frem, og spark roligt det andet ben strakt op, så hælene lander blødt på væggen.",
+        "Spark op som i trin 4, så hælene lander blødt på væggen.",
         "Sænk dig på 3 sek, til toppen af hovedet rører puden let, og hold 1 sek stille.",
         "Pres dig op til strakte arme uden vægt på hovedet i bunden, og gentag.",
         "Træd ned ét ben ad gangen, når sættet er slut. Gør puden lidt tyndere hver uge."
@@ -287,6 +291,7 @@
       "tempo": "3 sek ned, 1 sek stille med hovedet let mod puden, op i ét roligt stræk.",
       "breathing": "Ånd ind på vej ned, og pust ud, når du presser op.",
       "cues": ["3 sek ned, 1 sek stille", "Hovedet lander blødt", "Skub gulvet væk"],
+      "feel": "Skuldrene og bagsiden af armene, mest i bunden, ikke nakken.",
       "mistakes": [
         {
           "mistake": "Du lægger vægt på hovedet i bunden.",
@@ -301,17 +306,17 @@
           "fix": "Mister du balancen, så drej ud til siden, og træd ned. Giver armene efter, så lad hovedet lande blødt på puden uden vrid."
         }
       ],
-      "easier": "Trin 4: HSPU-negativer, hvor du kun sænker dig og træder ned. Eller brug en tykkere pude.",
-      "harder": "Trin 6: fuld HSPU, hvor hovedet går blødt helt ned til gulvet.",
+      "easier": "Et lag mere på puden. Tag det, hvis du ikke kan lave 3 rene gentagelser i alle sæt. Hjælper det ikke, så vælg trin 4 under Stiger.",
+      "harder": "Trin 6: fuld HSPU, hvor hovedet går helt ned til gulvet. Først når alle sæt rammer 8 med 2 i reserve to pas i træk, rykker appen dig op.",
       "equipment": ["wall", "pillow", "towel"],
-      "getReady": "Læg en pude eller et par foldede håndklæder ved en fri væg, så du kan gøre den tyndere uge for uge.",
+      "getReady": "Læg en pude eller en stak foldede håndklæder ind mod en fri væg, så du kan tage et lag væk hver uge.",
       "movements": [
         {
           "positions": [
             {
               "id": "top",
               "name": "Oppe",
-              "text": "Håndstand med ryggen mod væggen: hænderne i skulderbredde en håndsbredde fra den, armene strakte og hælene mod væggen. Ribbenene nede, kroppen lang og puden lige foran hænderne.",
+              "text": "Håndstand med ryggen mod væggen: hænderne i skulderbredde en fodlængde fra den, armene strakte og hælene mod væggen. Ribbenene nede, kroppen lang og puden mellem fingrene og væggen.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "heel", "on": "wall" }
@@ -320,7 +325,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Albuerne bøjet ca. 90° og ca. 45° ud fra kroppen. Toppen af hovedet rører puden let, så hoved og hænder danner en trekant. Hælene er gledet ned ad væggen og rører den stadig.",
+              "text": "Albuerne bøjet ca. 90° og ca. 45° ud, så de peger skråt ud i rummet. Toppen af hovedet rører puden let mellem fingerspidserne og væggen, så hoved og hænder danner en trekant. Hælene er gledet ned ad væggen.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "head", "on": "pillow" },
@@ -339,16 +344,17 @@
     {
       "id": "shoulder.6",
       "trains": "Hele kropsvægten presset op over hovedet: skuldre, der holder garden oppe og står imod i clinchen.",
-      "start": "Håndstand med ryggen mod væggen og hælene mod den. Hænderne står i skulderbredde en håndsbredde fra væggen.",
+      "start": "Håndstand med ryggen og hælene mod væggen, hænderne i skulderbredde en fodlængde fra den og fingrene mod den.",
       "steps": [
-        "Træd den ene fod frem, og spark roligt det andet ben strakt op, så hælene lander blødt på væggen.",
-        "Sænk dig på 3 sek, til toppen af hovedet rører gulvet blødt, og hold 1 sek stille.",
+        "Spark op som i trin 4, så hælene lander blødt på væggen.",
+        "Sænk dig på 3 sek, til toppen af hovedet rører gulvet blødt mellem fingerspidserne og væggen, og hold 1 sek stille.",
         "Pres dig op til strakte arme uden at lægge vægt på hovedet, og gentag.",
         "Træd ned ét ben ad gangen, når sættet er slut."
       ],
       "tempo": "3 sek ned, 1 sek stille med hovedet let mod gulvet, op i ét roligt stræk.",
       "breathing": "Ånd ind på vej ned, og pust ud, når du presser op.",
       "cues": ["Hovedet blødt ned", "Albuerne ca. 45° ud", "Skub gulvet væk"],
+      "feel": "Skuldrene og bagsiden af armene hele vejen, ikke nakken.",
       "mistakes": [
         {
           "mistake": "Hovedet rammer gulvet med vægt.",
@@ -363,8 +369,8 @@
           "fix": "Mister du balancen, så drej ud til siden, og træd ned. Kan du ikke presse op, så lad hovedet lande blødt, og træd ned uden vrid."
         }
       ],
-      "easier": "Trin 5: HSPU til en pude.",
-      "harder": "Trin 7: deficit-HSPU med hænderne på to stakke bøger.",
+      "easier": "Trin 5: HSPU til en pude. Tag den, hvis du ikke kan lave 3 rene gentagelser i alle sæt. Vælg den under Stiger.",
+      "harder": "Trin 7: deficit-HSPU med hænderne på bøger. Først når alle sæt rammer 6 med 2 i reserve to pas i træk, rykker appen dig op.",
       "equipment": ["wall"],
       "getReady": "Find et stykke fri væg, og ryd plads ud til siderne.",
       "movements": [
@@ -373,7 +379,7 @@
             {
               "id": "top",
               "name": "Oppe",
-              "text": "Håndstand med ryggen mod væggen: hænderne i skulderbredde en håndsbredde fra den, armene strakte og hælene mod væggen. Ribbenene nede og kroppen lang.",
+              "text": "Håndstand med ryggen mod væggen: hænderne i skulderbredde en fodlængde fra den, armene strakte og hælene mod væggen. Ribbenene nede og kroppen lang.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "heel", "on": "wall" }
@@ -382,7 +388,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Albuerne bøjet ca. 90° og ca. 45° ud fra kroppen. Toppen af hovedet rører gulvet blødt foran hænderne, så hoved og hænder danner en trekant. Hælene er gledet ned ad væggen.",
+              "text": "Albuerne bøjet ca. 90° og ca. 45° ud, så de peger skråt ud i rummet. Toppen af hovedet rører gulvet blødt mellem fingerspidserne og væggen, så hoved og hænder danner en trekant. Hælene er gledet ned ad væggen.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "head", "on": "floor" },
@@ -401,9 +407,9 @@
     {
       "id": "shoulder.7",
       "trains": "Hovedet går under hænderne, så skuldrene skal presse længere end fra gulvet: stigens sværeste pres over hovedet.",
-      "start": "Byg to lige høje stakke af store, flade bøger i skulderbredde en håndsbredde fra væggen. Hænderne står på stakkene.",
+      "start": "To lige høje stakke af store, flade bøger i skulderbredde, en fodlængde fra væggen. Hænderne på stakkene med fingrene mod væggen.",
       "steps": [
-        "Prøv stakkene, træd den ene fod frem, og spark roligt det andet ben strakt op, så hælene lander blødt på væggen.",
+        "Prøv stakkene med hænderne, og spark op som i trin 4, så hælene lander blødt på væggen.",
         "Sænk dig på 3 sek, til hovedet går ned mellem stakkene og rører gulvet blødt.",
         "Hold 1 sek stille uden vægt på hovedet, og pres dig op til strakte arme.",
         "Træd ned ét ben ad gangen, når sættet er slut."
@@ -411,6 +417,7 @@
       "tempo": "3 sek ned, 1 sek stille med hovedet under håndhøjde, op i ét roligt stræk.",
       "breathing": "Ånd ind på vej ned, og pust ud, når du presser op.",
       "cues": ["Hovedet under håndhøjde", "Hovedet lander blødt", "Albuerne ca. 45° ud"],
+      "feel": "Skuldrene og bagsiden af armene, mest i den dybe bund, ikke nakken.",
       "mistakes": [
         {
           "mistake": "Stakkene vipper eller glider.",
@@ -425,17 +432,17 @@
           "fix": "Mister du balancen, så drej ud til siden, og træd ned. Kan du ikke presse op, så lad hovedet lande blødt, og træd ned uden vrid."
         }
       ],
-      "easier": "Trin 6: fuld HSPU mod væggen med hænderne i gulvet.",
-      "harder": "Det er stigens sidste trin. Lidt højere stakke gør vejen ned længere.",
+      "easier": "Trin 6: fuld HSPU med hænderne i gulvet. Tag den, hvis du ikke kan lave 3 rene gentagelser i alle sæt. Vælg den under Stiger.",
+      "harder": "Det er stigens sidste trin. Gør hver gentagelse renere: 3 sek ned, 1 sek stille og hovedet blødt.",
       "equipment": ["wall", "books"],
-      "getReady": "Byg to lige høje stakke af store bøger ved en fri væg, og prøv, at de står fast.",
+      "getReady": "Byg to lige høje stakke af store bøger en fodlængde fra en fri væg, og prøv, at de står fast.",
       "movements": [
         {
           "positions": [
             {
               "id": "top",
               "name": "Oppe",
-              "text": "Håndstand med ryggen mod væggen og hænderne på to lige høje stakke bøger i skulderbredde en håndsbredde fra den. Armene strakte, hælene mod væggen og kroppen lang.",
+              "text": "Håndstand med ryggen mod væggen og hænderne på to lige høje stakke bøger i skulderbredde en fodlængde fra den. Armene strakte, hælene mod væggen og kroppen lang.",
               "contacts": [
                 { "part": "hand", "on": "books" },
                 { "part": "heel", "on": "wall" }
@@ -444,7 +451,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Albuerne bøjet forbi 90° og ca. 45° ud fra kroppen. Hovedet er gået ned mellem stakkene under håndhøjde og rører gulvet blødt. Hælene er gledet ned ad væggen.",
+              "text": "Albuerne bøjet forbi 90° og ca. 45° ud, så de peger skråt ud i rummet. Hovedet er gået ned mellem stakkene under håndhøjde og rører gulvet blødt. Hælene er gledet ned ad væggen.",
               "contacts": [
                 { "part": "hand", "on": "books" },
                 { "part": "head", "on": "floor" },

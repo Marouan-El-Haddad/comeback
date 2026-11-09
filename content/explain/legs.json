@@ -2,7 +2,7 @@
   "format": 1,
   "subject": "legs",
   "why": [
-    "I Muay Thai står du tit på ét ben: når du sparker, giver knæ og skifter stilling. Stigen bygger styrke i ét ben ad gangen, så standbenet holder, og fodarbejdet bliver stærkere. Den går fra split squat til pistol squat helt ned og op på ét ben.",
+    "I Muay Thai står du tit på ét ben: når du sparker, giver knæ og skifter stilling. Stigen gør ét ben ad gangen stærkt, så standbenet holder. Den går fra split squat til pistol squat, helt ned og op på ét ben.",
     "Tjek anklen med knæ-til-væg: stil tæerne 10 cm fra væggen, og før knæet frem mod den. Når knæet væggen, uden at hælen letter? Ellers: 2 × 10 ankel-vip først (knæet frem over tæerne med hælen i gulvet) og en tynd bog under hælen i trin 4–6.",
     "Smerte op til 3 ud af 10 under en øvelse er i orden, hvis den er væk næste morgen. Skarp eller stigende smerte i et led: stop øvelsen, og gå et trin ned i en uge. Det gør appen, når du trykker »Smerte« og »Skarp eller i et led«; på trin 1 får du den lettere variant."
   ],
@@ -10,16 +10,17 @@
     {
       "id": "legs.1",
       "trains": "Lår og baller på ét ben ad gangen, så standbenet holder, når du sparker og giver knæ.",
-      "start": "Stå i et langt skridt med fødderne i hoftebredde, som på to skinner, og en pude på gulvet under bagerste knæ. Forreste fod står fladt, bagerste hæl er løftet, og hænderne er på hofterne.",
+      "start": "Stå i et langt skridt med fødderne i hoftebredde, som på to skinner, og puden lige under bagerste knæ. Forreste fod står fladt, bagerste på tæerne, og hænderne er på hofterne.",
       "steps": [
-        "Spænd maven, og hold overkroppen rank med vægten mest på forreste ben.",
-        "Sænk dig lige ned på 3 sek, til bagerste knæ rører puden let.",
+        "Spænd maven, og læg det meste af vægten på forreste ben.",
+        "Sænk dig lodret ned på 3 sek, til bagerste knæ rører puden let.",
         "Hold 1 sek stille uden at hvile på puden, og pres dig op gennem forreste hæl.",
-        "I »Venstre ben« står venstre fod forrest og højre bagerst; i »Højre ben« omvendt."
+        "I »Venstre ben« står venstre fod forrest; i »Højre ben« højre."
       ],
       "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
       "breathing": "Træk vejret ind på vej ned, og pust ud på vej op.",
       "cues": ["3 sek ned, 1 sek stille", "Knæet rører puden let", "Forreste hæl i gulvet"],
+      "feel": "Forreste lår og balle og et let stræk foran bagerste hofte, ikke i knæene.",
       "mistakes": [
         {
           "mistake": "Forreste hæl letter, og vægten ryger ud på tæerne.",
@@ -34,10 +35,10 @@
           "fix": "Lad knæet røre puden let, og hold spændingen i begge ben, mens du holder stille."
         }
       ],
-      "easier": "Hold let i en stoleryg for balancen, eller læg en pude mere ovenpå, så vejen ned bliver kortere.",
-      "harder": "Trin 2: bulgarsk split squat med bagerste fod oppe på sofaen.",
+      "easier": "Læg en pude mere ovenpå, så vejen ned bliver kortere, og hold let i en stoleryg, hvis du vakler.",
+      "harder": "Trin 2: bulgarsk split squat med bagerste fod på sofaen. Appen rykker dig op, når alle sæt rammer toppen af intervallet med 2 i reserve to pas i træk.",
       "equipment": ["pillow"],
-      "getReady": "Læg en pude på gulvet, knæl på den med begge knæ i 90°, og rejs dig uden at flytte fødderne.",
+      "getReady": "Læg en pude på gulvet, knæl med bagerste knæ på den og begge knæ i 90°, og rejs dig uden at flytte fødderne.",
       "movements": [
         {
           "positions": [
@@ -72,12 +73,12 @@
     {
       "id": "legs.2",
       "trains": "Mere af vægten på ét ben, så lår, baller og balance bliver stærkere til spark og knæ.",
-      "start": "Stå med ryggen til sofaen, et stort skridt foran den, og læg vristen af bagerste fod på sofakanten. Forreste fod står fladt i gulvet, og hænderne er på hofterne.",
+      "start": "Stå med ryggen til sofaen og forreste fod fladt, et stort skridt foran kanten. Læg vristen af bagerste fod på kanten, så fødderne står i hoftebredde, og sæt hænderne på hofterne.",
       "steps": [
-        "Hold ryggen lang, og læn overkroppen en smule frem.",
-        "Sænk dig på 3 sek, til bagerste knæ er en håndsbredde over gulvet, og hold 1 sek stille.",
-        "Pres dig op gennem hele forreste fod. Knæet må gerne gå frem over tæerne, men hælen bliver i gulvet.",
-        "I »Venstre ben« står venstre fod i gulvet og højre vrist på sofaen; i »Højre ben« omvendt."
+        "Læn overkroppen lidt frem med lang ryg, og sænk dig på 3 sek, til bagerste knæ er en håndsbredde over gulvet.",
+        "Hold 1 sek stille, og pres dig op gennem hele forreste fod med hælen i gulvet.",
+        "Knæet må gerne gå frem over tæerne. Lad bagerste fod bare hvile på sofaen.",
+        "I »Venstre ben« står venstre fod i gulvet; i »Højre ben« højre."
       ],
       "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
       "breathing": "Træk vejret ind på vej ned, og pust ud på vej op.",
@@ -86,6 +87,7 @@
         "Knæet må gerne frem over tæerne",
         "Forreste hæl i gulvet"
       ],
+      "feel": "Forreste lår og balle og et stræk foran bagerste hofte og lår, ikke i knæet.",
       "mistakes": [
         {
           "mistake": "Du skubber dig op med bagerste ben.",
@@ -100,10 +102,10 @@
           "fix": "Hold knæet over midten af foden, så det peger samme vej som tæerne."
         }
       ],
-      "easier": "Trin 1: split squat med begge fødder i gulvet og bagerste knæ ned til en pude.",
-      "harder": "Trin 3: bulgarsk split squat med rygsæk, eller med 3 sek pause i bunden.",
+      "easier": "Trin 1: split squat med begge fødder i gulvet. Vælg trinnet under Stiger, hvis du ikke kan lave bunden af intervallet rent med 2 i reserve.",
+      "harder": "Trin 3: bulgarsk med rygsæk eller 3 sek pause i bunden. Appen rykker dig op, når alle sæt rammer toppen af intervallet med 2 i reserve to pas i træk.",
       "equipment": ["sofa"],
-      "getReady": "Stil dig med ryggen til sofaen, et stort skridt foran kanten, så du kan lægge vristen op på den.",
+      "getReady": "Sæt dig på sofakanten, stræk det ene ben frem, og stil forreste fod der, hvor hælen rammer gulvet.",
       "movements": [
         {
           "positions": [
@@ -137,16 +139,17 @@
     {
       "id": "legs.3",
       "trains": "Mere belastning på ét ben ad gangen, så lår og baller får mere kraft til spark og knæ.",
-      "start": "Stil dig med ryggen til sofaen, et stort skridt foran den, med rygsækken på ryggen. Læg vristen af bagerste fod på sofakanten, og hold i stropperne.",
+      "start": "Tag rygsækken på med stropperne strammet, og stil dig med ryggen til sofaen, et stort skridt foran kanten. Læg vristen af bagerste fod på kanten, og hold i stropperne.",
       "steps": [
         "Læn overkroppen lidt frem med lang ryg, og sænk dig dybt på 3 sek, til bagerste knæ er lige over gulvet.",
         "Hold 1 sek stille, og pres dig op gennem hele forreste fod.",
         "Uden rygsæk: hænderne på hofterne og 3 sek pause i bunden i stedet for 1 sek.",
-        "I »Venstre ben« står venstre fod i gulvet og højre vrist på sofaen; i »Højre ben« omvendt."
+        "I »Venstre ben« står venstre fod i gulvet; i »Højre ben« højre."
       ],
       "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op. Uden rygsæk: 3 sek pause i bunden.",
       "breathing": "Træk vejret ind på vej ned, hold ikke vejret i bunden, og pust ud på vej op.",
       "cues": ["Dybt og kontrolleret", "Forreste hæl i gulvet", "Bagerste ben hviler bare"],
+      "feel": "Forreste lår og balle, især i bunden, ikke lænden eller knæet.",
       "mistakes": [
         {
           "mistake": "Du stopper højere oppe, når det bliver tungt.",
@@ -161,10 +164,10 @@
           "fix": "Tæl 3 sek ned, og stå helt stille i bunden, før du presser dig op."
         }
       ],
-      "easier": "Trin 2: bulgarsk split squat uden rygsæk.",
-      "harder": "Trin 4: etbens rejs-dig fra stol med armene frem som modvægt.",
+      "easier": "Trin 2: bulgarsk uden rygsæk. Vælg trinnet under Stiger, hvis du ikke kan lave bunden af intervallet rent med 2 i reserve, heller ikke med en lettere rygsæk.",
+      "harder": "Trin 4: etbens rejs-dig fra stol. Appen rykker dig op, når alle sæt rammer toppen af intervallet med 2 i reserve to pas i træk.",
       "equipment": ["sofa", "backpack"],
-      "getReady": "Pak rygsækken, så alle sæt bliver rene med den planlagte reserve, fx med vandflasker, hvor 1 liter vejer 1 kg.",
+      "getReady": "Pak rygsækken med vandflasker (1 liter vejer 1 kg) eller bøger, så du kan lave alle sæt rent med den planlagte reserve.",
       "movements": [
         {
           "id": "backpack",
@@ -229,20 +232,21 @@
     {
       "id": "legs.4",
       "trains": "Styrke på ét ben gennem en dyb bevægelse med stolen som stop, så standbenet holder i spark og knæ.",
-      "start": "Sid yderst på en solid stol med den ene fod fladt i gulvet lige foran sædet. Stræk det andet ben frem med hælen lidt over gulvet, og stræk armene frem i skulderhøjde.",
+      "start": "Sid yderst på stolen med standbenets fod fladt midt foran dig, lige under knæet. Stræk det andet ben frem med hælen lidt over gulvet, og stræk armene frem i skulderhøjde.",
       "steps": [
-        "Læn overkroppen frem, og rejs dig på ét ben med armene frem som modvægt.",
+        "Læn dig frem, til næsen er over tæerne, og rejs dig på ét ben med armene frem som modvægt.",
         "Sæt dig igen på 3 sek, til bagdelen rører stolen let, og hold 1 sek stille uden at slappe af.",
-        "Rejs dig kontrolleret igen. I »Venstre ben« står du på venstre ben med højre strakt frem; i »Højre ben« omvendt.",
-        "Sænk sædet gradvist: er stolen for lav, så læg puder på sædet, og fjern dem én ad gangen, efterhånden som det går."
+        "Kan du ikke rejse dig fra stolen, så læg puder på sædet, og fjern én, når du rammer toppen af intervallet i alle sæt.",
+        "I »Venstre ben« står du på venstre ben; i »Højre ben« på højre."
       ],
       "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
       "breathing": "Træk vejret ind på vej ned, og pust ud, når du rejser dig.",
-      "cues": ["Armene frem som modvægt", "Rør stolen let", "Hele foden i gulvet"],
+      "cues": ["Næsen over tæerne", "Armene frem som modvægt", "Rør stolen let"],
+      "feel": "Lår og balle på standbenet, mest når du rejser dig, ikke i knæet.",
       "mistakes": [
         {
           "mistake": "Du gynger bagud og kaster dig op.",
-          "fix": "Læn overkroppen frem, og stræk armene langt frem, før du rejser dig."
+          "fix": "Læn dig frem, til næsen er over tæerne, og stræk armene langt frem, før du rejser dig."
         },
         {
           "mistake": "Standbenets knæ falder ind mod midten.",
@@ -253,17 +257,17 @@
           "fix": "Læg en tynd bog under hælen, og lav ankel-vip før sættet, hvis du ikke klarede knæ-til-væg."
         }
       ],
-      "easier": "Trin 3: bulgarsk split squat med rygsæk eller med 3 sek pause i bunden.",
-      "harder": "Trin 5: pistol-negativer, hvor du sænker dig på ét ben uden stol og rejser dig på to.",
+      "easier": "Trin 3: bulgarsk med rygsæk eller 3 sek pause. Vælg trinnet under Stiger, hvis du ikke kan lave bunden af intervallet rent, selv med puder på sædet.",
+      "harder": "Trin 5: pistol-negativer uden stol. Appen rykker dig op, når alle sæt rammer toppen af intervallet med 2 i reserve to pas i træk.",
       "equipment": ["chair", "wall", "pillow"],
-      "getReady": "Stil en solid stol med ryggen mod en væg, så den ikke kan glide.",
+      "getReady": "Stil en solid stol uden hjul med ryggen mod væggen, så den ikke kan glide, og læg puder på sædet, hvis du skal bruge dem.",
       "movements": [
         {
           "positions": [
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Bagdelen rører stolens forkant let. Standbenets fod står fladt lige foran sædet, og knæet er bøjet ca. 90°. Det frie ben er strakt frem med hælen lidt over gulvet, overkroppen lænet frem og armene strakt frem.",
+              "text": "Bagdelen rører stolens forkant let. Standbenets fod står fladt lige under knæet, som er bøjet ca. 90°. Det frie ben er strakt frem med hælen lidt over gulvet, overkroppen lænet frem og armene strakt frem.",
               "contacts": [
                 { "part": "foot", "on": "floor", "count": 1 },
                 { "part": "hip", "on": "chair" }
@@ -290,13 +294,14 @@
       "start": "Stå på ét ben med det frie ben strakt frem og hælen lidt over gulvet. Stræk armene frem i skulderhøjde som modvægt.",
       "steps": [
         "Sænk dig på 5 sek helt ned på ét ben, så bagdelen kommer tæt på hælen.",
-        "Hold hele foden i gulvet, og lad knæet gå frem over tæerne.",
-        "Sæt den frie fod ned i bunden, og rejs dig kontrolleret på to ben.",
-        "Løft det frie ben frem igen. I »Venstre ben« står du på venstre ben med højre strakt frem; i »Højre ben« omvendt."
+        "Hold hele foden i gulvet, og lad knæet gå frem over tæerne, lige over midten af foden.",
+        "Sæt den frie fod ned i bunden, rejs dig på to ben, og løft benet frem igen.",
+        "I »Venstre ben« står du på venstre ben; i »Højre ben« på højre."
       ],
       "tempo": "5 sek ned på ét ben, og rejs dig kontrolleret på to.",
       "breathing": "Træk vejret roligt på vej ned, og pust ud, når du rejser dig.",
       "cues": ["5 sek ned på ét ben", "Hælen bliver i gulvet", "Rejs dig på to"],
+      "feel": "Lår og balle på standbenet, mest på den nederste del af vejen, ikke i knæet.",
       "mistakes": [
         {
           "mistake": "Du falder det sidste stykke ned.",
@@ -311,8 +316,8 @@
           "fix": "Hold knæet over midten af foden, så det peger samme vej som tæerne."
         }
       ],
-      "easier": "Trin 4: etbens rejs-dig fra stol, hvor stolen tager imod dig i bunden.",
-      "harder": "Trin 6: pistol squat, hele vejen ned og op på ét ben.",
+      "easier": "Trin 4: etbens rejs-dig fra stol, hvor stolen tager imod dig. Vælg trinnet under Stiger, hvis du falder det sidste stykke ned i de fleste gentagelser.",
+      "harder": "Trin 6: pistol squat, hele vejen ned og op på ét ben. Appen rykker dig op, når alle sæt rammer toppen af intervallet med 2 i reserve to pas i træk.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, og stå på bare fødder eller i sko, så foden ikke glider.",
       "movements": [
@@ -360,11 +365,12 @@
         "Sænk dig på 3 sek helt ned på ét ben, så bagdelen kommer tæt på hælen.",
         "Hold 1 sek stille med hele foden i gulvet og det frie ben over gulvet.",
         "Pres dig op på samme ben uden at sætte den frie fod ned.",
-        "I »Venstre ben« står du på venstre ben med højre strakt frem; i »Højre ben« omvendt."
+        "I »Venstre ben« står du på venstre ben; i »Højre ben« på højre."
       ],
       "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
       "breathing": "Træk vejret ind på vej ned, og pust ud på vej op.",
       "cues": ["Hele vejen ned og op", "Hælen bliver i gulvet", "Armene frem som modvægt"],
+      "feel": "Lår og balle på standbenet hele vejen ned og op, ikke i knæet.",
       "mistakes": [
         {
           "mistake": "Du falder ned i bunden og fjedrer op.",
@@ -379,8 +385,8 @@
           "fix": "Pres knæet ud over midten af foden, så det peger samme vej som tæerne."
         }
       ],
-      "easier": "Trin 5: pistol-negativer, hvor du sænker dig på ét ben og rejser dig på to.",
-      "harder": "Trin 7: pistol med 2 sek pause i bunden og et knæspark i toppen.",
+      "easier": "Trin 5: pistol-negativer, hvor du rejser dig på to ben. Vælg trinnet under Stiger, hvis du ikke kan lave bunden af intervallet rent med 2 i reserve.",
+      "harder": "Trin 7: pistol med pause og knæspark. Appen rykker dig op, når alle sæt rammer toppen af intervallet med 2 i reserve to pas i træk.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, og stå på bare fødder eller i sko, så foden ikke glider.",
       "movements": [
@@ -420,6 +426,7 @@
       "tempo": "3 sek ned, 2 sek pause i bunden, kontrolleret op, og driv så knæet op.",
       "breathing": "Træk vejret ind på vej ned, og pust kraftigt ud i knæsparket.",
       "cues": ["2 sek pause i bunden", "Driv knæet op", "Hælen bliver i gulvet"],
+      "feel": "Lår og balle på standbenet i pausen og maven i knæsparket, ingen smerte i knæet.",
       "mistakes": [
         {
           "mistake": "Du synker sammen og hviler i pausen.",
@@ -434,7 +441,7 @@
           "fix": "Stræk armene længere frem, og hold vægten midt på foden hele vejen ned."
         }
       ],
-      "easier": "Trin 6: pistol squat uden pause og knæspark.",
+      "easier": "Trin 6: pistol squat uden pause og knæspark. Vælg trinnet under Stiger, hvis du synker sammen i pausen eller mister balancen i knæsparket.",
       "harder": "Det er stigens sidste trin. Hold formen, og byg op til toppen af intervallet.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, og stå på bare fødder eller i sko, så foden ikke glider.",

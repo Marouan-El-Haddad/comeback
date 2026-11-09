@@ -10,20 +10,21 @@
     {
       "id": "pull.1",
       "trains": "De brede rygmuskler og musklerne mellem skulderbladene, som trækker i clinchen og holder skuldrene tilbage.",
-      "start": "Støt den ene hånd på stolesædet, og sæt foden på samme side frem og den anden et skridt bagud. Bøj i hoften med lige ryg og let bøjede knæ, og hold rygsækken i håndtaget med den frie hånd.",
+      "start": "Stå foran stolen, og støt den ene hånd midt på sædet med strakt arm. Foden på samme side frem, den anden et stort skridt bagud. Ryggen lige og næsten vandret, rygsækken i den frie hånd.",
       "steps": [
-        "Spænd maven, så ryggen er lige og næsten vandret og ikke drejer.",
-        "Træk albuen op mod hoften tæt langs kroppen, til rygsækken når hoften.",
+        "Bøj let i knæene, og spænd maven, så ryggen er lige og ikke drejer.",
+        "Træk albuen op tæt langs kroppen, til hånden med rygsækken er ved hoften.",
         "Hold 1 sek stop i toppen med skulderbladet trukket ind mod rygsøjlen.",
-        "Sænk rygsækken på 3 sek til strakt arm. Tag alle gentagelser, og skift så side."
+        "Sænk på 3 sek til strakt arm. I »Venstre side« trækker venstre arm, og højre hånd støtter."
       ],
       "tempo": "Træk op i ét roligt træk, 1 sek stop i toppen, og sænk på 3 sek.",
       "breathing": "Pust ud, når du trækker op, og ånd ind på vej ned.",
       "cues": ["Træk albuen mod hoften", "1 sek stop i toppen", "Ryggen stille, ingen vrid"],
+      "feel": "Siden af ryggen under armen og mellem skulderbladene, ikke nakken eller lænden.",
       "mistakes": [
         {
-          "mistake": "Du vrider overkroppen op for at få rygsækken højere.",
-          "fix": "Hold skuldrene i samme højde, og lad armen og skulderbladet gøre arbejdet."
+          "mistake": "Du vrider overkroppen op eller rykker rygsækken op med fart.",
+          "fix": "Hold skuldrene i samme højde, start fra strakt arm uden sving, og lad armen og skulderbladet gøre arbejdet."
         },
         {
           "mistake": "Du trækker mod brystet med albuen ude til siden.",
@@ -34,17 +35,17 @@
           "fix": "Skub hoften bagud, og løft brystet lidt, så ryggen er lige fra hoften til nakken."
         }
       ],
-      "easier": "Tag noget ud af rygsækken, hvis du ikke kan lave 8 gode gentagelser med 1 sek stop i toppen.",
-      "harder": "Trin 2: bord-row med bøjede knæ under et tungt spisebord.",
-      "equipment": ["backpack", "chair"],
-      "getReady": "Pak rygsækken med bøger eller vandflasker, og stil den ved siden af en solid stol.",
+      "easier": "En lettere rygsæk med samme tempo. Tag den, hvis du ikke kan lave 8 rene gentagelser pr. side med 1 sek stop i toppen.",
+      "harder": "Trin 2: bord-row under et tungt spisebord. Først når alle sæt rammer 15 pr. side med 2 i reserve to pas i træk, rykker appen dig op.",
+      "equipment": ["backpack", "chair", "wall"],
+      "getReady": "Stil en solid stol uden hjul med ryglænet mod væggen. Pak rygsækken som sidst, første gang så 8 gentagelser går rent med 2–3 i reserve.",
       "movements": [
         {
           "positions": [
             {
               "id": "bottom",
               "name": "Strakt arm",
-              "text": "Den ene hånd på stolesædet med strakt arm. Foden på samme side står fremme ved stolen, den anden et skridt bagud, og knæene er let bøjede. Ryggen og hovedet på linje, næsten vandret. Den frie arm hænger lodret med rygsækken.",
+              "text": "Støttehånden midt på stolesædet med strakt arm. Foden på samme side ved stolen, den anden et stort skridt bagud, knæene let bøjede. Ryggen lige, ca. 20° over vandret. Den frie arm hænger lodret med rygsækken.",
               "contacts": [
                 { "part": "hand", "on": "chair", "count": 1 },
                 { "part": "foot", "on": "floor" }
@@ -53,7 +54,7 @@
             {
               "id": "top",
               "name": "Trukket op",
-              "text": "Albuen er trukket op tæt langs kroppen og peger mod loftet, og rygsækken er ved hoften. Skulderbladet er trukket ind mod rygsøjlen. Ryggen, støttearmen og benene er som før, uden vrid.",
+              "text": "Albuen er trukket op tæt langs kroppen og peger mod loftet, og hånden med rygsækken er ved hoften. Skulderbladet er trukket ind mod rygsøjlen. Ryggen, støttearmen og benene står som før, uden vrid.",
               "contacts": [
                 { "part": "hand", "on": "chair", "count": 1 },
                 { "part": "foot", "on": "floor" }
@@ -81,6 +82,7 @@
       "tempo": "Træk op i ét roligt træk, 1 sek pause med brystet ved kanten, og sænk på 3 sek.",
       "breathing": "Pust ud, når du trækker op, og ånd ind på vej ned.",
       "cues": ["Brystet mod kanten", "1 sek pause i toppen", "Hoften oppe hele vejen"],
+      "feel": "Mellem skulderbladene, bag på skuldrene og i armene, ikke lænden.",
       "mistakes": [
         {
           "mistake": "Hoften hænger ned mod gulvet.",
@@ -95,10 +97,10 @@
           "fix": "Stop, og ret hvert bord-row-sæt til 0 med − i stedet for at trykke »Smerte«. Vælg trin 1 under Stiger efter passet."
         }
       ],
-      "easier": "Trin 1: rygsæk-row med én arm. Vælg det under Stiger, hvis bordet vipper det mindste.",
-      "harder": "Trin 3: bord-row med strakte ben, så kroppen er en planke fra hæl til hoved.",
+      "easier": "Trin 1: rygsæk-row med én arm. Tag den, hvis du ikke kan lave 8 rene gentagelser i alle sæt, eller bordet vipper. Vælg den under Stiger.",
+      "harder": "Trin 3: bord-row med strakte ben. Først når alle sæt rammer 12 med 2 i reserve to pas i træk, rykker appen dig op.",
       "equipment": ["table"],
-      "getReady": "Find et tungt spisebord, ikke et klapbord, og gør plads på gulvet ved langsiden.",
+      "getReady": "Find et tungt spisebord, ikke et klapbord, og ryd gulvet under langsiden. Bordpladen skal stikke ud, så du kan gribe om kanten.",
       "movements": [
         {
           "positions": [
@@ -142,6 +144,7 @@
       "tempo": "Træk op i ét roligt træk, 1 sek pause med brystet ved kanten, og sænk på 3 sek.",
       "breathing": "Pust ud, når du trækker op, og ånd ind på vej ned.",
       "cues": ["Planke fra hæl til hoved", "Brystet mod kanten", "1 sek pause i toppen"],
+      "feel": "Mellem skulderbladene og i armene, mens baller og baglår holder kroppen lige.",
       "mistakes": [
         {
           "mistake": "Hoften hænger, så kroppen knækker.",
@@ -156,8 +159,8 @@
           "fix": "Stop, og ret hvert bord-row-sæt til 0 med − i stedet for at trykke »Smerte«. Vælg trin 1 under Stiger efter passet."
         }
       ],
-      "easier": "Trin 2: bord-row med bøjede knæ.",
-      "harder": "Trin 4: fødderne på en stol, så kroppen er vandret.",
+      "easier": "Trin 2: bord-row med bøjede knæ. Tag den, hvis du ikke kan lave 6 rene gentagelser i alle sæt. Vælg den under Stiger.",
+      "harder": "Trin 4: fødderne på en stol. Først når alle sæt rammer 12 med 2 i reserve to pas i træk, rykker appen dig op.",
       "equipment": ["table"],
       "getReady": "Læg dig under langsiden af det tunge spisebord, og træk først let for at mærke, at det står fast.",
       "movements": [
@@ -193,7 +196,7 @@
     {
       "id": "pull.4",
       "trains": "Kroppen vandret, så næsten hele vægten skal trækkes af ryg og arme: mere trækstyrke til clinchen.",
-      "start": "Lig under langsiden af det tunge bord som i trin 3, og læg hælene på sædet af en solid stol. Grib kanten i skulderbredde.",
+      "start": "Lig under langsiden af det tunge bord som i trin 3, og læg hælene på sædet af en solid stol uden hjul. Grib kanten i skulderbredde.",
       "steps": [
         "Træk først let. Vipper bordet det mindste, så stop, og tag resten af dagens træk-sæt som rygsæk-row.",
         "Løft hoften, så kroppen er en lige planke fra hælene på stolen til hovedet.",
@@ -203,6 +206,7 @@
       "tempo": "Træk op i ét roligt træk, 1 sek pause med brystet ved kanten, og sænk på 3 sek.",
       "breathing": "Pust ud, når du trækker op, og ånd ind på vej ned.",
       "cues": ["Kroppen vandret", "Samme pause i toppen", "Brystet mod kanten"],
+      "feel": "Øvre ryg og arme tager næsten hele vægten, mens baller og baglår holder kroppen vandret.",
       "mistakes": [
         {
           "mistake": "Hoften hænger, og kroppen knækker.",
@@ -217,10 +221,10 @@
           "fix": "Stop, og ret hvert bord-row-sæt til 0 med − i stedet for at trykke »Smerte«. Vælg trin 1 under Stiger efter passet."
         }
       ],
-      "easier": "Trin 3: bord-row med strakte ben og hælene i gulvet.",
-      "harder": "Trin 5: archer bord-row med bredt greb, hvor den ene arm trækker.",
+      "easier": "Trin 3: bord-row med hælene i gulvet. Tag den, hvis du ikke kan lave 6 rene gentagelser i alle sæt. Vælg den under Stiger.",
+      "harder": "Trin 5: archer bord-row med bredt greb. Først når alle sæt rammer 12 med 2 i reserve to pas i træk, rykker appen dig op.",
       "equipment": ["chair", "table"],
-      "getReady": "Stil en solid stol, der står fast, en kropslængde fra bordets langside, så hælene kan ligge på sædet.",
+      "getReady": "Stil en solid stol uden hjul med sædet mod bordets langside, så langt væk, at dine hæle kan ligge på sædet.",
       "movements": [
         {
           "positions": [
@@ -259,11 +263,12 @@
         "Træk først let. Vipper bordet det mindste, så stop, og tag resten af dagens træk-sæt som rygsæk-row.",
         "Træk brystet op mod den ene hånd med albuen tæt langs siden. Den anden arm bliver næsten strakt.",
         "Hold 1 sek pause i toppen, og sænk dig på 3 sek til strakte arme.",
-        "I sættet »Venstre side« trækker du mod venstre hånd hver gang. I »Højre side« mod højre."
+        "I »Venstre side« trækker du mod venstre hånd hver gang, i »Højre side« mod højre."
       ],
       "tempo": "Træk op i ét roligt træk, 1 sek pause i toppen, og sænk på 3 sek.",
       "breathing": "Pust ud, når du trækker op, og ånd ind på vej ned.",
       "cues": ["Grib bredt", "Den ene arm trækker", "Den anden hjælper kun lidt"],
+      "feel": "Ryggen og armen på den trækkende side; den strakte arm mærker du kun lidt.",
       "mistakes": [
         {
           "mistake": "Begge arme trækker lige meget.",
@@ -278,8 +283,8 @@
           "fix": "Stop, og ret hvert bord-row-sæt til 0 med − i stedet for at trykke »Smerte«. Vælg trin 1 under Stiger efter passet."
         }
       ],
-      "easier": "Trin 4: bord-row med fødderne på en stol og begge arme.",
-      "harder": "Trin 6: etarms bord-row med den frie arm langs siden.",
+      "easier": "Trin 4: bord-row med fødderne på en stol. Tag den, hvis du ikke kan lave 4 rene gentagelser pr. side i alle sæt. Vælg den under Stiger.",
+      "harder": "Trin 6: etarms bord-row. Først når alle sæt rammer 8 pr. side med 2 i reserve to pas i træk, rykker appen dig op.",
       "equipment": ["table"],
       "getReady": "Læg dig under langsiden af det tunge spisebord, og træk først let for at mærke, at det står fast.",
       "movements": [
@@ -320,11 +325,12 @@
         "Træk først let. Vipper bordet det mindste, så stop, og tag resten af dagens træk-sæt som rygsæk-row.",
         "Spænd maven og ballerne, og træk brystet op mod kanten med albuen tæt langs siden.",
         "Hold 1 sek pause i toppen uden at dreje hoften, og sænk dig på 3 sek.",
-        "I sættet »Venstre side« trækker venstre hånd, og højre arm ligger langs siden. I »Højre side« bytter du."
+        "I »Venstre side« trækker venstre hånd, og højre arm ligger langs siden. I »Højre side« bytter du."
       ],
       "tempo": "Træk op i ét roligt træk, 1 sek pause i toppen, og sænk på 3 sek.",
       "breathing": "Pust ud, når du trækker op, og ånd ind på vej ned.",
       "cues": ["Hoften må ikke dreje", "Den frie arm langs siden", "1 sek pause i toppen"],
+      "feel": "Ryggen og armen på den trækkende side, plus maven, der holder hoften fra at dreje.",
       "mistakes": [
         {
           "mistake": "Hoften og kroppen drejer op mod den trækkende side.",
@@ -339,8 +345,8 @@
           "fix": "Stop, og ret hvert bord-row-sæt til 0 med − i stedet for at trykke »Smerte«. Vælg trin 1 under Stiger efter passet."
         }
       ],
-      "easier": "Trin 5: archer bord-row, hvor den anden arm hjælper lidt.",
-      "harder": "Trin 7: samme row med 3 sek pause med brystet ved kanten.",
+      "easier": "Trin 5: archer bord-row. Tag den, hvis du ikke kan lave 3 rene gentagelser pr. side i alle sæt. Vælg den under Stiger.",
+      "harder": "Trin 7: med 3 sek pause ved kanten. Først når alle sæt rammer 8 pr. side med 2 i reserve to pas i træk, rykker appen dig op.",
       "equipment": ["table"],
       "getReady": "Læg dig under langsiden af det tunge spisebord, og træk først let for at mærke, at det står fast.",
       "movements": [
@@ -381,11 +387,12 @@
         "Træk først let. Vipper bordet det mindste, så stop, og tag resten af dagens træk-sæt som rygsæk-row.",
         "Træk brystet op mod kanten med albuen tæt langs siden.",
         "Hold brystet ved kanten i 3 sek uden at dreje hoften, og sænk dig på 3 sek.",
-        "I sættet »Venstre side« trækker venstre hånd, og højre arm ligger langs siden. I »Højre side« bytter du."
+        "I »Venstre side« trækker venstre hånd, og højre arm ligger langs siden. I »Højre side« bytter du."
       ],
       "tempo": "Træk op i ét roligt træk, hold brystet ved kanten i 3 sek, og sænk på 3 sek.",
       "breathing": "Pust ud, når du trækker op, træk vejret roligt i holdet, og ånd ind på vej ned.",
       "cues": ["Hold 3 sek ved kanten", "Hoften må ikke dreje", "Den frie arm langs siden"],
+      "feel": "Mellem skulderbladet og rygsøjlen på den trækkende side, mest i holdet ved kanten.",
       "mistakes": [
         {
           "mistake": "Brystet synker væk fra kanten under holdet.",
@@ -400,7 +407,7 @@
           "fix": "Stop, og ret hvert bord-row-sæt til 0 med − i stedet for at trykke »Smerte«. Vælg trin 1 under Stiger efter passet."
         }
       ],
-      "easier": "Trin 6: etarms bord-row med 1 sek pause i toppen.",
+      "easier": "Trin 6: etarms bord-row med 1 sek pause. Tag den, hvis du ikke kan lave 3 gentagelser pr. side med hele holdet i alle sæt. Vælg den under Stiger.",
       "harder": "Det er stigens sidste trin. Gør hvert hold renere: brystet ved kanten og ingen drejning.",
       "equipment": ["table"],
       "getReady": "Læg dig under langsiden af det tunge spisebord, og træk først let for at mærke, at det står fast.",
