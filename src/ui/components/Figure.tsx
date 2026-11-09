@@ -84,7 +84,7 @@ export function FigureStill({
     <div class="figure-still-only" role="img" aria-label={label}>
       <svg
         class="figure-svg"
-        viewBox={viewBox(model.box)}
+        viewBox={viewBox(model.stillBox)}
         preserveAspectRatio="xMidYMid meet"
         aria-hidden="true"
         dangerouslySetInnerHTML={{ __html: markup }}
@@ -305,11 +305,12 @@ export function stillColumns(count: number, width: number, height: number): numb
 
 /** Reduced motion: every position as a still image with its name, at most three to a row. */
 function Stills({ model, label }: { model: FigureModel; label: string }) {
-  const box = viewBox(model.box);
+  // A figure that travels along x (`advance`) shows each position in its own box (H1, P1a review).
+  const box = viewBox(model.stillBox);
   const columns = stillColumns(
     model.movement.positions.length,
-    model.box.x1 - model.box.x0,
-    model.box.y1 - model.box.y0,
+    model.stillBox.x1 - model.stillBox.x0,
+    model.stillBox.y1 - model.stillBox.y0,
   );
   return (
     <figure class={isTall(model) ? 'figure stills tall' : 'figure stills'}>

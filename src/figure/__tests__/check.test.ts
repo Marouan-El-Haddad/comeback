@@ -12,15 +12,19 @@ import type {
   FigureItem,
   IkLimb,
   OwnMovement,
+  Point,
   Pose,
 } from '../../content/types.ts';
 import {
   checkFigure,
   checkFigureFile,
   evaluatePose,
+  frameJump,
+  jumpProblems,
   movementFor,
   straightInText,
 } from '../check.ts';
+import { buildModel } from '../motion.ts';
 
 function read<T>(dir: string, subject: string): T {
   return JSON.parse(
@@ -133,6 +137,22 @@ describe('kontakt med væggen (wall sit)', () => {
     const { figure, movement } = reference('wallsit', 'wallsit.W1');
     (figure.keyframes.stand as Pose).hip = [-3, (figure.keyframes.stand as Pose).hip[1]];
     expect(messages(figure, movement).join('\n')).toContain('går 3 ind i væggen');
+  });
+
+  test('vendt facing med spejlede fødder fanges: brystet vender mod væggen (L1 i P1a-reviewet)', () => {
+    // Before, the knee turned round, the thigh hung straight down, and nothing was caught.
+    const { figure, movement } = reference('wallsit', 'wallsit.W1');
+    (figure as { facing: number }).facing = -1;
+    const sit = figure.keyframes.sit as Pose;
+    sit.hip = [sit.hip[0], sit.hip[1] + 4];
+    for (const pose of [figure.keyframes.stand as Pose, sit]) {
+      for (const leg of [pose.legs.near, pose.legs.far] as IkLimb[]) {
+        leg.tip = [leg.to[0] - 7.2, 0.3];
+      }
+    }
+    expect(messages(figure, movement).join('\n')).toContain(
+      'wallsit.W1 › sit: ryggen skal røre væggen, men brystet vender mod væggen',
+    );
   });
 });
 
@@ -336,6 +356,64 @@ describe('H1: mellem positionerne', () => {
   });
 });
 
+describe('spring (H1 og L2 i P1a-reviewet)', () => {
+  test('to bevægelser, der ikke mødes, fanges: figuren må ikke springe mellem dem', () => {
+    const { figure, movement } = reference('press', 'press.1');
+    const model = buildModel(figure, movement);
+    expect(jumpProblems(model)).toEqual([]);
+    // A hold that stands 20 further along than the move before it ended.
+    const hold = model.timeline.moves.find((m) => m.from === m.to);
+    if (!hold) throw new Error('intet hold');
+    hold.shift = [20, 20];
+    expect(
+      jumpProblems(model)
+        .map((p) => `${p.where}: ${p.message}`)
+        .join('\n'),
+    ).toMatch(/top → bottom: figuren springer 20 mellem »3 sek ned« og »1 sek stille«/);
+  });
+
+  test('et spring mellem to billeder i en bevægelse fanges; en jævn bevægelse gør ikke', () => {
+    const smooth = Array.from({ length: 17 }, (_, k): Point[] => [
+      [k, 0],
+      [k, 10],
+    ]);
+    expect(frameJump(smooth)).toBeNull();
+    // Halfway the figure is 20 further along from one frame to the next.
+    const jumpy = smooth.map((f, k) => (k >= 9 ? f.map(([x, y]): Point => [x + 20, y]) : f));
+    expect(frameJump(jumpy)).toBeCloseTo(21, 5);
+  });
+});
+
+describe('»via« tjekkes som en position (H2 i P1a-reviewet)', () => {
+  test('burpee E1 består med sine to via-poser, hvor hoften går højt', () => {
+    const { figure, movement } = reference('burpee_emom', 'burpee_emom.E1');
+    expect(figure.transitions?.filter((t) => t.via)).toHaveLength(2);
+    expect(messages(figure, movement)).toEqual([]);
+  });
+
+  test('det, begge positioner rører, holder via-posen: en løftet hånd fanges', () => {
+    const { figure, movement } = reference('burpee_emom', 'burpee_emom.E1');
+    const via = figure.transitions?.find((t) => t.from === 'squat')?.via;
+    if (!via) throw new Error('ingen via');
+    via.arms.near = { to: [69.04, 6] };
+    expect(messages(figure, movement).join('\n')).toContain(
+      'burpee_emom.E1 › via squat–chest: near.hand skal røre gulvet, men er 6 over',
+    );
+  });
+
+  test('en via-pose med hoften for lavt sender knæene i gulvet, og det fanges', () => {
+    const { figure, movement } = reference('burpee_emom', 'burpee_emom.E1');
+    const via = figure.transitions?.find((t) => t.from === 'squat')?.via;
+    if (!via) throw new Error('ingen via');
+    via.hip = [39.6, 26];
+    const all = messages(figure, movement).join('\n');
+    expect(all).toContain('via squat–chest: far.knee rører gulvet');
+    expect(all).toMatch(
+      /via squat–chest → chest: undervejs: (near|far)\.knee går [\d,]+ ind i gulvet/,
+    );
+  });
+});
+
 describe('M2: et led, teksten kalder strakt, er strakt', () => {
   test('»Strakte arme« med albuer bøjet 20° fanges med et råd', () => {
     const { figure, movement } = reference('press', 'press.1');
@@ -351,6 +429,22 @@ describe('M2: et led, teksten kalder strakt, er strakt', () => {
     const { figure, movement } = reference('press', 'press.1');
     (movement.positions[0] as { text: string }).text = 'Strakte arme med hænderne under skuldrene.';
     expect(messages(figure, movement)).toEqual([]);
+  });
+
+  test('»knæ« med æ læses, også før punktum og komma (M2 i P1a-reviewet)', () => {
+    const kinds = (text: string) => straightInText(text).map((x) => `${x.kind}:${x.both}`);
+    expect(kinds('Stående på ét ben med strakt knæ.')).toEqual(['leg:false']);
+    expect(kinds('Stående oprejst med fødderne i hoftebredde og strakte knæ,')).toEqual([
+      'leg:true',
+    ]);
+    expect(kinds('Afsæt: knæ og ankler strakte')).toEqual(['leg:true']);
+    expect(kinds('På ryggen med den ene hånd om kanten og armen strakt.')).toEqual(['arm:false']);
+    expect(kinds('Det nederste ben hænger strakt lige over gulvet.')).toEqual(['leg:false']);
+    expect(kinds('Det øverste ben sparket strakt frem.')).toEqual(['leg:false']);
+    expect(kinds('Den øverste arm er ført strakt i en bue.')).toEqual(['arm:false']);
+    expect(kinds('Kroppen falder med strakt standben.')).toEqual(['leg:false']);
+    expect(kinds('Et par centimeter over gulvet med næsten strakte knæ.')).toEqual([]);
+    expect(kinds('Knæene er stadig næsten strakte.')).toEqual([]);
   });
 
   test('teksten læses forsigtigt: »næsten strakt« og »let bøjede« kræver ingenting', () => {
@@ -406,6 +500,20 @@ describe('grænserne fra figurerne i P3 (D56)', () => {
   test('på ryggen: en overkrop, der slet ikke rører gulvet, fanges', () => {
     const { figure, movement } = onBack(lying([0, 16], 175));
     expect(messages(figure, movement).join('\n')).toContain('ryggen skal røre gulvet');
+  });
+
+  test('på ryggen vender brystet væk fra gulvet, på maven mod det (L1 i P1a-reviewet)', () => {
+    const back = onBack(lying([0, 5], 162));
+    (back.figure as { facing: number }).facing = -1;
+    expect(messages(back.figure, back.movement).join('\n')).toContain(
+      'hold: ryggen skal røre gulvet, men brystet vender mod gulvet',
+    );
+    const belly = onBack(lying([0, 5], 162));
+    const position = belly.movement.positions[0];
+    if (position) position.contacts[0] = { part: 'belly', on: 'floor' };
+    expect(messages(belly.figure, belly.movement).join('\n')).toContain(
+      'hold: maven skal røre gulvet, men brystet vender væk fra gulvet',
+    );
   });
 
   test('en fod, der flytter sig på gulvet, glider; med »lift« i en overgang er det et skridt', () => {

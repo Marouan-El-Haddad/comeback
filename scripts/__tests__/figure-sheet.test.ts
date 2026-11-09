@@ -43,6 +43,22 @@ describe('kontaktarkets side', () => {
     expect(html).not.toMatch(/https?:\/\//);
   });
 
+  test('viser en overgangs via-pose med blå ramme og midten af hver halvdel (H2 i P1a-reviewet)', () => {
+    const file = structuredClone(PRESS_FIGURES);
+    const figure = file.figures[0] as FigureItem;
+    const via = structuredClone(figure.keyframes.top as Pose);
+    figure.transitions = [{ from: 'top', to: 'bottom', via }];
+    const html = sheetHtml(
+      { file, explain: PRESS, program: PROGRAM, source: 'press.json', problems: [] },
+      { tokens },
+    );
+    expect(html).toContain('Overgange: Oppe → Nede: gennem en via-pose (blå ramme)');
+    expect(html).toContain('<div class="cell via">');
+    expect(html).toContain('Via: Oppe → Nede');
+    expect(html).toContain('Midt i: Oppe → via-posen');
+    expect(html).toContain('Midt i: via-posen → Nede');
+  });
+
   test('viser problemerne ved deres position og en rød ring om kontakten', () => {
     const file = structuredClone(PRESS_FIGURES);
     const top = (file.figures[0] as FigureItem).keyframes.top as Pose;

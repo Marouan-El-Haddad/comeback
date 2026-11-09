@@ -27,7 +27,15 @@ import {
   type Prim,
 } from './draw.ts';
 import { frameOf, isJointLimb, solve, type Frame, type Skeleton } from './geometry.ts';
-import { planMove, rigOf, shiftRig, tween, type Plan, type Rig } from './tween.ts';
+import {
+  clearanceProfile,
+  planMove,
+  rigOf,
+  shiftRig,
+  tween,
+  type Plan,
+  type Rig,
+} from './tween.ts';
 
 export { lerpAngle } from './geometry.ts';
 
@@ -55,7 +63,12 @@ export interface Move {
   shift?: [number, number];
   /** The hands and feet lifted on the way (a transition's `lift`). */
   lift?: readonly LiftLimb[];
+  /** Half of a transition's way through its `via` pose: one end is the via (`viaId`). */
+  bridge?: true;
 }
+
+/** The id of a transition's `via` pose among the figure's poses: »squat>chest«. */
+export const viaId = (from: string, to: string): string => `${from}>${to}`;
 
 export interface Timeline {
   moves: Move[];
@@ -75,9 +88,10 @@ export function phaseSeconds(phase: Phase, timing: Timing = CARD_TIMING): number
 /**
  * The phases as moves: a phase goes to `to` in its seconds; a repeated phase goes out to `to` and
  * back to the position before, half its seconds each way, as many times as it repeats. A figure's
- * transition from one position to another lifts hands and feet on that way (`lift`) and moves the
- * figure along x (`advance`). A movement that ends elsewhere than it started, or moved along x, gets
- * a way back without a label.
+ * transition from one position to another lifts hands and feet on that way (`lift`), moves the
+ * figure along x (`advance`), and goes through a pose of its own on the way (`via`: the move is two
+ * halves, each half the time). A movement that ends elsewhere than it started, or moved along x,
+ * gets a way back without a label, which a transition can shape too.
  */
 export function timeline(
   movement: OwnMovement,
@@ -96,10 +110,28 @@ export function timeline(
         ? undefined
         : transitions.find((y) => y.from === move.from && y.to === move.to);
     const dx = tr?.advance ?? 0;
-    if (dx !== 0) move.shift = [x, x + dx];
-    if (tr?.lift && tr.lift.length > 0) move.lift = tr.lift;
-    x += dx;
-    moves.push(move);
+    const lift = tr?.lift && tr.lift.length > 0 ? tr.lift : undefined;
+    // Every move after an advance keeps the figure where it got to, holds too (H1 in the P1a review).
+    const halves: Move[] = tr?.via
+      ? [
+          { ...move, to: viaId(move.from, move.to), seconds: move.seconds / 2, bridge: true },
+          {
+            ...move,
+            from: viaId(move.from, move.to),
+            start: move.start + move.seconds / 2,
+            seconds: move.seconds / 2,
+            bridge: true,
+          },
+        ]
+      : [move];
+    for (const half of halves) {
+      const d = dx / halves.length;
+      if (d !== 0 || x !== 0) half.shift = [x, x + d];
+      else delete half.shift;
+      if (lift) half.lift = lift;
+      x += d;
+      moves.push(half);
+    }
   };
   movement.phases.forEach((phase, i) => {
     const seconds = phaseSeconds(phase, timing);
@@ -119,10 +151,27 @@ export function timeline(
   });
   if ((at !== first || Math.abs(x) > 1e-9) && moves.length > 0) {
     const back: Move = { from: at, to: first, start: t, seconds: timing.back, phase: null };
-    if (Math.abs(x) > 1e-9) back.shift = [x, 0];
-    const lift = transitions.find((y) => y.from === at && y.to === first)?.lift;
-    if (lift && lift.length > 0 && at !== first) back.lift = lift;
-    moves.push(back);
+    const tr = at !== first ? transitions.find((y) => y.from === at && y.to === first) : undefined;
+    // The way back goes all the way to the start, also along x; a transition can lift and shape it.
+    const halves: Move[] = tr?.via
+      ? [
+          { ...back, to: viaId(at, first), seconds: back.seconds / 2, bridge: true },
+          {
+            ...back,
+            from: viaId(at, first),
+            start: back.start + back.seconds / 2,
+            seconds: back.seconds / 2,
+            bridge: true,
+          },
+        ]
+      : [back];
+    halves.forEach((half, k) => {
+      const from = x - (x * k) / halves.length;
+      const to = x - (x * (k + 1)) / halves.length;
+      if (Math.abs(x) > 1e-9) half.shift = [from, to];
+      if (tr?.lift && tr.lift.length > 0) half.lift = tr.lift;
+      moves.push(half);
+    });
     t += timing.back;
   }
   return { moves, total: t, phases };
@@ -173,6 +222,12 @@ export function shiftPose(pose: Pose, dx: number): Pose {
 // A figure ready to draw: its timeline, its keyframes solved and the box every frame fits in
 // ---------------------------------------------------------------------------------------------
 
+/** The figure's offset along x `u` (0–1, not eased) of the way through a move. */
+export function shiftAt(move: Move, u: number): number {
+  const [s0, s1] = move.shift ?? [0, 0];
+  return s0 + (s1 - s0) * ease(Math.max(0, Math.min(1, u)));
+}
+
 /** A move between two different positions: its keyframes as rigs (moved by any `advance`) and its plan. */
 export interface Step {
   a: Rig;
@@ -189,6 +244,14 @@ export interface FigureModel {
   solved: Record<string, Skeleton>;
   /** Each move between two different positions, ready for tween(). */
   steps: Map<Move, Step>;
+  /** Every pose the figure moves through: its keyframes, and its transitions' `via` poses. */
+  poses: Record<string, Pose>;
+  /**
+   * The box of the figure without its travel along x (`advance`): still images and the contact
+   * sheet's cells show each position and the middle of each move in it, at the same size as a
+   * figure that does not travel. The same as `box` when nothing travels.
+   */
+  stillBox: Box;
   /** The box every frame and prop fits in (before padding). */
   box: Box;
   /** The props that never move, and the floor line when the figure stands on a floor. */
@@ -204,16 +267,21 @@ function onFloor(figure: FigureItem, movement: OwnMovement): boolean {
   return figure.props.some((p) => !carried(p) && (!('at' in p) || p.at[1] <= 0.5));
 }
 
+/** The pose `u` of the way through a move without the figure's travel along x: for still images. */
+export function movePoseLocal(model: FigureModel, move: Move, u: number): Pose {
+  return shiftPose(movePose(model, move, u), -shiftAt(move, u));
+}
+
 /** The pose `u` (0–1, not eased) of the way through a move. */
 export function movePose(model: FigureModel, move: Move, u: number): Pose {
-  const a = model.figure.keyframes[move.from] as Pose;
+  const a = model.poses[move.from] as Pose;
   const shift = move.shift ?? [0, 0];
   const step = model.steps.get(move);
   if (move.from === move.to || !step) {
     return shiftPose(a, shift[0] + (shift[1] - shift[0]) * ease(u));
   }
   if (u <= 0) return shiftPose(a, shift[0]);
-  if (u >= 1) return shiftPose(model.figure.keyframes[move.to] as Pose, shift[1]);
+  if (u >= 1) return shiftPose(model.poses[move.to] as Pose, shift[1]);
   return tween(model.frame, step.a, step.b, step.plan, ease(u));
 }
 
@@ -252,12 +320,14 @@ export function buildModel(
   const line = timeline(movement, timing, figure.transitions);
   const solved: Record<string, Skeleton> = {};
   const rigs: Record<string, Rig> = {};
-  for (const p of movement.positions) {
-    const pose = figure.keyframes[p.id];
-    if (!pose) continue;
+  const poses: Record<string, Pose> = { ...figure.keyframes };
+  for (const tr of figure.transitions ?? []) {
+    if (tr.via) poses[viaId(tr.from, tr.to)] = tr.via;
+  }
+  for (const [id, pose] of Object.entries(poses)) {
     const s = solve(frame, pose);
-    solved[p.id] = s;
-    rigs[p.id] = rigOf(pose, s);
+    solved[id] = s;
+    rigs[id] = rigOf(pose, s);
   }
   // Every move between two positions gets its plan; moves alike share it (30 punches, 20 squats).
   const steps = new Map<Move, Step>();
@@ -269,10 +339,14 @@ export function buildModel(
     const [s0, s1] = m.shift ?? [0, 0];
     const a = shiftRig(ra, s0);
     const b = shiftRig(rb, s1);
-    const key = `${m.from}>${m.to}>${s1 - s0}>${(m.lift ?? []).join(',')}`;
+    // With props the figure's place among them counts, so the key holds the offset itself.
+    const where = figure.props.length > 0 ? `${s0}>${s1}` : `${s1 - s0}`;
+    const key = `${m.from}>${m.to}>${where}>${(m.lift ?? []).join(',')}`;
     let plan = plans.get(key);
     if (!plan) {
-      plan = planMove(figure, frame, a, b, m.lift);
+      // On the way to or from a via, a lifted hand or foot swings without an arc: the via shapes it.
+      plan = planMove(figure, frame, a, b, m.lift, !m.bridge);
+      clearanceProfile(frame, a, b, plan);
       plans.set(key, plan);
     }
     steps.set(m, { a, b, plan });
@@ -284,6 +358,8 @@ export function buildModel(
     timeline: line,
     solved,
     steps,
+    poses,
+    stillBox: emptyBox(),
     box: emptyBox(),
     still: [],
     frozen: movement.positions.length < 2 && movement.phases.length < 2,
@@ -306,9 +382,27 @@ export function buildModel(
     for (let k = 0; k <= SAMPLES; k++)
       track(box, movingPrims(model, movePose(model, m, k / SAMPLES)));
   }
+  // Without the travel along x: each position and the middle of each move where it stands.
+  const travels = line.moves.some((m) => m.shift !== undefined);
+  const stillBox = emptyBox();
+  if (travels) {
+    for (const p of movement.positions) {
+      const pose = figure.keyframes[p.id];
+      if (pose) track(stillBox, movingPrims(model, pose));
+    }
+    for (const m of line.moves) {
+      if (m.from === m.to) continue;
+      for (let k = 1; k < SAMPLES; k++) {
+        track(stillBox, movingPrims(model, movePoseLocal(model, m, k / SAMPLES)));
+      }
+    }
+  }
   // The props that stand still: measured once, then drawn with the walls reaching above the figure.
   const fixed = (p: Parameters<typeof carried>[0]) => !carried(p);
   track(box, propPrims(figure.props, null, provisional, frame.facing, 'solid', fixed));
+  if (travels) {
+    track(stillBox, propPrims(figure.props, null, provisional, frame.facing, 'solid', fixed));
+  }
   const extent: Extent = { x0: box.x0, x1: box.x1, top: box.y1 };
   const still = propPrims(figure.props, null, extent, frame.facing, 'solid', fixed);
   if (onFloor(figure, movement)) {
@@ -317,6 +411,16 @@ export function buildModel(
   track(box, still);
   model.box = box;
   model.still = still;
+  if (travels) {
+    // The floor line under the figure, 2 wider on each side, as for a figure that does not travel.
+    const floor = still.find((p) => p.key === 'floor');
+    if (floor && floor.t === 'line') {
+      const a: Point = [stillBox.x0 - 2, floor.a[1]];
+      const b: Point = [stillBox.x1 + 2, floor.b[1]];
+      track(stillBox, [{ ...floor, a, b }]);
+    }
+    model.stillBox = stillBox;
+  } else model.stillBox = box;
   return model;
 }
 

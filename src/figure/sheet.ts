@@ -15,12 +15,12 @@ import {
 } from '../content/types.ts';
 import type { Problem } from '../content/validate.ts';
 import type { Program } from '../engine/types.ts';
-import { evaluatePose, jointDegrees, movementFor } from './check.ts';
+import { evaluatePose, jointDegrees, movementFor, placeName } from './check.ts';
 import { bodyPrims, svgBody, viewBox, type Box, type Prim } from './draw.ts';
 import { chestDirection, polar, solve, type Frame, type Skeleton } from './geometry.ts';
 import {
   buildModel,
-  movePose,
+  movePoseLocal,
   movingPrims,
   phaseSeconds,
   sampledPoses,
@@ -98,9 +98,10 @@ function size(box: Box, pad = 3): { width: number; height: number } {
   };
 }
 
-function svg(model: FigureModel, inner: string): string {
-  const { width, height } = size(model.box);
-  return `<svg viewBox="${viewBox(model.box)}" width="${width}" height="${height}">${inner}</svg>`;
+/** A cell's drawing: the positions and the middles of the moves in the still box, without the travel. */
+function svg(model: FigureModel, inner: string, box: Box = model.stillBox): string {
+  const { width, height } = size(box);
+  return `<svg viewBox="${viewBox(box)}" width="${width}" height="${height}">${inner}</svg>`;
 }
 
 /** The chest's direction as a small blue arrow beside the torso. */
@@ -198,6 +199,7 @@ function transitionText(entry: FigureItem, names: Map<string, string>): string {
     const what = [
       t.lift ? `løfter ${t.lift.join(', ')}` : '',
       t.advance ? `flytter ${num(t.advance)} langs x` : '',
+      t.via ? 'gennem en via-pose (blå ramme)' : '',
     ]
       .filter(Boolean)
       .join(' og ');
@@ -235,14 +237,27 @@ function figureSection(input: SheetInput, entry: FigureItem): string {
     const angles = solved ? anglesText(solved) : '';
     return `<div class="cell">${svg(model, inner)}<p class="name">${escape(position.name)} <span>(${position.id})</span></p><p class="contacts">${escape(contacts)}</p>${angles ? `<p class="angles">${escape(angles)}</p>` : ''}${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div>`;
   });
+  // A transition's via: the pose the figure goes through on the way, checked like a keyframe. In
+  // the middle of a half the other end names which via it is.
+  const nameOf = (id: string) => (id.includes('>') ? 'via-posen' : (names.get(id) ?? id));
+  for (const t of entry.transitions ?? []) {
+    if (!t.via) continue;
+    const place = `${where} › ${placeName(`${t.from}>${t.to}`)}`;
+    const own = mine.filter((p) => p.where === place);
+    const solved = solve(frame, t.via);
+    const inner = svgBody([...model.still, ...movingPrims(model, t.via)]);
+    cells.push(
+      `<div class="cell via">${svg(model, inner)}<p class="name">${escape(`Via: ${names.get(t.from) ?? t.from} → ${names.get(t.to) ?? t.to}`)}</p><p class="contacts">overgang, ingen position</p><p class="angles">${escape(anglesText(solved))}</p>${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div>`,
+    );
+  }
   // The middle of every move (H1): the frame where a kinking knee or a joint through the floor shows.
   for (const move of distinctMoves(model)) {
-    const pose = movePose(model, move, 0.5);
+    const pose = movePoseLocal(model, move, 0.5);
     const s = solve(frame, pose);
     const moving: Prim[] = movingPrims(model, pose);
-    const place = `${where} › ${move.from} → ${move.to}`;
+    const place = `${where} › ${placeName(move.from)} → ${placeName(move.to)}`;
     const own = mine.filter((p) => p.where === place);
-    const label = `Midt i: ${names.get(move.from) ?? move.from} → ${names.get(move.to) ?? move.to}`;
+    const label = `Midt i: ${nameOf(move.from)} → ${nameOf(move.to)}`;
     cells.push(
       `<div class="cell mid">${svg(model, svgBody([...model.still, ...moving]))}<p class="name">${escape(label)}</p><p class="angles">${escape(anglesText(s))}</p>${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div>`,
     );
@@ -253,11 +268,14 @@ function figureSection(input: SheetInput, entry: FigureItem): string {
     .join('');
   const first = movement.positions[0]?.id ?? '';
   cells.push(
-    `<div class="cell">${svg(model, svgBody(model.still) + ghosts + svgBody(stillPrims(model, first).filter((p) => !model.still.includes(p))))}<p class="name">Bevægelsen</p><p class="contacts">hver 0,25 sek; mørk = ${escape(movement.positions[0]?.name ?? '')}</p></div>`,
+    `<div class="cell">${svg(model, svgBody(model.still) + ghosts + svgBody(stillPrims(model, first).filter((p) => !model.still.includes(p))), model.box)}<p class="name">Bevægelsen</p><p class="contacts">hver 0,25 sek; mørk = ${escape(movement.positions[0]?.name ?? '')}</p></div>`,
   );
   const shown = new Set([
     ...movement.positions.map((pos) => `${where} › ${pos.id}`),
-    ...distinctMoves(model).map((m) => `${where} › ${m.from} → ${m.to}`),
+    ...distinctMoves(model).map((m) => `${where} › ${placeName(m.from)} → ${placeName(m.to)}`),
+    ...(entry.transitions ?? []).flatMap((t) =>
+      t.via ? [`${where} › ${placeName(`${t.from}>${t.to}`)}`] : [],
+    ),
   ]);
   const general = mine.filter(
     (p) => ![...shown].some((s) => p.where === s || p.where.startsWith(`${s} ›`)),
@@ -294,11 +312,12 @@ section{border-top:2px solid var(--c-navy);padding:12px 0 16px}
 .cell{display:grid;gap:2px;justify-items:center;width:min-content;min-width:120px}
 .cell svg{border:1px solid var(--c-line);border-radius:8px;max-width:none}
 .cell.mid svg{border-style:dashed}
+.cell.via svg{border-color:var(--c-blue)}
 .angles{margin:0;font-size:14px;text-align:center;white-space:nowrap}
 .name{margin:4px 0 0;font-weight:600;color:var(--c-navy)}.name span{font-weight:400}
 .contacts{margin:0;font-size:14px;text-align:center}
 .phases{margin:8px 0 0}
 .problem{margin:4px 0 0;color:var(--c-redDark);font-weight:600}
 .ok{color:var(--c-green);font-weight:600}
-</style></head><body><h1>Kontaktark · ${escape(input.file.subject)}</h1><p class="meta">${escape(input.source)} · ${drawn.length} ${drawn.length === 1 ? 'figur' : 'figurer'}${figures.length > drawn.length ? ` og ${figures.length - drawn.length} »like«` : ''} · ${count === 0 ? '<span class="ok">ingen problemer</span>' : `<span class="problem">${count} ${count === 1 ? 'problem' : 'problemer'}</span>`}</p><p class="legend">Blå pil: brystets retning. Ringe: kontakterne i forklaringen (blå = passer, rød = passer ikke). Under hver position: knæ- og albuevinklerne (180° = strakt, nær/fjern). Stiplet ramme: billedet midt i en bevægelse. Samme skala på alle figurer.</p>${sections.join('')}</body></html>`;
+</style></head><body><h1>Kontaktark · ${escape(input.file.subject)}</h1><p class="meta">${escape(input.source)} · ${drawn.length} ${drawn.length === 1 ? 'figur' : 'figurer'}${figures.length > drawn.length ? ` og ${figures.length - drawn.length} »like«` : ''} · ${count === 0 ? '<span class="ok">ingen problemer</span>' : `<span class="problem">${count} ${count === 1 ? 'problem' : 'problemer'}</span>`}</p><p class="legend">Blå pil: brystets retning. Ringe: kontakterne i forklaringen (blå = passer, rød = passer ikke). Under hver position: knæ- og albuevinklerne (180° = strakt, nær/fjern). Stiplet ramme: billedet midt i en bevægelse. Blå ramme: en overgangs via-pose. Samme skala på alle figurer.</p>${sections.join('')}</body></html>`;
 }

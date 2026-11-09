@@ -1160,7 +1160,14 @@ export function validateFigureFile(
         );
     }
     if (entry.transitions !== undefined) {
-      checkTransitions(r, at(where, 'transitions'), entry.transitions, movement, visibility);
+      checkTransitions(
+        r,
+        at(where, 'transitions'),
+        entry.transitions,
+        movement,
+        visibility,
+        show(view),
+      );
     }
   });
   return r.problems;
@@ -1168,10 +1175,14 @@ export function validateFigureFile(
 
 const LIFTABLE = ['near.hand', 'far.hand', 'near.foot', 'far.foot'];
 
-/** The moves between two different positions a movement makes, as »from>to«. */
+/**
+ * The moves between two different positions a movement makes, as »from>to«, with the way back to
+ * the start when it ends elsewhere (M1 in the P1a review).
+ */
 function movesOf(movement: OwnMovement): Set<string> {
   const moves = new Set<string>();
-  let at = movement.positions[0]?.id ?? '';
+  const first = movement.positions[0]?.id ?? '';
+  let at = first;
   for (const phase of movement.phases) {
     if (phase.to !== at) {
       moves.add(`${at}>${phase.to}`);
@@ -1179,6 +1190,7 @@ function movesOf(movement: OwnMovement): Set<string> {
     }
     if (phase.repeat === undefined) at = phase.to;
   }
+  if (at !== first) moves.add(`${at}>${first}`);
   return moves;
 }
 
@@ -1192,13 +1204,14 @@ function checkTransitions(
   value: unknown,
   movement: OwnMovement,
   visibility: Record<string, Set<boolean>>,
+  view: string,
 ): void {
   if (!list(r, where, value, 1, 24, 'overgange')) return;
   const moves = movesOf(movement);
   const seen = new Set<string>();
   value.forEach((t, i) => {
     const w = at(where, i);
-    if (!shape(r, w, t, ['from', 'to'], ['lift', 'advance'])) return;
+    if (!shape(r, w, t, ['from', 'to'], ['lift', 'advance', 'via'])) return;
     const key = `${show(t.from)}>${show(t.to)}`;
     if (!moves.has(key)) {
       r.add(
@@ -1208,8 +1221,24 @@ function checkTransitions(
     }
     if (seen.has(key)) r.add(w, 'står to gange');
     seen.add(key);
-    if (t.lift === undefined && t.advance === undefined)
-      r.add(w, 'skal have »lift« eller »advance«');
+    if (t.lift === undefined && t.advance === undefined && t.via === undefined) {
+      r.add(w, 'skal have »lift«, »advance« eller »via«');
+    }
+    if (t.via !== undefined) {
+      // A pose like a keyframe, with the same limbs shown and hidden as the positions.
+      const shown = checkPose(r, at(w, 'via'), t.via, view);
+      for (const [limb, visible] of Object.entries(shown)) {
+        const keyframes = visibility[limb];
+        if (keyframes && keyframes.size === 1 && !keyframes.has(visible)) {
+          r.add(
+            at(w, 'via'),
+            visible
+              ? `${limb} er vist i via, men skjult (null) i positionerne`
+              : `${limb} er skjult (null) i via, men ikke i positionerne`,
+          );
+        }
+      }
+    }
     if (t.lift !== undefined && list(r, at(w, 'lift'), t.lift, 1, 4, 'lemmer')) {
       const names = new Set<string>();
       t.lift.forEach((l, j) => {

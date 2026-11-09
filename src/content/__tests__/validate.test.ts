@@ -303,7 +303,7 @@ describe('figurer', () => {
     [
       'overgang uden lift og advance',
       pressFigure((f) => (f.transitions = [{ from: 'top', to: 'bottom' }])),
-      'skal have »lift« eller »advance«',
+      'skal have »lift«, »advance« eller »via«',
     ],
     [
       'overgang løfter et ukendt lem',
@@ -379,6 +379,38 @@ describe('figurer', () => {
   ];
   test.each(cases)('%s', (_, file, fragment) => {
     expect(figureProblems(file, 'press', PRESS).join('\n')).toContain(fragment);
+  });
+
+  test('»via« er en pose som en keyframe, og vejen tilbage til start kan have en overgang', () => {
+    const top = PRESS_FIGURES.figures[0] as FigureItem;
+    const via = structuredClone(top.keyframes.top!);
+    const ok = pressFigure((f) => (f.transitions = [{ from: 'top', to: 'bottom', via }]));
+    expect(figureProblems(ok, 'press', PRESS)).toEqual([]);
+    const hidden = pressFigure(
+      (f) =>
+        (f.transitions = [
+          {
+            from: 'top',
+            to: 'bottom',
+            via: { ...structuredClone(via), arms: { near: null, far: via.arms.far } },
+          },
+        ]),
+    );
+    expect(figureProblems(hidden, 'press', PRESS).join('\n')).toContain(
+      'near.arms er skjult (null) i via, men ikke i positionerne',
+    );
+    const broken = pressFigure(
+      (f) => (f.transitions = [{ from: 'top', to: 'bottom', via: { ...via, hip: [1] as never } }]),
+    );
+    expect(figureProblems(broken, 'press', PRESS).join('\n')).toContain(
+      'transitions[0] › via › hip: skal være et punkt [x, y]',
+    );
+    // The way back to the start: a movement that ends in »bottom« goes back to »top« (M1, P1a review).
+    const endsDown = press((i) => void own(i).phases.pop());
+    const back = pressFigure(
+      (f) => (f.transitions = [{ from: 'bottom', to: 'top', lift: ['near.hand', 'far.hand'] }]),
+    );
+    expect(figureProblems(back, 'press', endsDown)).toEqual([]);
   });
 
   test('overgange, »spine« og en arm med »bend« i sidebilledet er gyldige (D56)', () => {

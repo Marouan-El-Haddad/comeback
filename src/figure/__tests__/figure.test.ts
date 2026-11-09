@@ -16,6 +16,7 @@ import {
   phaseAt,
   poseAt,
   timeline,
+  viaId,
 } from '../motion.ts';
 import { swingDelta } from '../tween.ts';
 
@@ -557,8 +558,16 @@ describe('fremad-kinematik fra det, der står stille (D56)', () => {
     const ankle = (u: number) =>
       solve(m.frame, movePose(m, move, u)).bones.find((b) => b.side === 'near' && b.kind === 'leg')
         ?.end ?? [0, 0];
+    // Halfway the foot is a step's arc (a tenth of the step, 3 to 8) over where it rests.
     expect(ankle(0.5)[1]).toBeGreaterThan(3.6 + 3);
     expect(ankle(1)[0]).toBeCloseTo(20, 1);
+    // And the knee never dips toward the floor on the way.
+    for (let u = 0.05; u < 1; u += 0.05) {
+      const leg = solve(m.frame, movePose(m, move, u)).bones.find(
+        (b) => b.side === 'near' && b.kind === 'leg',
+      );
+      expect(leg?.joint[1]).toBeGreaterThan(20);
+    }
   });
 
   test('»advance« flytter figuren langs x, og vejen tilbage fører den til start', () => {
@@ -654,5 +663,179 @@ describe('tegningen af ryg, ansigt og flasker (D56)', () => {
       s.bones.find((b) => b.side === 'near' && b.kind === 'arm')?.joint[0] ?? 0;
     expect(Math.sign(elbowX(plain) - 10)).toBe(-Math.sign(elbowX(flipped) - 10));
     expect(bendProblems(left, flipped)).toEqual([]);
+  });
+});
+
+describe('»advance« uden spring (H1 i P1a-reviewet)', () => {
+  /** Single-leg bounds: push off, fly, land, three times, then stand still and rise. */
+  const bounds = (): { figure: FigureItem; movement: OwnMovement } => {
+    const leg = (to: [number, number], tip: [number, number] | number) => ({ to, tip });
+    const arms = {
+      near: { to: [6, 50] as [number, number] },
+      far: { to: [-4, 50] as [number, number] },
+    };
+    const pose = (hip: [number, number], near: [number, number], far: [number, number]): Pose => ({
+      hip,
+      torso: 80,
+      arms,
+      legs: { near: leg(near, 0), far: leg(far, -30) },
+    });
+    return {
+      figure: {
+        id: 'power_legs.6',
+        movement: 'bounds',
+        view: 'side',
+        facing: 1,
+        props: [],
+        highlight: ['near.thigh'],
+        keyframes: {
+          stand: pose([0, 50.5], [0, 3.6], [-14, 12]),
+          push: pose([6, 48], [0, 3.6], [-16, 14]),
+          air: pose([12, 54], [4, 12], [-10, 16]),
+          land: pose([0, 48], [0, 3.6], [-16, 14]),
+        },
+        transitions: [
+          { from: 'push', to: 'air', advance: 20 },
+          { from: 'air', to: 'land', advance: 20 },
+        ],
+      },
+      movement: {
+        positions: [
+          {
+            id: 'stand',
+            name: 'Klar',
+            text: 'Klar.',
+            contacts: [{ part: 'foot', on: 'floor', count: 1 }],
+          },
+          {
+            id: 'push',
+            name: 'Afsæt',
+            text: 'Afsæt.',
+            contacts: [{ part: 'foot', on: 'floor', count: 1 }],
+          },
+          { id: 'air', name: 'I luften', text: 'Luften.', contacts: [] },
+          {
+            id: 'land',
+            name: 'Landing',
+            text: 'Landing.',
+            contacts: [{ part: 'foot', on: 'floor', count: 1 }],
+          },
+        ],
+        phases: [
+          { to: 'push', seconds: 0.3, label: 'Spring 1' },
+          { to: 'air', seconds: 0.4, label: 'I luften' },
+          { to: 'land', seconds: 0.3, label: 'Land' },
+          { to: 'push', seconds: 0.3, label: 'Spring 2' },
+          { to: 'air', seconds: 0.4, label: 'I luften' },
+          { to: 'land', seconds: 0.3, label: 'Land' },
+          { to: 'land', seconds: 1, label: 'Stå stille' },
+          { to: 'stand', seconds: 1, label: 'Rejs dig' },
+        ],
+      },
+    };
+  };
+
+  test('hver bevægelse og hvert hold har den løbende forskydning, og vejen tilbage går til 0', () => {
+    const { figure, movement } = bounds();
+    const line = timeline(movement, CARD_TIMING, figure.transitions);
+    expect(line.moves.map((m) => m.shift ?? [0, 0])).toEqual([
+      [0, 0],
+      [0, 20],
+      [20, 40],
+      [40, 40],
+      [40, 60],
+      [60, 80],
+      [80, 80],
+      [80, 80],
+      [80, 0],
+    ]);
+  });
+
+  test('hoften springer ikke mellem to billeder ved 30 billeder i sekundet', () => {
+    const { figure, movement } = bounds();
+    const model = buildModel(figure, movement);
+    let last: number | null = null;
+    let worst = 0;
+    for (let t = 0; t < model.timeline.total * 2; t += 1 / 30) {
+      const x = solve(model.frame, poseAt(model, t)).hip[0];
+      if (last !== null) worst = Math.max(worst, Math.abs(x - last));
+      last = x;
+    }
+    // The fastest way: 20 units in 0.4 sek with easing, about 2,6 units a frame at its peak.
+    expect(worst).toBeLessThan(5);
+  });
+
+  test('stillbillederne står i deres egen kasse uden turen langs gulvet', () => {
+    const { figure, movement } = bounds();
+    const model = buildModel(figure, movement);
+    const travel = model.box.x1 - model.box.x0;
+    const own = model.stillBox.x1 - model.stillBox.x0;
+    expect(travel).toBeGreaterThan(own + 60);
+    const noAdvance = buildModel({ ...figure, transitions: [] }, movement);
+    expect(own).toBeCloseTo(noAdvance.box.x1 - noAdvance.box.x0, 0);
+  });
+});
+
+describe('»via«: en mellempose på en overgang (H2 i P1a-reviewet)', () => {
+  /** Standing, then down on the heels, through a pose with the hands up on the way down and up. */
+  const figure = (): FigureItem => {
+    const low: Pose = {
+      ...standing(),
+      hip: [-6, 30],
+      torso: 70,
+      legs: { near: { to: [1, 3.6], tip: [8.2, 0.3] }, far: { to: [-1, 3.6], tip: [6.2, 0.3] } },
+    };
+    const through: Pose = {
+      ...standing(),
+      hip: [-2, 42],
+      torso: 85,
+      arms: { near: { to: [6, 100] }, far: { to: [5, 100] } },
+    };
+    return {
+      id: 'press.1',
+      view: 'side',
+      facing: 1,
+      props: [],
+      highlight: ['near.thigh'],
+      keyframes: { stand: standing(), low },
+      transitions: [
+        { from: 'stand', to: 'low', via: through },
+        { from: 'low', to: 'stand', via: { ...through, hip: [-3, 40] } },
+      ],
+    };
+  };
+  const movement: OwnMovement = {
+    positions: [
+      { id: 'stand', name: 'Stå', text: 'Stå.', contacts: [{ part: 'foot', on: 'floor' }] },
+      { id: 'low', name: 'Nede', text: 'Nede.', contacts: [{ part: 'foot', on: 'floor' }] },
+    ],
+    phases: [{ to: 'low', seconds: 1, label: 'Ned' }],
+  };
+
+  test('bevægelsen går i to halvdele gennem via-posen, også vejen tilbage til start', () => {
+    const line = timeline(movement, CARD_TIMING, figure().transitions);
+    expect(line.moves.map((m) => [m.from, m.to, m.start, m.seconds, m.phase, m.bridge])).toEqual([
+      ['stand', viaId('stand', 'low'), 0, 0.5, 0, true],
+      [viaId('stand', 'low'), 'low', 0.5, 0.5, 0, true],
+      ['low', viaId('low', 'stand'), 1, 0.5, null, true],
+      [viaId('low', 'stand'), 'stand', 1.5, 0.5, null, true],
+    ]);
+    expect(line.total).toBe(2);
+  });
+
+  test('halvdelene mødes i via-posen, og ingen keyframe springes over', () => {
+    const m = buildModel(figure(), movement);
+    const [first, second] = m.timeline.moves;
+    if (!first || !second) throw new Error('ingen bevægelser');
+    const hip = (move: typeof first, u: number) => solve(m.frame, movePose(m, move, u)).hip;
+    expect(near(hip(first, 0), [0, 49])).toBe(true);
+    expect(near(hip(first, 1), [-2, 42])).toBe(true);
+    expect(near(hip(second, 0), [-2, 42])).toBe(true);
+    expect(near(hip(second, 1), [-6, 30])).toBe(true);
+    // The hands go up through the via pose on the way down.
+    const hand = solve(m.frame, movePose(m, first, 1)).bones.find(
+      (b) => b.side === 'near' && b.kind === 'arm',
+    );
+    expect(hand?.end[1]).toBeGreaterThan(90);
   });
 });

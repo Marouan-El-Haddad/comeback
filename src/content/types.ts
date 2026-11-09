@@ -303,14 +303,20 @@ export type LiftLimb = 'near.hand' | 'far.hand' | 'near.foot' | 'far.foot';
  * hands or feet that leave their surface and land somewhere else (`lift`: a step, the feet jumping
  * back in a burpee, the hands walking toward a wall) go in an arc, and the check lets them move; and
  * the whole figure can move along x (`advance`, figure units, + to the right: bounds that travel
- * forward; with a `repeat` each way out and back is a move of its own). It applies every time the
- * movement goes from `from` to `to`.
+ * forward; with a `repeat` each way out and back is a move of its own), and it can pass through a
+ * pose of its own (`via`). It applies every time the movement goes from `from` to `to`, also on the
+ * way back to the start.
  */
 export interface Transition {
   from: string;
   to: string;
   lift?: LiftLimb[];
   advance?: number;
+  /**
+   * A pose the figure goes through on the way, without a position of its own in the explanation:
+   * the burpee's feet jumping back with the hip high between the squat and the chest (D56).
+   */
+  via?: Pose;
 }
 
 /** The segments drawn in Thai red: the muscles that work; `neck` = between shoulders and head. */

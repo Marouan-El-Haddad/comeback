@@ -8,7 +8,6 @@ import type { FigureFile } from '../content/types.ts';
 
 /** A figure's name in the list: its item, and its movement when the item has several. */
 export const WAITING_FOR_P2: readonly string[] = [
-  'burpee_emom.E1',
   'burpee_skill.V1',
   'burpee_skill.V2',
   'burpee_skill.V3',

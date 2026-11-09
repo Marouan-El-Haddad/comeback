@@ -27,6 +27,7 @@ import {
   type ExplainFile,
   type FigureFile,
   type FigureItem,
+  type LiftLimb,
   type OwnMovement,
   type Point,
   type Pose,
@@ -37,6 +38,7 @@ import {
 import type { Problem } from '../content/validate.ts';
 import {
   angleOf,
+  chestDirection,
   distance,
   frameOf,
   NOMINAL,
@@ -51,7 +53,16 @@ import {
 } from './geometry.ts';
 import { carried, outline, propPrims } from './draw.ts';
 import { buildModel, movePose, type FigureModel, type Move } from './motion.ts';
-import { inRange, nearest, REST, solids, TOUCH, type PointKind, type Solid } from './surfaces.ts';
+import {
+  inRange,
+  nearest,
+  normalAt,
+  REST,
+  solids,
+  TOUCH,
+  type PointKind,
+  type Solid,
+} from './surfaces.ts';
 import { limbOfLift, type LimbId } from './tween.ts';
 
 export { solids, TOUCH, type PointKind, type Solid } from './surfaces.ts';
@@ -231,6 +242,37 @@ function bodyTouches(frame: Frame, part: BodyPart, s: Skeleton, on: readonly Sol
   }
 }
 
+/**
+ * Lying on the back, the belly or the chest, the chest faces the right way: away from the surface on
+ * the back, into it on the belly and the chest (L1 in the P1a review). Only the side view knows
+ * where the chest faces. Returns how it faces when that is wrong (»mod«, »væk fra«), else null.
+ */
+function wrongWay(
+  frame: Frame,
+  pose: Pick<Pose, 'torso'>,
+  part: BodyPart,
+  s: Skeleton,
+  on: readonly Solid[],
+): 'mod' | 'væk fra' | null {
+  if (part !== 'back' && part !== 'belly' && part !== 'chest') return null;
+  const chest = chestDirection(frame, pose);
+  if (chest === null) return null;
+  // The point of the torso nearest the surface, and the way out of the surface there.
+  let near: { p: Point; solid: Solid; d: number } | null = null;
+  for (const p of part === 'chest' ? [s.shoulder] : torsoPoints(frame, s)) {
+    for (const solid of on) {
+      const d = solid.sdf(p);
+      if (!near || d < near.d) near = { p, solid, d };
+    }
+  }
+  if (!near) return null;
+  const n = normalAt(near.solid, near.p);
+  const c = polar([0, 0], 1, chest);
+  const dot = c[0] * n[0] + c[1] * n[1];
+  if (part === 'back') return dot < 0 ? 'mod' : null;
+  return dot > 0 ? 'væk fra' : null;
+}
+
 function bodyDistance(frame: Frame, part: BodyPart, s: Skeleton, on: readonly Solid[]): number {
   const d = (p: Point) => nearestOf(on, p);
   switch (part) {
@@ -372,6 +414,8 @@ export function evaluatePose(
   pose: Pose,
   contacts: readonly Contact[],
   frame: Frame = frameOf(figure),
+  /** What may touch without having to (a transition's `via`: what either position touches). */
+  mayTouch: readonly Contact[] = contacts,
 ): PoseReport {
   const s = solve(frame, pose);
   const all = solids(figure, s);
@@ -423,9 +467,15 @@ export function evaluatePose(
       }
     } else {
       ok = bodyTouches(frame, c.part, s, on);
+      const wrong = ok ? wrongWay(frame, pose, c.part, s, on) : null;
       if (!ok) {
         problems.push(
           `${PART_NAME[c.part]} skal røre ${surface}, men ${how(bodyDistance(frame, c.part, s, on))}`,
+        );
+      } else if (wrong) {
+        ok = false;
+        problems.push(
+          `${PART_NAME[c.part]} skal røre ${surface}, men brystet vender ${wrong} ${surface}: vend »facing«, eller drej overkroppen`,
         );
       }
     }
@@ -437,7 +487,7 @@ export function evaluatePose(
   for (const on of surfaces) {
     const these = all.filter((x) => x.on === on);
     for (const g of GROUPS) {
-      const declared = contacts.filter((c) => c.on === on && g.parts.includes(c.part));
+      const declared = mayTouch.filter((c) => c.on === on && g.parts.includes(c.part));
       const allowed = Math.min(
         2,
         declared.reduce((n, c) => n + (paired(c.part) ? (c.count ?? 2) : 2), 0),
@@ -656,22 +706,26 @@ export function straightInText(
 ): Array<{ kind: 'arm' | 'leg'; both: boolean; words: string }> {
   const found: Array<{ kind: 'arm' | 'leg'; both: boolean; words: string }> = [];
   const t = text.toLocaleLowerCase('da-DK');
+  // Word edges that know »æ«, »ø« and »å« (`` in JavaScript does not), and never after »næsten«
+  // or »let« (M2 in the P1a review).
+  const word = (pattern: string) => new RegExp(`(?<!\\p{L})(?:${pattern})(?!\\p{L})`, 'u');
+  const not = '(?<!næsten |let )';
   const rules: Array<[RegExp, 'arm' | 'leg', boolean]> = [
-    [/(?<!næsten |let )\bstrakte arme\b/, 'arm', true],
-    [/\b(?:armene|begge arme|arme) (?:er )?(?:stadig )?strakte?\b/, 'arm', true],
-    [/(?<!næsten |let )\bstrakte albuer\b/, 'arm', true],
-    [/\balbuerne (?:er )?(?:stadig )?strakte?\b/, 'arm', true],
-    [/(?<!næsten |let )\bstrakt arm\b/, 'arm', false],
-    [/\barm (?:er )?(?:stadig )?strakt\b/, 'arm', false],
-    [/(?<!næsten |let )\bstrakte ben\b/, 'leg', true],
-    [/\bbenene (?:er )?(?:stadig )?strakte?\b/, 'leg', true],
-    [/(?<!næsten |let )\bstrakte knæ\b/, 'leg', true],
-    [/\bknæene (?:er )?(?:stadig )?strakte?\b/, 'leg', true],
-    [/\bknæ og hofte er strakte\b/, 'leg', true],
-    [/(?<!næsten |let )\bstrakt knæ\b/, 'leg', false],
-    [/\bknæet (?:er )?(?:stadig )?strakt\b/, 'leg', false],
-    [/\bben (?:er )?(?:løftet )?strakt\b/, 'leg', false],
-    [/(?<!næsten |let )\bstrakt ben\b/, 'leg', false],
+    [word(`${not}strakte arme`), 'arm', true],
+    [word('(?:armene|begge arme|arme) (?:er )?(?:stadig )?strakte?'), 'arm', true],
+    [word(`${not}strakte albuer`), 'arm', true],
+    [word('albuerne (?:er )?(?:stadig )?strakte?'), 'arm', true],
+    [word(`${not}strakt arm`), 'arm', false],
+    [word('(?:arm|armen) (?:er )?(?:stadig |løftet |ført )?strakt'), 'arm', false],
+    [word(`${not}strakte ben`), 'leg', true],
+    [word('benene (?:er )?(?:stadig )?strakte?'), 'leg', true],
+    [word(`${not}strakte knæ`), 'leg', true],
+    [word('knæene (?:er )?(?:stadig )?strakte?'), 'leg', true],
+    [word('knæ og (?:hofte|ankler) (?:er )?strakte'), 'leg', true],
+    [word(`${not}strakt knæ`), 'leg', false],
+    [word('knæet (?:er )?(?:stadig )?strakt'), 'leg', false],
+    [word('(?:ben|benet) (?:er )?(?:stadig |løftet |hænger |sparket |ført )?strakt'), 'leg', false],
+    [word(`${not}strakt (?:ben|standben)`), 'leg', false],
   ];
   for (const [re, kind, both] of rules) {
     const m = t.match(re);
@@ -712,8 +766,10 @@ function distinctSteps(model: FigureModel): Move[] {
   const moves: Move[] = [];
   for (const m of model.timeline.moves) {
     if (m.from === m.to || !model.steps.has(m)) continue;
-    const shift = m.shift ? m.shift[1] - m.shift[0] : 0;
-    const key = `${m.from}>${m.to}>${shift}>${(m.lift ?? []).join(',')}`;
+    // With props the figure's place among them counts (H1 in the P1a review).
+    const [s0, s1] = m.shift ?? [0, 0];
+    const where = model.figure.props.length > 0 ? `${s0}>${s1}` : `${s1 - s0}`;
+    const key = `${m.from}>${m.to}>${where}>${(m.lift ?? []).join(',')}`;
     if (seen.has(key)) continue;
     seen.add(key);
     moves.push(m);
@@ -722,6 +778,63 @@ function distinctSteps(model: FigureModel): Move[] {
 }
 
 const SEGMENT = { arm: ['overarmen', 'underarmen'], leg: ['låret', 'skinnebenet'] } as const;
+
+/** Frames per move in the checks between keyframes: 30 a second, at least 16 (L2, P1a review). */
+const framesOf = (move: Move) => Math.max(16, Math.ceil(30 * move.seconds));
+
+/**
+ * The points of a frame, to see how far the figure moves from one frame to the next: always the
+ * same points in the same order (a hand or foot without its tip counts its wrist or ankle twice).
+ */
+function framePoints(s: Skeleton): Point[] {
+  return [s.hip, s.shoulder, s.head, ...s.bones.flatMap((b) => [b.joint, b.end, b.tip ?? b.end])];
+}
+
+/** The longest way a point goes from one frame to the other. */
+function farthest(a: readonly Point[], b: readonly Point[]): number {
+  let d = 0;
+  for (let i = 0; i < Math.min(a.length, b.length); i++) {
+    d = Math.max(d, distance(a[i] as Point, b[i] as Point));
+  }
+  return d;
+}
+
+/**
+ * The worst jump from one frame to the next, when it is more than three times the move's average
+ * way between frames, plus 1 (L2 in the P1a review); else null. Every frame has the same points in
+ * the same order.
+ */
+export function frameJump(frames: ReadonlyArray<readonly Point[]>): number | null {
+  const steps = frames.slice(1).map((f, k) => farthest(frames[k] ?? f, f));
+  const average = steps.reduce((sum, d) => sum + d, 0) / Math.max(1, steps.length);
+  const jump = Math.max(0, ...steps);
+  return jump > 3 * average + 1 ? jump : null;
+}
+
+/**
+ * Where one move ends, the next one begins, also from the last move round to the first: the figure
+ * never jumps between two moves (H1 in the P1a review).
+ */
+export function jumpProblems(model: FigureModel): Array<{ where: string; message: string }> {
+  const moves = model.timeline.moves;
+  const problems: Array<{ where: string; message: string }> = [];
+  if (moves.length < 2) return problems;
+  const label = (m: Move) =>
+    m.phase === null ? 'vejen tilbage' : `»${model.movement.phases[m.phase]?.label ?? ''}«`;
+  moves.forEach((m, i) => {
+    const next = moves[(i + 1) % moves.length] as Move;
+    const end = framePoints(solve(model.frame, movePose(model, m, 1)));
+    const start = framePoints(solve(model.frame, movePose(model, next, 0)));
+    const d = farthest(end, start);
+    if (d > 0.5) {
+      problems.push({
+        where: `${placeName(m.from)} → ${placeName(m.to)}`,
+        message: `figuren springer ${num(d)} mellem ${label(m)} og ${label(next)}; tjek »advance« og overgangene`,
+      });
+    }
+  });
+  return problems;
+}
 
 /** The frames between two keyframes: bending, length and surfaces (H1). */
 function betweenProblems(figure: FigureItem, model: FigureModel, move: Move): string[] {
@@ -742,8 +855,15 @@ function betweenProblems(figure: FigureItem, model: FigureModel, move: Move): st
   const amount = (message: string) =>
     Number((/(\d+(?:,\d+)?)/.exec(message)?.[1] ?? '0').replace(',', '.'));
   const worstOf = (message: string, key: string) => note(key, amount(message), () => message);
-  for (let k = 1; k < 8; k++) {
-    const pose = movePose(model, move, k / 8);
+  const n = framesOf(move);
+  // The figure moves smoothly: no frame jumps three times the move's average way between frames.
+  const frames = Array.from({ length: n + 1 }, (_, k) =>
+    framePoints(solve(frame, movePose(model, move, k / n))),
+  );
+  const jump = frameJump(frames);
+  if (jump !== null) note('jump', jump, (v) => `figuren springer ${num(v)} mellem to billeder`);
+  for (let k = 1; k < n; k++) {
+    const pose = movePose(model, move, k / n);
     const s = solve(frame, pose);
     for (const message of bendProblems(frame, s, flipped)) {
       worstOf(message, `way:${message.replace(/\(\d+(?:,\d+)?°\)/, '')}`);
@@ -819,6 +939,50 @@ function sideProblems(model: FigureModel, move: Move): string[] {
   return problems;
 }
 
+/** A pose's name in a message: its position, or »via squat–chest« for a transition's via. */
+export const placeName = (id: string): string =>
+  id.includes('>') ? `via ${id.replace('>', '–')}` : id;
+
+/**
+ * What a pose touches: a position's contacts; for a transition's via, what both positions touch
+ * (`still`: it keeps touching on the way, one of two when one position says one) and what either
+ * touches (`allowed`: it may touch).
+ */
+function contactsOf(
+  positions: ReadonlyMap<string, Position>,
+  id: string,
+): { still: Contact[]; allowed: Contact[] } {
+  const own = positions.get(id);
+  if (own) return { still: own.contacts, allowed: own.contacts };
+  const [a, b] = id.split('>');
+  const ca = positions.get(a ?? '')?.contacts ?? [];
+  const cb = positions.get(b ?? '')?.contacts ?? [];
+  const same = (c: Contact, d: Contact) => c.part === d.part && c.on === d.on;
+  return {
+    still: ca.flatMap((c) => {
+      const d = cb.find((x) => same(c, x));
+      if (!d) return [];
+      return [d.count === 1 && c.count !== 1 ? { ...c, count: d.count } : c];
+    }),
+    allowed: [...ca, ...cb.filter((d) => !ca.some((c) => same(c, d)))],
+  };
+}
+
+/**
+ * What a via keeps touching of what both its positions touch: a hand or foot lifted on the way
+ * lets go (one lifted of two: the other keeps it).
+ */
+function keptOnTheWay(still: readonly Contact[], lift: readonly LiftLimb[]): Contact[] {
+  const lifted = lift.map(limbOfLift);
+  return still.flatMap((c) => {
+    if (!paired(c.part)) return [c];
+    const kind = ARM_PARTS.has(c.part) ? 'arm' : 'leg';
+    const up = lifted.filter((id) => id.endsWith(`.${kind}`)).length;
+    if (up >= 2) return [];
+    return up === 1 ? [{ ...c, count: 1 as const }] : [c];
+  });
+}
+
 /** Contacts on the same surface in two positions in a row: the hand or foot must not slide. */
 function slideProblems(
   figure: FigureItem,
@@ -836,9 +1000,9 @@ function slideProblems(
     if (!step || move.phase === null) continue;
     const lifted = new Set<LimbId>((move.lift ?? []).map(limbOfLift));
     const [x, y] = [move.from, move.to].sort() as [string, string];
-    const where = `${x} → ${y}`;
-    const ca = positions.get(move.from)?.contacts ?? [];
-    const cb = positions.get(move.to)?.contacts ?? [];
+    const where = `${placeName(x)} → ${placeName(y)}`;
+    const ca = contactsOf(positions, move.from).still;
+    const cb = contactsOf(positions, move.to).still;
     const sa = step.a.skeleton;
     const sb = step.b.skeleton;
     const soa = solids(figure, sa);
@@ -893,12 +1057,18 @@ export function checkFigure(figure: FigureItem, movement: OwnMovement, where: st
   const add = (place: string, message: string) =>
     problems.push({ where: place ? `${where} › ${place}` : where, message });
 
-  // Hands and feet: a tip in every keyframe or in none, so it never pops in and out; in side view
-  // every leg has a foot, so the foot's direction shows `facing` (M1).
+  // Hands and feet: a tip in every keyframe and via or in none, so it never pops in and out; in
+  // side view every leg has a foot, so the foot's direction shows `facing` (M1).
+  const vias = (figure.transitions ?? []).flatMap((t) =>
+    t.via ? [{ id: `${t.from}>${t.to}`, pose: t.via, lift: t.lift ?? [] }] : [],
+  );
   for (const kind of ['arms', 'legs'] as const) {
     for (const side of ['near', 'far'] as const) {
-      const tips = movement.positions.map((p) => {
-        const limb = figure.keyframes[p.id]?.[kind][side];
+      const tips = [
+        ...movement.positions.map((p) => figure.keyframes[p.id]),
+        ...vias.map((v) => v.pose),
+      ].map((pose) => {
+        const limb = pose?.[kind][side];
         return limb ? limb.tip !== undefined : null;
       });
       const shown = tips.filter((t) => t !== null);
@@ -941,10 +1111,29 @@ export function checkFigure(figure: FigureItem, movement: OwnMovement, where: st
     }
   }
 
-  // The frames between the keyframes (H1).
+  // A transition's via is checked like a keyframe: it keeps touching what both its positions touch,
+  // and touches nothing that neither of them does.
+  const positions = new Map(movement.positions.map((p) => [p.id, p]));
+  for (const via of vias) {
+    const s = solve(frame, via.pose);
+    const { still, allowed } = contactsOf(positions, via.id);
+    for (const message of [
+      ...bendProblems(frame, s),
+      ...hipProblems(frame, via.pose, s),
+      ...armBendProblems(frame, via.pose, s),
+      ...limbProblems(s),
+      ...jointLimbProblems(via.pose, s),
+      ...evaluatePose(figure, via.pose, keptOnTheWay(still, via.lift), frame, allowed).problems,
+    ]) {
+      add(placeName(via.id), message);
+    }
+  }
+
+  // The frames between the keyframes (H1), and no jump from one move to the next.
   const model = buildModel(figure, movement);
+  for (const p of jumpProblems(model)) add(p.where, p.message);
   for (const move of distinctSteps(model)) {
-    const place = `${move.from} → ${move.to}`;
+    const place = `${placeName(move.from)} → ${placeName(move.to)}`;
     for (const message of [...sideProblems(model, move), ...betweenProblems(figure, model, move)]) {
       add(place, message);
     }
