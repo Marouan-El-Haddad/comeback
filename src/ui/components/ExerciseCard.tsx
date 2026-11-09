@@ -7,9 +7,9 @@
 // first, then »Træner« (D47) and »Mærk« (D55). Loaded with lazy() from src/ui/card.tsx: it fetches
 // content and holds the figure system, so never in the start files (SPEC 7).
 import type { ComponentChildren } from 'preact';
-import { useEffect, useMemo, useRef } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { loadExplain, loadFigures } from '../../content/load.ts';
-import type { ExplainItem, FigureFile, FigureItem, Movement } from '../../content/types.ts';
+import type { ExplainItem, Fault, FigureFile, FigureItem, Movement } from '../../content/types.ts';
 import { PROGRAM } from '../../engine/program.ts';
 import type { CardProps } from '../card.tsx';
 import { useExplain, useFigures } from '../content.ts';
@@ -27,7 +27,7 @@ import {
   type CardItem,
   type CardMovement,
 } from './cardItem.ts';
-import { Figure as AnimatedFigure } from './Figure.tsx';
+import { Figure as AnimatedFigure, FaultFigure } from './Figure.tsx';
 import { pictoUrl } from './Picto.tsx';
 
 /** The session's first power step as the warm-up's »Potensér« shows it, or null. */
@@ -56,6 +56,35 @@ export async function prepare(id: string, context: CardContext | null = null): P
 
 /** Finds a card movement's figure among the loaded figure files, or null when it is not drawn. */
 type FigureOf = (movement: CardMovement) => FigureItem | null;
+
+/** A typical mistake drawn as right and wrong in a movement's figure (D58). */
+interface DrawnFault {
+  figure: FigureItem;
+  movement: CardMovement;
+  fault: Fault;
+}
+
+/**
+ * The typical mistakes the card's figures draw, by their number in the explanation (from 1): only
+ * the movements of the card's own explanation, whose mistakes the card lists – not the power step the
+ * warm-up's »Potensér« borrows.
+ */
+function drawnFaults(
+  movements: readonly CardMovement[],
+  figureOf: FigureOf,
+  ownId: string | undefined,
+): Map<number, DrawnFault> {
+  const found = new Map<number, DrawnFault>();
+  for (const movement of movements) {
+    if (movement.positions.length === 0 || movement.source?.item !== ownId) continue;
+    const figure = figureOf(movement);
+    for (const fault of figure?.faults ?? []) {
+      if (figure && !found.has(fault.mistake))
+        found.set(fault.mistake, { figure, movement, fault });
+    }
+  }
+  return found;
+}
 
 function figureFinder(files: ReadonlyArray<FigureFile | null | undefined>): FigureOf {
   return (movement) => {
@@ -97,6 +126,11 @@ export function ExerciseCard({ id, back, onClose, context = null, status }: Card
     [explained, context, power?.name, powerExplained],
   );
   const figureOf = figureFinder([figures, otherFigures, powerFigures]);
+  const faults = useMemo(
+    () =>
+      drawnFaults(movements, figureFinder([figures, otherFigures, powerFigures]), explained?.id),
+    [movements, figures, otherFigures, powerFigures, explained?.id],
+  );
 
   const backButton = (
     <button type="button" class="btn" onClick={onClose}>
@@ -158,7 +192,7 @@ export function ExerciseCard({ id, back, onClose, context = null, status }: Card
           ) : (
             <ProgrammeOnly item={item} />
           )}
-          <Folds x={explained} why={why} />
+          <Folds x={explained} why={why} faults={faults} />
         </>
       )}
       <button type="button" class="btn block card-back" onClick={onClose}>
@@ -344,8 +378,19 @@ function Cues({ cues }: { cues: string[] }) {
   );
 }
 
-/** Folded, one tap each: tempo and breathing, mistakes, easier and harder, equipment, »Hvorfor«. */
-function Folds({ x, why }: { x: ExplainItem | null; why: string[] }) {
+/**
+ * Folded, one tap each: tempo and breathing, mistakes, easier and harder, equipment, »Hvorfor«. A
+ * mistake the figure draws stands as »Rigtigt« and »Forkert« under it, drawn when the fold opens.
+ */
+function Folds({
+  x,
+  why,
+  faults,
+}: {
+  x: ExplainItem | null;
+  why: string[];
+  faults: ReadonlyMap<number, DrawnFault>;
+}) {
   if (!x && why.length === 0) return null;
   return (
     <div class="card-folds">
@@ -359,16 +404,27 @@ function Folds({ x, why }: { x: ExplainItem | null; why: string[] }) {
               <dd>{x.breathing}</dd>
             </dl>
           </Fold>
-          <Fold title="Typiske fejl">
+          <Fold title="Typiske fejl" lazy={faults.size > 0}>
             <ul class="card-mistakes">
-              {x.mistakes.map((m) => (
-                <li key={m.mistake}>
-                  <p class="card-mistake">{m.mistake}</p>
-                  <p>
-                    <strong>Ret det:</strong> {m.fix}
-                  </p>
-                </li>
-              ))}
+              {x.mistakes.map((m, i) => {
+                const drawn = faults.get(i + 1);
+                return (
+                  <li key={m.mistake}>
+                    <p class="card-mistake">{m.mistake}</p>
+                    {drawn && (
+                      <FaultFigure
+                        figure={drawn.figure}
+                        movement={drawn.movement}
+                        fault={drawn.fault}
+                        mistake={m.mistake}
+                      />
+                    )}
+                    <p>
+                      <strong>Ret det:</strong> {m.fix}
+                    </p>
+                  </li>
+                );
+              })}
             </ul>
           </Fold>
           <Fold title="Lettere og sværere">
@@ -397,11 +453,26 @@ function Folds({ x, why }: { x: ExplainItem | null; why: string[] }) {
   );
 }
 
-function Fold({ title, children }: { title: string; children: ComponentChildren }) {
+/** A fold; a `lazy` one draws its contents the first time it opens (the mistakes' figures). */
+function Fold({
+  title,
+  children,
+  lazy = false,
+}: {
+  title: string;
+  children: ComponentChildren;
+  lazy?: boolean;
+}) {
+  const [opened, setOpened] = useState(!lazy);
   return (
-    <details class="card-fold">
+    <details
+      class="card-fold"
+      onToggle={(e) => {
+        if (e.currentTarget.open) setOpened(true);
+      }}
+    >
       <summary>{title}</summary>
-      <div class="card-fold-body">{children}</div>
+      <div class="card-fold-body">{opened ? children : null}</div>
     </details>
   );
 }

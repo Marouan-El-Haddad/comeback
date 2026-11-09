@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { a11yProblems, SESSION_RULES } from './a11y.ts';
-import { onboard, openApp } from './helpers.ts';
+import { closeIntro, onboard, openApp, startSession } from './helpers.ts';
 
 // The animated figure on the exercise card (docs/SPEC.md 3.8, 5 and 6; DECISIONS.md D48): it moves
 // in the step's tempo (push-up: 3 sek ned, 1 sek stille, op) with the running phase highlighted, a
@@ -23,8 +23,17 @@ async function openCard(page: Page, ladder: string, step: string): Promise<void>
 
 /** Stops the clock, so the test moves time itself. */
 async function pauseClock(page: Page): Promise<void> {
-  const now = await page.evaluate(() => Date.now());
-  await page.clock.pauseAt(now + 20);
+  // The page's clock runs on in real time until it stands still; under load it can pass the moment
+  // first, so try a little further ahead.
+  for (let i = 1; ; i++) {
+    const now = await page.evaluate(() => Date.now());
+    try {
+      await page.clock.pauseAt(now + 50 * i);
+      return;
+    } catch (error) {
+      if (i >= 5) throw error;
+    }
+  }
 }
 
 /** Moves time on in steps of `step` ms until the running phase is `label`; returns the ms it took. */
@@ -52,7 +61,7 @@ test('figuren animerer push-uppen i tempoet: 3 sek ned, 1 sek stille, op', async
   await expect(stage).toHaveAttribute('role', 'img');
   await expect(stage).toHaveAttribute(
     'aria-label',
-    /^Push-up med tempo\. Oppe: Strakte arme .* Nede: Brystet .* Faserne: 3 sek ned, 1 sek stille og op\.$/,
+    /^Push-up med tempo\. Oppe: Strakte arme .* Nede: Brystet .* Faserne: 3 sek ned, 1 sek stille og op\. Markeringer: i »3 sek ned« en pil ned ved brystet; ved Nede en lige linje fra foden til skulderen: »Én planke«; i »Op« en pil op ved brystet\.$/,
   );
   await expect(c.locator('.figure-phase')).toHaveText(['3 sek ned', '1 sek stille', 'Op']);
   await expect(c.locator('.card-phases').first()).toHaveText('3 sek ned · 1 sek stille · Op');
@@ -319,4 +328,226 @@ test('reduceret bevægelse med fem positioner: højst tre stillbilleder pr. ræk
   expect(await a11yProblems(page, '.exercise-card', SESSION_RULES)).toEqual([]);
   await card(page).locator('.figure-stills').scrollIntoViewIfNeeded();
   await page.screenshot({ path: 'screenshots/kort-figur-fem-stillbilleder.png', scale: 'css' });
+});
+
+// ---------------------------------------------------------------------------------------------
+// Views, marks and typical mistakes (docs/SPEC.md 3.2 and 3.8, DECISIONS.md D58): the examples
+// press.1 (arrows, »Én planke« and the hanging hip), power_legs.1 (the squat jump from the side and
+// the front with »Knæ over tæer«) and wallsit.W1 (90° at the knee).
+// ---------------------------------------------------------------------------------------------
+
+/** The text of the mark shown now in a view, or null when none is shown. */
+async function markText(root: ReturnType<Page['locator']>, view = 0): Promise<string | null> {
+  const mark = root.locator('.figure-draw').nth(view).locator('.figure-mark');
+  return (await mark.isVisible()) ? mark.innerText() : null;
+}
+
+/** Whether a view draws a mark's shapes now. */
+async function markDrawn(root: ReturnType<Page['locator']>, view = 0): Promise<boolean> {
+  return root
+    .locator('.figure-draw')
+    .nth(view)
+    .locator('g.figure-marks')
+    .evaluate((g) => g.childElementCount > 0);
+}
+
+test('to vinkler: squat jumpet fra siden og forfra på samme ur, med navnene over @date', async ({
+  page,
+}) => {
+  await openApp(page, '2026-11-17');
+  await onboard(page);
+  await openCard(page, 'Power ben · trin 1', 'Squat jump');
+  const c = card(page);
+  const figure = c.locator('.card-figure .figure');
+  await expect(figure).toHaveClass(/\btwo\b/);
+  await expect(figure.locator('.figure-view-name')).toHaveText(['Fra siden', 'Forfra']);
+  await expect(figure.locator('.figure-draw')).toHaveCount(2);
+  // One line of phases for both, and a text alternative that names the views and the marks.
+  await expect(c.locator('.card-figure .figure-phases')).toHaveCount(1);
+  await expect(c.locator('.card-figure .figure-stage')).toHaveAttribute(
+    'aria-label',
+    /Tegnet fra siden og forfra\. Markeringer: i »Sæt dig ned« en pil .* ved hoften; forfra ved Landing »Knæ over tæer« ved knæet\.$/,
+  );
+  await pauseClock(page);
+  await untilPhase(page, 'Rejs dig');
+  await untilPhase(page, 'Sæt dig ned');
+  const hips = () =>
+    figure
+      .locator('.figure-draw svg [data-k="torso"]')
+      .evaluateAll((els) =>
+        els.map((el) =>
+          Number(el.getAttribute('y1') ?? el.getAttribute('points')?.split(/[ ,]/)[1]),
+        ),
+      );
+  const before = await hips();
+  // In »Sæt dig ned« both views go down together: the same clock (SVG y grows downward).
+  await page.clock.runFor(400);
+  await expect(current(page)).toHaveText('Sæt dig ned');
+  const after = await hips();
+  expect(after[0]).toBeGreaterThan((before[0] ?? 0) + 3);
+  expect(after[1]).toBeGreaterThan((before[1] ?? 0) + 3);
+  // The arrow for the hip on the way down in the side view; no text with it.
+  expect(await markDrawn(figure, 0)).toBe(true);
+  expect(await markText(figure, 0)).toBeNull();
+  await page.screenshot({ path: 'screenshots/kort-figur-vinkler.png', scale: 'css' });
+  // »Frys 2 sek« at the landing: »Knæ over tæer« by the front view's knee, at 18 px.
+  await untilPhase(page, 'Frys 2 sek');
+  await page.clock.runFor(200);
+  expect(await markText(figure, 1)).toBe('Knæ over tæer');
+  expect(await markDrawn(figure, 0)).toBe(false);
+  expect(await a11yProblems(page, '.exercise-card', SESSION_RULES)).toEqual([]);
+  await page.screenshot({ path: 'screenshots/kort-figur-vinkler-cue.png', scale: 'css' });
+  // It leaves with the phase: one mark at a time, only at its moment.
+  await untilPhase(page, 'Rejs dig');
+  await page.clock.runFor(100);
+  expect(await markText(figure, 1)).toBeNull();
+});
+
+test('en markering står i sin fase: pil ned, »Én planke« i bunden, pil op (press.1), 90° i wall sit', async ({
+  page,
+}) => {
+  await openApp(page, '2026-11-17');
+  await onboard(page);
+  await openCard(page, 'Pres · trin 1', 'Push-up med tempo');
+  const c = card(page);
+  const figure = c.locator('.card-figure .figure');
+  await pauseClock(page);
+  await untilPhase(page, 'Op');
+  await untilPhase(page, '3 sek ned');
+  await page.clock.runFor(1_000);
+  // »3 sek ned«: the arrow at the chest, no text.
+  expect(await markDrawn(figure)).toBe(true);
+  expect(await markText(figure)).toBeNull();
+  const arrow = await figure.locator('g.figure-marks').innerHTML();
+  expect(arrow).toContain('polyline');
+  // »1 sek stille« at the bottom: the guide line from the heel to the shoulder with its cue.
+  await untilPhase(page, '1 sek stille');
+  await page.clock.runFor(300);
+  expect(await markText(figure)).toBe('Én planke');
+  expect(await figure.locator('g.figure-marks').innerHTML()).toContain('stroke-dasharray');
+  // The text stands inside the drawing and covers no more than its own box (18 px, SPEC 6).
+  const mark = await figure.locator('.figure-mark').boundingBox();
+  const draw = await figure.locator('.figure-draw').boundingBox();
+  expect(
+    mark && draw && mark.x >= draw.x - 1 && mark.x + mark.width <= draw.x + draw.width + 1,
+  ).toBe(true);
+  expect(await a11yProblems(page, '.exercise-card', SESSION_RULES)).toEqual([]);
+  await page.screenshot({ path: 'screenshots/kort-figur-markering.png', scale: 'css' });
+  // »Op«: a new arrow, the text gone.
+  await untilPhase(page, 'Op');
+  await page.clock.runFor(300);
+  expect(await markText(figure)).toBeNull();
+  expect(await figure.locator('g.figure-marks').innerHTML()).not.toBe(arrow);
+  await c.getByRole('button', { name: 'Tilbage', exact: true }).first().click();
+  await page.getByRole('button', { name: 'Tilbage', exact: true }).click();
+
+  // Wall sit: the knee's 90° in the hold, with its arc.
+  await openCard(page, 'Wall sit · trin W1', 'Wall sit, 90°');
+  await pauseClock(page);
+  await untilPhase(page, 'Hold');
+  await page.clock.runFor(300);
+  expect(await markText(c.locator('.card-figure .figure'))).toBe('90°');
+  await page.screenshot({ path: 'screenshots/kort-figur-vinkel.png', scale: 'css' });
+});
+
+test('typiske fejl som figur: »Rigtigt« og »Forkert« side om side under fejlen (press.1)', async ({
+  page,
+}) => {
+  await openApp(page, '2026-11-17');
+  await onboard(page);
+  await openCard(page, 'Pres · trin 1', 'Push-up med tempo');
+  const c = card(page);
+  const fold = c.locator('details.card-fold', { hasText: 'Typiske fejl' });
+  // Drawn when the fold opens, not before (the card opens as fast as before).
+  await expect(c.locator('.fault-pair')).toHaveCount(0);
+  await fold.locator('summary').click();
+  const first = fold.locator('.card-mistakes li').first();
+  const pair = first.locator('.fault-pair');
+  await expect(pair).toBeVisible();
+  await expect(pair.locator('.fault-label')).toHaveText(['Rigtigt', 'Forkert']);
+  await expect(pair).toHaveAttribute(
+    'aria-label',
+    'Rigtigt: Oppe. Forkert: Hoften hænger, eller den stikker op.',
+  );
+  // Side by side at the same size, the wrong one with a ring where it differs.
+  const [right, wrong] = [
+    await pair.locator('.fault-cell').nth(0).boundingBox(),
+    await pair.locator('.fault-cell').nth(1).boundingBox(),
+  ];
+  expect(right && wrong && Math.abs(right.y - wrong.y)).toBeLessThan(1);
+  expect(right && wrong && Math.abs(right.width - wrong.width)).toBeLessThan(1);
+  expect(await pair.locator('.fault-cell.wrong svg').innerHTML()).toContain('stroke-dasharray');
+  // Only the mistake the figure draws has a pair.
+  await expect(fold.locator('.fault-pair')).toHaveCount(1);
+  expect(await a11yProblems(page, '.exercise-card', SESSION_RULES)).toEqual([]);
+  await pair.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: 'screenshots/kort-fejlpar.png', scale: 'css' });
+});
+
+test('reduceret bevægelse: stillbillederne har deres markeringer, og den anden vinkel står under sit navn', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openApp(page, '2026-11-17');
+  await onboard(page);
+  await openCard(page, 'Pres · trin 1', 'Push-up med tempo');
+  const c = card(page);
+  const stills = c.locator('.card-figure .figure-still');
+  await expect(stills).toHaveCount(2);
+  // »Nede« carries the guide line with »Én planke« and the arrow up for »Op« that starts there;
+  // »Oppe« the arrow down for »3 sek ned«.
+  await expect(stills.nth(1).locator('.figure-mark')).toHaveText('Én planke');
+  await expect(stills.nth(1).locator('.figure-mark')).toBeVisible();
+  expect(await stills.nth(0).locator('svg').innerHTML()).toContain('polyline');
+  expect(await a11yProblems(page, '.exercise-card', SESSION_RULES)).toEqual([]);
+  await page.screenshot({ path: 'screenshots/kort-stillbilleder-markeringer.png', scale: 'css' });
+  await c.getByRole('button', { name: 'Tilbage', exact: true }).first().click();
+  await page.getByRole('button', { name: 'Tilbage', exact: true }).click();
+
+  // The squat jump: its positions from the side, then from the front under »Forfra«, the cue on the
+  // front view's landing.
+  await openCard(page, 'Power ben · trin 1', 'Squat jump');
+  const views = c.locator('.card-figure .figure-stills-view');
+  await expect(views).toHaveCount(2);
+  await expect(c.locator('.card-figure .figure-view-name')).toHaveText(['Fra siden', 'Forfra']);
+  const landing = views.nth(1).locator('.figure-still').filter({ hasText: 'Landing' });
+  await expect(landing.locator('.figure-mark')).toHaveText('Knæ over tæer');
+  await expect(c.locator('.card-figure .figure-stills-all')).toHaveAttribute(
+    'aria-label',
+    /Markeringer: .*»Knæ over tæer«/,
+  );
+  await page.screenshot({ path: 'screenshots/kort-stillbilleder-vinkler.png', scale: 'css' });
+});
+
+test('»Nu« i passet: begge vinkler og markeringen på sit tidspunkt (D52, D58) @date', async ({
+  page,
+}) => {
+  await openApp(page, '2026-11-17');
+  await onboard(page);
+  await startSession(page);
+  // The warm-up as still images, so the fake clock does not draw four minutes of frames.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+  for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+  await closeIntro(page);
+  const now = page.locator('.session .stack.now');
+  await expect(now.locator('.set-name')).toHaveText('Squat jump');
+  const figure = now.locator('.now-stage .figure');
+  await expect(figure.locator('.figure-draw')).toHaveCount(2);
+  // In a session the views stand without names, to leave room for the set.
+  await expect(figure.locator('.figure-view-name')).toHaveCount(0);
+  await pauseClock(page);
+  const phase = now.locator('.figure-current .figure-phase');
+  for (let ms = 0; ms < 10_000 && (await phase.allTextContents())[0] !== 'Frys 2 sek'; ms += 50) {
+    await page.clock.runFor(50);
+  }
+  await expect(phase).toHaveText('Frys 2 sek');
+  await page.clock.runFor(200);
+  expect(await markText(figure, 1)).toBe('Knæ over tæer');
+  // »Som planlagt« stays where it is (D33), and the text reads at 18 px and 7:1 (SPEC 6).
+  await expect(page.getByTestId('as-planned')).toBeInViewport();
+  expect(await a11yProblems(page, '.session', SESSION_RULES)).toEqual([]);
+  await page.screenshot({ path: 'screenshots/pas-nu-vinkler-markering.png', scale: 'css' });
 });

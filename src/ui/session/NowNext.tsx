@@ -75,6 +75,7 @@ export function ExerciseFigure({
   const movement = drawn?.movement ?? null;
   // With reduced motion a session's figure is one still image of its most typical position, as in
   // »Næste«: all positions side by side, as on the card, pushed the target off its place (D54).
+  // »Nu« and the pause show it in both views with its marks (D58).
   const asStill = useReducedMotion() || still;
   const parts = follow?.parts;
   const mode = follow?.mode;
@@ -108,6 +109,7 @@ export function ExerciseFigure({
             movement={movement}
             label={label}
             position={keyPosition(movement)}
+            full={size === 'now' || size === 'big'}
           />
         ) : (
           <Figure

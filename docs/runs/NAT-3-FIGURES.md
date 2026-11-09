@@ -42,7 +42,7 @@ Kør tjekket igen, når positionernes tekst ændres: tjekket af strakte led læs
 ### Andre muligheder
 
 - **`bend` på en arm i sidebilledet:** kun med armen over hovedet, og kun når teksten siger, at albuen peger den anden vej, end den gør af sig selv. Håndstanden har ingen `bend` (se herunder).
-- **`spine`** (sidebilledet, −10 til 10): ryggen krummer, + mod ryggen (katten, rund øvre ryg) og − mod brystet (koen).
+- **`spine`** (−10 til 10): fra siden krummer ryggen, + mod ryggen (katten, rund øvre ryg) og − mod brystet (koen); forfra bøjer overkroppen til siden, + mod den nære side (P1b).
 - **Ansigtet:** et lille mærke på hovedet viser, hvor ansigtet vender. Det drejer med `head`.
 - **Ryg, mave og side:** kontakten betyder, at den del af overkroppen rører fladen; resten må løftes. I sidebilledet vender brystet væk fra fladen ved ryggen og mod den ved mave og bryst.
 - **Flasker og rygsæk på ryggen** ligger langs ryggen.
