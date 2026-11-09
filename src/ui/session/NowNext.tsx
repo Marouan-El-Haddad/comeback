@@ -252,6 +252,13 @@ export function NextBig({
           </button>
         )}
       </div>
+      {/* »Gør klar« before the figure: what to set up is read first, and if the room runs out it
+          is the figure's feet, not the text, that goes under the actions (D51, D59). */}
+      {ready && (
+        <p class="get-ready">
+          <strong>Gør klar:</strong> {ready}
+        </p>
+      )}
       <ExerciseFigure
         cardId={next.cardId}
         pictoId={next.pictoId}
@@ -259,11 +266,6 @@ export function NextBig({
         context={context}
         size="big"
       />
-      {ready && (
-        <p class="get-ready">
-          <strong>Gør klar:</strong> {ready}
-        </p>
-      )}
     </section>
   );
 }
@@ -325,6 +327,9 @@ export function SessionProgress({ at, of, label }: { at: number; of: number; lab
   );
 }
 
+/** A name longer than this is set in 22 px instead of 28, so »Nu« keeps its cues over »Næste«. */
+const LONG_NAME = 16;
+
 /**
  * »Nu« above the exercise in hand: the label with the track and step on one line, then the name
  * with »Sådan gør du« beside it, so the button stays on the first screen above the actions.
@@ -344,7 +349,8 @@ export function NowHead({
         <span class="now-label">Nu</span> {kicker}
       </p>
       <div class="now-head-row">
-        <h1 class="set-name">{name}</h1>
+        {/* A long name in 22 px stands on at most two lines by »Sådan gør du« (D59). */}
+        <h1 class={name.length > LONG_NAME ? 'set-name long' : 'set-name'}>{name}</h1>
         {onCard && (
           <button type="button" class="btn how now-how" onClick={onCard}>
             Sådan gør du

@@ -105,15 +105,29 @@ export function CountdownView({
   state,
   label,
   size = 'big',
+  part = null,
 }: {
   state: CountdownState;
   label?: string;
   size?: CountdownSize;
+  /**
+   * On one line over an intro card: the part of the session the exercise begins, as its big red
+   * number and its name left of the clock (D59), so the card keeps its room.
+   */
+  part?: { at: number; label: string } | null;
 }) {
   if (size === 'line') {
     return (
-      <div class="countdown line" role="timer" aria-live="off">
-        {label && <span class="countdown-label">{label}</span>}
+      <div
+        class={part ? 'countdown line with-part' : 'countdown line'}
+        role="timer"
+        aria-live="off"
+      >
+        {part && <span class="day-part-number">{part.at}</span>}
+        <span class="countdown-labels">
+          {part && <span class="part-name">{part.label}</span>}
+          {label && <span class="countdown-label">{label}</span>}
+        </span>
         <span class="countdown-number" data-testid="countdown">
           {formatClock(state.remaining)}
         </span>

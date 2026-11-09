@@ -204,7 +204,7 @@
 }
 
 .session-figure.now .figure.tall:not(.stills) .figure-svg {
-  height: 192px;
+  height: 152px;
 }
 
 .session-figure.now .card-phases,
@@ -229,13 +229,22 @@
   height: 80px;
 }
 
-/* The next exercise big in the pause and on the intro card: the figure takes the width. */
+/* The next exercise big in the pause and on the intro card: the figure takes the width. On the intro
+   card it is 130 px (150 standing), so »Gør klar« and the first step stand over »Luk« (D59). */
 .session-figure.big .figure-svg {
-  height: 160px;
+  height: 144px;
 }
 
 .session-figure.big .figure.tall:not(.stills) .figure-svg {
-  height: 176px;
+  height: 160px;
+}
+
+.intro-card .session-figure.big .figure-svg {
+  height: 130px;
+}
+
+.intro-card .session-figure.big .figure.tall:not(.stills) .figure-svg {
+  height: 150px;
 }
 
 .session-figure.next {
@@ -310,19 +319,29 @@
   font-size: 88px;
 }
 
-/* One line: the intro card's clock, still big enough to read from the floor (SPEC 5: 64 px). */
+/* One line: the intro card's clock, still big enough to read from the floor (SPEC 5: 64 px). Where
+   the exercise begins a part, the part's big red number and name stand left of it, in the same
+   64 px, so the card under it keeps its room (D59). */
 .countdown.line {
   display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: baseline;
+  grid-template-columns: 1fr auto;
+  align-items: center;
   gap: 4px 16px;
   width: 100%;
   height: auto;
 }
 
+.countdown.line.with-part {
+  grid-template-columns: auto 1fr auto;
+}
+
+.countdown-labels {
+  min-width: 0;
+  display: grid;
+}
+
 .countdown.line .countdown-number {
   font-size: 64px;
-  justify-self: end;
 }
 
 .countdown.line .countdown-label {
@@ -350,8 +369,8 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  height: 80px;
-  padding: 4px 0 8px;
+  height: 76px;
+  padding: 4px 0;
   border-bottom: 1px solid var(--c-line);
   overflow: hidden;
 }
@@ -364,12 +383,13 @@
 
 .next-strip .next-label {
   font-size: 18px;
+  line-height: 1.1;
 }
 
 .next-strip .next-name,
 .next-strip .next-line {
   font-size: 18px;
-  line-height: 1.25;
+  line-height: 1.2;
   font-weight: 600;
   color: var(--c-ink);
   white-space: nowrap;
@@ -387,7 +407,7 @@
 .next-up.next-big {
   display: grid;
   gap: 8px;
-  padding-top: 16px;
+  padding-top: 8px;
   border-top: 4px solid var(--c-navy);
 }
 

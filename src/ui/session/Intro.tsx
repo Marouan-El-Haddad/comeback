@@ -8,7 +8,7 @@ import type { CardContext } from '../components/cardItem.ts';
 import { PROGRAM } from '../../engine/program.ts';
 import { cardItem } from '../components/cardItem.ts';
 import { useExercise } from './exercise.ts';
-import { ExerciseFigure, PartHead } from './NowNext.tsx';
+import { ExerciseFigure } from './NowNext.tsx';
 import type { PartStart, Upcoming } from './outline.ts';
 import { CountdownView, useCountdown } from './timers.tsx';
 
@@ -63,30 +63,22 @@ export function IntroBody({
 
 /**
  * The intro card with the clock it stands under: the pause's, or its own »Gør klar«. Where the
- * exercise begins a part of the session, the part's big red number stands over the card (D59).
+ * exercise begins a part of the session, the clock's line carries the part's big red number (D59).
  */
 export function IntroCard({
   next,
   context = null,
-  part = null,
   clock,
-  above,
   onClose,
 }: {
   next: Upcoming;
   context?: CardContext | null;
-  /** The part the exercise starts, if it starts one. */
-  part?: PartStart | null;
   clock: ComponentChildren;
-  /** Over the clock: the set just logged (the pause). */
-  above?: ComponentChildren;
   onClose: () => void;
 }) {
   return (
     <div class="intro" data-testid="intro">
-      {above}
       {clock}
-      {part && <PartHead at={part.at} label={part.label} note={part.note} />}
       {/* A tap anywhere on the card closes it, as »Luk« does (D44). */}
       <section class="intro-card" aria-label="Introkort" onClick={onClose}>
         <IntroBody next={next} context={context} />
@@ -122,8 +114,7 @@ export function IntroStep({
     <IntroCard
       next={next}
       context={context}
-      part={part}
-      clock={<CountdownView state={timer} label="Gør klar" size="line" />}
+      clock={<CountdownView state={timer} label="Gør klar" size="line" part={part} />}
       onClose={onDone}
     />
   );
@@ -179,8 +170,7 @@ export function WarmupIntro({
   const timer = useCountdown(INTRO_SECONDS, paused, { onDone, end: 'go' });
   return (
     <div class="intro" data-testid="intro">
-      <CountdownView state={timer} label="Gør klar" size="line" />
-      {part && <PartHead at={part.at} label={part.label} note={part.note} />}
+      <CountdownView state={timer} label="Gør klar" size="line" part={part} />
       <section class="intro-card" aria-label="Introkort" onClick={onDone}>
         <p class="intro-label">Opvarmning · 8 min</p>
         <h1>Fire punkter efter tur</h1>

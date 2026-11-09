@@ -30,8 +30,9 @@
   gap: 16px;
 }
 
-/* »Nu« in a session is the tightest screen (D51): 8 px between its parts keeps the cues above the
-   fixed actions, also under the time machine's banner. */
+/* »Nu« in a session is the tightest screen (D51): 8 px between its parts, a long name in 22 px and a
+   standing figure of 152 px keep both cues over »Næste«, also under the time machine's banner;
+   e2e/fit.spec.ts measures it through Styrke A and B (D59). */
 .stack.now {
   gap: 8px;
 }
@@ -363,9 +364,14 @@
   letter-spacing: 0.04em;
 }
 
-/* The exercise in hand is the session's heading (SPEC 5: 28 px). */
+/* The exercise in hand is the session's heading (SPEC 5: 28 px); a long name is 22 px, so it stands
+   on at most two lines beside »Sådan gør du« and the cues stay over »Næste« (D59). */
 .set-name {
   font-size: 28px;
+}
+
+.set-name.long {
+  font-size: 22px;
 }
 
 .set-count {
@@ -532,9 +538,11 @@
   gap: 16px;
 }
 
+/* The pause: »✓ Logget«, the ring and »Næste« 8 px apart, so »Næste« and its »Gør klar« stand over
+   the actions (D51, D59). */
 .rest {
   display: grid;
-  gap: 16px;
+  gap: 8px;
 }
 
 .next-up p {

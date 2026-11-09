@@ -46,7 +46,6 @@ import {
   NextStrip,
   NowCues,
   NowHead,
-  PartHead,
   SessionProgress,
   useCues,
   useSessionStyle,
@@ -1380,9 +1379,7 @@ function RestStep(props: {
       <IntroCard
         next={props.next}
         context={props.context}
-        part={props.part}
-        above={logged}
-        clock={<CountdownView state={timer} label="Pause" size="line" />}
+        clock={<CountdownView state={timer} label="Pause" size="line" part={props.part} />}
         onClose={props.onIntroClose}
       />
     );
@@ -1785,12 +1782,13 @@ function EmomStep(props: {
   if (!started) {
     return (
       <div class="stack">
-        {props.part && (
-          <PartHead at={props.part.at} label={props.part.label} note={props.part.note} />
-        )}
         <section class="intro-card" aria-label="Introkort" data-testid="intro">
           <IntroBody
-            label={`Burpees · EMOM ${step.key}`}
+            label={
+              props.part
+                ? `Del ${props.part.at} · ${props.part.label} · EMOM ${step.key}`
+                : `Burpees · EMOM ${step.key}`
+            }
             next={{
               cardId: emom.stepId,
               pictoId: emom.stepId,
