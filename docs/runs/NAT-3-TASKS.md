@@ -21,6 +21,7 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 
 ### [~] P0 – Passet færdigt fra arbejdsmappen (opgavens pakke 0)
 
+- Status: bygget 04:30 (73213a6, 62e3ca9, 504feea, 6f0d761, 3c91d73); review i gang.
 - Agent: `comeback-builder`. Frist: udgivet før tirsdagens Styrke A (10/11).
 - Udgangspunkt: NAT-2's P6 stoppede midt i arbejdet. SPEC 3.2 og D50–D53 er committet; koden (`src/ui/session/DayPlan.tsx`, `NowNext.tsx`, `Intro.tsx`, `outline.ts`, `exercise.ts`, `session.css`, ændringer i `Runner.tsx`, `OpenStrong.tsx`, `timers.tsx`, `App.tsx`, `Today.tsx` m.fl.), testene (`e2e/session.spec.ts`, `src/ui/__tests__/outline.test.ts`, rettede specs) og skærmbillederne ligger ucommittet i arbejdsmappen sammen med et tillæg til D53. Det kasseres ikke.
 - Mål: »Dagens pas« før start (D50), »Nu« og »Næste« og fremdriften altid synlige (D51), figuren følger passets ur (D52), næste øvelse stort med animation og »Gør klar« i pausen, introkortet første gang (D44, D51), »Hold pause« til fanerne (D53). Desuden:
@@ -36,7 +37,7 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 - Grønt: `npm run check`; `e2e/session.spec.ts` og hele suiten i `pixel9a` og `pixel9a-utc`; opstarten ikke langsommere.
 - Skærmbilleder: `dagens-pas*.png`, `pas-nu-og-naeste.png`, `pause.png`, `introkort.png`, `hold-pause.png`, `os-*.png`.
 
-### [ ] P1a – Figurmotoren rettet (opgavens pakke 1)
+### [~] P1a – Figurmotoren rettet (opgavens pakke 1)
 
 - Agent: `comeback-builder`. Brief: `docs/runs/NAT-2-P3-FIX.md` (H1, M1–M3, L1–L4 og motorens grænser 1–6), reviewet i `docs/reviews/nat2-p3-figurer.md`.
 - Accept:
@@ -71,8 +72,9 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 - Review: `comeback-reviewer` gennemgår hver figur mod forklaringens positioner og anatomien og afviser alt, der ikke er tydeligt (`docs/reviews/nat3-p2-figurer-*.md`). Pakken er først færdig, når de afviste figurer er rettet og godkendt.
 - Grønt: `node scripts/check-explain.ts` (alle filer); `npm run check`.
 
-### [ ] P3 – Skærpede forklaringer (opgavens pakke 3)
+### [~] P3 – Skærpede forklaringer (opgavens pakke 3)
 
+- Status: P3a (feltet »Mærk«, D55) bygget 05:00 (0a6b352, 77072e3, 112ef68); forklaringerne flettet 05:05 (3648b6b) med tolkningerne P62–P67 (d0cb7cc); review i to dele (A og B) i gang. Koden fra P3a reviewes sammen med P1a.
 - Agenter: `comeback-coach` × 6 parallelt i kopier i scratchpad (samme grupper som P2), ingen commits. Feltet »Mærk« (`feel`) i datamodellen og kortet bygges af `comeback-builder` (P3a).
 - Mål: hvert kort læst med brugerens blik: præcis hvordan øvelsen laves derhjemme med gulv, stol, væg og rygsæk; hvad han skal mærke (»Mærk«); hvornår det er for let eller for svært (i »Lettere« og »Sværere«, i tråd med motorens regler for reserve og trin). Teksten skæres ned, hvor det kan lade sig gøre, og gøres mere konkret, hvor det er nødvendigt. Navne, doser og regler ændres ikke; bevægelsernes positioner, faser og ID'er ændres kun i ordlyden. Hver træner skriver desuden et figurbrief pr. punkt til P2 (vinkel, markeringer og tidspunkt, fejl til rigtigt/forkert, hvordan bevægelsen ser ud).
 - Grønt: `node scripts/check-explain.ts` (alle filer); `npm run check`; `no-source-refs`; review `docs/reviews/nat3-p3-forklaringer.md`.
