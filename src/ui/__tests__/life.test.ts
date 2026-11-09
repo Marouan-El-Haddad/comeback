@@ -1,18 +1,25 @@
 import { describe, expect, it } from 'vitest';
-import { PROGRAM } from '../../engine/index.ts';
+import { PROGRAM, submitSundayCheck } from '../../engine/index.ts';
 import { dayOf, Log, mondays } from '../../engine/__tests__/helpers/log.ts';
 import {
   clubAsks,
   clubEnd,
   clubLogOn,
   clubSummary,
+  gradeOnly,
   minutesIn,
+  standingChanges,
+  standingText,
   sundayDue,
+  trackDistance,
   type ClubAsk,
 } from '../life.ts';
 import {
+  checkEffects,
   filmWeek,
   heavyChoices,
+  heavyLabel,
+  heavyStep,
   lightPains,
   painChoices,
   parseSleep,
@@ -235,5 +242,72 @@ describe('the Sunday check’s fields', () => {
     expect(filmWeek(state, SUN)).toBe(true);
     expect(filmWeek(state, '2026-11-22')).toBe(false);
     expect(filmWeek(state, '2026-11-29')).toBe(true);
+  });
+});
+
+// The review of P5a (docs/reviews/nat3-p5a-livet.md, DECISIONS.md D65).
+describe('after the review of P5a', () => {
+  it('M3: the grade from the Sunday check alone does not answer yesterday’s club card', () => {
+    const log = onboarded();
+    log.push({ type: 'club_logged', attended: true, technique: 4 }, SAT);
+    const [sunday] = clubAsks(PROGRAM, log.state(SUN), SUN, 9 * 60);
+    expect(sunday).toMatchObject({ date: SAT, yesterday: true, answered: false });
+    expect(sunday?.log && gradeOnly(sunday.log)).toBe(true);
+    // The rest of the club log answers it; a log on the club day itself always does.
+    log.push({ type: 'club_logged', attended: true, hardness: 'medium' }, SAT);
+    expect(clubAsks(PROGRAM, log.state(SUN), SUN, 9 * 60)[0]?.answered).toBe(true);
+    const sameDay = onboarded();
+    sameDay.push({ type: 'club_logged', attended: true, technique: 7 }, SAT);
+    expect(clubAsks(PROGRAM, sameDay.state(SAT), SAT, 20 * 60)[0]?.answered).toBe(true);
+  });
+
+  it('M1: »For tungt?« in a pain period is about the step before the pain, which the period would bring back', () => {
+    const log = new Log().onboard({
+      completedWeeks: mondays(1),
+      steps: { legs: { stepId: 'legs.3', target: 8 } },
+    });
+    log.session({
+      date: dayOf(1, 2),
+      sets: { legs: { values: [8, 8, 8], rir: 2, pain: 'sharp' } },
+    });
+    const state = log.state(dayOf(1, 7));
+    expect(state.tracks.legs?.stepId).toBe('legs.2');
+    expect(heavyStep(state, 'legs')).toBe('legs.3');
+    expect(heavyLabel(PROGRAM, state, 'legs')).toBe('Ben · trin 3');
+    expect(heavyChoices(PROGRAM, state, [])).toContain('legs');
+    const input = { date: dayOf(1, 7), painTracks: [], tooHeavy: ['legs'] };
+    expect(checkEffects(PROGRAM, log.events, state, input).get('legs')).toBe(
+      'Ben bliver på trin 2 og kommer ikke tilbage til trin 3 – dit eget valg.',
+    );
+  });
+
+  it('M2: the screen says what saving does, and nothing a correction would not do', () => {
+    const log = new Log().onboard({
+      completedWeeks: mondays(1),
+      steps: { legs: { stepId: 'legs.3', target: 8 }, groin: 'groin.1', press: 'press.2' },
+    });
+    const sunday = dayOf(1, 7);
+    const first = { date: sunday, painTracks: ['groin', 'press'], tooHeavy: ['legs'] };
+    let effects = checkEffects(PROGRAM, log.events, log.state(sunday), first);
+    expect(effects.get('groin')).toBe('Lyske får en lettere variant til 29. november.');
+    expect(effects.get('press')).toBe('Pres går fra trin 2 til trin 1 til 29. november.');
+    expect(effects.get('legs')).toBe('Ben går fra trin 3 til trin 2 – dit eget valg.');
+    log.add(submitSundayCheck(log.ctx, log.events, first));
+    // The same answers again: nothing more happens, and the screen says so.
+    effects = checkEffects(PROGRAM, log.events, log.state(sunday), first);
+    expect(effects.get('groin')).toBe('Lyske står allerede nede fra søndagstjekket.');
+    expect(effects.get('legs')).toBe('Ben står allerede nede fra søndagstjekket.');
+    // A correction without them: the changes still stand, also on the card.
+    log.add(submitSundayCheck(log.ctx, log.events, { date: sunday, painTracks: [], tooHeavy: [] }));
+    const state = log.state(sunday);
+    const due = sundayDue(state, sunday);
+    if (!due) throw new Error('no check');
+    const standing = standingChanges(PROGRAM, state, due, (id) => trackDistance(state, id));
+    expect(standing.map((c) => standingText(PROGRAM, c))).toEqual([
+      'Lyske – lettere variant til 29. november (smerte)',
+      'Pres – midlertidigt trin til 29. november (smerte)',
+      'Ben – nu trin 2',
+    ]);
+    expect(standing.map((c) => c.kind)).toEqual(['pain', 'pain', 'heavy']);
   });
 });
