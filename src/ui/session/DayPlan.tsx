@@ -13,7 +13,7 @@ import { loadedExplain } from '../../content/load.ts';
 import { loadedExplanation, subjectOf, useSubjects } from './exercise.ts';
 import { ExerciseFigure } from './NowNext.tsx';
 import { sessionSections, type Section } from './outline.ts';
-import type { Step } from './steps.ts';
+import { isAlternating, type Step } from './steps.ts';
 
 export interface DayItem {
   key: string;
@@ -56,7 +56,9 @@ function blockDose(block: BlockPlan): string {
   if (block.role === 'neck') return formatDose(getStep(PROGRAM, block.stepId).dose);
   const unit = block.unit === 'sec' ? ' sek' : '';
   const per = block.per ? ` pr. ${block.per}` : '';
-  return `${block.sets} × ${block.target}${unit}${per}`;
+  // Skater-hop and split jumps: both sides in one set (P54).
+  const alternately = isAlternating(block) ? ', skiftevis' : '';
+  return `${block.sets} × ${block.target}${unit}${per}${alternately}`;
 }
 
 function measureName(id: string | undefined): string {

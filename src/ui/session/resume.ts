@@ -19,6 +19,11 @@ export interface RunState extends RunRequest {
   red: boolean;
   preIndex: number;
   stepIndex: number;
+  /**
+   * What the step at `stepIndex` is (steps.ts `stepKey`), so a later version with other steps
+   * resumes at the same one. Missing in a session saved by a version before it (D54).
+   */
+  stepKey?: string;
   sessionId: string | null;
   intervalsAnyway: boolean;
   sim: boolean;

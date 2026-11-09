@@ -59,7 +59,14 @@ export function Summary({
   const targetChanges = Object.values(session.evaluations).filter(
     (e) => e.qualifying && e.targetAfter !== e.targetBefore,
   );
-  const pains = session.sets.filter((s) => s.pain);
+  // A set done alternately is logged as both its sides with the same pain (P54): named once.
+  const pains = session.sets.filter(
+    (s, i, all) =>
+      s.pain &&
+      all.findIndex(
+        (o) => o.blockId === s.blockId && o.setIndex === s.setIndex && o.pain === s.pain,
+      ) === i,
+  );
   return (
     <div class="session">
       <div class="session-body">

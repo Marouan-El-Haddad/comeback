@@ -23,7 +23,7 @@ import {
   type BlockPlan,
   type SessionPlan,
 } from '../../engine/index.ts';
-import type { Light, Pain, Rir, SessionSummary } from '../../engine/types.ts';
+import type { Light, Pain, Rir, SessionSummary, State } from '../../engine/types.ts';
 import { MEASURES } from '../../content/types.ts';
 import { audioState, enableAudio, play } from '../audio.ts';
 import { ExerciseCard, HowButton, useCard } from '../card.tsx';
@@ -60,6 +60,7 @@ import {
   neckClock,
   roundClock,
   sectionOf,
+  perWord,
   sessionSections,
   sideWord,
   SUMMARY_NEXT,
@@ -68,7 +69,17 @@ import {
   type Upcoming,
 } from './outline.ts';
 import { RUN_KEY, type RunRequest, type RunState } from './resume.ts';
-import { buildSteps, nextExercise, setCount, type ExerciseStep, type Step } from './steps.ts';
+import {
+  buildSteps,
+  firstNotLogged,
+  nextExercise,
+  resumeIndex,
+  setCount,
+  setEvents,
+  stepKey,
+  type ExerciseStep,
+  type Step,
+} from './steps.ts';
 import { Summary } from './Summary.tsx';
 import { Countdown, CountdownView, PhaseRunner, useCountdown, type Phase } from './timers.tsx';
 
@@ -87,6 +98,44 @@ function contextOf(step: ExerciseStep | undefined, kind: RunRequest['kind']): Ca
     return { session: kind, power: null, lighter: true };
   }
   return null;
+}
+
+/**
+ * The plan a session runs with: resolved for its day, light and choices, and – once started –
+ * exactly as it was planned at the start (P26).
+ */
+function runPlan(state: State, run: RunState): SessionPlan {
+  const light: Light = run.red ? 'red' : lightFor(run.answers);
+  const resolved = resolvePlan(PROGRAM, state, {
+    date: run.date,
+    kind: run.kind,
+    light,
+    short: run.short,
+    calmBase: run.calmBase,
+    intervalsAnyway: run.intervalsAnyway,
+  });
+  const session = run.sessionId
+    ? state.sessions.find((s) => s.sessionId === run.sessionId)
+    : undefined;
+  if (!session) return resolved;
+  const blocks = resolved.blocks.map((b) => {
+    const ref = session.blocks.find((r) => r.blockId === b.blockId);
+    return ref
+      ? { ...b, stepId: ref.stepId, sets: ref.sets, target: ref.target, rirPlan: ref.rirPlan }
+      : b;
+  });
+  return { ...resolved, blocks };
+}
+
+/**
+ * A saved session at its step (D54): the same step when the key fits, and otherwise the first step
+ * not logged – also for a session saved by the version before the keys (`comeback.run`).
+ */
+function resumed(state: State, saved: RunState): RunState {
+  if (saved.phase !== 'run' || saved.stepIndex < 0) return saved;
+  const steps = buildSteps(runPlan(state, saved));
+  const stepIndex = resumeIndex(steps, saved);
+  return stepIndex === saved.stepIndex ? saved : { ...saved, stepIndex };
 }
 
 /** A clock for the figure: the part that runs, kept in a ref so the figure reads it each frame. */
@@ -137,7 +186,7 @@ export function Runner({
       saved.sim === (model.sim !== null) &&
       open
     )
-      return saved;
+      return resumed(model.state, saved);
     // No saved step (e.g. local storage was cleared) but the session is open in the log: go on
     // with it; the first step without a logged set is found once the steps are known.
     const started = model.state.sessions.find(
@@ -213,9 +262,6 @@ export function Runner({
   const hidden = card.id !== null || away;
   const pause = onAway ? () => onAway(true) : undefined;
 
-  useEffect(() => {
-    writeLocal(run, RUN_KEY);
-  }, [run]);
   // The screen stays on from the traffic light to the summary (docs/SPEC.md 3.2), not under the tabs.
   const awake = run.phase !== 'overview' && !away;
   useEffect(() => {
@@ -230,58 +276,28 @@ export function Runner({
     ? state.sessions.find((s) => s.sessionId === run.sessionId)
     : undefined;
 
-  const plan: SessionPlan = useMemo(() => {
-    const resolved = resolvePlan(PROGRAM, state, {
-      date: run.date,
-      kind: run.kind,
-      light,
-      short: run.short,
-      calmBase: run.calmBase,
-      intervalsAnyway: run.intervalsAnyway,
-    });
-    if (!session) return resolved;
-    // The session runs exactly as it was planned when it started (P26).
-    const blocks = resolved.blocks.map((b) => {
-      const ref = session.blocks.find((r) => r.blockId === b.blockId);
-      return ref
-        ? { ...b, stepId: ref.stepId, sets: ref.sets, target: ref.target, rirPlan: ref.rirPlan }
-        : b;
-    });
-    return { ...resolved, blocks };
-  }, [state, run.date, run.kind, light, run.short, run.calmBase, run.intervalsAnyway, session]);
+  // The session runs exactly as it was planned when it started (P26).
+  const plan: SessionPlan = useMemo(
+    () => runPlan(state, run),
+    [state, run.date, run.kind, light, run.short, run.calmBase, run.intervalsAnyway, session],
+  );
 
   const steps = useMemo(() => buildSteps(plan), [plan]);
   const hosts = useMemo(() => introHosts(steps), [steps]);
 
+  // Saved after every step with what the step is, so the session resumes at the same step after
+  // the app was closed, also in a later version (D54).
+  useEffect(() => {
+    writeLocal(
+      run.phase === 'run' ? { ...run, stepKey: stepKey(steps, run.stepIndex) } : run,
+      RUN_KEY,
+    );
+  }, [run, steps]);
+
   // Resumed from the log alone (stepIndex -1): the first set, result or measurement not logged.
   useEffect(() => {
     if (run.phase !== 'run' || run.stepIndex >= 0 || !session) return;
-    const done = (step: Step): boolean => {
-      switch (step.type) {
-        case 'set':
-          return session.sets.some(
-            (s) =>
-              s.blockId === step.block.blockId &&
-              s.setIndex === step.setIndex &&
-              s.side === step.side,
-          );
-        case 'power-q':
-        case 'emom-q':
-        case 'club-q':
-        case 'neck-q':
-        case 'rounds-q':
-          return session.results.some((r) => r.blockId === step.block.blockId);
-        case 'emom':
-        case 'club':
-        case 'neck':
-        case 'round':
-          return session.results.some((r) => r.blockId === step.block.blockId);
-        default:
-          return false;
-      }
-    };
-    let index = steps.findIndex((step) => step.type !== 'rest' && !done(step));
-    if (index < 0) index = steps.length - 1;
+    const index = firstNotLogged(steps, session);
     setRun((r) => ({ ...r, stepIndex: index }));
   }, [run.phase, run.stepIndex, session, steps]);
 
@@ -832,19 +848,16 @@ export function Runner({
             onCard={(id) => openCard(id, contextOf(step, run.kind))}
             onLog={async (value, rir, pain) => {
               const measureId = step.measure ? step.block.measureId : undefined;
-              const events = [
-                logSet(ctx, {
-                  sessionId,
-                  date,
-                  block: step.block,
-                  setIndex: step.setIndex,
-                  side: step.side,
-                  value,
-                  rir,
-                  pain,
-                  measureId,
-                }),
-              ];
+              // One set, or both sides of a set done alternately (P54).
+              const events = setEvents(ctx, {
+                sessionId,
+                date,
+                step,
+                value,
+                rir,
+                pain,
+                measureId,
+              });
               if (measureId && value !== undefined) {
                 events.push(
                   ctx.make(
@@ -1361,6 +1374,8 @@ function SetStep(props: {
   // Power is steered by »lige høje og hurtige«, not by reps in reserve (R-POWER).
   const power = block.role === 'power';
   const asPlanned = value === block.target && rir === planned;
+  // A set done alternately: the target counts each side, and one tap logs both (P54).
+  const unit = step.alternate ? `${unitWord(block)} ${perWord(block)}` : unitWord(block);
   const cues = useCues(block.stepId, props.context);
   const clock = usePartClock();
   const parts = useMemo(() => holdClock(block.target), [block.target]);
@@ -1391,6 +1406,7 @@ function SetStep(props: {
     <p class="set-count">
       {step.measure ? 'Måling' : `Sæt ${step.setIndex} af ${setCount(block)}`}
       {step.side ? ` · ${sideWord(step.side, block)}` : ''}
+      {step.alternate ? ' · skiftevis' : ''}
     </p>
   );
   const figure = (follow?: Follow) => (
@@ -1440,7 +1456,7 @@ function SetStep(props: {
         <div class="now-target">
           <div class="big-number" data-testid="target">
             <span class="number">{value}</span>
-            <span class="unit">{unitWord(block)}</span>
+            <span class="unit">{unit}</span>
           </div>
           {count}
           {!step.measure && !power && (
@@ -1486,8 +1502,8 @@ function SetStep(props: {
         >
           {power
             ? asPlanned
-              ? `Som planlagt (${block.target} ${unitWord(block)})`
-              : `Log ${value} ${unitWord(block)}`
+              ? `Som planlagt (${block.target} ${unit})`
+              : `Log ${value} ${unit}`
             : asPlanned
               ? `Som planlagt (${block.target} · reserve ${rirText(planned)})`
               : `Log ${value} · reserve ${rirText(rir)}`}

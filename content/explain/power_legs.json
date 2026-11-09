@@ -166,7 +166,7 @@
         "Bøj højre knæ og hofte, og spring så langt til venstre du kan.",
         "Land på venstre ben med bøjet knæ og hofte, og frys på landingen.",
         "Spring tilbage til højre ben, og bliv ved, til du har landet målet på hvert ben, fx 3 gange på hvert.",
-        "Lav hele sættet, mens passet viser »Venstre side«. Tryk så »Som planlagt« for venstre og straks igen for højre side."
+        "Tryk så »Som planlagt« én gang for hele sættet."
       ],
       "tempo": "Eksplosivt sidelæns og en stille landing, hvor du fryser på hvert ben.",
       "breathing": "Pust ud, når du lander, og træk vejret, før du springer igen.",
@@ -192,7 +192,7 @@
       "easier": "Trin 2: længdespring.",
       "harder": "Trin 4: split jumps.",
       "equipment": [],
-      "getReady": "Find 3 meter fri plads til siden, og tryk »Som planlagt« to gange efter sættet: venstre, så straks højre.",
+      "getReady": "Find 3 meter fri plads til siden.",
       "movements": [
         {
           "positions": [
@@ -240,7 +240,7 @@
         "Hop op, kun lige højt nok til at skifte ben, og byt ben i luften.",
         "Land blødt og i balance med højre fod foran, og hop straks igen til venstre fod foran.",
         "Bliv ved, til du har landet målet med hvert ben foran, fx 3 gange med hvert.",
-        "Lav hele sættet, mens passet viser »Venstre ben«. Tryk så »Som planlagt« for venstre og straks igen for højre ben."
+        "Tryk så »Som planlagt« én gang for hele sættet."
       ],
       "tempo": "Lavt, hurtigt og i balance: hop straks igen, når du lander.",
       "breathing": "Pust kort ud ved hver landing, og hold rytmen.",
@@ -266,7 +266,7 @@
       "easier": "Trin 3: skater-hop.",
       "harder": "Trin 5: tuck jumps.",
       "equipment": [],
-      "getReady": "Stil dig i et udfald med venstre fod foran, og tryk »Som planlagt« to gange efter sættet: venstre, så straks højre.",
+      "getReady": "Stil dig i et udfald med venstre fod foran.",
       "movements": [
         {
           "positions": [

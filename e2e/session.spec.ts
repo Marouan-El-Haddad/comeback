@@ -34,6 +34,34 @@ const dayItem = (page: Page, name: string) =>
     .locator('.day-item')
     .filter({ has: page.locator('.day-item-name').getByText(name, { exact: true }) });
 
+/** Onboarding with the defaults, but power legs at `step` (skater-hop is step 3). */
+async function onboardPowerLegs(page: Page, step: number): Promise<void> {
+  await expect(page.getByTestId('onboarding')).toBeVisible();
+  for (let i = 0; i < 8; i++) {
+    if (await page.getByRole('heading', { name: 'Dit trin på hver stige' }).isVisible()) {
+      const harder = page.getByRole('button', { name: 'Power ben: sværere trin' });
+      for (let s = 1; s < step; s++) await harder.click();
+    }
+    const done = page.getByTestId('onboarding-done');
+    if (await done.isVisible()) {
+      await done.click();
+      break;
+    }
+    await page.getByTestId('onboarding-next').click();
+  }
+  await expect(page.getByTestId('today')).toBeVisible();
+}
+
+/** The session as the previous version saved it: the step's index without its key (D54). */
+async function saveAsPreviousVersion(page: Page, stepIndex?: number): Promise<void> {
+  await page.evaluate((index) => {
+    const run = JSON.parse(localStorage.getItem('comeback.run') ?? '{}') as Record<string, unknown>;
+    delete run.stepKey;
+    if (index !== undefined) run.stepIndex = index;
+    localStorage.setItem('comeback.run', JSON.stringify(run));
+  }, stepIndex);
+}
+
 /** The countdown on the screen in seconds (»1:25« = 85). */
 async function secondsLeft(page: Page): Promise<number> {
   const text = await page.getByTestId('countdown').first().innerText();
@@ -563,6 +591,84 @@ test('»Hold pause« fører til fanerne midt i et pas, og passet venter samme st
   await page.getByRole('button', { name: 'I dag', exact: true }).click();
   await page.getByTestId('main-card').getByRole('button', { name: 'Fortsæt passet' }).click();
   await expect(page.locator('.set-count')).toHaveText('Sæt 2 af 3');
+});
+
+test('skater-hop er ét sæt, og ét »Som planlagt« logger begge sider (P54)', async ({ page }) => {
+  await stillFigures(page);
+  // Programme week 2, Tuesday: power legs at step 3, skater-hop (3 × 3–4 pr. side).
+  await openApp(page, '2026-11-17');
+  await onboardPowerLegs(page, 3);
+  await page.getByTestId('start-session').click();
+  await expect(dayItem(page, 'Skater-hop')).toContainText('3 × 3 pr. side, skiftevis');
+  await page.getByTestId('day-start').click();
+  await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+  for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
+  await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+  await expect(intro(page).getByRole('heading', { level: 1 })).toHaveText('Power ben · Skater-hop');
+  await expect(intro(page).locator('.intro-line')).toHaveText(
+    'Sæt 1 af 3 · skiftevis · mål 3 pr. side',
+  );
+  await closeIntro(page);
+
+  // One set with both sides: the target counts each side, one tap logs it.
+  await expect(now(page).locator('.set-name')).toHaveText('Skater-hop');
+  await expect(page.locator('.session-title')).toHaveText('Power · sæt 1/3');
+  await expect(page.locator('.set-count')).toHaveText('Sæt 1 af 3 · skiftevis');
+  await expect(page.getByTestId('target').locator('.unit')).toHaveText('reps pr. side');
+  await expect(page.getByTestId('as-planned')).toHaveText('Som planlagt (3 reps pr. side)');
+  await expect(strip(page).locator('.next-line')).toHaveText(
+    'Sæt 2 af 3 · skiftevis · mål 3 pr. side',
+  );
+  expect(await a11yProblems(page, '.session', SESSION_RULES)).toEqual([]);
+  await page.screenshot({
+    path: 'screenshots/pas-skiftevis.png',
+    scale: 'css',
+    animations: 'disabled',
+  });
+  const before = await storedEventCount(page);
+  await page.getByTestId('as-planned').click();
+  // Left and right, as the engine counts per-side sets, and straight on to the pause.
+  await expect.poll(() => storedEventCount(page)).toBe(before + 2);
+  await expect(page.getByText('Spring pausen over')).toBeVisible();
+  await page.getByText('Spring pausen over').click();
+  await expect(page.locator('.set-count')).toHaveText('Sæt 2 af 3 · skiftevis');
+
+  // The previous version had a step per side: »set 2, left« was step 3, which is now the pause
+  // after set 2. A session it saved there resumes from the log, at set 2, with nothing lost.
+  const events = await storedEventCount(page);
+  await saveAsPreviousVersion(page, 3);
+  await page.reload();
+  await expect(page.locator('.set-count')).toHaveText('Sæt 2 af 3 · skiftevis');
+  expect(await storedEventCount(page)).toBe(events);
+});
+
+test('et pas gemt af den forrige version genoptages samme sted uden fejl og tab', async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await stillFigures(page);
+  await openApp(page, '2026-11-17');
+  await onboard(page);
+  await startSession(page);
+  await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+  for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
+  await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+  await closeIntro(page);
+  await page.getByTestId('as-planned').click();
+  await page.getByText('Spring pausen over').click();
+  await expect(page.locator('.set-count')).toHaveText('Sæt 2 af 3');
+  const events = await storedEventCount(page);
+
+  // `comeback.run` as main 2894827 wrote it: the same fields, no step key.
+  await saveAsPreviousVersion(page);
+  await page.reload();
+  await expect(page.locator('.set-count')).toHaveText('Sæt 2 af 3');
+  await expect(now(page).locator('.set-name')).toHaveText('Squat jump');
+  expect(await storedEventCount(page)).toBe(events);
+  await page.getByTestId('as-planned').click();
+  await expect.poll(() => storedEventCount(page)).toBe(events + 1);
+  expect(errors).toEqual([]);
 });
 
 test('»Lettere variant i dag« efter skarp smerte på trin 1 (N3) @date', async ({ page }) => {

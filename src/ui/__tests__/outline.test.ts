@@ -151,6 +151,21 @@ describe('»Næste«', () => {
     expect(upcomingOf(steps[14] as never).title).toBe('Nakke · Hage-ind liggende');
     expect(stepCardId(steps[5] as never)).toBe('measures.pushups');
   });
+
+  test('et skiftevist sæt: begge sider i ét sæt, målet pr. side (P54)', () => {
+    const skater = block('A.power', {
+      trackId: 'power_legs',
+      role: 'power',
+      stepId: 'power_legs.3',
+      per: 'side',
+      target: 3,
+      group: undefined,
+    });
+    expect(upcomingOf(set(skater, 1, 'Power', { alternate: true }) as never)).toMatchObject({
+      title: 'Power ben · Skater-hop',
+      line: 'Sæt 1 af 2 · skiftevis · mål 3 pr. side',
+    });
+  });
 });
 
 describe('urets dele, som figuren følger', () => {

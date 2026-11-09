@@ -145,6 +145,11 @@ export function sideWord(side: Side | undefined, block: BlockPlan): string {
   return side === 'L' ? 'Venstre side' : 'Højre side';
 }
 
+/** »pr. side« or »pr. ben«: the target of a set done alternately counts each side (P54). */
+export function perWord(block: BlockPlan): string {
+  return block.per === 'ben' ? 'pr. ben' : 'pr. side';
+}
+
 /** »Pres · Push-up med tempo«; a step named as its track gets its key: »Nakke · trin N1«. */
 export function exerciseTitle(program: Program, trackId: string, stepId: string): string {
   const track = getTrack(program, trackId);
@@ -168,7 +173,11 @@ export function upcomingOf(step: ExerciseStep, program: Program = PROGRAM): Upco
         line:
           `Sæt ${step.setIndex} af ${setCount(block)}` +
           (step.side ? ` · ${sideWord(step.side, block)}` : '') +
-          (step.measure ? ' · måling: max' : ` · mål ${block.target} ${unitWord(block)}`),
+          (step.measure
+            ? ' · måling: max'
+            : step.alternate
+              ? ` · skiftevis · mål ${block.target} ${perWord(block)}`
+              : ` · mål ${block.target} ${unitWord(block)}`),
       };
     case 'round':
       return {
