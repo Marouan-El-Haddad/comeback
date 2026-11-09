@@ -281,6 +281,34 @@ function labelFits(el: HTMLElement): boolean {
 }
 
 /**
+ * Calls `place` again when a web font has loaded (font-display: swap): a mark's text placed in the
+ * fallback font changes size then. Returns the function that stops it.
+ */
+function onFonts(place: () => void): () => void {
+  const fonts = typeof document === 'undefined' ? undefined : document.fonts;
+  if (!fonts) return () => undefined;
+  fonts.addEventListener('loadingdone', place);
+  return () => fonts.removeEventListener('loadingdone', place);
+}
+
+/**
+ * A text that wraps keeps the width of its limit in CSS, with room left at the end of its lines:
+ * narrow it to its widest line, so it covers no more of the figure than its words (D60).
+ */
+function tighten(el: HTMLElement): void {
+  el.style.width = '';
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const lines = [...range.getClientRects()];
+  if (lines.length < 2) return;
+  const widest = Math.max(...lines.map((r) => r.right)) - Math.min(...lines.map((r) => r.left));
+  const style = getComputedStyle(el);
+  const edges = ['paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth'] as const;
+  const extra = edges.reduce((sum, key) => sum + (parseFloat(style[key]) || 0), 0);
+  if (widest + extra < el.offsetWidth - 1) el.style.width = `${Math.ceil(widest + extra) + 1}px`;
+}
+
+/**
  * Places a mark's text by its point, off the body where it can (placeLabel): the SVG fills its box
  * (`width` × `height` px) and keeps its aspect ratio (»meet«), so every point's place in px follows
  * from the viewBox. The text stays inside its drawing, at most as wide as it and on at most two
@@ -308,8 +336,10 @@ function placeMark(
     });
   // First at most as wide as its drawing (figure.css).
   el.style.maxWidth = '';
+  el.style.width = '';
   const drawing = el.parentElement;
   if (labelFits(el) || !figure || !drawing) {
+    tighten(el);
     const [x, y] = placeLabel({
       width,
       height,
@@ -341,7 +371,9 @@ function placeMark(
   let best: { at: Point; covers: number; max: number } | null = null;
   for (const max of [Math.floor(area.width), Math.floor(area.width / 2)]) {
     el.style.maxWidth = `${max}px`;
+    el.style.width = '';
     if (best && !labelFits(el)) continue;
+    tighten(el);
     const w = el.offsetWidth;
     const h = el.offsetHeight;
     const at = placeLabel({
@@ -359,6 +391,7 @@ function placeMark(
   }
   if (!best) return;
   el.style.maxWidth = `${best.max}px`;
+  tighten(el);
   el.style.transform = `translate(${Math.round(best.at[0] - dx)}px, ${Math.round(best.at[1] - dy)}px)`;
 }
 
@@ -411,10 +444,14 @@ function StillDrawing({
       });
     };
     place();
-    if (typeof ResizeObserver !== 'function') return;
+    const offFonts = onFonts(place);
+    if (typeof ResizeObserver !== 'function') return offFonts;
     const observer = new ResizeObserver(place);
     observer.observe(root);
-    return () => observer.disconnect();
+    return () => {
+      offFonts();
+      observer.disconnect();
+    };
   }, [markup, vb, height]);
   return (
     <div class="figure-draw" data-view={model.figure.view} ref={ref}>
@@ -648,9 +685,14 @@ function Animated({
           })
         : null;
     for (const d of drawn) resize?.observe(d.box);
+    const offFonts = onFonts(() => {
+      for (const d of drawn)
+        placeMark(d.label, d.shown, d.viewBox, d.width, d.height, root, othersOf(d));
+    });
     run();
     return () => {
       stop();
+      offFonts();
       observer?.disconnect();
       resize?.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
