@@ -100,7 +100,7 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 - Agent: `comeback-builder`. Kilder: ENGINE 5.9 (R-MOVE, R-REST), SPEC 3.1 og 4.11, PLAN M3.
 - Grønt: scenarierne for R-MOVE og R-REST; Playwright i tidsmaskinen (`@date`).
 
-### [ ] P5c – Livet: syg, rejse, ferie, klubben lukket og begivenheder
+### [~] P5c – Livet: syg, rejse, ferie, klubben lukket og begivenheder
 
 - Agent: `comeback-builder`. Kilder: ENGINE 5.7 og R-EVENT, SPEC 4.11, PLAN M3.
 - Grønt: scenarierne for S-WEEK og S-EVENT dækket af UI; Playwright i tidsmaskinen (`@date`).
