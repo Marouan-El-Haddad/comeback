@@ -522,7 +522,8 @@
             }
           }
         }
-      ]
+      ],
+      "marks": [{ "cue": "Klap under brystet", "phase": 3, "point": "near.hand", "place": "below" }]
     },
     {
       "id": "burpee_skill.V5",

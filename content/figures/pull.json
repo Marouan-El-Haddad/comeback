@@ -78,7 +78,14 @@
         { "arrow": "chest", "phase": 1, "offset": [-8, 0] },
         { "cue": "Brystet mod kanten", "at": "top", "point": "chest", "place": "below" }
       ],
-      "faults": [{ "mistake": 1, "at": "top", "wrong": { "hip": [17.6, 20.6], "torso": 13.48 } }]
+      "faults": [
+        {
+          "mistake": 1,
+          "at": "top",
+          "wrong": { "hip": [17.6, 20.6], "torso": 13.48 },
+          "ring": "hip"
+        }
+      ]
     },
     {
       "id": "pull.3",

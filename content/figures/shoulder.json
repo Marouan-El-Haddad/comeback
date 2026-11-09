@@ -41,7 +41,8 @@
         {
           "mistake": 1,
           "at": "bottom",
-          "wrong": { "hip": [44.87, 17.6], "torso": -15, "head": 10 }
+          "wrong": { "hip": [44.87, 17.6], "torso": -15, "head": 10 },
+          "ring": "hip"
         }
       ]
     },

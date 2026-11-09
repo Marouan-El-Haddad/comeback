@@ -201,7 +201,8 @@
             "torso": 90,
             "head": 0,
             "arms": { "near": { "to": [-16.23, 51.53] }, "far": { "to": [-14.73, 50.88] } }
-          }
+          },
+          "ring": "near.knee"
         }
       ],
       "transitions": [

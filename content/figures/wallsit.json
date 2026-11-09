@@ -50,7 +50,8 @@
               "near": { "to": [12.5, 62.1], "upper": 12, "lower": 9 },
               "far": { "to": [11.5, 64.1], "upper": 11, "lower": 9 }
             }
-          }
+          },
+          "ring": "hip"
         }
       ]
     },
@@ -103,7 +104,8 @@
         {
           "mistake": 2,
           "at": "left",
-          "wrong": { "arms": { "far": { "to": [18, 55.1], "upper": 13 } } }
+          "wrong": { "arms": { "far": { "to": [18, 55.1], "upper": 13 } } },
+          "ring": "far.hand"
         }
       ]
     },
