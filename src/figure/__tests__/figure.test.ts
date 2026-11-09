@@ -4,7 +4,14 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, test } from 'vitest';
-import type { Contact, ExplainFile, FigureItem, OwnMovement, Pose } from '../../content/types.ts';
+import type {
+  Contact,
+  ExplainFile,
+  FigureItem,
+  OwnMovement,
+  Point,
+  Pose,
+} from '../../content/types.ts';
 import { bendProblems, jumpProblems, movementFor, turn } from '../check.ts';
 import {
   bodyPrims,
@@ -1103,22 +1110,120 @@ describe('D58: vinkler, markeringer og fejlpar', () => {
   });
 
   describe("rammen følger en figur, der rejser langs x (P1a's forslag)", () => {
-    // The bounds as drawn in content/, moved 14 forward on each way of each bound (84 in all).
-    const read = (dir: string): unknown =>
-      JSON.parse(readFileSync(join(process.cwd(), 'content', dir, 'power_legs.json'), 'utf8'));
-    const drawn = (read('figures') as { figures: FigureItem[] }).figures.find(
-      (f) => f.id === 'power_legs.6' && f.movement === 'bounds',
-    ) as FigureItem;
+    // Single-leg bounds as the P1a instruction drew them: 14 forward on each way of each bound (84
+    // in all), so the frame's rules are tested apart from the figure agents' drawing.
+    const legs = (near: [Point, Point], far: [Point, Point]): Pose['legs'] => ({
+      near: { to: near[0], tip: near[1] },
+      far: { to: far[0], tip: far[1] },
+    });
+    const pose = (
+      hip: Point,
+      torso: number,
+      head: number,
+      hands: [Point, Point],
+      feet: Pose['legs'],
+    ): Pose => ({
+      hip,
+      torso,
+      head,
+      arms: { near: { to: hands[0] }, far: { to: hands[1] } },
+      legs: feet,
+    });
     const tried: { figure: FigureItem } = {
       figure: {
-        ...drawn,
+        id: 'power_legs.6',
+        movement: 'bounds',
+        view: 'side',
+        facing: 1,
+        props: [],
+        highlight: ['near.thigh'],
+        keyframes: {
+          stand: pose(
+            [0.6, 49.9],
+            80,
+            8,
+            [
+              [7.81, 48.69],
+              [3.81, 48.69],
+            ],
+            legs(
+              [
+                [1.2, 3.6],
+                [8.4, 0.3],
+              ],
+              [
+                [-23.5, 14.8],
+                [-24.8, 7.41],
+              ],
+            ),
+          ),
+          push: pose(
+            [14.15, 54.32],
+            72,
+            10,
+            [
+              [54.72, 82.85],
+              [54.6, 85.57],
+            ],
+            legs(
+              [
+                [5.95, 7.83],
+                [8.4, 0.3],
+              ],
+              [
+                [32.1, 34.19],
+                [38.25, 29.89],
+              ],
+            ),
+          ),
+          air: pose(
+            [8.5, 57.5],
+            78,
+            8,
+            [
+              [-5.38, 62.87],
+              [-4.1, 61.85],
+            ],
+            legs(
+              [
+                [14.29, 12.47],
+                [21.53, 10.53],
+              ],
+              [
+                [-19.03, 52.57],
+                [-26.08, 50.01],
+              ],
+            ),
+          ),
+          land: pose(
+            [-1.74, 47.2],
+            70,
+            15,
+            [
+              [22.6, 48.9],
+              [24.15, 50.37],
+            ],
+            legs(
+              [
+                [1.2, 3.6],
+                [8.4, 0.3],
+              ],
+              [
+                [-22, 18],
+                [-23.3, 10.61],
+              ],
+            ),
+          ),
+        },
         transitions: [
           { from: 'push', to: 'air', advance: 14 },
           { from: 'air', to: 'land', advance: 14 },
         ],
       },
     };
-    const explain = read('explain') as ExplainFile;
+    const explain = JSON.parse(
+      readFileSync(join(process.cwd(), 'content', 'explain', 'power_legs.json'), 'utf8'),
+    ) as ExplainFile;
     const movement = movementFor(explain, 'power_legs.6', 'bounds') as OwnMovement;
     const model = buildModel(tried.figure, movement);
     const tall = 191 / 214;
@@ -1401,6 +1506,39 @@ describe('D60: rettelser efter reviewet af P1b', () => {
     expect(stillMarks(model, 'dip')).toEqual([]);
     // The animation still has it, pointing forward.
     expect(markPlans(model)[1]?.shows[0]?.chord?.[0]).toBeGreaterThan(10);
+  });
+
+  test('H1: teksten holder sig fra hovedet og fra overkroppens sider forfra som fra et lem', () => {
+    // The body a mark's text keeps off: the head as a disk of points, not one point among many
+    // along the limbs, and from the front the torso's long sides.
+    const figure: FigureItem = {
+      ...PUSH_UP_FIGURE,
+      marks: [{ cue: 'Blikket ned', at: 'bottom', point: 'head' }],
+    };
+    const model = buildModel(figure, PUSH_UP);
+    const body = markPlans(model)[0]?.shows[0]?.body ?? [];
+    const head = solve(model.frame, PUSH_UP_FIGURE.keyframes.bottom as Pose).head;
+    const near = (p: readonly number[], q: readonly number[], r: number) =>
+      Math.hypot((p[0] ?? 0) - (q[0] ?? 0), (p[1] ?? 0) - (q[1] ?? 0)) <= r;
+    expect(body.filter((p) => near(p, head, 6.4)).length).toBeGreaterThanOrEqual(9);
+    const front: FigureItem = {
+      id: 'power_legs.1',
+      view: 'front',
+      props: [],
+      highlight: ['torso'],
+      keyframes: {
+        land: { hip: [0, 49], torso: 90, arms: { near: null, far: null }, legs: frontLegs(49) },
+      },
+      marks: [{ cue: 'Knæ ud', at: 'land', point: 'near.knee' }],
+    };
+    const still: OwnMovement = {
+      positions: [{ id: 'land', name: 'Landing', text: 'Landing.', contacts: [] }],
+      phases: [{ to: 'land', seconds: 2, label: 'Hold' }],
+    };
+    const s = solve({ view: 'front', facing: null }, front.keyframes.land as Pose);
+    const corner = s.shoulders?.[1] ?? [0, 0];
+    const drawn = markPlans(buildModel(front, still))[0]?.shows[0]?.body ?? [];
+    expect(drawn.some((p) => near(p, corner, 0.01))).toBe(true);
   });
 
   test('en forkert stilling med »spine« tegnes med krum ryg, også når ingen position har »spine«', () => {

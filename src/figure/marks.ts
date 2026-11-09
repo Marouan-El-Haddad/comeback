@@ -301,8 +301,20 @@ function bodyPoints(s: Skeleton): Array<[number, number, number]> {
     }
   };
   along(s.hip, s.shoulder, WIDTH.torso / 2);
+  // From the front the torso is a trapezoid as wide as the shoulders and the hips.
+  if (s.pelvis && s.shoulders) {
+    along(s.pelvis[0], s.shoulders[0], WIDTH.limb / 2);
+    along(s.pelvis[1], s.shoulders[1], WIDTH.limb / 2);
+    along(s.shoulders[0], s.shoulders[1], WIDTH.limb / 2);
+  }
   along(s.shoulder, s.head, WIDTH.limb / 2);
-  out.push([s.head[0], s.head[1], BODY.headRadius]);
+  // The head as a disk of points, so a text over it counts as much as over a limb (D60).
+  const r = BODY.headRadius;
+  out.push([s.head[0], s.head[1], r / 2]);
+  for (let k = 0; k < 8; k++) {
+    const p = polar(s.head, r * 0.55, k * 45);
+    out.push([p[0], p[1], r / 2]);
+  }
   for (const b of s.bones) {
     along(b.root, b.joint, WIDTH.limb / 2);
     along(b.joint, b.end, WIDTH.limb / 2);
