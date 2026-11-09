@@ -381,9 +381,11 @@ test('Styrke A i tidsmaskinen: dagens pas, nu og næste, pausen og introkortet @
   });
   await page.getByTestId('as-planned').click();
 
-  // The pause: the next exercise big with its animation and »Gør klar«.
+  // The pause: what the tap logged, then the next exercise big with »Gør klar« and its animation.
   await expect(page.getByText('Spring pausen over')).toBeVisible();
+  await expect(page.getByTestId('rest-logged')).toHaveText('✓ Logget: sæt 1 af 2 · 3 reps');
   await expect(nextUp(page).locator('.next-title')).toHaveText('Power ben · Squat jump');
+  await expect(nextUp(page).locator('.next-part-name')).toHaveCount(0);
   await expect(nextUp(page).locator('.get-ready')).toContainText('Gør klar:');
   await expect(nextUp(page).locator('.figure-stage')).toBeVisible();
   await page.getByText('Spring pausen over').click();
@@ -395,6 +397,11 @@ test('Styrke A i tidsmaskinen: dagens pas, nu og næste, pausen og introkortet @
   await expect(intro(page).getByRole('heading', { level: 1 })).toHaveText('Måling · Push-ups');
   await expect(intro(page).locator('.intro-line')).toHaveText('Første sæt i Pres · max');
   await expect(intro(page).locator('.countdown-label')).toHaveText('Pause');
+  // It begins Par 1: the part's big red number and name in the clock's line, nothing else over the
+  // card, so its »Gør klar« and first step stand over »Luk« (D59, D61).
+  await expect(intro(page).locator('.countdown .day-part-number')).toHaveText('4');
+  await expect(intro(page).locator('.countdown .part-name')).toHaveText('Par 1');
+  await expect(page.getByTestId('rest-logged')).toHaveCount(0);
   await page.clock.runFor(2_000);
   expect(await a11yProblems(page, '.session', SESSION_RULES)).toEqual([]);
   await page.screenshot({
@@ -405,6 +412,8 @@ test('Styrke A i tidsmaskinen: dagens pas, nu og næste, pausen og introkortet @
   const left = await secondsLeft(page);
   await closeIntro(page);
   await expect(nextUp(page).locator('.next-title')).toHaveText('Måling · Push-ups');
+  await expect(nextUp(page).locator('.next-part-name')).toHaveText('Del 4 · Par 1');
+  await expect(page.getByTestId('rest-logged')).toHaveText('✓ Logget: sæt 2 af 2 · 3 reps');
   await expect(nextUp(page).locator('.get-ready')).toBeVisible();
   // The same clock: closing the card changes nothing in the pause.
   expect(Math.abs((await secondsLeft(page)) - left)).toBeLessThanOrEqual(1);
@@ -417,8 +426,10 @@ test('Styrke A i tidsmaskinen: dagens pas, nu og næste, pausen og introkortet @
   ).toBeVisible();
   await expect(nextUp(page).locator('.next-title')).toHaveText('Måling · Push-ups');
   await page.getByRole('button', { name: 'Ja', exact: true }).click();
-  // The measurement's »Nu« says max too, never the step's tempo push-up (D45, D57).
+  // The measurement's »Nu« says max too, never the step's tempo push-up (D45, D57), and the header
+  // the part it began (D59).
   await expect(now(page).locator('.step-kicker')).toHaveText('Nu Måling · første sæt i Pres · max');
+  await expect(progress(page)).toHaveText('Del 4 af 8');
 
   // The rest of the session: »Nu« and »Næste« on every screen, the intro cards close themselves.
   await stillFigures(page);
