@@ -206,7 +206,7 @@ test('Styrke A i tidsmaskinen: dagens pas, nu og næste, pausen og introkortet @
   ]);
   await expect(dayItem(page, 'Squat jump')).toContainText('Pause 75 sek');
   // A measurement in place of the first set comes before the sets, and its equipment counts:
-  // bord-rows need a table.
+  // bord-rows need a table. The row's chair stands with its back against a wall (P65).
   await expect(dayItem(page, 'Push-up med tempo')).toContainText(
     'Første sæt er en måling: Push-ups',
   );
@@ -215,7 +215,7 @@ test('Styrke A i tidsmaskinen: dagens pas, nu og næste, pausen og introkortet @
   );
   await expect(dayItem(page, 'Rygsæk-row med én arm')).toContainText('1 × 8 pr. side + måling');
   await expect(dayItem(page, 'Rygsæk-row med én arm')).toContainText(
-    'Udstyr: Rygsæk, stol og bord',
+    'Udstyr: Rygsæk, stol, væg og bord',
   );
   await expect(plan.getByTestId('day-equipment')).toContainText(/rygsæk/i);
   await expect(plan.getByTestId('day-equipment')).toContainText(/bord/i);
