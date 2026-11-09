@@ -37,9 +37,9 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 - Grønt: `npm run check`; `e2e/session.spec.ts` og hele suiten i `pixel9a` og `pixel9a-utc`; opstarten ikke langsommere.
 - Skærmbilleder: `dagens-pas*.png`, `pas-nu-og-naeste.png`, `pause.png`, `introkort.png`, `hold-pause.png`, `os-*.png`.
 
-### [~] P1a – Figurmotoren rettet (opgavens pakke 1)
+### [x] P1a – Figurmotoren rettet (opgavens pakke 1)
 
-- Status: bygget 06:25 (a2b48c7–ac78155; D56, R20). Review `docs/reviews/nat3-p1a-figurmotor.md`: 2 høje, 2 middel, 2 lave, alle rettet (279d015–9d009de; D56, R22) og tjekket i »Opfølgning«; nyt H3 (`via` målt mod sig selv) rettet i P1b (8b0de82) og tjekket i P1b's opfølgning. Venter på udgivelse.
+- Status: bygget 06:25 (a2b48c7–ac78155; D56, R20). Review `docs/reviews/nat3-p1a-figurmotor.md`: 2 høje, 2 middel, 2 lave, alle rettet (279d015–9d009de; D56, R22) og tjekket i »Opfølgning«; nyt H3 (`via` målt mod sig selv) rettet i P1b (8b0de82) og tjekket i P1b's opfølgning. Udgivet 22:46 (Actions 42705154428).
 - Agent: `comeback-builder`. Brief: `docs/runs/NAT-2-P3-FIX.md` (H1, M1–M3, L1–L4 og motorens grænser 1–6), reviewet i `docs/reviews/nat2-p3-figurer.md`.
 - Accept:
   1. H1: leddenes vinkler interpoleres med forlæns kinematik fra det punkt, der står fast; segmenterne holder længden, strakte led forbliver strakte, intet går gennem gulvet, og hælen drejer om tåen. Tests for alle figurer: intet led bøjer mere end i nabopositionerne, intet går gennem en flade midt i en fase, segmenterne holder længden.
@@ -48,9 +48,9 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
   4. Resuméet lister præcist, hvilke figurer (fil og punkt) der nu fejler eller kan tegnes bedre.
 - Grønt: `npm run check`; `node scripts/check-explain.ts`; `e2e/figure.spec.ts` og en test af, at en push-up ikke knækker midt i en fase; startfilerne uændrede.
 
-### [~] P1b – Figurmotoren: vinkler, markeringer, fejl og bevægelse (opgavens pakke 2, motordelen)
+### [x] P1b – Figurmotoren: vinkler, markeringer, fejl og bevægelse (opgavens pakke 2, motordelen)
 
-- Status: bygget 10:55 (8b0de82–ece1f42; D58, R23, R24). Review `docs/reviews/nat3-p1b-figurmotor.md`: 2 høje, 3 middel, 3 lave, alle rettet (41e813e–3d04bba; D60, R25) og tjekket i »Opfølgning«; 2 nye lave (L4, L5) er åbne. Venter på udgivelse.
+- Status: bygget 10:55 (8b0de82–ece1f42; D58, R23, R24). Review `docs/reviews/nat3-p1b-figurmotor.md`: 2 høje, 3 middel, 3 lave, alle rettet (41e813e–3d04bba; D60, R25) og tjekket i »Opfølgning«; 2 nye lave (L4 rettet i motorrunde 2, L5 rettet i motorrunde 2). Udgivet 22:46 (Actions 42705154428).
 - Agent: `comeback-builder`.
 - Mål: det, figurerne i P2 skal kunne vise, findes i formatet, motoren, tjekket, kontaktarket, øvelseskortet og »Nu« i passet:
   1. Vinkel: en figur kan tegnes fra siden eller forfra, og med to vinkler side om side, hvor én ikke er nok.
@@ -61,9 +61,9 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 - Kilder: `docs/runs/NAT-3.md` pakke 2; SPEC 3.2, 3.8 og 9.1; D48.
 - Grønt: `npm run check`; `e2e/figure.spec.ts` udvidet (vinkler, markeringer, fejl, reduceret bevægelse); højst 30 billeder i sekundet uden JIT; startfilerne uændrede.
 
-### [~] P2 – Alle figurer i høj kvalitet (opgavens pakke 2)
+### [x] P2 – Alle figurer i høj kvalitet (opgavens pakke 2)
 
-- Status: første omgang (stillinger og bevægelse) og anden omgang (vinkler, markeringer, fejlpar) hos 6 figuragenter, flettet i 196bb1e. Review i tre dele (`docs/reviews/nat3-p2-figurer-1.md`, `-2.md`, `-3.md`): 108 af 146 figurer godkendt, 38 afvist; 3 høje, 30 middel, 24 lave. Rettet af figuragenterne og trænerne og i motorrunde 2 (7a300af–2e0909b, D62), flettet i 2e0909b; opfølgningerne godkendte 138 af 146; de sidste 8 rettet af orkestratoren og G5 med reviewernes afprøvede værdier (a749ca1, 118ec40). Begrundet: legs.1 og legs.2 vises midlertidigt uden vinkel forfra (to vinkler gør split squat for lille i »Nu«, og sofaen kan ikke stå bag figuren forfra), og fejlparrene i neck.N1 og os.5 er fjernet, fordi forskellen ikke kan ses med hovedets model.
+- Status: første omgang (stillinger og bevægelse) og anden omgang (vinkler, markeringer, fejlpar) hos 6 figuragenter, flettet i 196bb1e. Review i tre dele (`docs/reviews/nat3-p2-figurer-1.md`, `-2.md`, `-3.md`): 108 af 146 figurer godkendt, 38 afvist; 3 høje, 30 middel, 24 lave. Rettet af figuragenterne og trænerne og i motorrunde 2 (7a300af–2e0909b, D62), flettet i 2e0909b; opfølgningerne godkendte 138 af 146; de sidste 8 rettet af orkestratoren og G5 med reviewernes afprøvede værdier (a749ca1, 118ec40). Begrundet: legs.1 og legs.2 vises midlertidigt uden vinkel forfra (to vinkler gør split squat for lille i »Nu«, og sofaen kan ikke stå bag figuren forfra), og fejlparrene i neck.N1 og os.5 er fjernet, fordi forskellen ikke kan ses med hovedets model. Udgivet 22:46 (Actions 42705154428).
 - Agenter: `comeback-builder` × 6 parallelt på datafiler (ingen kodeændringer, ingen commits), med trænernes figurbrief fra P3 som input. Grupper:
   - P2.1 press, pull, backpack_row, shoulder
   - P2.2 legs, sl_rdl, calf, posterior, wallsit
@@ -82,9 +82,9 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 - Mål: hvert kort læst med brugerens blik: præcis hvordan øvelsen laves derhjemme med gulv, stol, væg og rygsæk; hvad han skal mærke (»Mærk«); hvornår det er for let eller for svært (i »Lettere« og »Sværere«, i tråd med motorens regler for reserve og trin). Teksten skæres ned, hvor det kan lade sig gøre, og gøres mere konkret, hvor det er nødvendigt. Navne, doser og regler ændres ikke; bevægelsernes positioner, faser og ID'er ændres kun i ordlyden. Hver træner skriver desuden et figurbrief pr. punkt til P2 (vinkel, markeringer og tidspunkt, fejl til rigtigt/forkert, hvordan bevægelsen ser ud).
 - Grønt: `node scripts/check-explain.ts` (alle filer); `npm run check`; `no-source-refs`; review `docs/reviews/nat3-p3-forklaringer.md`.
 
-### [~] P4 – Designløft (opgavens pakke 4)
+### [x] P4 – Designløft (opgavens pakke 4)
 
-- Status: bygget 12:55 (2cddf14–d92a6e2, D59). Review `docs/reviews/nat3-p4-design.md`: 0 høje, 2 middel, 2 lave, alle rettet (3f2b7af–d5e9ad7, D61) plus dobbelttryk-spærren i passet (a307dab–f4597bf) og tjekket i »Opfølgning«; 4 nye lave (N1–N4) er åbne. Før- og efterbilleder i `screenshots/nat3-foer/` og `nat3-efter/`.
+- Status: bygget 12:55 (2cddf14–d92a6e2, D59). Review `docs/reviews/nat3-p4-design.md`: 0 høje, 2 middel, 2 lave, alle rettet (3f2b7af–d5e9ad7, D61) plus dobbelttryk-spærren i passet (a307dab–f4597bf) og tjekket i »Opfølgning«; 4 nye lave (N1–N4) er åbne. Udgivet 22:46 (Actions 42705154428). Før- og efterbilleder i `screenshots/nat3-foer/` og `nat3-efter/`.
 - Agent: `comeback-builder`.
 - Mål: alle skærme gennemgået mod SPEC 5 og 6 og listen over forbudte mønstre: hierarki, den typografiske skala, luft, PDF'ens plakatidentitet, figuren som hovedperson og overgange, der viser, hvad der ændrede sig. Før- og efterbilleder af de vigtigste skærme (før = `main` ved NAT-3's start, 2894827).
 - Grønt: hele Playwright-suiten; skærmbilleder af alle skærme; kontrast, trykflader og tekststørrelser tjekket.
