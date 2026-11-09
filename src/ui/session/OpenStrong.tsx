@@ -2,7 +2,7 @@
 // from start to end (SK3). Logged as os_done; only »denne uge: n af 7« is shown, never a streak.
 // Before it starts, its six exercises on one screen as »Dagens pas« (SPEC 3.2); while it runs, »Nu«
 // with the figure following the item's clock, and »Næste« with the next item. No intro card (D44).
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { mondayOf, osCue, osThisWeek, PROGRAM } from '../../engine/index.ts';
 import { enableAudio, play } from '../audio.ts';
 import { ExerciseCard, useCard } from '../card.tsx';
@@ -38,7 +38,8 @@ export function OpenStrong({ model, onClose }: { model: Model; onClose: () => vo
   useSessionStyle();
   const [index, setIndex] = useState(-1);
   const [paused, setPaused] = useState(false);
-  const [saved, setSaved] = useState(false);
+  // Set at once, so a second »Videre« in a double tap never saves Open & Strong twice (D61).
+  const saved = useRef(false);
   const items = OS?.items ?? [];
   const item = items[index];
   // »Sådan gør du« opens the item's exercise card; the clock stands still while it is open, so the
@@ -59,8 +60,8 @@ export function OpenStrong({ model, onClose }: { model: Model; onClose: () => vo
       return;
     }
     play('slut');
-    if (!saved) {
-      setSaved(true);
+    if (!saved.current) {
+      saved.current = true;
       await model.commit([model.ctx.make({ type: 'os_done' }, model.today)]);
     }
     setIndex(items.length);

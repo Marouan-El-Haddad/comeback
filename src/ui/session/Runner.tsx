@@ -234,11 +234,36 @@ export function Runner({
   // the second tap never lands on the neck's »Stop«, »Videre« or »Spring pausen over« under »Luk«
   // (D57). Set before the screen is painted, so not even the first frame takes a tap.
   const [settling, setSettling] = useState(false);
+  // A tap that writes an event (an answer, a measurement, a set, the start and the end of the
+  // session) takes the screen until the next one comes: the taps that follow it in a double tap are
+  // ignored, so an answer is never saved twice and no step is skipped (D33, D57, D61). Set
+  // synchronously, so even a second tap before the next drawing finds it.
+  const writing = useRef(false);
   useLayoutEffect(() => {
+    writing.current = false;
     setSettling(true);
     const id = setTimeout(() => setSettling(false), 500);
     return () => clearTimeout(id);
   }, [run.phase, run.preIndex, run.stepIndex, away, introShut, card.id]);
+  /** Runs `action` for the first tap only, until the screen changes (or the writing fails). */
+  const once =
+    <A extends unknown[]>(action: (...args: A) => unknown) =>
+    (...args: A): void => {
+      if (writing.current) return;
+      writing.current = true;
+      setSettling(true);
+      Promise.resolve()
+        .then(() => action(...args))
+        .then(
+          () => {
+            writing.current = false;
+          },
+          () => {
+            writing.current = false;
+            setSettling(false);
+          },
+        );
+    };
   // A new step starts at the top, with »Nu« and the clock in view, wherever the last one was rolled.
   useEffect(() => {
     if (!away) window.scrollTo(0, 0);
@@ -394,7 +419,7 @@ export function Runner({
         <button type="button" class="btn" onClick={() => setConfirmEnd(false)}>
           Fortsæt
         </button>
-        <button type="button" class="btn primary" onClick={() => void finish(true)}>
+        <button type="button" class="btn primary" onClick={once(() => finish(true))}>
           Afslut
         </button>
       </div>
@@ -517,22 +542,22 @@ export function Runner({
           <button
             type="button"
             class="btn block red-outline"
-            onClick={() => {
+            onClick={once(() => {
               void enableAudio();
-              void begin(true);
-            }}
+              return begin(true);
+            })}
           >
             Rød: syg, feber, skarp smerte eller under 4 timers søvn
           </button>
           <button
             type="button"
             class={now === 'green' ? 'btn primary block' : 'btn primary block yellow'}
-            onClick={() => {
+            onClick={once(() => {
               void enableAudio();
               soundNoted();
-              if (motor) void begin(false);
-              else setRun((r) => ({ ...r, phase: 'pre', preIndex: 0 }));
-            }}
+              if (motor) return begin(false);
+              return setRun((r) => ({ ...r, phase: 'pre', preIndex: 0 }));
+            })}
           >
             {motor
               ? now === 'green'
@@ -595,7 +620,7 @@ export function Runner({
                 />
               }
               next={<NextStrip next={warmupNext(0)} context={warmupContext} />}
-              onSave={async (value) => {
+              onSave={once(async (value: number) => {
                 await model.commit([
                   ctx.make(
                     {
@@ -609,7 +634,7 @@ export function Runner({
                   ),
                 ]);
                 nextPre();
-              }}
+              })}
               onSkip={nextPre}
             />
           </div>
@@ -701,13 +726,13 @@ export function Runner({
           )}
         </div>
         <div class="session-actions">
-          <button type="button" class="btn block red-outline" onClick={() => void begin(true)}>
+          <button type="button" class="btn block red-outline" onClick={once(() => begin(true))}>
             Rød: syg, feber, skarp smerte eller under 4 timers søvn
           </button>
           <button
             type="button"
             class={light === 'green' ? 'btn primary block' : 'btn primary block yellow'}
-            onClick={() => void begin(false)}
+            onClick={once(() => begin(false))}
           >
             {light === 'green' ? 'GRØN – kør passet' : 'GUL – minimumsdosis'}
           </button>
@@ -846,7 +871,7 @@ export function Runner({
                 />
               }
               next={strip}
-              onSave={async (value) => {
+              onSave={once(async (value: number) => {
                 await model.commit([
                   logSet(ctx, {
                     sessionId,
@@ -868,7 +893,7 @@ export function Runner({
                   ),
                 ]);
                 advance();
-              }}
+              })}
               onSkip={advance}
             />
           );
@@ -884,7 +909,7 @@ export function Runner({
             // top (docs/SPEC.md 3.8, D47).
             context={contextOf(step, run.kind)}
             onCard={(id) => openCard(id, contextOf(step, run.kind))}
-            onLog={async (value, rir, pain) => {
+            onLog={once(async (value?: number, rir?: Rir, pain?: Pain) => {
               const measureId = step.measure ? step.block.measureId : undefined;
               // One set, or both sides of a set done alternately (P54); a side the previous version
               // logged already is not logged again (D57).
@@ -914,7 +939,7 @@ export function Runner({
               }
               await model.commit(events);
               advance();
-            }}
+            })}
           />
         );
         break;
@@ -941,7 +966,7 @@ export function Runner({
             title={trackName(step.block.trackId)}
             question="Alle hop/reps lige høje og hurtige?"
             next={nextBox}
-            onAnswer={(yes) => void logResult(step.block, { quality: yes })}
+            onAnswer={once((yes: boolean) => logResult(step.block, { quality: yes }))}
           />
         );
         break;
@@ -962,7 +987,9 @@ export function Runner({
         body = (
           <EmomQuestions
             next={nextBox}
-            onSave={(clean, rest20) => void logResult(step.block, { clean, rest20 })}
+            onSave={once((clean: boolean, rest20: boolean) =>
+              logResult(step.block, { clean, rest20 }),
+            )}
           />
         );
         break;
@@ -998,7 +1025,7 @@ export function Runner({
             title={getStep(PROGRAM, step.block.stepId).name}
             question="Rene runder?"
             next={nextBox}
-            onAnswer={(yes) => void logResult(step.block, { clean: yes })}
+            onAnswer={once((yes: boolean) => logResult(step.block, { clean: yes }))}
           />
         );
         break;
@@ -1008,7 +1035,7 @@ export function Runner({
             title="Klubsekvensen"
             question="Ren runde?"
             next={nextBox}
-            onAnswer={(yes) => void logResult(step.block, { clean: yes })}
+            onAnswer={once((yes: boolean) => logResult(step.block, { clean: yes }))}
           />
         );
         break;
@@ -1021,7 +1048,7 @@ export function Runner({
             next={strip}
             onDone={advance}
             onCard={(id) => openCard(id)}
-            onStop={async () => {
+            onStop={once(async () => {
               await model.commit([
                 logSet(ctx, {
                   sessionId,
@@ -1035,12 +1062,17 @@ export function Runner({
               ]);
               advance();
               advance();
-            }}
+            })}
           />
         );
         break;
       case 'neck-q':
-        body = <Feel next={nextBox} onAnswer={(feel) => void logResult(step.block, { feel })} />;
+        body = (
+          <Feel
+            next={nextBox}
+            onAnswer={once((feel: 'easy' | 'ok' | 'hard') => logResult(step.block, { feel }))}
+          />
+        );
         break;
       case 'measure': {
         const measureId = step.block.measureId ?? '';
@@ -1059,7 +1091,7 @@ export function Runner({
               />
             }
             next={strip}
-            onSave={async (value) => {
+            onSave={once(async (value: number) => {
               await model.commit([
                 ctx.make(
                   {
@@ -1073,7 +1105,7 @@ export function Runner({
                 ),
               ]);
               advance();
-            }}
+            })}
             onSkip={advance}
           />
         );
@@ -1102,7 +1134,7 @@ export function Runner({
             state={state}
             onCard={() => card.open(`${MEASURES}.${plan.motor?.measureId ?? 'base_check'}`)}
             next={<NextStrip next={SUMMARY_NEXT} />}
-            onSave={async (value) => {
+            onSave={once(async (value: number) => {
               await model.commit([
                 ctx.make(
                   {
@@ -1116,7 +1148,7 @@ export function Runner({
                 ),
               ]);
               advance();
-            }}
+            })}
             onSkip={advance}
           />
         );
@@ -1143,7 +1175,7 @@ export function Runner({
   const actions =
     step.type === 'walk' ? (
       <div class="session-actions">
-        <button type="button" class="btn primary block" onClick={() => void finish(false)}>
+        <button type="button" class="btn primary block" onClick={once(() => finish(false))}>
           Afslut den røde dag
         </button>
       </div>
@@ -1152,7 +1184,7 @@ export function Runner({
         <button
           type="button"
           class="btn primary block"
-          onClick={() => void finish(false)}
+          onClick={once(() => finish(false))}
           data-testid="finish"
         >
           Afslut passet
@@ -1418,7 +1450,11 @@ function SetStep(props: {
   context: CardContext | null;
   /** Opens the exercise card of the step (»Sådan gør du«). */
   onCard: (stepId: string) => void;
-  onLog: (value: number | undefined, rir: Rir | undefined, pain: Pain | undefined) => Promise<void>;
+  onLog: (
+    value: number | undefined,
+    rir: Rir | undefined,
+    pain: Pain | undefined,
+  ) => void | Promise<void>;
 }) {
   const { step } = props;
   const block = step.block;
@@ -1897,7 +1933,7 @@ function NeckStep(props: {
   next: ComponentChildren;
   onDone: () => void;
   onCard: (stepId: string) => void;
-  onStop: () => Promise<void>;
+  onStop: () => void | Promise<void>;
 }) {
   const step = getStep(PROGRAM, props.block.stepId);
   const clock = usePartClock();
