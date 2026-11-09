@@ -6,7 +6,10 @@
 // measurements in the sessions (program/measures.json).
 import type { SessionKind } from '../engine/types.ts';
 
-/** Format version of every file in content/. A new field that old files lack needs a new version. */
+/**
+ * Format version of every file in content/. A new required field that old files lack needs a new
+ * version; an optional one, like »Mærk« (`feel`), does not.
+ */
 export const CONTENT_FORMAT = 1;
 
 /** The subject of the measurements' files: content/explain/measures.json, ids 'measures.<id>'. */
@@ -150,6 +153,11 @@ export interface ExplainItem {
   id: string;
   /** »Træner«: what the step does for the body and for Muay Thai. One sentence. */
   trains: string;
+  /**
+   * »Mærk«, shown right after »Træner«: where the step should be felt and maybe where not (»Forsiden
+   * af lårene og balderne, ikke knæet.«). One sentence; optional (DECISIONS.md D55).
+   */
+  feel?: string;
   /** »Udgangsstilling«. 1–2 sentences. */
   start: string;
   /** »Sådan gør du«: 2–4 short, numbered steps in the imperative. */

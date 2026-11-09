@@ -603,6 +603,82 @@ describe('kilder i forklaringerne (L2)', () => {
   });
 });
 
+describe('»Mærk« (feel, D55)', () => {
+  const FEEL = 'Brystet og bagsiden af armene, ikke skuldrene.';
+
+  /** press.1 with »Mærk« as key number `index`: the order of the keys does not matter. */
+  const feelAt = (index: number, feel: unknown = FEEL): ExplainFile =>
+    press((i, f) => {
+      const entries: Array<[string, unknown]> = Object.entries(i);
+      entries.splice(index, 0, ['feel', feel]);
+      f.items[0] = Object.fromEntries(entries) as unknown as ExplainItem;
+    });
+  const after = (key: keyof ExplainItem) => Object.keys(PRESS.items[0]!).indexOf(key) + 1;
+  const feelProblems = (feel: unknown) => explainProblems(feelAt(after('trains'), feel), 'press');
+
+  test('valgfrit: uden »Mærk« er punktet gyldigt som før', () => {
+    expect('feel' in PRESS.items[0]!).toBe(false);
+    expect(explainProblems(PRESS, 'press')).toEqual([]);
+  });
+
+  test.each([
+    ['først', 0],
+    ['lige efter »trains«', after('trains')],
+    ['lige efter »cues«', after('cues')],
+    ['sidst', Object.keys(PRESS.items[0]!).length],
+  ])('»Mærk« %s er gyldigt', (_, index) => {
+    const file = feelAt(index);
+    expect(Object.keys(file.items[0]!).indexOf('feel')).toBe(index);
+    expect(explainProblems(file, 'press')).toEqual([]);
+  });
+
+  test('forkortelser, tal og et spørgsmål er stadig én sætning', () => {
+    expect(feelProblems('Brystet og armene, med albuerne ca. 45° ud.')).toEqual([]);
+    expect(feelProblems('Mærker du det i brystet og bagsiden af armene?')).toEqual([]);
+  });
+
+  const cases: Array<[string, unknown, string]> = [
+    [
+      'for lang',
+      `${'Brystet og armene, '.repeat(6)}ikke skuldrene.`,
+      'press.1 › feel: højst 120 tegn (har 129)',
+    ],
+    [
+      'flere sætninger',
+      'Brystet og armene. Ikke skuldrene.',
+      'press.1 › feel: skal være én sætning (har 2)',
+    ],
+    [
+      'et spørgsmål og en sætning',
+      'Mærker du det i skuldrene? Så sænk dig mindre.',
+      'press.1 › feel: skal være én sætning (har 2)',
+    ],
+    ['emoji', 'Brystet og armene 💪.', 'press.1 › feel: ingen emojis'],
+    [
+      'kildehenvisning',
+      'Brystet og armene, som på side 12.',
+      'press.1 › feel: ingen henvisning til PDF, sidetal eller kilder',
+    ],
+    ['studier', 'Brystet, som forskningen viser.', 'press.1 › feel: ingen henvisning til studier'],
+    ['dosis', 'Brystet efter 3 × 8.', 'press.1 › feel: skriv ikke dosis (»3 × 8«)'],
+    ['uden punktum', 'Brystet og armene', 'press.1 › feel: skal slutte med punktum'],
+    ['tom', '', 'press.1 › feel: må ikke være tom'],
+    ['ikke en tekst', ['Brystet.'], 'press.1 › feel: skal være en tekst'],
+  ];
+  test.each(cases)('%s afvises', (_, feel, message) => {
+    expect(feelProblems(feel).join('\n')).toContain(message);
+  });
+
+  test('en »like« får »Mærk« med det trin, den peger på, og har ikke sit eget', () => {
+    const file = structuredClone(EMOM);
+    // The types let it through (»feel« is a field of a full explanation); the validation does not.
+    file.items[1] = { id: 'burpee_emom.E2', like: 'burpee_emom.E1', feel: FEEL };
+    expect(explainProblems(file, 'burpee_emom').join('\n')).toContain(
+      'burpee_emom.E2: ukendt felt »feel«',
+    );
+  });
+});
+
 describe('labels med tid på hold og gentagelser (L7)', () => {
   /** A neck hold (N1: 10 sek, N2: 10–30 sek) whose hold phase has the given label. */
   const neck = (id: string, label: string): ExplainFile => {

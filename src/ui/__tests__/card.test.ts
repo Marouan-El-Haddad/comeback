@@ -145,6 +145,16 @@ describe('explanationOf', () => {
     expect(explanationOf(file, 'burpee_emom.E2')?.trains).toBe('Træner.');
   });
 
+  test('et trin »som« et andet får også dets »Mærk« (D55)', () => {
+    const feel = 'Pulsen stiger i arbejdet og falder i pausen.';
+    const withFeel: ExplainFile = {
+      ...file,
+      items: [item('burpee_emom.E1', { feel }), { id: 'burpee_emom.E2', like: 'burpee_emom.E1' }],
+    };
+    expect(explanationOf(withFeel, 'burpee_emom.E2')?.feel).toBe(feel);
+    expect(explanationOf(file, 'burpee_emom.E2')?.feel).toBeUndefined();
+  });
+
   test('uden fil eller uden trinnet: ingen forklaring', () => {
     expect(explanationOf(file, 'burpee_emom.E3')).toBeNull();
     expect(explanationOf(null, 'burpee_emom.E1')).toBeNull();

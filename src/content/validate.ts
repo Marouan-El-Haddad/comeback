@@ -109,6 +109,7 @@ const UNKNOWN_SUBJECT = 'er hverken et spor, en rutine eller »measures«';
 export const LIMITS = {
   why: { min: 1, max: 3, chars: 280 },
   trains: 150,
+  feel: 120,
   start: 220,
   steps: { min: 2, max: 4, chars: 140 },
   tempo: 120,
@@ -135,6 +136,8 @@ const RESEARCH =
   /\b(?:meta-?analyse\p{L}*|studie(?:r|t|rne|ts|rnes)?|forskning\p{L}*|forsker\p{L}*|evidens\p{L}*)(?!\p{L})/iu;
 /** A step named in »Lettere« or »Sværere«: »trin 2«, »E3«. */
 const STEP_NAME = /\b[Tt]rin\s+[A-Z]?\d+\b|\b[A-Z]\d\b/u;
+/** A new sentence: a full stop or question mark, a space and a capital letter (not »ca. 45°«). */
+const NEW_SENTENCE = /[.?!]\s+(?=[»"(]?\p{Lu})/gu;
 
 // ---------------------------------------------------------------------------------------------
 // A small reader for untyped JSON that collects problems with their place in the file
@@ -217,6 +220,8 @@ interface TextRule {
   words?: number;
   /** Dose notation such as »3 × 8« is not allowed (the dose comes from the programme). */
   noDose?: boolean;
+  /** One sentence only (»Mærk«, D55). */
+  oneSentence?: boolean;
 }
 
 function text(r: Report, where: string, value: unknown, rule: TextRule): value is string {
@@ -246,6 +251,10 @@ function text(r: Report, where: string, value: unknown, rule: TextRule): value i
     r.add(where, `skal slutte med punktum: ${quote}`);
   }
   if (rule.kind === 'short' && end === '.') r.add(where, `uden punktum til sidst: ${quote}`);
+  if (rule.oneSentence) {
+    const sentences = 1 + (value.trim().match(NEW_SENTENCE)?.length ?? 0);
+    if (sentences > 1) r.add(where, `skal være én sætning (har ${sentences}): ${quote}`);
+  }
   if (value.includes('!')) r.add(where, `ingen udråbstegn: ${quote}`);
   if (EMOJI.test(value)) r.add(where, `ingen emojis: ${quote}`);
   const ref = findSourceRef(value);
@@ -284,6 +293,9 @@ const ITEM_KEYS = [
   'getReady',
   'movements',
 ] as const;
+
+/** Fields an explanation may leave out; the order of the keys in a file does not matter. */
+const OPTIONAL_ITEM_KEYS = ['feel'] as const;
 
 /** The seconds the programme (or a text) states: »3 sek ned« → [3, 3, '3 sek ned']. */
 export function statedSeconds(texts: readonly string[]): Array<[number, number, string]> {
@@ -612,6 +624,14 @@ function checkItem(
   const prose = (key: string, chars: number) =>
     text(r, at(where, key), value[key], { kind: 'prose', chars, noDose });
   prose('trains', LIMITS.trains);
+  if (value.feel !== undefined) {
+    text(r, at(where, 'feel'), value.feel, {
+      kind: 'prose',
+      chars: LIMITS.feel,
+      noDose,
+      oneSentence: true,
+    });
+  }
   prose('start', LIMITS.start);
   prose('tempo', LIMITS.tempo);
   prose('breathing', LIMITS.breathing);
@@ -740,7 +760,7 @@ export function validateExplainFile(
       shape(r, where, entry, ['id', 'like']);
       return;
     }
-    if (!shape(r, where, entry, ITEM_KEYS)) return;
+    if (!shape(r, where, entry, ITEM_KEYS, OPTIONAL_ITEM_KEYS)) return;
     full.set(item.id, entry);
     checkItem(r, where, entry, item, sessions);
   });
