@@ -9,7 +9,7 @@ import {
 } from './helpers.ts';
 
 // Whole sessions with Firefox' JIT off take a while; the figures are drawn as stills.
-test.describe.configure({ timeout: 300_000 });
+test.describe.configure({ timeout: 600_000 });
 test.beforeEach(async ({ page }) => stillFigures(page));
 
 // Programme week 1 (from Monday 9 November): Styrke A with the zero-point measurements, the motor
