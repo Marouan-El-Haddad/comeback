@@ -669,7 +669,11 @@ function MainCard({
         type="button"
         class="btn primary block"
         data-testid="start-session"
-        onClick={() => onStart(plan.kind ?? 'A', plan.short, session.calmBase)}
+        // The day's own calm base (a moved motor), not the one after a hard club day: that one
+        // keeps »Kør intervallerne alligevel« on the traffic light (ENGINE 5.2, P25).
+        onClick={() =>
+          onStart(plan.kind ?? 'A', plan.short, session.calmBase && !session.intervalsOption)
+        }
       >
         Se dagens pas
       </button>

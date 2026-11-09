@@ -520,7 +520,9 @@ export function Runner({
               <p class="hint">Søndagstjekket noterede smerte, der ikke gik væk.</p>
             )}
             {defaults.hardYesterday && <p class="hint">I går var klubtræningen hård.</p>}
-            {motor && plan.intervalsOption && (
+            {/* Ticked, the plan runs the intervals and has no option left: the box stays, so the
+                choice can be seen and undone (P25). */}
+            {motor && (plan.intervalsOption || run.intervalsAnyway) && (
               <label class="check">
                 <input
                   type="checkbox"

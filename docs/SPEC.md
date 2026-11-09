@@ -139,7 +139,7 @@ Primærknappen står nederst, hvor tommelfingeren rammer først, og rød-knappen
 - Spørgsmålene står lavt, lige over knapperne, hvor tommelfingeren er (afsnit 6; `DECISIONS.md` D59); overskriften står øverst.
 - Alle tre står på »ja« som standard. Spørgsmål 2 står på »nej«, hvis der er logget skarp smerte inden for 2 dage eller søndagstjekket har noteret smerte, der ikke gik væk. Spørgsmål 3 kan først besvares efter opvarmningen: skærmen vises før opvarmningen med spørgsmål 1–2, og spørgsmål 3 dukker op efter opvarmningens trin 4.
 - Resultat: grøn → planlagt pas; gul → minimumsdosis (par 1 og par 2, 2 sæt, reserve 3, ingen power, ingen burpees, nakke udgår), ca. 25 min; rød → kun Open & Strong og en gåtur, passet markeres rødt. Motor på gul dag → rolig base 30 min. Rød-knappen hedder »Rød: syg, feber, skarp smerte eller under 4 timers søvn« (PDF s. 7).
-- Hinten om gårsdagens klubtræning vises, når gårsdagens klublog var »Hård«. På styrkedage ændrer den intet automatisk; på en motor-dag med intervaller bliver rolig base standard med valget »Kør intervallerne alligevel« (`ENGINE.md` 5.2).
+- Hinten om gårsdagens klubtræning vises, når gårsdagens klublog var »Hård«. På styrkedage ændrer den intet automatisk; på en motor-dag med intervaller bliver rolig base standard med valget »Kør intervallerne alligevel« (`ENGINE.md` 5.2): et flueben på trafiklyset, som bliver stående, når det er sat, så valget kan ses og fortrydes (`DECISIONS.md` D63).
 
 ### 3.4 Uge
 
