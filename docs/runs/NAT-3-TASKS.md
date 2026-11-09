@@ -47,7 +47,7 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
   4. Resuméet lister præcist, hvilke figurer (fil og punkt) der nu fejler eller kan tegnes bedre.
 - Grønt: `npm run check`; `node scripts/check-explain.ts`; `e2e/figure.spec.ts` og en test af, at en push-up ikke knækker midt i en fase; startfilerne uændrede.
 
-### [ ] P1b – Figurmotoren: vinkler, markeringer, fejl og bevægelse (opgavens pakke 2, motordelen)
+### [~] P1b – Figurmotoren: vinkler, markeringer, fejl og bevægelse (opgavens pakke 2, motordelen)
 
 - Agent: `comeback-builder`.
 - Mål: det, figurerne i P2 skal kunne vise, findes i formatet, motoren, tjekket, kontaktarket, øvelseskortet og »Nu« i passet:
@@ -59,7 +59,7 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 - Kilder: `docs/runs/NAT-3.md` pakke 2; SPEC 3.2, 3.8 og 9.1; D48.
 - Grønt: `npm run check`; `e2e/figure.spec.ts` udvidet (vinkler, markeringer, fejl, reduceret bevægelse); højst 30 billeder i sekundet uden JIT; startfilerne uændrede.
 
-### [ ] P2 – Alle figurer i høj kvalitet (opgavens pakke 2)
+### [~] P2 – Alle figurer i høj kvalitet (opgavens pakke 2)
 
 - Agenter: `comeback-builder` × 6 parallelt på datafiler (ingen kodeændringer, ingen commits), med trænernes figurbrief fra P3 som input. Grupper:
   - P2.1 press, pull, backpack_row, shoulder
