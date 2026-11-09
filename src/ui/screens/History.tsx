@@ -23,11 +23,16 @@ export function History({ model, onBack }: { model: Model; onBack: () => void })
   if (chosen) return <Summary session={chosen} onDone={() => setOpen(null)} doneLabel="Tilbage" />;
   return (
     <div class="screen history" data-testid="history">
-      <button type="button" class="btn" onClick={onBack}>
+      <button type="button" class="btn back" onClick={onBack}>
         Tilbage
       </button>
       <h1>Historik</h1>
-      {sessions.length === 0 && <p>Dit første pas bliver dit nulpunkt.</p>}
+      {sessions.length === 0 && (
+        <p class="empty">
+          <strong>Dit første pas bliver dit nulpunkt.</strong>
+          Hvert pas, du logger, står her med dato, trafiklys og sæt.
+        </p>
+      )}
       <ul class="ladder-list">
         {sessions.map((s) => (
           <li key={s.sessionId}>

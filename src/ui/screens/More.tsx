@@ -58,20 +58,30 @@ export function More({
   return (
     <div class="screen more" data-testid="more">
       <h1>Mere</h1>
-      <div class="stack">
-        <button type="button" class="btn block" onClick={() => onPage('history')}>
-          Historik
+      {/* Each row says what is behind it; its name alone is the button's name (D59). */}
+      <nav class="menu" aria-label="Mere">
+        <button
+          type="button"
+          class="menu-row"
+          aria-label="Historik"
+          onClick={() => onPage('history')}
+        >
+          <span class="menu-title">Historik</span>
+          <span class="menu-text">Dine pas med dato, trafiklys og sæt</span>
         </button>
-        <button type="button" class="btn block" onClick={() => onPage('backup')}>
-          Backup
+        <button type="button" class="menu-row" aria-label="Backup" onClick={() => onPage('backup')}>
+          <span class="menu-title">Backup</span>
+          <span class="menu-text">Gem dine data som en fil, eller hent dem igen</span>
         </button>
-        <a class="btn block" href={`${import.meta.env.BASE_URL}program/`}>
-          Programmet
+        <a class="menu-row" aria-label="Programmet" href={`${import.meta.env.BASE_URL}program/`}>
+          <span class="menu-title">Programmet</span>
+          <span class="menu-text">Alle stiger, trin, uger og målinger</span>
         </a>
-        <button type="button" class="btn block" onClick={() => onPage('about')}>
-          Om
+        <button type="button" class="menu-row" aria-label="Om" onClick={() => onPage('about')}>
+          <span class="menu-title">Om</span>
+          <span class="menu-text">Version og diagnose</span>
         </button>
-      </div>
+      </nav>
     </div>
   );
 }
@@ -126,7 +136,7 @@ function Backup({ model, onBack }: { model: Model; onBack: () => void }) {
 
   return (
     <div class="screen backup" data-testid="backup">
-      <button type="button" class="btn" onClick={onBack}>
+      <button type="button" class="btn back" onClick={onBack}>
         Tilbage
       </button>
       <h1>Backup</h1>
@@ -229,7 +239,7 @@ function About({ model, onPage }: { model: Model; onPage: (p: MorePage) => void 
   void model;
   return (
     <div class="screen about" data-testid="about">
-      <button type="button" class="btn" onClick={() => onPage('menu')}>
+      <button type="button" class="btn back" onClick={() => onPage('menu')}>
         Tilbage
       </button>
       <h1>Om</h1>
@@ -333,7 +343,7 @@ function Diagnose({ model, onBack }: { model: Model; onBack: () => void }) {
   ];
   return (
     <div class="screen diagnose" data-testid="diagnose">
-      <button type="button" class="btn" onClick={onBack}>
+      <button type="button" class="btn back" onClick={onBack}>
         Tilbage
       </button>
       <h1>Diagnose</h1>
@@ -416,7 +426,7 @@ function TimeMachine({ model, onBack }: { model: Model; onBack: () => void }) {
   const [date, setDate] = useState(addDays(model.sim?.date ?? model.today, 1));
   return (
     <div class="screen timemachine" data-testid="timemachine">
-      <button type="button" class="btn" onClick={onBack}>
+      <button type="button" class="btn back" onClick={onBack}>
         Tilbage
       </button>
       <h1>Tidsmaskinen</h1>

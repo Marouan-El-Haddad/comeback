@@ -1,5 +1,6 @@
 // I dag (docs/SPEC.md 3.1): today's session with one button to »Dagens pas«, Open & Strong, tomorrow,
 // the rest of the week, the »blev ikke logget« card and the backup line. Visible without a tap (SK1).
+import type { ComponentChildren } from 'preact';
 import { useEffect } from 'preact/hooks';
 import {
   addDays,
@@ -42,20 +43,32 @@ function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-function blockLine(block: BlockPlan): string | null {
-  if (block.role === 'warmup') return 'Opvarmning · 8 min';
+/** A block's line on the day's card: the step on the left, the dose on the right. */
+interface BlockLine {
+  name: string;
+  dose: string;
+}
+
+function blockLine(block: BlockPlan): BlockLine {
+  if (block.role === 'warmup') return { name: 'Opvarmning', dose: '8 min' };
   if (block.role === 'measure') {
-    return `Måling: ${PROGRAM.measures.find((m) => m.id === block.measureId)?.name ?? ''}`;
+    const measure = PROGRAM.measures.find((m) => m.id === block.measureId)?.name ?? '';
+    return { name: `Måling: ${measure}`, dose: '' };
   }
   const track = getTrack(PROGRAM, block.trackId);
   const step = getStep(PROGRAM, block.stepId);
   if (block.unit === 'emom' && block.emom)
-    return `Burpees EMOM ${step.key} · ${block.emom.minutes} × ${block.emom.reps}`;
+    return {
+      name: `Burpees EMOM ${step.key}`,
+      dose: `${block.emom.minutes} × ${block.emom.reps}`,
+    };
+  const name = `${track.short} trin ${step.key}`;
+  const measure = block.measureId ? ' + måling' : '';
   if (block.unit === 'rounds') {
     const rounds = block.rounds ?? 1;
     const word = rounds === 1 ? 'runde' : 'runder';
     const dose = block.sets > 1 ? `${block.sets} × ${rounds} ${word}` : `${rounds} ${word}`;
-    return `${track.short} trin ${step.key} · ${dose}${block.measureId ? ' + måling' : ''}`;
+    return { name, dose: `${dose}${measure}` };
   }
   const unit = block.unit === 'sec' ? ' sek' : '';
   const per =
@@ -66,8 +79,7 @@ function blockLine(block: BlockPlan): string | null {
         : block.per === 'retning'
           ? ' pr. retning'
           : '';
-  const measure = block.measureId ? ' + måling' : '';
-  return `${track.short} trin ${step.key} · ${block.sets} × ${block.target}${unit}${per}${measure}`;
+  return { name, dose: `${block.sets} × ${block.target}${unit}${per}${measure}` };
 }
 
 function dayLine(day: DayPlan): string {
@@ -222,6 +234,33 @@ export function Today(props: {
   );
 }
 
+/**
+ * The day's card: the session's name (and time) on a navy band, then what the day holds. Every state
+ * of the day has the same card: a session, one that holds a pause or is under way, one logged today,
+ * a red day, a club or rest day, and the days before the programme starts (docs/SPEC.md 3.1).
+ */
+function Card({
+  title,
+  aside,
+  done = false,
+  children,
+}: {
+  title: string;
+  aside?: ComponentChildren;
+  done?: boolean;
+  children: ComponentChildren;
+}) {
+  return (
+    <div class={done ? 'card main-card done' : 'card main-card'} data-testid="main-card">
+      <div class="main-card-head">
+        <h1>{title}</h1>
+        {aside}
+      </div>
+      <div class="main-card-body">{children}</div>
+    </div>
+  );
+}
+
 function MainCard({
   plan,
   startDate,
@@ -236,8 +275,7 @@ function MainCard({
   if (paused) {
     const kind = plan.open?.kind ?? plan.kind ?? 'A';
     return (
-      <div class="card main-card" data-testid="main-card">
-        <h1>{SESSION_NAME[kind]}</h1>
+      <Card title={SESSION_NAME[kind]}>
         <p>Passet holder pause. Uret står stille, og det, du har logget, er gemt.</p>
         <button
           type="button"
@@ -246,24 +284,22 @@ function MainCard({
         >
           Fortsæt passet
         </button>
-      </div>
+      </Card>
     );
   }
   if (plan.beforeStart) {
     return (
-      <div class="card main-card">
-        <h1>Programmet starter {formatLong(startDate)}</h1>
+      <Card title={`Programmet starter ${formatLong(startDate)}`}>
         <p>
           Open &amp; Strong kan du tage allerede nu. Tidsmaskinen under Mere → Om lader dig prøve et
           pas.
         </p>
-      </div>
+      </Card>
     );
   }
   if (plan.open) {
     return (
-      <div class="card main-card">
-        <h1>{SESSION_NAME[plan.open.kind]}</h1>
+      <Card title={SESSION_NAME[plan.open.kind]}>
         <p>Passet er i gang.</p>
         <button
           type="button"
@@ -274,7 +310,7 @@ function MainCard({
         >
           Fortsæt passet
         </button>
-      </div>
+      </Card>
     );
   }
   if (plan.done) {
@@ -287,32 +323,31 @@ function MainCard({
             ? 'rødt'
             : 'logget';
     return (
-      <div class="card main-card done">
-        <h1>{SESSION_NAME[plan.done.kind]}</h1>
-        <p>Logget i dag ({status}).</p>
-      </div>
+      <Card title={SESSION_NAME[plan.done.kind]} done>
+        <p class="main-card-done">✓ Logget i dag ({status}).</p>
+      </Card>
     );
   }
   if (plan.red) {
     return (
-      <div class="card main-card">
-        <h1>Syg</h1>
+      <Card title="Syg">
         <p>Kun Open &amp; Strong og en gåtur. Kun forkølet over halsen er din egen vurdering.</p>
-      </div>
+      </Card>
     );
   }
   if (!plan.session || !plan.kind) {
     return (
-      <div class="card main-card">
-        <h1>
-          {plan.club.day
+      <Card
+        title={
+          plan.club.day
             ? plan.club.closed
               ? 'Klubben er lukket'
               : 'Muay Thai'
             : weekday(plan.date) === 7
               ? 'Søndag'
-              : 'Hviledag'}
-        </h1>
+              : 'Hviledag'
+        }
+      >
         <p>
           {plan.club.day
             ? plan.club.closed
@@ -320,24 +355,36 @@ function MainCard({
               : `Træning ${plan.club.time ?? ''}${plan.club.clinch ? ` · MMA-clinch ${plan.club.clinch}` : ''}`
             : 'Fri gåtur. Open & Strong er valgfri.'}
         </p>
-      </div>
+      </Card>
     );
   }
   const session = plan.session;
-  const lines = session.blocks.map(blockLine).filter((l): l is string => l !== null);
+  const lines = session.blocks.map(blockLine);
   const motor = session.motor;
   return (
-    <div class="card main-card" data-testid="main-card">
-      <div class="main-card-head">
-        <h1>{SESSION_NAME[plan.kind]}</h1>
-        <p class="muted">ca. {sessionMinutes(session)} min</p>
-      </div>
+    <Card
+      title={SESSION_NAME[plan.kind]}
+      aside={
+        <p class="main-card-time">
+          ca. <strong>{sessionMinutes(session)}</strong> min
+        </p>
+      }
+    >
       {motor ? (
         <p class="block-line">{motor.title}</p>
       ) : (
         <ul class="block-lines">
           {lines.map((l) => (
-            <li key={l}>{l}</li>
+            <li key={l.name}>
+              <span>{l.name}</span>
+              {l.dose && (
+                <>
+                  {/* Read aloud as »Pres trin 1 · 3 × 6«; on the screen the dose stands to the right. */}
+                  <span class="sr-label"> · </span>
+                  <span class="block-dose">{l.dose}</span>
+                </>
+              )}
+            </li>
           ))}
         </ul>
       )}
@@ -354,6 +401,6 @@ function MainCard({
       >
         Se dagens pas
       </button>
-    </div>
+    </Card>
   );
 }

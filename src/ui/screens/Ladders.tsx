@@ -96,7 +96,8 @@ function LadderList({ model, onOpen }: { model: Model; onOpen: (trackId: string)
                 <Picto stepId={t.stepId} small />
                 <span class="ladder-text">
                   <span class="ladder-name">
-                    {track.short} · trin {step.key} <LevelBadge level={step.level} />
+                    {track.short} · <span class="ladder-step-no">trin {step.key}</span>{' '}
+                    <LevelBadge level={step.level} />
                   </span>
                   <span class="ladder-step">{step.name}</span>
                   <span class="ladder-distance">
@@ -118,7 +119,8 @@ function LadderList({ model, onOpen }: { model: Model; onOpen: (trackId: string)
             <li key={track.id}>
               <OtherRow
                 picto={t.stepId}
-                name={`${track.short} · trin ${step.key}`}
+                name={track.short}
+                step={step.key}
                 text={step.name}
                 onClick={() => onOpen(track.id)}
               />
@@ -152,6 +154,8 @@ function LadderList({ model, onOpen }: { model: Model; onOpen: (trackId: string)
 function OtherRow(props: {
   picto: string | null;
   name: string;
+  /** The step you are on, in red after the name (»Nakke · trin N1«). */
+  step?: string;
   text: string;
   onClick: () => void;
 }) {
@@ -164,7 +168,15 @@ function OtherRow(props: {
     >
       {picto && <Picto stepId={picto} small />}
       <span class="ladder-text">
-        <span class="ladder-name">{props.name}</span>
+        <span class="ladder-name">
+          {props.name}
+          {props.step && (
+            <>
+              {' · '}
+              <span class="ladder-step-no">trin {props.step}</span>
+            </>
+          )}
+        </span>
         <span class="ladder-step">{props.text}</span>
       </span>
     </button>
@@ -247,7 +259,7 @@ function OtherDetail({ model, id, onBack, onCard, hidden }: DetailProps & { id: 
           }));
   return (
     <div class="screen other-detail" hidden={hidden}>
-      <button type="button" class="btn" onClick={onBack}>
+      <button type="button" class="btn back" onClick={onBack}>
         Tilbage
       </button>
       <h1>{title}</h1>
@@ -281,11 +293,11 @@ function LadderDetail({
   };
   return (
     <div class="screen ladder-detail" hidden={hidden}>
-      <button type="button" class="btn" onClick={onBack}>
+      <button type="button" class="btn back" onClick={onBack}>
         Tilbage
       </button>
       <h1>{track.name}</h1>
-      <p class="muted">{distanceText(track, t, model.state.emom.pendingUp)}</p>
+      <p class="ladder-distance">{distanceText(track, t, model.state.emom.pendingUp)}</p>
       <ol class="prog-steps">
         {track.steps.map((step, i) => {
           const mine = step.id === t.stepId;

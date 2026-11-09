@@ -1,5 +1,6 @@
-// Uge (docs/SPEC.md 3.4; view only in milestone 2): seven rows with the session, its length and
-// status, and the week's sets, reserve, power, motor and EMOM cap at the top.
+// Uge (docs/SPEC.md 3.4; view only in milestone 2): seven rows as a table – the day on the left, the
+// session, its length and status on the right – and the week's sets, reserve, power, motor and EMOM
+// cap at the top.
 import { formatLong, PROGRAM, weekPlan } from '../../engine/index.ts';
 import type { SessionKind } from '../../engine/types.ts';
 import { capitalize, sessionMinutes } from '../format.ts';
@@ -12,6 +13,11 @@ const NAME: Record<SessionKind, string> = {
   os: 'Open & Strong',
   travel: 'Rejsepas',
 };
+
+/** The chip's colour from the tokens' semantics: strength navy, motor blue (design-tokens.json). */
+function chipKind(kind: SessionKind): string {
+  return kind === 'motor' ? 'motor' : kind === 'os' ? '' : 'strength';
+}
 
 export function WeekView({ model }: { model: Model }) {
   const days = weekPlan(PROGRAM, model.state, model.today);
@@ -39,6 +45,8 @@ export function WeekView({ model }: { model: Model }) {
           const skipped = model.state.skipped.some(
             (s) => s.forDate === d.date && s.reason === 'user',
           );
+          const [weekdayName = '', ...rest] = formatLong(d.date).split(' ');
+          const date = rest.join(' ');
           let status = '';
           if (d.done?.status === 'green' || d.done?.status === 'travel') status = '✓ logget';
           else if (d.done?.status === 'yellow') status = '◐ gult';
@@ -47,16 +55,22 @@ export function WeekView({ model }: { model: Model }) {
           else if (d.open) status = 'i gang';
           return (
             <li key={d.date} class={today ? 'week-day today' : 'week-day'}>
-              <p class="week-day-name">{capitalize(formatLong(d.date))}</p>
+              <p class="week-day-name">
+                {/* »Mandag« over »16. november«: the day reads first, as in a table (SPEC 3.4). */}
+                <span class="week-day-weekday">{capitalize(weekdayName)}</span>{' '}
+                <span class="week-day-date">{date}</span>
+              </p>
               <div class="chips">
                 {d.kind && (
-                  <span class="chip">
+                  <span class={`chip ${chipKind(d.kind)}`}>
                     {NAME[d.kind]}
                     {d.short ? ' · kort' : ''}
                     {d.session ? ` · ${sessionMinutes(d.session)} min` : ''}
                   </span>
                 )}
-                {!d.kind && session && <span class="chip">{NAME[session.kind]}</span>}
+                {!d.kind && session && (
+                  <span class={`chip ${chipKind(session.kind)}`}>{NAME[session.kind]}</span>
+                )}
                 {d.club.day && (
                   <span class="chip club">
                     {d.club.closed ? 'Kamp-runder hjemme' : `Muay Thai ${d.club.time ?? ''}`}

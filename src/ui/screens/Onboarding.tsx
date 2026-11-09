@@ -136,7 +136,11 @@ export function Onboarding({ model }: { model: Model }) {
     <div class="screen onboarding" data-testid="onboarding">
       {current === 'welcome' && (
         <div class="stack">
-          <h1>Comeback</h1>
+          {/* The programme's name on a navy band, as the day's card on I dag (D59). */}
+          <header class="welcome-band">
+            <h1>Comeback</h1>
+            <p>Sekundærtræning til Muay Thai · 12 uger</p>
+          </header>
           <p class="lead">
             Appen tager tænkearbejdet i dit 12-ugers program: hvad du skal i dag, hvor mange sæt og
             reps, og hvornår du rykker op.
