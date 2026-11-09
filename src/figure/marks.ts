@@ -85,6 +85,11 @@ export interface MarkDraw {
 export interface MarkShow extends MarkDraw {
   start: number;
   end: number;
+  /**
+   * A cue at a part of the body or a guide line between parts, in a phase: its dot or line follows
+   * the body every frame (followPrims), while its text stands still (H2 in the P1b review, D60).
+   */
+  follow?: true;
 }
 
 export interface MarkPlan {
@@ -344,13 +349,31 @@ export function markDraw(
   phase: number | null,
   local: boolean,
 ): MarkDraw {
+  const { draw, body, own } = markParts(model, mark, index, pose, dx, phase, local);
+  return { ...draw, body: [...body, ...own] };
+}
+
+/** A mark drawn from a pose, the body of that pose, and the points of its own arc or arrow. */
+function markParts(
+  model: FigureModel,
+  mark: Mark,
+  index: number,
+  pose: Pose,
+  dx: number,
+  phase: number | null,
+  local: boolean,
+): {
+  draw: Omit<MarkDraw, 'body'>;
+  body: Array<[number, number, number]>;
+  own: Array<[number, number, number]>;
+} {
   const s = solve(model.frame, pose);
   const draw = markShape(model, mark, index, s, dx, phase, local);
   // The text keeps off the body and off the mark's own arc or line.
   const own = draw.prims.flatMap((p): Array<[number, number, number]> =>
     p.t === 'path' ? p.pts.map((q) => [q[0], q[1], 1]) : [],
   );
-  return { ...draw, prims: withHalo(draw.prims), body: [...bodyPoints(s), ...own] };
+  return { draw: { ...draw, prims: withHalo(draw.prims) }, body: bodyPoints(s), own };
 }
 
 /** A mark's shapes and text, from the skeleton of its moment. */
@@ -423,10 +446,53 @@ function markShape(
 /** The figure's travel along x `u` of the way through a move (0 without travel). */
 const travel = (m: Move, u: number) => (m.shift ? m.shift[0] + (m.shift[1] - m.shift[0]) * u : 0);
 
+/** Whether a mark names a part of the body that it follows through its phase (D60). */
+export function follows(mark: Mark): boolean {
+  if (mark.phase === undefined) return false;
+  if ('line' in mark) return mark.line.some((p) => !Array.isArray(p));
+  return 'cue' in mark && mark.point !== undefined && !Array.isArray(mark.point);
+}
+
+/** Frames sampled in each move of a phase: its mark's text keeps off the body in all of them. */
+const PHASE_SAMPLES = 4;
+
+/** The body as drawn through a phase, as points with their half widths (for placeLabel). */
+function phaseBody(model: FigureModel, index: number): Array<[number, number, number]> {
+  const out: Array<[number, number, number]> = [];
+  const seen = new Set<string>();
+  for (const m of model.timeline.moves) {
+    // A repeat goes the same ways many times: each way once.
+    const key = `${m.from}>${m.to}>${(m.shift ?? [0, 0]).join(',')}`;
+    if (m.phase !== index || seen.has(key)) continue;
+    seen.add(key);
+    const steps = m.from === m.to ? 0 : PHASE_SAMPLES;
+    for (let k = 0; k <= steps; k++) {
+      out.push(...bodyPoints(solve(model.frame, movePose(model, m, steps ? k / steps : 0))));
+    }
+  }
+  return out;
+}
+
+/**
+ * The shapes of a mark that follows the body (a cue's dot, a guide line), at `pose` with the figure's
+ * travel `dx`: the app moves the shapes drawn when the mark came (same keys) every frame (D60).
+ */
+export function followPrims(
+  model: FigureModel,
+  mark: Mark,
+  index: number,
+  pose: Pose,
+  dx: number,
+): Prim[] {
+  const s = solve(model.frame, pose);
+  return withHalo(markShape(model, mark, index, s, dx, mark.phase ?? null, false).prims);
+}
+
 /**
  * When a mark is shown in the figure's timeline and how it is drawn then: a phase's mark for the
- * whole phase, drawn from where the phase starts; a position's mark in each hold or pause at it,
- * drawn from the keyframe where the figure stands.
+ * whole phase, drawn from where the phase starts, its text kept off the body all through the phase
+ * (a cue's dot and a guide line follow the body, D60); a position's mark in each hold or pause at
+ * it, drawn from the keyframe where the figure stands.
  */
 export function markShows(model: FigureModel, mark: Mark, index: number): MarkShow[] {
   if (mark.phase !== undefined) {
@@ -434,7 +500,7 @@ export function markShows(model: FigureModel, mark: Mark, index: number): MarkSh
     const time = model.timeline.phases[i];
     const first = model.timeline.moves.find((m) => m.phase === i);
     if (!time || !first) return [];
-    const draw = markDraw(
+    const { draw, own } = markParts(
       model,
       mark,
       index,
@@ -443,7 +509,15 @@ export function markShows(model: FigureModel, mark: Mark, index: number): MarkSh
       i,
       false,
     );
-    return [{ start: time.start, end: time.start + time.seconds, ...draw }];
+    return [
+      {
+        start: time.start,
+        end: time.start + time.seconds,
+        ...draw,
+        body: [...phaseBody(model, i), ...own],
+        ...(follows(mark) ? { follow: true as const } : {}),
+      },
+    ];
   }
   const pose = mark.at === undefined ? undefined : model.figure.keyframes[mark.at];
   if (!pose) return [];
@@ -488,9 +562,18 @@ export function markAt(
   return null;
 }
 
+/** Whether the figure travels along x in a phase (a transition's `advance` on its way). */
+function phaseTravels(model: FigureModel, index: number): boolean {
+  return model.timeline.moves.some(
+    (m) => m.phase === index && m.shift !== undefined && Math.abs(m.shift[1] - m.shift[0]) > 1e-9,
+  );
+}
+
 /**
  * The marks on a position's still image (reduced motion, the contact sheet): its own (`at`) and
- * those of the phases that start there – an arrow from there – drawn without the travel along x.
+ * those of the phases that start there – an arrow from there – drawn without the travel along x. A
+ * phase that travels gets no arrow: without the travel it would point the wrong way (L2 in the P1b
+ * review, D60); the text alternative still names it.
  */
 export function stillMarks(model: FigureModel, positionId: string): MarkDraw[] {
   const pose = model.figure.keyframes[positionId];
@@ -499,6 +582,7 @@ export function stillMarks(model: FigureModel, positionId: string): MarkDraw[] {
   return (model.figure.marks ?? []).flatMap((mark, index) => {
     if (mark.at === positionId) return [markDraw(model, mark, index, pose, 0, null, true)];
     if (mark.phase === undefined || starts[mark.phase - 1] !== positionId) return [];
+    if ('arrow' in mark && phaseTravels(model, mark.phase - 1)) return [];
     return [markDraw(model, mark, index, pose, 0, mark.phase - 1, true)];
   });
 }
@@ -515,7 +599,9 @@ const LABEL_GAP = 6;
  * on the side it asks for, else the first other side, then above or below the body, then a corner –
  * the first that covers none of the body's points (in px, with the half width of their stroke), or
  * the one that covers fewest; always inside the drawing. Without a point it stands in the top left
- * corner, or the next corner free of the body. Returns the text's top left corner.
+ * corner, or the next corner free of the body. With `line` (a text that cannot stand in its own
+ * drawing, D60) the area is the whole figure and the text stands on its own line over or under the
+ * body, never beside its point. Returns the text's top left corner.
  */
 export function placeLabel(o: {
   width: number;
@@ -529,6 +615,8 @@ export function placeLabel(o: {
   body: ReadonlyArray<readonly [number, number, number]>;
   /** An angle's ray in px: its text tries the places along it first, centred on the ray. */
   ray?: { from: Point; dir: Point } | null;
+  /** On its own line over or under the body (H1 in the P1b review). */
+  line?: boolean;
 }): Point {
   const { width, height, w, h, at, body } = o;
   const clamp = (x: number, y: number): Point => [
@@ -545,13 +633,21 @@ export function placeLabel(o: {
     return clamp(p[0] - w / 2, p[1] + g);
   };
   const candidates: Point[] = [];
-  if (o.ray) {
+  if (o.line) {
+    // Over the body, then under it, centred on the point, at the left and at the right; then the
+    // area's top and bottom edge.
+    for (const x of [(at ? at[0] : width / 2) - w / 2, 0, width - w]) {
+      if (Number.isFinite(top)) candidates.push(clamp(x, top - LABEL_GAP - h));
+      if (Number.isFinite(bottom)) candidates.push(clamp(x, bottom + LABEL_GAP));
+      candidates.push(clamp(x, 0), clamp(x, height - h));
+    }
+  } else if (o.ray) {
     const { from, dir } = o.ray;
     for (let t = 0; t <= 120; t += 4) {
       candidates.push(clamp(from[0] + dir[0] * t - w / 2, from[1] + dir[1] * t - h / 2));
     }
   }
-  if (at && o.place !== 'corner') {
+  if (!o.line && at && o.place !== 'corner') {
     const sides: MarkPlace[] = ['right', 'left', 'above', 'below'];
     for (const place of [o.place, ...sides.filter((x) => x !== o.place)]) {
       candidates.push(beside(place, at));
@@ -559,19 +655,18 @@ export function placeLabel(o: {
     if (Number.isFinite(top)) candidates.push(clamp(at[0] - w / 2, top - LABEL_GAP - h));
     if (Number.isFinite(bottom)) candidates.push(clamp(at[0] - w / 2, bottom + LABEL_GAP));
   }
-  candidates.push(
-    clamp(0, 0),
-    clamp(width - w, 0),
-    clamp(0, height - h),
-    clamp(width - w, height - h),
-  );
-  const covered = ([x, y]: Point) =>
-    body.filter(([bx, by, r]) => bx + r > x && bx - r < x + w && by + r > y && by - r < y + h)
-      .length;
+  if (!o.line) {
+    candidates.push(
+      clamp(0, 0),
+      clamp(width - w, 0),
+      clamp(0, height - h),
+      clamp(width - w, height - h),
+    );
+  }
   let best = candidates[0] ?? [0, 0];
   let fewest = Infinity;
   for (const c of candidates) {
-    const n = covered(c);
+    const n = labelCovers(c, w, h, body);
     if (n < fewest) {
       best = c;
       fewest = n;
@@ -579,6 +674,23 @@ export function placeLabel(o: {
     }
   }
   return best;
+}
+
+/** How many of the body's points (px, with their radius) a text at `at` of `w` × `h` px covers. */
+export function labelCovers(
+  at: Point,
+  w: number,
+  h: number,
+  body: ReadonlyArray<readonly [number, number, number]>,
+): number {
+  const [x, y] = at;
+  return body.filter(([bx, by, r]) => bx + r > x && bx - r < x + w && by + r > y && by - r < y + h)
+    .length;
+}
+
+/** The body of a view at a pose, as points with the half widths of their strokes (figure units). */
+export function bodyOf(model: FigureModel, pose: Pose): Array<[number, number, number]> {
+  return bodyPoints(solve(model.frame, pose));
 }
 
 // ---------------------------------------------------------------------------------------------

@@ -96,12 +96,15 @@ export function phaseSeconds(phase: Phase, timing: Timing = CARD_TIMING): number
  * transition from one position to another lifts hands and feet on that way (`lift`), moves the
  * figure along x (`advance`), and goes through a pose of its own on the way (`via`: the move is two
  * halves, each half the time). A movement that ends elsewhere than it started, or moved along x,
- * gets a way back without a label, which a transition can shape too.
+ * gets a way back without a label, which a transition can shape too. With `cut` a movement that ends
+ * where it started stands its half second at the end too, as the other view of a figure that
+ * travels does (L1 in the P1b review): both views then have one loop length.
  */
 export function timeline(
   movement: OwnMovement,
   timing: Timing = CARD_TIMING,
   transitions: readonly Transition[] = [],
+  cut = false,
 ): Timeline {
   const first = movement.positions[0]?.id ?? '';
   const moves: Move[] = [];
@@ -159,6 +162,12 @@ export function timeline(
     // and the loop starts over at the start – a cut, never a glide backward in the same pose.
     const seconds = timing.back / 2;
     moves.push({ from: at, to: at, start: t, seconds, phase: null, shift: [x, x], cut: true });
+    return { moves, total: t + seconds, phases };
+  }
+  if (cut && at === first && moves.length > 0) {
+    // The other view of a figure that travels: the same half second at the end, where it stands.
+    const seconds = timing.back / 2;
+    moves.push({ from: at, to: at, start: t, seconds, phase: null, cut: true });
     return { moves, total: t + seconds, phases };
   }
   if ((at !== first || Math.abs(x) > 1e-9) && moves.length > 0) {
@@ -335,13 +344,18 @@ const TICK = 12;
 /** Samples per move when the box is measured: limbs swing outside their keyframes in between. */
 const SAMPLES = 8;
 
+/**
+ * A view of a figure ready to draw. `cut`: it stands half a second at its first position at the end
+ * of the loop, as the other view that travels does (viewModels in views.ts).
+ */
 export function buildModel(
   figure: FigureItem,
   movement: OwnMovement,
   timing: Timing = CARD_TIMING,
+  cut = false,
 ): FigureModel {
   const frame = frameOf(figure);
-  const line = timeline(movement, timing, figure.transitions);
+  const line = timeline(movement, timing, figure.transitions, cut);
   const solved: Record<string, Skeleton> = {};
   const rigs: Record<string, Rig> = {};
   const poses: Record<string, Pose> = { ...figure.keyframes };

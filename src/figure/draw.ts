@@ -75,9 +75,20 @@ function highlighted(highlight: readonly Segment[], b: Bone, segment: 1 | 2): bo
   });
 }
 
-/** Whether a figure draws its back as a curve: a keyframe bends it (`spine`). */
-export function curvedBack(figure: { keyframes?: FigureItem['keyframes'] }): boolean {
-  return Object.values(figure.keyframes ?? {}).some((pose) => (pose.spine ?? 0) !== 0);
+/**
+ * Whether a figure draws its back as a curve in every frame: a keyframe or a transition's via bends
+ * it (`spine`), so the animation keeps one element for the back. A single pose that bends it (a
+ * typical mistake with a round back) is drawn as a curve on its own (bodyPrims, D60).
+ */
+export function curvedBack(figure: {
+  keyframes?: FigureItem['keyframes'];
+  transitions?: FigureItem['transitions'];
+}): boolean {
+  const poses = [
+    ...Object.values(figure.keyframes ?? {}),
+    ...(figure.transitions ?? []).flatMap((t) => (t.via ? [t.via] : [])),
+  ];
+  return poses.some((pose) => (pose.spine ?? 0) !== 0);
 }
 
 /** The face mark: a small round nose on the head, the way the face looks (side view). */
@@ -111,14 +122,19 @@ export function drawnPoints(s: Skeleton): Point[] {
 
 /**
  * The body of one frame: limbs, torso, neck (when it is red), head and, in side view, the face mark,
- * in picto.py's z order. A figure with a round back somewhere draws its back as a curve in every frame.
+ * in picto.py's z order. A figure with a round back somewhere draws its back as a curve in every
+ * frame, and so does a pose that bends it on its own (a typical mistake, D60).
  */
 export function bodyPrims(
-  figure: Pick<FigureItem, 'view' | 'highlight'> & { keyframes?: FigureItem['keyframes'] },
+  figure: Pick<FigureItem, 'view' | 'highlight'> & {
+    keyframes?: FigureItem['keyframes'];
+    transitions?: FigureItem['transitions'];
+  },
   s: Skeleton,
   mode: Mode = 'solid',
   prefix = '',
 ): Prim[] {
+  const curved = curvedBack(figure) || s.spine !== 0;
   const ghost = mode === 'ghost';
   const zBase = ghost ? 2 : 10;
   const colour = (b: Bone, segment: 1 | 2): Paint => {
@@ -169,14 +185,14 @@ export function bodyPrims(
       key: `${prefix}torso`,
       z: zBase + 1,
       t: 'poly',
-      pts: curvedBack(figure)
+      pts: curved
         ? frontTorso(s, s.pelvis, s.shoulders)
         : [s.pelvis[0], s.pelvis[1], s.shoulders[1], s.shoulders[0]],
       s: torso,
       f: torso,
       w: WIDTH.limb,
     });
-  } else if (curvedBack(figure)) {
+  } else if (curved) {
     prims.push({
       key: `${prefix}torso`,
       z: zBase + 1,

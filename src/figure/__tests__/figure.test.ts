@@ -8,6 +8,7 @@ import type { Contact, ExplainFile, FigureItem, OwnMovement, Pose } from '../../
 import { bendProblems, jumpProblems, movementFor, turn } from '../check.ts';
 import {
   bodyPrims,
+  curvedBack,
   moving,
   propPrims,
   svgBody,
@@ -19,6 +20,7 @@ import {
 import { deviation, faultPair, wrongPose } from '../faults.ts';
 import {
   directionText,
+  followPrims,
   jointAngle,
   markAt,
   markPlans,
@@ -26,7 +28,7 @@ import {
   stillMarks,
   viewsAndMarksText,
 } from '../marks.ts';
-import { figureViews } from '../views.ts';
+import { drawnHeights, figureViews, stackViews, viewModels } from '../views.ts';
 import { bendOf, distance, frameOf, ik, solve, type Frame } from '../geometry.ts';
 import {
   buildModel,
@@ -1101,15 +1103,22 @@ describe('D58: vinkler, markeringer og fejlpar', () => {
   });
 
   describe("rammen følger en figur, der rejser langs x (P1a's forslag)", () => {
-    const tried = JSON.parse(
-      readFileSync(
-        join(process.cwd(), 'src', 'figure', '__tests__', 'p2', 'power_legs.6.bounds.json'),
-        'utf8',
-      ),
-    ) as { figure: FigureItem };
-    const explain = JSON.parse(
-      readFileSync(join(process.cwd(), 'content', 'explain', 'power_legs.json'), 'utf8'),
-    ) as ExplainFile;
+    // The bounds as drawn in content/, moved 14 forward on each way of each bound (84 in all).
+    const read = (dir: string): unknown =>
+      JSON.parse(readFileSync(join(process.cwd(), 'content', dir, 'power_legs.json'), 'utf8'));
+    const drawn = (read('figures') as { figures: FigureItem[] }).figures.find(
+      (f) => f.id === 'power_legs.6' && f.movement === 'bounds',
+    ) as FigureItem;
+    const tried: { figure: FigureItem } = {
+      figure: {
+        ...drawn,
+        transitions: [
+          { from: 'push', to: 'air', advance: 14 },
+          { from: 'air', to: 'land', advance: 14 },
+        ],
+      },
+    };
+    const explain = read('explain') as ExplainFile;
     const movement = movementFor(explain, 'power_legs.6', 'bounds') as OwnMovement;
     const model = buildModel(tried.figure, movement);
     const tall = 191 / 214;
@@ -1154,5 +1163,266 @@ describe('D58: vinkler, markeringer og fejlpar', () => {
       const still = buildModel(PUSH_UP_FIGURE, PUSH_UP);
       expect(frameBox(still, 1, tall)).toBe(still.box);
     });
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+// D60: the fixes after the review of P1b (docs/reviews/nat3-p1b-figurmotor.md)
+// ---------------------------------------------------------------------------------------------
+
+/** Legs from the front, the knees a little out: a hip at `y` over feet hip-width apart. */
+function frontLegs(y: number): Pose['legs'] {
+  const reach = Math.min(46.5, y - 3.6);
+  return {
+    near: { to: [6, y - reach], bend: 1 },
+    far: { to: [-6, y - reach], bend: -1 },
+  };
+}
+
+describe('D60: rettelser efter reviewet af P1b', () => {
+  /** A mark's own shapes, without the white edge drawn under each (its halo). */
+  const own = (prims: readonly Prim[] = []) => prims.filter((p) => !p.key.endsWith('.halo'));
+
+  test('H1: en tekst, der ikke kan stå i sin tegning, står på sin egen linje over eller under kroppen', () => {
+    // A standing figure across 240 × 160 px with its head near the top: over the head the text
+    // covers less of the body than under the feet.
+    const tall = Array.from({ length: 12 }, (_, i) => [120, 40 + i * 10, 4] as const);
+    expect(
+      placeLabel({
+        width: 240,
+        height: 160,
+        w: 200,
+        h: 46,
+        at: [150, 100],
+        place: 'right',
+        line: true,
+        body: tall,
+      }),
+    ).toEqual([40, 0]);
+    // A squat lower in the drawing: the text stands on its own line just over the head.
+    const squat = Array.from({ length: 8 }, (_, i) => [120, 80 + i * 10, 4] as const);
+    expect(
+      placeLabel({
+        width: 240,
+        height: 160,
+        w: 200,
+        h: 46,
+        at: [150, 120],
+        place: 'right',
+        line: true,
+        body: squat,
+      }),
+    ).toEqual([40, 24]);
+    // Room beside the point is not enough: the text stands on the line over the body, not beside
+    // its point – at the right, where it covers nothing.
+    const narrow = Array.from({ length: 12 }, (_, i) => [30, 40 + i * 10, 4] as const);
+    const beside = { width: 240, height: 160, w: 150, h: 46, at: [30, 100] as [number, number] };
+    expect(placeLabel({ ...beside, place: 'right', body: narrow })).toEqual([36, 77]);
+    expect(placeLabel({ ...beside, place: 'right', line: true, body: narrow })).toEqual([90, 0]);
+    // Never outside the area, also when the text is as wide as it.
+    const [x, y] = placeLabel({
+      width: 240,
+      height: 160,
+      w: 240,
+      h: 46,
+      at: null,
+      place: 'corner',
+      line: true,
+      body: squat,
+    });
+    expect([x, y + 46 <= 160]).toEqual([0, true]);
+  });
+
+  test('H2: en cue ved hoften og en hjælpelinje i en fase følger kroppen, mens teksten står stille', () => {
+    const figure: FigureItem = {
+      ...PUSH_UP_FIGURE,
+      marks: [
+        { cue: 'Hoften med', phase: 1, point: 'hip' },
+        { cue: 'Stille', phase: 2, point: [40, 30] },
+        { line: ['near.foot', 'shoulder'], cue: 'Én planke', phase: 3 },
+        { cue: 'Ned', at: 'bottom', point: 'hip' },
+      ],
+    };
+    const model = buildModel(figure, PUSH_UP);
+    const plans = markPlans(model);
+    const [cue, fixed, line, held] = plans.map((p) => p.shows[0]);
+    // A part of the body in a phase follows; a point in figure units and a position's mark stand.
+    expect([cue?.follow, fixed?.follow, line?.follow, held?.follow]).toEqual([
+      true,
+      undefined,
+      true,
+      undefined,
+    ]);
+    // Near the end of »3 sek ned« the dot sits on the hip as it is then, far below where it began.
+    const late = poseAt(model, 2.9);
+    const hip = solve(model.frame, late).hip;
+    const top = solve(model.frame, PUSH_UP_FIGURE.keyframes.top as Pose).hip;
+    expect(distance(hip, top)).toBeGreaterThan(10);
+    const first = plans[0]?.mark ?? { cue: '' };
+    const dot = own(followPrims(model, first, 0, late, 0)).find((p) => p.t === 'circle');
+    expect(dot?.t === 'circle' && near(dot.c, hip)).toBe(true);
+    // The shapes have the keys of the ones drawn when the mark came, so the app moves them.
+    const keys = (prims: readonly Prim[]) => prims.map((p) => p.key).sort();
+    expect(keys(followPrims(model, first, 0, late, 0))).toEqual(keys(cue?.prims ?? []));
+    // Halfway through »Op« the line runs through the foot and the shoulder as they are then.
+    const mid = poseAt(model, 4.5);
+    const s = solve(model.frame, mid);
+    const third = plans[2]?.mark ?? { cue: '' };
+    const drawn = own(followPrims(model, third, 2, mid, 0)).find((p) => p.t === 'line');
+    if (drawn?.t !== 'line') throw new Error('ingen linje');
+    const foot = s.bones.find((b) => b.side === 'near' && b.kind === 'leg')?.end ?? [0, 0];
+    const off = (p: readonly number[], a: readonly number[], b: readonly number[]) =>
+      Math.abs(
+        ((b[0] ?? 0) - (a[0] ?? 0)) * ((p[1] ?? 0) - (a[1] ?? 0)) -
+          ((b[1] ?? 0) - (a[1] ?? 0)) * ((p[0] ?? 0) - (a[0] ?? 0)),
+      ) / Math.hypot((b[0] ?? 0) - (a[0] ?? 0), (b[1] ?? 0) - (a[1] ?? 0));
+    expect(off(foot, drawn.a, drawn.b)).toBeLessThan(0.01);
+    expect(off(s.shoulder, drawn.a, drawn.b)).toBeLessThan(0.01);
+    // The text keeps off the body during the whole phase: the body it keeps off has the hip at the
+    // bottom as well as at the top.
+    const bottom = solve(model.frame, PUSH_UP_FIGURE.keyframes.bottom as Pose).hip;
+    const has = (p: readonly number[]) =>
+      (cue?.body ?? []).some(([x, y]) => Math.hypot(x - (p[0] ?? 0), y - (p[1] ?? 0)) < 1.5);
+    expect([has(top), has(bottom)]).toEqual([true, true]);
+  });
+
+  test('M1: to vinkler står side om side eller over hinanden, alt efter hvad der tegner den mindste størst', () => {
+    // A standing figure (the squat jump: 0.52 and 0.36 as wide as high) side by side everywhere: on
+    // the card, beside the target, beside the clock and in the pause.
+    for (const [w, h] of [
+      [382, 192],
+      [246, 160],
+      [170, 160],
+      [382, 160],
+    ] as const) {
+      expect(stackViews([0.52, 0.36], w, h)).toBe(false);
+    }
+    // A push-up from the side and from above (2.2 each) over each other beside the target: each view
+    // 76 px high instead of 54 side by side, and at least 60 px.
+    expect(stackViews([2.2, 2.2], 246, 160)).toBe(true);
+    const [side] = drawnHeights([2.2, 2.2], 246, 160, false);
+    const [over] = drawnHeights([2.2, 2.2], 246, 160, true);
+    expect(side).toBeLessThan(60);
+    expect(over).toBeGreaterThanOrEqual(60);
+    // Beside the clock too: as big as one view would be there (170 × 77 px), not halved.
+    expect(stackViews([2.2, 2.2], 170, 160)).toBe(true);
+    const [clock] = drawnHeights([2.2, 2.2], 170, 160, true);
+    expect(clock).toBeGreaterThan((170 / 2.2) * 0.95);
+    // In the pause side by side is larger (187 × 85 px against 382 × 76 px), and so on the card for
+    // a figure that is a little wider than high.
+    expect(stackViews([2.2, 2.2], 382, 160)).toBe(false);
+    expect(stackViews([1.3, 1.6], 382, 192)).toBe(false);
+    // One wide view is enough: a standing view and a lying one stand over each other at the clock.
+    expect(stackViews([0.9, 3.6], 170, 160)).toBe(true);
+  });
+
+  test('L1: to vinkler har samme løkke, også når kun den ene rejser langs gulvet', () => {
+    const movement: OwnMovement = {
+      positions: [
+        { id: 'land', name: 'Landet', text: 'Landet.', contacts: [] },
+        { id: 'air', name: 'Luften', text: 'Oppe.', contacts: [] },
+      ],
+      phases: [{ to: 'air', seconds: 1, repeat: 3, label: '3 hop' }],
+    };
+    const figure: FigureItem = {
+      id: 'power_legs.6',
+      view: 'side',
+      facing: 1,
+      props: [],
+      highlight: ['near.thigh'],
+      keyframes: { land: standing(), air: { ...standing(), hip: [0, 56] } },
+      transitions: [
+        { from: 'land', to: 'air', advance: 10 },
+        { from: 'air', to: 'land', advance: 10 },
+      ],
+      second: {
+        view: 'front',
+        props: [],
+        keyframes: {
+          land: { hip: [0, 49], torso: 90, arms: { near: null, far: null }, legs: frontLegs(49) },
+          air: { hip: [0, 56], torso: 90, arms: { near: null, far: null }, legs: frontLegs(56) },
+        },
+      },
+    };
+    // Built alone, the view that travels ends with its half second where it landed (the cut), and
+    // the other does not: they would drift half a second apart each loop.
+    const [a, b] = figureViews(figure).map((v) => buildModel(v, movement));
+    expect(a?.timeline.total).toBeCloseTo(3.5, 9);
+    expect(b?.timeline.total).toBeCloseTo(3, 9);
+    // Together both have the same loop: the one that stays holds its first position as long.
+    const [one, two] = viewModels(figure, movement);
+    expect(one?.timeline.total).toBeCloseTo(3.5, 9);
+    expect(two?.timeline.total).toBeCloseTo(3.5, 9);
+    expect(two?.timeline.moves.at(-1)).toMatchObject({ from: 'land', to: 'land', phase: null });
+    expect(two?.timeline.moves.at(-1)?.shift).toBeUndefined();
+    // A figure without travel is built as before.
+    const [still] = viewModels(PUSH_UP_FIGURE, PUSH_UP);
+    expect(still?.timeline.total).toBe(5);
+  });
+
+  test('L2: et stillbillede har ingen pil i en fase, hvor figuren rejser langs gulvet', () => {
+    const movement: OwnMovement = {
+      positions: [
+        { id: 'stand', name: 'Klar', text: 'Klar.', contacts: [] },
+        { id: 'dip', name: 'Nede', text: 'Nede.', contacts: [] },
+        { id: 'air', name: 'Luften', text: 'Oppe.', contacts: [] },
+      ],
+      phases: [
+        { to: 'dip', seconds: 0.5, label: 'Ned' },
+        { to: 'air', seconds: 0.5, label: 'Spring' },
+        { to: 'stand', seconds: 0.5, label: 'Land' },
+      ],
+    };
+    const figure: FigureItem = {
+      id: 'power_legs.2',
+      view: 'side',
+      facing: 1,
+      props: [],
+      highlight: ['near.thigh'],
+      keyframes: {
+        stand: standing(),
+        dip: { ...standing(), hip: [-4, 40] },
+        air: { ...standing(), hip: [0, 56] },
+      },
+      transitions: [
+        { from: 'dip', to: 'air', advance: 20 },
+        { from: 'air', to: 'stand', advance: 20 },
+      ],
+      marks: [
+        { arrow: 'hip', phase: 1 },
+        { arrow: 'hip', phase: 2 },
+      ],
+    };
+    const model = buildModel(figure, movement);
+    const first = (m: { prims: Prim[] }) => own(m.prims)[0]?.key;
+    // »Ned« stays where it is: its arrow is on the still image it starts from.
+    expect(stillMarks(model, 'stand').map(first)).toEqual(['mark0.shaft']);
+    // »Spring« travels 20 forward: without the travel the arrow would point back, so it is left out.
+    expect(stillMarks(model, 'dip')).toEqual([]);
+    // The animation still has it, pointing forward.
+    expect(markPlans(model)[1]?.shows[0]?.chord?.[0]).toBeGreaterThan(10);
+  });
+
+  test('en forkert stilling med »spine« tegnes med krum ryg, også når ingen position har »spine«', () => {
+    const pair = faultPair(PUSH_UP_FIGURE, PUSH_UP, {
+      mistake: 1,
+      at: 'top',
+      wrong: { spine: 4 },
+    });
+    if (!pair) throw new Error('intet par');
+    expect(curvedBack(PUSH_UP_FIGURE)).toBe(false);
+    const model = buildModel(pair.figure, PUSH_UP);
+    const torso = (pose: Pose) => movingPrims(model, pose).find((p) => p.key === 'torso')?.t;
+    expect(torso(pair.wrong)).toBe('curve');
+    // The right pose beside it keeps its straight back.
+    expect(torso(pair.right)).toBe('line');
+    // A via with »spine« bends the back in the animation, so every frame draws it as a curve.
+    const via: FigureItem = {
+      ...PUSH_UP_FIGURE,
+      transitions: [
+        { from: 'top', to: 'bottom', via: { ...(PUSH_UP_FIGURE.keyframes.top as Pose), spine: 3 } },
+      ],
+    };
+    expect(curvedBack(via)).toBe(true);
   });
 });

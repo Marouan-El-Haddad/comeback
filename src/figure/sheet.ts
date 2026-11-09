@@ -33,7 +33,7 @@ import {
   type FigureModel,
   type Move,
 } from './motion.ts';
-import { figureViews, VIEW_NAME } from './views.ts';
+import { figureViews, stackViews, VIEW_GAP, VIEW_NAME, viewAspect, viewModels } from './views.ts';
 
 export interface SheetInput {
   file: FigureFile;
@@ -217,34 +217,63 @@ function transitionText(entry: FigureItem, names: Map<string, string>): string {
   return `<p class="meta">Overgange: ${escape(parts.join(' · '))}</p>`;
 }
 
-/** The card's figure as the app draws it (figure.css): px per figure unit, for the marks' text. */
-const CARD = { width: 382, height: 150, tall: [185, 214], two: [187, 190] } as const;
+/**
+ * The card's figure as the app draws it (figure.css): one view 382 × 152 px, a standing one 183 ×
+ * 216 px beside its phases, and two views 192 px high side by side or over each other (D60).
+ */
+const CARD = { width: 382, height: 152, tall: [183, 216], two: 192 } as const;
 
-function cardScale(model: FigureModel, two: boolean): number {
-  const vw = model.box.x1 - model.box.x0 + 6;
-  const vh = model.box.y1 - model.box.y0 + 6;
-  if (two) return Math.min(CARD.two[0] / vw, CARD.two[1] / vh);
+/** A view's box as the card draws it: without the travel along the floor when the frame follows. */
+function cardBox(model: FigureModel): Box {
+  return model.travel && !model.fixed ? model.stillBox : model.box;
+}
+
+/** The size of a view's drawing on the card, in px. */
+function cardDrawing(models: readonly FigureModel[], i: number): { width: number; height: number } {
+  const model = models[i] as FigureModel;
+  if (models.length > 1) {
+    const aspects = models.map((m) => viewAspect(m));
+    return stackViews(aspects, CARD.width, CARD.two)
+      ? { width: CARD.width, height: Math.floor((CARD.two - VIEW_GAP) / 2) }
+      : { width: (CARD.width - VIEW_GAP) / 2, height: CARD.two };
+  }
   const still = model.stillBox;
   const tall = still.y1 - still.y0 > (still.x1 - still.x0) * 0.9;
   return tall
-    ? Math.min(CARD.tall[0] / vw, CARD.tall[1] / vh)
-    : Math.min(CARD.width / vw, CARD.height / vh);
+    ? { width: CARD.tall[0], height: CARD.tall[1] }
+    : { width: CARD.width, height: CARD.height };
+}
+
+/** Px per figure unit of a view on the card: the marks' text has its card size next to it. */
+function cardScale(model: FigureModel, card: { width: number; height: number }): number {
+  const box = cardBox(model);
+  return Math.min(card.width / (box.x1 - box.x0 + 6), card.height / (box.y1 - box.y0 + 6));
 }
 
 /**
  * A cell's drawing with the marks of its position on it: the shapes in the SVG and the text where the
- * app puts it (placeLabel), in the size it has on the card (18 px there), so a figure agent sees what
- * it covers. The text's size is estimated from its letters.
+ * app puts it (placeLabel), in the size and at most the width it has on the card (18 px there,
+ * wrapped there on at most two lines), so a figure agent sees what it covers. The text's size is
+ * estimated from its letters; a text of more than two lines stands on its own line over or under the
+ * body, as in the app (D60).
  */
-function drawing(box: Box, inner: string, marks: readonly MarkDraw[], font: number): string {
+function drawing(
+  box: Box,
+  inner: string,
+  marks: readonly MarkDraw[],
+  font: number,
+  widest: number,
+): string {
   const vx = box.x0 - 3;
   const top = box.y1 + 3;
   const { width, height } = size(box);
   const px = (p: Point): Point => [(p[0] - vx) * SCALE, (top - p[1]) * SCALE];
   const labels = marks.flatMap((m) => {
     if (!m.label) return [];
-    const w = m.label.text.length * 0.56 * font + 0.9 * font;
-    const h = 1.3 * font + 2;
+    const once = m.label.text.length * 0.56 * font + 0.9 * font;
+    const lines = Math.max(1, Math.ceil(once / widest));
+    const w = Math.min(once, widest);
+    const h = lines * 1.3 * font + 2;
     const [x, y] = placeLabel({
       width,
       height,
@@ -262,9 +291,11 @@ function drawing(box: Box, inner: string, marks: readonly MarkDraw[], font: numb
           }
         : null,
       body: m.body.map(([bx, by, r]) => [...px([bx, by]), r * SCALE] as const),
+      line: lines > 2,
     });
     return [
-      `<span class="mark" style="left:${x.toFixed(1)}px;top:${y.toFixed(1)}px;font-size:${font.toFixed(1)}px">${escape(m.label.text)}</span>`,
+      // As wide as on the card (at most the drawing there), even where the cell is narrower.
+      `<span class="mark" style="left:${x.toFixed(1)}px;top:${y.toFixed(1)}px;font-size:${font.toFixed(1)}px;width:max-content;max-width:${widest.toFixed(1)}px">${escape(m.label.text)}</span>`,
     ];
   });
   const shapes = svgBody(marks.flatMap((m) => m.prims));
@@ -282,6 +313,7 @@ function viewCells(
   where: string,
   mine: readonly Problem[],
   font: number,
+  widest: number,
 ): { cells: string[]; places: string[] } {
   const frame = model.frame;
   const names = new Map(movement.positions.map((p) => [p.id, p.name]));
@@ -302,7 +334,7 @@ function viewCells(
     const solved = model.solved[position.id];
     const angles = solved ? anglesText(solved) : '';
     const marks = stillMarks(model, position.id);
-    return `<div class="cell">${drawing(model.stillBox, inner, marks, font)}<p class="name">${escape(position.name)} <span>(${position.id})</span></p><p class="contacts">${escape(contacts)}</p>${angles ? `<p class="angles">${escape(angles)}</p>` : ''}${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div>`;
+    return `<div class="cell">${drawing(model.stillBox, inner, marks, font, widest)}<p class="name">${escape(position.name)} <span>(${position.id})</span></p><p class="contacts">${escape(contacts)}</p>${angles ? `<p class="angles">${escape(angles)}</p>` : ''}${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div>`;
   });
   // A transition's via: the pose the figure goes through on the way, checked like a keyframe. In
   // the middle of a half the other end names which via it is.
@@ -418,8 +450,7 @@ function figureSection(input: SheetInput, entry: FigureItem): string {
   const movement = movementFor(input.explain, entry.id, entry.movement);
   if (!movement) return '';
   const views = figureViews(entry);
-  const models = views.map((view) => buildModel(view, movement));
-  const two = views.length > 1;
+  const models = viewModels(entry, movement);
   const where = entry.movement ? `${entry.id} › ${entry.movement}` : entry.id;
   const mine = input.problems.filter((p) => p.where === where || p.where.startsWith(`${where} ›`));
   const names = new Map(movement.positions.map((p) => [p.id, p.name]));
@@ -441,8 +472,9 @@ function figureSection(input: SheetInput, entry: FigureItem): string {
       i === 0 && second
         ? mine.filter((p) => p.where !== second && !p.where.startsWith(`${second} ›`))
         : mine;
-    const font = 18 * (SCALE / cardScale(model, two));
-    const result = viewCells(view, model, movement, prefix, own, font);
+    const card = cardDrawing(models, i);
+    const scale = SCALE / cardScale(model, card);
+    const result = viewCells(view, model, movement, prefix, own, 18 * scale, card.width * scale);
     places.push(...result.places);
     const head =
       i === 0
@@ -513,7 +545,7 @@ section{border-top:2px solid var(--c-navy);padding:12px 0 16px}
 .phases{margin:8px 0 0}
 h3{font:600 18px/1.2 'Kanit',system-ui,sans-serif;color:var(--c-navy);margin:12px 0 2px}
 .draw{position:relative;line-height:0}
-.mark{position:absolute;padding:0 0.45em;border:1px solid var(--c-line);border-left:0.22em solid var(--c-red);border-radius:4px;background:var(--c-paper);color:var(--c-navy);font-weight:600;line-height:1.3;white-space:nowrap}
+.mark{position:absolute;padding:0 0.45em;border:1px solid var(--c-line);border-left:0.22em solid var(--c-red);border-radius:4px;background:var(--c-paper);color:var(--c-navy);font-weight:600;line-height:1.3;white-space:normal;box-sizing:border-box}
 .problem{margin:4px 0 0;color:var(--c-redDark);font-weight:600}
 .ok{color:var(--c-green);font-weight:600}
 </style></head><body><h1>Kontaktark · ${escape(input.file.subject)}</h1><p class="meta">${escape(input.source)} · ${drawn.length} ${drawn.length === 1 ? 'figur' : 'figurer'}${figures.length > drawn.length ? ` og ${figures.length - drawn.length} »like«` : ''} · ${count === 0 ? '<span class="ok">ingen problemer</span>' : `<span class="problem">${count} ${count === 1 ? 'problem' : 'problemer'}</span>`}</p><p class="legend">Blå pil: brystets retning. Ringe: kontakterne i forklaringen (blå = passer, rød = passer ikke). Under hver position: knæ- og albuevinklerne (180° = strakt, nær/fjern). Stiplet ramme: billedet midt i en bevægelse. Blå ramme: en overgangs via-pose. Rødt: markeringerne på positionen og pilen for den fase, der starter dér, med teksten i den størrelse, den har på kortet; under »Markeringer« står, hvornår hver vises. »Rigtigt« og »Forkert«: en typisk fejl og hvor meget den afviger (ring). Samme skala på alle figurer.</p>${sections.join('')}</body></html>`;
