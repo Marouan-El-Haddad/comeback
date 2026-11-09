@@ -63,6 +63,7 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 
 ### [~] P2 – Alle figurer i høj kvalitet (opgavens pakke 2)
 
+- Status: første omgang (stillinger og bevægelse) og anden omgang (vinkler, markeringer, fejlpar) hos 6 figuragenter, flettet i 196bb1e. Review i tre dele (`docs/reviews/nat3-p2-figurer-1.md`, `-2.md`, `-3.md`): 108 af 146 figurer godkendt, 38 afvist; 3 høje, 30 middel, 24 lave. Rettet af figuragenterne og trænerne og i motorrunde 2 (7a300af–2e0909b, D62), flettet i 2e0909b; opfølgningerne godkendte 138 af 146; de sidste 8 rettet af orkestratoren og G5 med reviewernes afprøvede værdier (a749ca1, 118ec40). Begrundet: legs.1 og legs.2 vises midlertidigt uden vinkel forfra (to vinkler gør split squat for lille i »Nu«, og sofaen kan ikke stå bag figuren forfra), og fejlparrene i neck.N1 og os.5 er fjernet, fordi forskellen ikke kan ses med hovedets model.
 - Agenter: `comeback-builder` × 6 parallelt på datafiler (ingen kodeændringer, ingen commits), med trænernes figurbrief fra P3 som input. Grupper:
   - P2.1 press, pull, backpack_row, shoulder
   - P2.2 legs, sl_rdl, calf, posterior, wallsit
@@ -83,6 +84,7 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 
 ### [~] P4 – Designløft (opgavens pakke 4)
 
+- Status: bygget 12:55 (2cddf14–d92a6e2, D59). Review `docs/reviews/nat3-p4-design.md`: 0 høje, 2 middel, 2 lave, alle rettet (3f2b7af–d5e9ad7, D61) plus dobbelttryk-spærren i passet (a307dab–f4597bf) og tjekket i »Opfølgning«; 4 nye lave (N1–N4) er åbne. Før- og efterbilleder i `screenshots/nat3-foer/` og `nat3-efter/`.
 - Agent: `comeback-builder`.
 - Mål: alle skærme gennemgået mod SPEC 5 og 6 og listen over forbudte mønstre: hierarki, den typografiske skala, luft, PDF'ens plakatidentitet, figuren som hovedperson og overgange, der viser, hvad der ændrede sig. Før- og efterbilleder af de vigtigste skærme (før = `main` ved NAT-3's start, 2894827).
 - Grønt: hele Playwright-suiten; skærmbilleder af alle skærme; kontrast, trykflader og tekststørrelser tjekket.
