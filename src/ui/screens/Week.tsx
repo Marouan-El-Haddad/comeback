@@ -80,10 +80,9 @@ export function WeekView({ model }: { model: Model }) {
           const isToday = d.date === today;
           const session = d.done ?? d.open;
           const item = d.kind ? movable(PROGRAM, state, d.date, today) : null;
-          // A session skipped and then moved away leaves nothing on its old day.
-          const skipped =
-            d.kind !== null &&
-            state.skipped.some((s) => s.forDate === d.date && s.reason === 'user');
+          // »– sprunget over« is the session's own: not another session skipped on the day, and
+          // not a session skipped and then moved away.
+          const skipped = item?.skipped ?? false;
           const from = item ? movedFrom(PROGRAM, state, item.kind, d.date) : null;
           const [weekdayName = '', ...rest] = formatLong(d.date).split(' ');
           const date = rest.join(' ');
@@ -91,8 +90,8 @@ export function WeekView({ model }: { model: Model }) {
           if (d.done?.status === 'green' || d.done?.status === 'travel') status = '✓ logget';
           else if (d.done?.status === 'yellow') status = '◐ gult';
           else if (d.done?.status === 'red') status = 'rødt';
-          else if (skipped) status = '– sprunget over';
           else if (d.open) status = 'i gang';
+          else if (skipped) status = '– sprunget over';
           else if (item?.missed) status = '– ikke logget';
           else if (from) status = `flyttet fra ${weekdayWord(from)}`;
           const chip =

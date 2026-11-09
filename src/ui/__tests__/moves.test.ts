@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { moveSession, PROGRAM } from '../../engine/index.ts';
 import { Log } from '../../engine/__tests__/helpers/log.ts';
+import type { State } from '../../engine/types.ts';
 import {
   canAct,
   dayRef,
   forgotten,
   motorGone,
   movable,
+  motorNote,
   movedFrom,
   optionName,
   optionNotes,
@@ -27,11 +29,11 @@ function onboarded() {
   return new Log().onboard({ date: '2026-11-08' });
 }
 
-const days = (item: ReturnType<typeof movable>, today: string) =>
+const days = (state: State, item: ReturnType<typeof movable>, today: string) =>
   (item?.options ?? []).map((o) => ({
     name: optionName(o, today),
     mode: o.mode,
-    notes: optionNotes(o),
+    notes: item ? optionNotes(PROGRAM, state, item, o, today) : [],
   }));
 
 describe('a forgotten session (SPEC 3.1)', () => {
@@ -45,12 +47,15 @@ describe('a forgotten session (SPEC 3.1)', () => {
     ]);
     const item = list[0] ?? null;
     expect(item && canAct(item)).toBe(true);
-    expect(days(item, WED)).toEqual([
+    expect(days(state, item, WED)).toEqual([
       { name: 'Kort version i dag', mode: 'short', notes: [] },
       {
         name: 'Torsdag 12. november',
         mode: 'full',
-        notes: ['Motoren udgår denne uge.', 'B skal efterlade dig frisk.'],
+        notes: [
+          'Motoren udgår denne uge – tag en valgfri rolig tur søndag.',
+          'B skal efterlade dig frisk.',
+        ],
       },
       // Saturday is the day after B on Friday.
       {
@@ -73,7 +78,7 @@ describe('a forgotten session (SPEC 3.1)', () => {
       ['motor', THU],
     ]);
     expect(dayRef(TUE, FRI)).toBe('tirsdag');
-    expect(days(friday[0] ?? null, FRI).map((d) => d.name)).toEqual([
+    expect(days(log.state(FRI), friday[0] ?? null, FRI).map((d) => d.name)).toEqual([
       'Kort version lørdag 14. november',
       'Søndag 15. november',
     ]);
@@ -141,7 +146,7 @@ describe('today’s and the week’s sessions (SPEC 3.1, 3.4)', () => {
     const log = onboarded();
     const item = movable(PROGRAM, log.state(TUE), TUE, TUE);
     expect(item).toMatchObject({ kind: 'A', date: TUE, missed: false, skipped: false });
-    expect(days(item, TUE).map((d) => d.name)).toEqual([
+    expect(days(log.state(TUE), item, TUE).map((d) => d.name)).toEqual([
       'Kort version onsdag 11. november',
       'Torsdag 12. november',
       'Kort version lørdag 14. november',
@@ -158,11 +163,25 @@ describe('today’s and the week’s sessions (SPEC 3.1, 3.4)', () => {
     const log = onboarded();
     log.catchUp(THU);
     const item = movable(PROGRAM, log.state(THU), TUE, THU);
-    expect(days(item, THU)[0]).toEqual({
+    expect(days(log.state(THU), item, THU)[0]).toEqual({
       name: 'I dag, torsdag 12. november',
       mode: 'full',
-      notes: ['Motoren udgår denne uge.', 'B skal efterlade dig frisk.'],
+      notes: [
+        'Motoren udgår denne uge – tag en valgfri rolig tur søndag.',
+        'B skal efterlade dig frisk.',
+      ],
     });
+    // With a holiday on Sunday no day is left for the calm run (ENGINE 5.9, rule 6).
+    log.push({ type: 'status_set', status: 'holiday', from: SUN, to: SUN }, THU);
+    const holiday = movable(PROGRAM, log.state(THU), TUE, THU);
+    expect(days(log.state(THU), holiday, THU)[0]?.notes).toEqual([
+      'Motoren udgår denne uge.',
+      'B skal efterlade dig frisk.',
+    ]);
+    expect(motorNote(SUN, SAT)).toBe(
+      'Motoren udgår denne uge – tag en valgfri rolig tur i morgen.',
+    );
+    expect(motorNote(THU, THU)).toBe('Motoren udgår denne uge – tag en valgfri rolig tur i dag.');
   });
 
   it('a moved session says where it came from, and that the motor drops when it took its day', () => {

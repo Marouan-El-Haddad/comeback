@@ -107,7 +107,7 @@ export function MoveForm(props: MoveFormProps) {
       onClick={move(option)}
     >
       <span class="move-day-name">{optionName(option, today)}</span>
-      {optionNotes(option).map((text) => (
+      {optionNotes(PROGRAM, model.state, item, option, today).map((text) => (
         <Fragment key={text}>
           {' '}
           <span class="move-day-note">{text}</span>

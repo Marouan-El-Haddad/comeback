@@ -5,6 +5,7 @@
 import {
   addDays,
   calendarWeek,
+  calmTourDay,
   formatLong,
   mondayOf,
   scheduleForWeek,
@@ -89,10 +90,11 @@ export function weekdayWord(date: ISODate): string {
   return formatLong(date).split(' ')[0] ?? '';
 }
 
-/** »i dag«, »i går« or the weekday (»tirsdag«). */
+/** »i dag«, »i går«, »i morgen« or the weekday (»tirsdag«). */
 export function dayRef(date: ISODate, today: ISODate): string {
   if (date === today) return 'i dag';
   if (date === addDays(today, -1)) return 'i går';
+  if (date === addDays(today, 1)) return 'i morgen';
   return weekdayWord(date);
 }
 
@@ -103,10 +105,35 @@ export function optionName(option: MoveOption, today: ISODate): string {
   return option.date === today ? `I dag, ${day}` : capitalize(day);
 }
 
-/** What the move costs, on its button (S-MOVE-01): the motor drops, B close to A. */
-export function optionNotes(option: MoveOption): string[] {
+/** »Motoren udgår denne uge – tag en valgfri rolig tur søndag.«, or without a day (ENGINE 5.9). */
+export function motorNote(calm: ISODate | null, today: ISODate): string {
+  return calm
+    ? `Motoren udgår denne uge – tag en valgfri rolig tur ${dayRef(calm, today)}.`
+    : 'Motoren udgår denne uge.';
+}
+
+/**
+ * What the move costs, on its button (S-MOVE-01): the motor drops – with the day of the optional
+ * calm run after the move (5.9 rule 1, S-MOVE-06) – and B close to A.
+ */
+export function optionNotes(
+  program: Program,
+  state: State,
+  item: Movable,
+  option: MoveOption,
+  today: ISODate,
+): string[] {
   const notes: string[] = [];
-  if (option.motorDropped) notes.push('Motoren udgår denne uge.');
+  if (option.motorDropped) {
+    const move = {
+      kind: item.kind,
+      fromDate: item.date,
+      toDate: option.date,
+      short: option.mode === 'short',
+    };
+    const after = { ...state, moves: [...state.moves, move] };
+    notes.push(motorNote(calmTourDay(program, after, option.date, today), today));
+  }
   if (option.warning) notes.push(`${option.warning}.`);
   return notes;
 }

@@ -7,6 +7,7 @@ import type { ComponentChildren } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import {
   addDays,
+  calmTourDay,
   daysBetween,
   formatLong,
   getStep,
@@ -31,6 +32,7 @@ import {
   dayRef,
   forgotten,
   motorGone,
+  motorNote,
   movable,
   movedFrom,
   weekdayWord,
@@ -104,11 +106,13 @@ function blockLine(block: BlockPlan): BlockLine {
   return { name, dose: `${block.sets} × ${block.target}${unit}${per}${measure}` };
 }
 
-function dayLine(day: DayPlan): string {
+/** A day in »I morgen« and »Resten af ugen«; `calm` is the day of the optional calm run (D66). */
+function dayLine(day: DayPlan, calm: ISODate | null): string {
   if (day.red) return 'Syg: Open & Strong og en gåtur';
   if (day.kind) return SESSION_NAME[day.kind] + (day.short ? ' · kort version' : '');
   if (day.club.day)
     return day.club.closed ? '4–5 kamp-runder hjemme' : `Muay Thai ${day.club.time ?? ''}`.trim();
+  if (day.date === calm) return 'Valgfri rolig tur';
   if (weekday(day.date) === 7) return 'Fri gåtur · Open & Strong valgfri';
   return 'Hviledag';
 }
@@ -219,6 +223,8 @@ export function Today(props: {
   const openSunday = () => sunday && open({ kind: 'sunday', sunday: sunday.sunday });
   // Today's session too (D64).
   const todayMove = movable(PROGRAM, state, today, today);
+  // Moves took the week's motor: the optional calm run on the first free day (ENGINE 5.9, D66).
+  const calm = calmTourDay(PROGRAM, state, today, today);
   const openMove = (m: Movable) => () => open({ kind: 'move', session: m.kind, date: m.date });
 
   return (
@@ -297,6 +303,13 @@ export function Today(props: {
         <SundayCard due={sunday} state={state} onOpen={openSunday} />
       )}
 
+      {calm === today && (
+        <p class="hint" data-testid="calm-tour">
+          Valgfri rolig tur i dag: motoren udgår denne uge, så tag en rolig tur i tale-tempo, hvis
+          du kan.
+        </p>
+      )}
+
       <MainCard
         plan={plan}
         startDate={state.startDate}
@@ -325,7 +338,7 @@ export function Today(props: {
         </button>
       </div>
 
-      <p class="tomorrow">I morgen: {dayLine(tomorrow)}</p>
+      <p class="tomorrow">I morgen: {dayLine(tomorrow, calm)}</p>
 
       {rest.length > 1 && (
         <details class="rest-of-week">
@@ -333,7 +346,7 @@ export function Today(props: {
           <ul>
             {rest.slice(1).map((d) => (
               <li key={d.date}>
-                {capitalize(formatLong(d.date).split(' ')[0] ?? '')}: {dayLine(d)}
+                {capitalize(formatLong(d.date).split(' ')[0] ?? '')}: {dayLine(d, calm)}
               </li>
             ))}
           </ul>
@@ -419,7 +432,9 @@ function MissedCard(props: {
         today,
       ),
     ]);
-    props.onSkipped(`✓ ${name} ${when} er sprunget over.`);
+    // Skipped, it can still be moved from Uge while the week has a day for it (D64, D66).
+    const still = item.options.length > 0 ? ' Du kan stadig flytte passet under Uge.' : '';
+    props.onSkipped(`✓ ${name} ${when} er sprunget over.${still}`);
   });
   return (
     <div class="card life-card" data-testid="missed-card">
@@ -733,7 +748,9 @@ function MainCard({
     plan.short
       ? `Kort version: 30 min med opvarmning, par 1 og 2 – om morgenen, før ${clubName}.`
       : '',
-    from && motorGone(PROGRAM, state, plan.date) ? 'Motoren udgår denne uge.' : '',
+    from && motorGone(PROGRAM, state, plan.date)
+      ? motorNote(calmTourDay(PROGRAM, state, plan.date, plan.date), plan.date)
+      : '',
   ].filter((n) => n !== '');
   return (
     <Card
