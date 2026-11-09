@@ -1,0 +1,165 @@
+{
+  "subject": "neck",
+  "figure": {
+    "id": "neck.N5",
+    "movement": "side",
+    "view": "front",
+    "props": [
+      {
+        "type": "bed",
+        "x": 8,
+        "width": 82,
+        "height": 26
+      }
+    ],
+    "highlight": ["neck"],
+    "keyframes": {
+      "stotte": {
+        "hip": [59.5, 33],
+        "torso": 1.53,
+        "head": 0,
+        "width": {
+          "shoulders": 16,
+          "hips": 12
+        },
+        "arms": {
+          "near": {
+            "joint": [81, 28],
+            "end": [95.5, 25.2],
+            "tip": [102.5, 25.8]
+          },
+          "far": {
+            "joint": [73.5, 44.3],
+            "end": [59.5, 41.5]
+          }
+        },
+        "legs": {
+          "near": {
+            "to": [17.5, 29.6],
+            "bend": 1,
+            "upper": 21.72,
+            "lower": 20.82
+          },
+          "far": {
+            "to": [17.5, 35.4],
+            "bend": -1,
+            "upper": 21.6,
+            "lower": 20.7
+          }
+        }
+      },
+      "hold": {
+        "hip": [59.5, 33],
+        "torso": 1.53,
+        "head": 0,
+        "width": {
+          "shoulders": 16,
+          "hips": 12
+        },
+        "arms": {
+          "near": {
+            "joint": [81.5, 29.3],
+            "end": [73, 27.6],
+            "tip": [66.5, 27.2]
+          },
+          "far": {
+            "joint": [75, 40],
+            "end": [78, 27.5]
+          }
+        },
+        "legs": {
+          "near": {
+            "to": [17.5, 29.6],
+            "bend": 1,
+            "upper": 21.72,
+            "lower": 20.82
+          },
+          "far": {
+            "to": [17.5, 35.4],
+            "bend": -1,
+            "upper": 21.6,
+            "lower": 20.7
+          }
+        }
+      }
+    },
+    "transitions": [
+      {
+        "from": "stotte",
+        "to": "hold",
+        "via": {
+          "hip": [59.5, 33],
+          "torso": 1.53,
+          "head": 0,
+          "width": {
+            "shoulders": 16,
+            "hips": 12
+          },
+          "arms": {
+            "near": {
+              "joint": [85.3, 33.5],
+              "end": [81, 41],
+              "tip": [78, 46.2]
+            },
+            "far": {
+              "joint": [74.25, 42.15],
+              "end": [68.75, 34.5]
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [17.5, 29.6],
+              "bend": 1,
+              "upper": 21.72,
+              "lower": 20.82
+            },
+            "far": {
+              "to": [17.5, 35.4],
+              "bend": -1,
+              "upper": 21.6,
+              "lower": 20.7
+            }
+          }
+        }
+      },
+      {
+        "from": "hold",
+        "to": "stotte",
+        "via": {
+          "hip": [59.5, 33],
+          "torso": 1.53,
+          "head": 0,
+          "width": {
+            "shoulders": 16,
+            "hips": 12
+          },
+          "arms": {
+            "near": {
+              "joint": [85.3, 33.5],
+              "end": [81, 41],
+              "tip": [78, 46.2]
+            },
+            "far": {
+              "joint": [74.25, 42.15],
+              "end": [68.75, 34.5]
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [17.5, 29.6],
+              "bend": 1,
+              "upper": 21.72,
+              "lower": 20.82
+            },
+            "far": {
+              "to": [17.5, 35.4],
+              "bend": -1,
+              "upper": 21.6,
+              "lower": 20.7
+            }
+          }
+        }
+      }
+    ]
+  }
+}

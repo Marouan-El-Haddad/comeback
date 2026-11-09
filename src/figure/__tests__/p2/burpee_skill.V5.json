@@ -1,0 +1,164 @@
+{
+  "subject": "burpee_skill",
+  "figure": {
+    "id": "burpee_skill.V5",
+    "view": "side",
+    "facing": 1,
+    "props": [],
+    "highlight": ["near.thigh"],
+    "keyframes": {
+      "stand": {
+        "hip": [52.01, 48.3],
+        "torso": 90,
+        "head": 0,
+        "arms": {
+          "near": {
+            "to": [53.51, 47.14]
+          },
+          "far": {
+            "to": [52.61, 47.11]
+          }
+        },
+        "legs": {
+          "near": {
+            "to": [52.74, 3.6],
+            "tip": [59.94, 0.3]
+          },
+          "far": {
+            "to": [38.44, 9.5],
+            "tip": -90
+          }
+        }
+      },
+      "squat": {
+        "hip": [42.55, 18.51],
+        "torso": 25,
+        "head": 0,
+        "arms": {
+          "near": {
+            "to": [69.04, 0]
+          },
+          "far": {
+            "to": [70.44, 0]
+          }
+        },
+        "legs": {
+          "near": {
+            "to": [52.74, 3.6],
+            "tip": [59.94, 0.3]
+          },
+          "far": {
+            "to": [-3.35, 7.5],
+            "tip": 200
+          }
+        }
+      },
+      "plank": {
+        "hip": [43.88, 20.44],
+        "torso": 21,
+        "head": -4,
+        "arms": {
+          "near": {
+            "to": [69.04, 0]
+          },
+          "far": {
+            "to": [70.44, 0]
+          }
+        },
+        "legs": {
+          "near": {
+            "to": [0, 3.6],
+            "tip": [3.4, 0.3]
+          },
+          "far": {
+            "to": [-1.96, 9],
+            "tip": 200
+          }
+        }
+      },
+      "bottom": {
+        "hip": [47.13, 5.3],
+        "torso": -1.72,
+        "head": 20,
+        "arms": {
+          "near": {
+            "to": [69.04, 0],
+            "upper": 12.5
+          },
+          "far": {
+            "to": [70.44, 0],
+            "upper": 12.5
+          }
+        },
+        "legs": {
+          "near": {
+            "to": [0, 3.6],
+            "tip": [3.4, 0.3]
+          },
+          "far": {
+            "to": [0.08, 9],
+            "tip": 200
+          }
+        }
+      }
+    },
+    "transitions": [
+      {
+        "from": "squat",
+        "to": "plank",
+        "lift": ["near.foot"],
+        "via": {
+          "hip": [39.6, 33.6],
+          "torso": -5,
+          "head": -4,
+          "arms": {
+            "near": {
+              "to": [69.04, 0]
+            },
+            "far": {
+              "to": [70.44, 0]
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [20, 12],
+              "tip": -125
+            },
+            "far": {
+              "to": [-5, 20],
+              "tip": 200
+            }
+          }
+        }
+      },
+      {
+        "from": "plank",
+        "to": "squat",
+        "lift": ["near.foot"],
+        "via": {
+          "hip": [40, 36.2],
+          "torso": -10,
+          "head": -4,
+          "arms": {
+            "near": {
+              "to": [69.04, 0]
+            },
+            "far": {
+              "to": [70.44, 0]
+            }
+          },
+          "legs": {
+            "near": {
+              "to": [40, 12],
+              "tip": -90
+            },
+            "far": {
+              "to": [-4, 22],
+              "tip": 200
+            }
+          }
+        }
+      }
+    ]
+  }
+}
