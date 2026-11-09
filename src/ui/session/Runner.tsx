@@ -68,7 +68,7 @@ import {
   upcomingOf,
   type Upcoming,
 } from './outline.ts';
-import { RUN_KEY, type RunRequest, type RunState } from './resume.ts';
+import { readRun, writeRun, type RunRequest, type RunState } from './resume.ts';
 import {
   buildSteps,
   firstNotLogged,
@@ -172,7 +172,7 @@ export function Runner({
   useModel(model);
   useSessionStyle();
   const [run, setRun] = useState<RunState>(() => {
-    const saved = readLocal<RunState>(RUN_KEY);
+    const saved = readRun(model.sim !== null);
     // Resume only the same session: same day, kind and world (a time-machine run never comes
     // back in the real app), and its session still open in the log.
     const open =
@@ -289,11 +289,11 @@ export function Runner({
   const hosts = useMemo(() => introHosts(steps), [steps]);
 
   // Saved after every step with what the step is, so the session resumes at the same step after
-  // the app was closed, also in a later version (D54).
+  // the app was closed, also in a later version (D54); in the time machine only in memory (D57).
   useEffect(() => {
-    writeLocal(
+    writeRun(
+      run.sim,
       run.phase === 'run' ? { ...run, stepKey: stepKey(steps, run.stepIndex) } : run,
-      RUN_KEY,
     );
   }, [run, steps]);
 
@@ -361,7 +361,7 @@ export function Runner({
 
   const finish = async (aborted: boolean) => {
     if (!run.sessionId) {
-      writeLocal(null, RUN_KEY);
+      writeRun(run.sim, null);
       onClose();
       return;
     }
@@ -374,7 +374,7 @@ export function Runner({
   };
 
   const close = () => {
-    writeLocal(null, RUN_KEY);
+    writeRun(run.sim, null);
     onClose();
   };
 

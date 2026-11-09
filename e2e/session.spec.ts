@@ -825,6 +825,39 @@ test('et dobbelttryk på introkortets »Luk« logger og springer intet over (D57
   await expect(page.getByRole('heading', { name: 'Hvordan føltes trinnet?' })).toHaveCount(0);
 });
 
+test('tidsmaskinen skriver aldrig over et rigtigt pas, der holder pause (D57)', async ({
+  page,
+}) => {
+  await stillFigures(page);
+  await openApp(page, '2026-11-17');
+  await onboard(page);
+  // A real session holds a pause in the warm-up, before it is started in the log.
+  await startSession(page);
+  await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+  await closeIntro(page);
+  await page.clock.runFor(121_000);
+  await expect(page.locator('.session-title')).toHaveText('Opvarmning · 2/4');
+  await page.getByTestId('session-pause').click();
+  const saved = await page.evaluate(() => localStorage.getItem('comeback.run'));
+  expect(JSON.parse(saved ?? '{}')).toMatchObject({ phase: 'pre', preIndex: 1, sim: false });
+
+  // In the time machine: the motor from »Dagens pas« to the summary.
+  await startSimulation(page, '2026-11-19');
+  await startSession(page);
+  await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+  await page.getByRole('button', { name: 'Start uret' }).click();
+  await page.clock.runFor(36 * 60_000);
+  await page.getByTestId('finish').click();
+  await page.getByTestId('done').click();
+  expect(await page.evaluate(() => localStorage.getItem('comeback.run'))).toBe(saved);
+
+  // Back in the real world the session goes on at the same item of the warm-up.
+  await page.getByTestId('sim-exit').click();
+  await expect(page.locator('.banner.sim')).toHaveCount(0);
+  await page.getByTestId('start-session').click();
+  await expect(page.locator('.session-title')).toHaveText('Opvarmning · 2/4');
+});
+
 test('»Lettere variant i dag« efter skarp smerte på trin 1 (N3) @date', async ({ page }) => {
   await stillFigures(page);
   await openApp(page, '2026-11-06');

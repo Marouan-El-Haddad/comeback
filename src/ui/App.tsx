@@ -14,7 +14,7 @@ import { More, type MorePage } from './screens/More.tsx';
 import { Onboarding } from './screens/Onboarding.tsx';
 import { Today } from './screens/Today.tsx';
 import { WeekView } from './screens/Week.tsx';
-import { resumableRun, type RunRequest } from './session/resume.ts';
+import { forgetSimRun, resumableRun, type RunRequest } from './session/resume.ts';
 import { noteScreen } from './startup.ts';
 import { applyUpdate, onSwChange, swStatus } from './sw.ts';
 
@@ -48,13 +48,15 @@ export function App({ model }: { model: Model }) {
 
   useEffect(() => onSwChange(() => setSw((n) => n + 1)), []);
   // A session belongs to its world. When the time machine starts or ends while a session holds a
-  // pause under the tabs, the session is let go here; it waits in the log, and I dag's »Fortsæt
-  // passet« takes it up again in its own world (D53).
+  // pause under the tabs, the session is let go here; it waits in the log and in `comeback.run`,
+  // which the time machine never writes (D57), and I dag's »Fortsæt passet« takes it up again at
+  // the same step in its own world (D53).
   const world = model.sim !== null;
   const lastWorld = useRef(world);
   useEffect(() => {
     if (lastWorld.current === world) return;
     lastWorld.current = world;
+    forgetSimRun();
     setRun(null);
     setAway(false);
   }, [world]);
