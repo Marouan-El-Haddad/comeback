@@ -32,8 +32,7 @@
           }
         }
       },
-      "marks": [{ "cue": "Blidt tryk", "at": "tuck", "point": "head", "place": "above" }],
-      "faults": [{ "mistake": 1, "at": "tuck", "wrong": { "head": -45.24, "nod": 53.94 } }]
+      "marks": [{ "cue": "Blidt tryk", "at": "tuck", "point": [7.8, 0.3], "place": "above" }]
     },
     {
       "id": "neck.N2",
@@ -76,7 +75,7 @@
           }
         }
       },
-      "marks": [{ "cue": "Kun 2 cm", "at": "lift", "point": "head", "place": "above" }],
+      "marks": [{ "cue": "Kun 2 cm", "at": "lift", "point": [7.9, 1.1], "place": "above" }],
       "faults": [
         {
           "mistake": 2,
