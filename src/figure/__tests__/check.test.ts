@@ -185,7 +185,7 @@ describe('kontakt med stolen (rygsæk-row med én arm)', () => {
     const { figure, movement } = reference('pull', 'pull.1');
     (figure.keyframes.top as Pose).arms.far = { to: [69.5, 30] };
     expect(messages(figure, movement).join('\n')).toContain(
-      'pull.1 › top: hånden (én) skal røre stolen, men far.hand er 6 fra og near.hand er 35,5 fra',
+      'pull.1 › top: hånden (én) skal røre stolen, men far.hand er 6 fra og near.hand er 30,4 fra',
     );
   });
 
@@ -227,7 +227,7 @@ describe('M1: forkert facing fanges, også uden fødder og med spejlede fødder'
     const all = messages(figure, movement).join('\n');
     expect(all).toContain('near.legs mangler »tip«');
     expect(all).toMatch(
-      /far\.legs: låret står \d+° bag kroppen, mere end en hofte kan; tjek »facing«/,
+      /far\.legs: låret står [\d,]+° bag kroppen, mere end en hofte kan; tjek »facing«/,
     );
   });
 
@@ -241,7 +241,7 @@ describe('M1: forkert facing fanges, også uden fødder og med spejlede fødder'
         }
       }
     }
-    expect(messages(figure, movement).join('\n')).toMatch(/låret står \d+° bag kroppen/);
+    expect(messages(figure, movement).join('\n')).toMatch(/låret står [\d,]+° bag kroppen/);
   });
 
   test('en rygsæk i gulvet fanges', () => {
@@ -407,7 +407,7 @@ describe('»via« tjekkes som en position (H2 i P1a-reviewet)', () => {
     const { figure, movement } = reference('burpee_emom', 'burpee_emom.E1');
     const via = figure.transitions?.find((t) => t.from === 'squat')?.via;
     if (!via) throw new Error('ingen via');
-    via.hip = [39.6, 26];
+    via.hip = [39.6, 14];
     const all = messages(figure, movement).join('\n');
     expect(all).toContain('via squat–chest: far.knee rører gulvet');
     expect(all).toMatch(
@@ -419,7 +419,7 @@ describe('»via« tjekkes som en position (H2 i P1a-reviewet)', () => {
 describe('H3: en via måles mod de to rigtige positioner (opfølgningen på P1a-reviewet)', () => {
   const explain = read<ExplainFile>('explain', 'warmup');
   const spiderman = movementFor(explain, 'warmup.2', 'spiderman');
-  /** The spiderman of src/figure/__tests__/p2/ as it was before H3: its via bends both arms 39°. */
+  /** The spiderman of the instruction to P2 as it was before H3: its via bends both arms 39°. */
   const before = (
     JSON.parse(
       readFileSync(
@@ -435,7 +435,7 @@ describe('H3: en via måles mod de to rigtige positioner (opfølgningen på P1a-
     );
   };
 
-  test('spidermanen fra p2/ før H3: albuerne bøjer i via’en og undervejs, selv om armene er strakte i planke og udfald', () => {
+  test('spidermanen fra anvisningen til P2 før H3: albuerne bøjer i via’en og undervejs, selv om armene er strakte i planke og udfald', () => {
     const all = check(before).join('\n');
     expect(all).toMatch(
       /warmup\.2 › spiderman › via planke–udfald: (near|far)\.arms: albuen bøjer [\d,]+° mellem to strakte positioner/,
@@ -794,21 +794,18 @@ describe('D58: stilstand, markeringer, fejlpar og den anden vinkel i tjekket', (
 });
 
 describe('D60: tjekket læser landingen, og et led kan forkortes mere (reviewet af P1b)', () => {
-  /** The figure agents' bounds from P2: keyframes on the spot, 64 forward with `advance`. */
+  /** The bounds as the figure agents drew them in P2: keyframes on the spot, 64 forward. */
   const bounds = (): { figure: FigureItem; movement: OwnMovement } => {
-    const tried = JSON.parse(
-      readFileSync(
-        join(process.cwd(), 'src', 'figure', '__tests__', 'p2', 'power_legs.6.bounds.json'),
-        'utf8',
-      ),
-    ) as { figure: FigureItem };
+    const figure = read<FigureFile>('figures', 'power_legs').figures.find(
+      (f) => f.id === 'power_legs.6' && f.movement === 'bounds',
+    );
     const movement = movementFor(
       read<ExplainFile>('explain', 'power_legs'),
       'power_legs.6',
       'bounds',
     );
-    if (!movement) throw new Error('bounds mangler');
-    return { figure: structuredClone(tried.figure), movement: structuredClone(movement) };
+    if (!figure || 'like' in figure || !movement) throw new Error('bounds mangler');
+    return { figure: structuredClone(figure), movement: structuredClone(movement) };
   };
 
   test('M2: bounds, der lander på stedet, selv om teksten siger 1–1,5 m frem, fanges', () => {

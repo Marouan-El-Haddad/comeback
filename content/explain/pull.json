@@ -169,7 +169,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "På ryggen med hovedet under bordet og hænderne om kanten i skulderbredde. Armene er strakte og lodrette, og kroppen er en lige planke fra hælene til hovedet. Kun hælene rører gulvet.",
+              "text": "På ryggen med hovedet under bordet og hænderne om kanten i skulderbredde. Armene er strakte og næsten lodrette, og kroppen er en lige planke fra hælene til hovedet. Kun hælene rører gulvet.",
               "contacts": [
                 { "part": "hand", "on": "table" },
                 { "part": "heel", "on": "floor" }
@@ -355,7 +355,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "På ryggen under bordet med den ene hånd om kanten lige over skulderen og armen strakt. Den frie arm ligger langs siden. Kroppen er en lige planke fra hælene til hovedet, og kun hælene rører gulvet.",
+              "text": "På ryggen under bordet med den ene hånd om kanten næsten lige over skulderen og armen strakt. Den frie arm ligger langs siden. Kroppen er en lige planke fra hælene til hovedet, og kun hælene rører gulvet.",
               "contacts": [
                 { "part": "hand", "on": "table", "count": 1 },
                 { "part": "heel", "on": "floor" }
@@ -417,7 +417,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "På ryggen under bordet med den ene hånd om kanten lige over skulderen og armen strakt. Den frie arm ligger langs siden. Kroppen er en lige planke fra hælene til hovedet, og kun hælene rører gulvet.",
+              "text": "På ryggen under bordet med den ene hånd om kanten næsten lige over skulderen og armen strakt. Den frie arm ligger langs siden. Kroppen er en lige planke fra hælene til hovedet, og kun hælene rører gulvet.",
               "contacts": [
                 { "part": "hand", "on": "table", "count": 1 },
                 { "part": "heel", "on": "floor" }

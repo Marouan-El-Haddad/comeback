@@ -7,32 +7,44 @@
       "view": "side",
       "facing": 1,
       "props": [
-        { "type": "chair", "x": 66, "width": 24, "height": 24 },
+        { "type": "wall", "x": 86, "side": 1 },
+        { "type": "chair", "x": 62, "width": 24, "height": 24 },
         { "type": "backpack", "attach": "near.hand" }
       ],
       "highlight": ["near.upperArm", "near.forearm"],
       "keyframes": {
         "bottom": {
-          "hip": [30, 46],
-          "torso": 15,
+          "hip": [28.81, 41.51],
+          "torso": 20,
           "head": -2,
-          "arms": { "near": { "to": [59.58, 22.74] }, "far": { "to": [69.5, 24.2] } },
+          "arms": { "near": { "to": [57, 20.67] }, "far": { "to": [71, 24] } },
           "legs": {
-            "near": { "to": [10.5, 3.6], "tip": [17.7, 0.3] },
-            "far": { "to": [45, 3.6], "tip": [52.2, 0.3] }
+            "near": { "to": [3.3, 3.6], "tip": [10.5, 0.3] },
+            "far": { "to": [55, 3.6], "tip": [62.2, 0.3] }
           }
         },
         "top": {
-          "hip": [30, 46],
-          "torso": 15,
+          "hip": [28.81, 41.51],
+          "torso": 20,
           "head": -2,
-          "arms": { "near": { "to": [37, 44.5] }, "far": { "to": [69.5, 24.2] } },
+          "arms": { "near": { "to": [35.81, 39.51] }, "far": { "to": [71, 24] } },
           "legs": {
-            "near": { "to": [10.5, 3.6], "tip": [17.7, 0.3] },
-            "far": { "to": [45, 3.6], "tip": [52.2, 0.3] }
+            "near": { "to": [3.3, 3.6], "tip": [10.5, 0.3] },
+            "far": { "to": [55, 3.6], "tip": [62.2, 0.3] }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "near.elbow", "phase": 1, "offset": [0, 0] },
+        { "cue": "Albuen mod hoften", "at": "top", "point": "near.elbow", "place": "above" }
+      ],
+      "faults": [
+        {
+          "mistake": 2,
+          "at": "top",
+          "wrong": { "arms": { "near": { "joint": [57, 59.82], "end": [56.5, 44.97] } } }
+        }
+      ]
     }
   ]
 }

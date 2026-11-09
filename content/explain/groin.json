@@ -111,7 +111,7 @@
             {
               "id": "down",
               "name": "Nede",
-              "text": "Liggende på siden med underarmen i gulvet og albuen under skulderen. Det øverste knæ hviler på sofakanten med underbenet på sædet. Hoften og det nederste ben ligger i gulvet, og den øverste hånd er på hoften.",
+              "text": "Liggende på siden på underarmen med albuen omtrent under skulderen. Øverste knæ og underben på sofaen. Hoften og det nederste ben i gulvet, øverste hånd på hoften.",
               "contacts": [
                 { "part": "side", "on": "floor" },
                 { "part": "forearm", "on": "floor", "count": 1 },
@@ -187,7 +187,7 @@
             {
               "id": "dip",
               "name": "Hoften nede",
-              "text": "Som planken, men hoften er sænket mod gulvet, til den er en håndsbredde over det. Albuen er stadig under skulderen, det øverste knæ og underben ligger på sofaen, og det nederste ben hænger frit.",
+              "text": "Som planken, men hoften er sænket, til den er en håndsbredde over gulvet. Albuen er blevet, hvor den stod, omtrent under skulderen. Øverste knæ og underben ligger på sofaen, og det nederste ben hænger frit.",
               "contacts": [
                 { "part": "forearm", "on": "floor", "count": 1 },
                 { "part": "knee", "on": "sofa", "count": 1 },
@@ -245,7 +245,7 @@
             {
               "id": "down",
               "name": "Nede",
-              "text": "Liggende på siden med underarmen i gulvet og albuen under skulderen. Indersiden af den øverste fod hviler på sofakanten med strakt knæ. Hoften og det nederste ben ligger i gulvet, og den øverste hånd er på hoften.",
+              "text": "Liggende på siden på underarmen med albuen omtrent under skulderen. Indersiden af øverste fod på sofakanten, knæet strakt. Hoften og nederste ben i gulvet, øverste hånd på hoften.",
               "contacts": [
                 { "part": "side", "on": "floor" },
                 { "part": "forearm", "on": "floor", "count": 1 },

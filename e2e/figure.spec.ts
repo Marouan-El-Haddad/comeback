@@ -333,7 +333,7 @@ test('reduceret bevægelse med fem positioner: højst tre stillbilleder pr. ræk
 // ---------------------------------------------------------------------------------------------
 // Views, marks and typical mistakes (docs/SPEC.md 3.2 and 3.8, DECISIONS.md D58): the examples
 // press.1 (arrows, »Én planke« and the hanging hip), power_legs.1 (the squat jump from the side and
-// the front with »Knæ over tæer«) and wallsit.W1 (90° at the knee).
+// the front with the guide line »Over tæerne«) and wallsit.W1 (90° at the knee).
 // ---------------------------------------------------------------------------------------------
 
 /** The text of the mark shown now in a view, or null when none is shown. */
@@ -366,7 +366,7 @@ test('to vinkler: squat jumpet fra siden og forfra på samme ur, med navnene ove
   await expect(c.locator('.card-figure .figure-phases')).toHaveCount(1);
   await expect(c.locator('.card-figure .figure-stage')).toHaveAttribute(
     'aria-label',
-    /Tegnet fra siden og forfra\. Markeringer: i »Sæt dig ned« en pil .* ved hoften; forfra ved Landing »Knæ over tæer« ved knæet\.$/,
+    /Tegnet fra siden og forfra\. Markeringer: i »Sæt dig ned« en pil .* ved hoften; forfra ved Landing en lige linje fra knæet til tæerne: »Over tæerne«\.$/,
   );
   await pauseClock(page);
   await untilPhase(page, 'Rejs dig');
@@ -390,10 +390,10 @@ test('to vinkler: squat jumpet fra siden og forfra på samme ur, med navnene ove
   expect(await markDrawn(figure, 0)).toBe(true);
   expect(await markText(figure, 0)).toBeNull();
   await page.screenshot({ path: 'screenshots/kort-figur-vinkler.png', scale: 'css' });
-  // »Frys 2 sek« at the landing: »Knæ over tæer« by the front view's knee, at 18 px.
+  // »Frys 2 sek« at the landing: »Over tæerne« along the front view's shin, at 18 px.
   await untilPhase(page, 'Frys 2 sek');
   await page.clock.runFor(200);
-  expect(await markText(figure, 1)).toBe('Knæ over tæer');
+  expect(await markText(figure, 1)).toBe('Over tæerne');
   expect(await markDrawn(figure, 0)).toBe(false);
   expect(await a11yProblems(page, '.exercise-card', SESSION_RULES)).toEqual([]);
   await page.screenshot({ path: 'screenshots/kort-figur-vinkler-cue.png', scale: 'css' });
@@ -511,10 +511,10 @@ test('reduceret bevægelse: stillbillederne har deres markeringer, og den anden 
   await expect(views).toHaveCount(2);
   await expect(c.locator('.card-figure .figure-view-name')).toHaveText(['Fra siden', 'Forfra']);
   const landing = views.nth(1).locator('.figure-still').filter({ hasText: 'Landing' });
-  await expect(landing.locator('.figure-mark')).toHaveText('Knæ over tæer');
+  await expect(landing.locator('.figure-mark')).toHaveText('Over tæerne');
   await expect(c.locator('.card-figure .figure-stills-all')).toHaveAttribute(
     'aria-label',
-    /Markeringer: .*»Knæ over tæer«/,
+    /Markeringer: .*»Over tæerne«/,
   );
   await page.screenshot({ path: 'screenshots/kort-stillbilleder-vinkler.png', scale: 'css' });
 });
@@ -545,7 +545,7 @@ test('»Nu« i passet: begge vinkler og markeringen på sit tidspunkt (D52, D58)
   }
   await expect(phase).toHaveText('Frys 2 sek');
   await page.clock.runFor(200);
-  expect(await markText(figure, 1)).toBe('Knæ over tæer');
+  expect(await markText(figure, 1)).toBe('Over tæerne');
   // »Som planlagt« stays where it is (D33), and the text reads at 18 px and 7:1 (SPEC 6).
   await expect(page.getByTestId('as-planned')).toBeInViewport();
   expect(await a11yProblems(page, '.session', SESSION_RULES)).toEqual([]);

@@ -58,7 +58,7 @@
             {
               "id": "top",
               "name": "Oppe",
-              "text": "Hoften løftet, så skuldre, hofte og knæ er på en lige linje. Arbejdsbenets knæ er bøjet ca. 90° med underbenet lodret og hele foden i gulvet. Det frie ben er strakt i samme linje, og hoved, skuldre og arme ligger i gulvet.",
+              "text": "Hoften løftet, så skuldre, hofte og knæ er på en lige linje. Arbejdsbenets underben er lodret, knæet bøjet ca. 65° og hele foden i gulvet. Det frie ben er strakt i samme linje, og hoved, skuldre og arme ligger i gulvet.",
               "contacts": [
                 { "part": "shoulders", "on": "floor" },
                 { "part": "head", "on": "floor" },

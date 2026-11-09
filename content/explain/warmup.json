@@ -152,7 +152,7 @@
             {
               "id": "udfald",
               "name": "Udfald",
-              "text": "Venstre fod står fladt i gulvet uden for venstre hånd med knæet bøjet ca. 90° over foden. Højre ben er strakt bagud med knæet over gulvet og tæerne i gulvet. Begge hænder i gulvet inden for foden, hoften lav.",
+              "text": "Venstre fod står fladt i gulvet uden for venstre hånd med knæet dybt bøjet (ca. 70°) over foden. Højre ben er strakt bagud med knæet over gulvet og tæerne i gulvet. Begge hænder i gulvet inden for foden, hoften lav.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "foot", "on": "floor", "count": 1 },

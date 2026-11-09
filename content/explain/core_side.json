@@ -211,7 +211,7 @@
     {
       "id": "core_side.S4",
       "trains": "Siden af kroppen og skulderen, der bærer dig på én strakt arm, så du står stabilt, når du sparker og bliver presset i clinchen.",
-      "start": "Lig på siden med overkroppen løftet på strakt arm og hånden fladt i gulvet lige under skulderen. Benene strakte og fødderne oven på hinanden.",
+      "start": "Lig på siden med overkroppen løftet på strakt arm og hånden fladt i gulvet en håndsbredde længere fra fødderne end skulderen. Benene strakte og fødderne oven på hinanden.",
       "steps": [
         "Skub gulvet væk med hånden, og løft hoften, til hoved, hofte og fødder er på én linje.",
         "Stræk den øverste arm lodret op, og løft det øverste ben strakt op i en stjerne.",
@@ -246,7 +246,7 @@
             {
               "id": "down",
               "name": "Nede",
-              "text": "Liggende på siden med hoften i gulvet og overkroppen løftet på strakt arm, hånden fladt i gulvet lige under skulderen. Benene strakte og fødderne oven på hinanden. Den øverste hånd på hoften.",
+              "text": "Liggende på siden med hoften i gulvet og overkroppen løftet på strakt arm, hånden fladt i gulvet en håndsbredde længere fra fødderne end skulderen. Benene strakte og fødderne oven på hinanden. Den øverste hånd på hoften.",
               "contacts": [
                 { "part": "side", "on": "floor" },
                 { "part": "hand", "on": "floor", "count": 1 },

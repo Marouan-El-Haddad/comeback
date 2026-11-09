@@ -54,7 +54,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Albuerne bøjet ca. 90° og skråt bagud. Hovedet er lige over gulvet foran fingerspidserne, så hoved og hænder danner en trekant. Hoften er stadig højt over skuldrene, og benene er strakte med tæerne i gulvet.",
+              "text": "Albuerne er bøjet til ca. 60° og peger skråt bagud. Hovedet er lige over gulvet foran fingerspidserne, så hoved og hænder danner en trekant. Hoften er stadig højt over skuldrene, og benene er strakte med tæerne i gulvet.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "toes", "on": "floor" }

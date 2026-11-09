@@ -7,32 +7,44 @@
       "view": "side",
       "facing": 1,
       "props": [
-        { "type": "chair", "x": 66, "width": 24, "height": 24 },
+        { "type": "wall", "x": 86, "side": 1 },
+        { "type": "chair", "x": 62, "width": 24, "height": 24 },
         { "type": "backpack", "attach": "near.hand" }
       ],
       "highlight": ["near.upperArm", "near.forearm"],
       "keyframes": {
         "bottom": {
-          "hip": [30, 46],
-          "torso": 15,
+          "hip": [28.81, 41.51],
+          "torso": 20,
           "head": -2,
-          "arms": { "near": { "to": [59.58, 22.74] }, "far": { "to": [69.5, 24.2] } },
+          "arms": { "near": { "to": [57, 20.67] }, "far": { "to": [71, 24] } },
           "legs": {
-            "near": { "to": [10.5, 3.6], "tip": [17.7, 0.3] },
-            "far": { "to": [45, 3.6], "tip": [52.2, 0.3] }
+            "near": { "to": [3.3, 3.6], "tip": [10.5, 0.3] },
+            "far": { "to": [55, 3.6], "tip": [62.2, 0.3] }
           }
         },
         "top": {
-          "hip": [30, 46],
-          "torso": 15,
+          "hip": [28.81, 41.51],
+          "torso": 20,
           "head": -2,
-          "arms": { "near": { "to": [37, 44.5] }, "far": { "to": [69.5, 24.2] } },
+          "arms": { "near": { "to": [35.81, 39.51] }, "far": { "to": [71, 24] } },
           "legs": {
-            "near": { "to": [10.5, 3.6], "tip": [17.7, 0.3] },
-            "far": { "to": [45, 3.6], "tip": [52.2, 0.3] }
+            "near": { "to": [3.3, 3.6], "tip": [10.5, 0.3] },
+            "far": { "to": [55, 3.6], "tip": [62.2, 0.3] }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "near.elbow", "phase": 1, "offset": [0, 0] },
+        { "cue": "Albuen mod hoften", "at": "top", "point": "near.elbow", "place": "above" }
+      ],
+      "faults": [
+        {
+          "mistake": 2,
+          "at": "top",
+          "wrong": { "arms": { "near": { "joint": [57, 59.82], "end": [56.5, 44.97] } } }
+        }
+      ]
     },
     {
       "id": "pull.2",
@@ -67,7 +79,12 @@
             "far": { "to": [-4.67, 3.6], "tip": [-11.87, 0.3] }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "chest", "phase": 1, "offset": [-8, 0] },
+        { "cue": "Brystet mod kanten", "at": "top", "point": "chest", "place": "below" }
+      ],
+      "faults": [{ "mistake": 1, "at": "top", "wrong": { "hip": [17.6, 20.6], "torso": 13.48 } }]
     },
     {
       "id": "pull.3",
@@ -77,32 +94,36 @@
       "highlight": ["near.upperArm", "near.forearm"],
       "keyframes": {
         "bottom": {
-          "hip": [19.97, 8.15],
-          "torso": 6.28,
+          "hip": [14.52, 7.26],
+          "torso": 5.19,
           "head": 0,
           "arms": {
             "near": { "to": [39, 40.6], "tip": [42, 43.4] },
             "far": { "to": [38.6, 40.6], "tip": [41.6, 43.4] }
           },
           "legs": {
-            "near": { "to": [-26.77, 3], "tip": [-28.37, 10.3] },
-            "far": { "to": [-27.37, 3], "tip": [-28.97, 10.3] }
+            "near": { "to": [-32.38, 3], "tip": [-33.98, 10.3] },
+            "far": { "to": [-32.98, 3], "tip": [-34.58, 10.3] }
           }
         },
         "top": {
-          "hip": [16.74, 20.83],
-          "torso": 22.28,
-          "head": -24,
+          "hip": [11.29, 20.64],
+          "torso": 22,
+          "head": -22,
           "arms": {
             "near": { "to": [39, 40.6], "tip": [42, 43.4] },
             "far": { "to": [38.6, 40.6], "tip": [41.6, 43.4] }
           },
           "legs": {
-            "near": { "to": [-26.77, 3], "tip": [-28.37, 10.3] },
-            "far": { "to": [-27.37, 3], "tip": [-28.97, 10.3] }
+            "near": { "to": [-32.38, 3], "tip": [-33.98, 10.3] },
+            "far": { "to": [-32.98, 3], "tip": [-34.58, 10.3] }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "chest", "phase": 1, "offset": [-8, 0] },
+        { "line": ["near.foot", "head"], "cue": "Hæl til hoved", "at": "top", "place": "below" }
+      ]
     },
     {
       "id": "pull.4",
@@ -140,7 +161,16 @@
             "far": { "to": [-34.62, 27], "tip": [-36.22, 34.3] }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "chest", "phase": 1, "offset": [-8, 0] },
+        {
+          "line": ["near.foot", "shoulder"],
+          "cue": "Kroppen vandret",
+          "at": "top",
+          "place": "below"
+        }
+      ]
     },
     {
       "id": "pull.5",
@@ -175,7 +205,11 @@
             "far": { "to": [-24.92, 3], "tip": [-26.52, 10.3] }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "chest", "phase": 1, "offset": [-8, 0] },
+        { "cue": "Én arm trækker", "at": "top", "point": "near.elbow", "place": "above" }
+      ]
     },
     {
       "id": "pull.6",
@@ -185,33 +219,75 @@
       "highlight": ["near.upperArm", "near.forearm"],
       "keyframes": {
         "bottom": {
-          "hip": [19.97, 8.15],
-          "torso": 6.28,
+          "hip": [14.52, 7.26],
+          "torso": 5.19,
           "head": 0,
           "arms": {
             "near": { "to": [39, 40.6], "tip": [42, 43.4] },
-            "far": { "to": [19.47, 4.83] }
+            "far": { "to": [14.12, 2.88] }
           },
           "legs": {
-            "near": { "to": [-26.77, 3], "tip": [-28.37, 10.3] },
-            "far": { "to": [-27.37, 3], "tip": [-28.97, 10.3] }
+            "near": { "to": [-32.38, 3], "tip": [-33.98, 10.3] },
+            "far": { "to": [-32.98, 3], "tip": [-34.58, 10.3] }
           }
         },
         "top": {
-          "hip": [16.74, 20.83],
-          "torso": 22.28,
-          "head": -24,
+          "hip": [11.29, 20.64],
+          "torso": 22,
+          "head": -22,
           "arms": {
             "near": { "to": [39, 40.6], "tip": [42, 43.4] },
-            "far": { "to": [17.17, 17.5] }
+            "far": { "to": [12.17, 16.33] }
           },
           "legs": {
-            "near": { "to": [-26.77, 3], "tip": [-28.37, 10.3] },
-            "far": { "to": [-27.37, 3], "tip": [-28.97, 10.3] }
+            "near": { "to": [-32.38, 3], "tip": [-33.98, 10.3] },
+            "far": { "to": [-32.98, 3], "tip": [-34.58, 10.3] }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "chest", "phase": 1, "offset": [-8, 0] },
+        { "cue": "Hoften drejer ikke", "at": "top", "point": "hip", "place": "below" }
+      ]
     },
-    { "id": "pull.7", "like": "pull.6" }
+    {
+      "id": "pull.7",
+      "view": "side",
+      "facing": -1,
+      "props": [{ "type": "table", "x": 40, "width": 36, "height": 43 }],
+      "highlight": ["near.upperArm", "near.forearm"],
+      "keyframes": {
+        "bottom": {
+          "hip": [14.52, 7.26],
+          "torso": 5.19,
+          "head": 0,
+          "arms": {
+            "near": { "to": [39, 40.6], "tip": [42, 43.4] },
+            "far": { "to": [14.12, 2.88] }
+          },
+          "legs": {
+            "near": { "to": [-32.38, 3], "tip": [-33.98, 10.3] },
+            "far": { "to": [-32.98, 3], "tip": [-34.58, 10.3] }
+          }
+        },
+        "top": {
+          "hip": [11.29, 20.64],
+          "torso": 22,
+          "head": -22,
+          "arms": {
+            "near": { "to": [39, 40.6], "tip": [42, 43.4] },
+            "far": { "to": [12.17, 16.33] }
+          },
+          "legs": {
+            "near": { "to": [-32.38, 3], "tip": [-33.98, 10.3] },
+            "far": { "to": [-32.98, 3], "tip": [-34.58, 10.3] }
+          }
+        }
+      },
+      "marks": [
+        { "arrow": "chest", "phase": 1, "offset": [-8, 0] },
+        { "cue": "Brystet ved kanten", "at": "top", "point": "chest", "place": "below" }
+      ]
+    }
   ]
 }

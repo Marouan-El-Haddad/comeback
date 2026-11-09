@@ -4,363 +4,298 @@
   "figures": [
     {
       "id": "core_side.S1",
-      "view": "side",
-      "facing": 1,
+      "view": "front",
       "props": [],
       "highlight": ["torso"],
       "keyframes": {
         "down": {
-          "hip": [46.98, 5.5],
-          "torso": 4.78,
+          "hip": [-43.47, 9.87],
+          "torso": 144.19,
           "head": 0,
           "arms": {
-            "near": {
-              "joint": [70.88, 2.5],
-              "end": [84.07, 1]
-            },
-            "far": {
-              "to": [47.51, 11.16]
-            }
+            "near": { "to": [-45.27, 21.03], "bend": 1 },
+            "far": { "joint": [-75.71, 2.5], "end": [-83.71, 1.2] }
           },
           "legs": {
-            "near": {
-              "to": [0.03, 8.08],
-              "tip": [-1.38, 4.77]
-            },
-            "far": {
-              "to": [0, 3.6],
-              "tip": [-1.6, 0.3]
-            }
+            "near": { "to": [6.96, 11.6], "bend": 1 },
+            "far": { "to": [0, 3.6], "bend": -1 }
           }
         },
         "up": {
-          "hip": [46.13, 12.7],
-          "torso": 11.15,
+          "hip": [-43.89, 21.44],
+          "torso": 165.15,
           "head": 0,
           "arms": {
-            "near": {
-              "joint": [75.57, 2.5],
-              "end": [84.07, 1]
-            },
-            "far": {
-              "to": [46.03, 18.38]
-            }
+            "near": { "to": [-49.58, 31.23], "bend": 1 },
+            "far": { "joint": [-75.71, 2.5], "end": [-83.71, 1.2] }
           },
           "legs": {
-            "near": {
-              "to": [-0.66, 8.04],
-              "tip": [-1.55, 4.55]
-            },
-            "far": {
-              "to": [0, 3.6],
-              "tip": [-1.6, 0.3]
+            "near": { "to": [1.92, 10.85], "bend": 1 },
+            "far": { "to": [0, 3.6], "bend": -1 }
+          }
+        }
+      },
+      "marks": [
+        { "arrow": "hip", "phase": 1, "offset": [9, 0] },
+        { "cue": "Lige linje", "at": "up", "point": "hip", "place": "above" }
+      ],
+      "faults": [
+        {
+          "mistake": 1,
+          "at": "up",
+          "wrong": {
+            "hip": [-45.43, 15.64],
+            "torso": 153.84,
+            "spine": -3,
+            "arms": { "near": { "to": [-49.08, 26.35], "bend": 1 } },
+            "legs": {
+              "near": { "to": [3.06, 10.59], "bend": 1 },
+              "far": { "to": [-1.52, 3.81], "bend": -1 }
             }
           }
         }
-      }
+      ]
     },
     {
       "id": "core_side.S2",
-      "view": "side",
-      "facing": 1,
+      "view": "front",
       "props": [],
       "highlight": ["torso", "near.thigh"],
       "keyframes": {
         "plank": {
-          "hip": [46.13, 12.7],
-          "torso": 11.15,
+          "hip": [-43.89, 21.44],
+          "torso": 165.15,
           "head": 0,
           "arms": {
-            "near": {
-              "joint": [75.57, 2.5],
-              "end": [84.07, 1]
-            },
-            "far": {
-              "to": [46.03, 18.38]
-            }
+            "near": { "to": [-49.58, 31.23], "bend": 1 },
+            "far": { "joint": [-75.71, 2.5], "end": [-83.71, 1.2] }
           },
           "legs": {
-            "near": {
-              "joint": [22.25, 10.32],
-              "end": [-0.64, 8.04],
-              "tip": [-1.53, 4.55]
-            },
-            "far": {
-              "to": [0, 3.6],
-              "tip": [-1.6, 0.3]
-            }
+            "near": { "to": [1.92, 10.85], "bend": 1 },
+            "far": { "to": [0, 3.6], "bend": -1 }
           }
         },
         "leg_up": {
-          "hip": [46.13, 12.7],
-          "torso": 11.15,
+          "hip": [-43.89, 21.44],
+          "torso": 165.15,
           "head": 0,
           "arms": {
-            "near": {
-              "joint": [75.57, 2.5],
-              "end": [84.07, 1]
-            },
-            "far": {
-              "to": [46.03, 18.38]
-            }
+            "near": { "to": [-49.58, 31.23], "bend": 1 },
+            "far": { "joint": [-75.71, 2.5], "end": [-83.71, 1.2] }
           },
           "legs": {
-            "near": {
-              "joint": [24.26, 22.58],
-              "end": [3.3, 32.05],
-              "tip": [0.79, 29.47]
-            },
-            "far": {
-              "to": [0, 3.6],
-              "tip": [-1.6, 0.3]
+            "near": { "to": [3.03, 39.53], "bend": 1 },
+            "far": { "to": [0, 3.6], "bend": -1 }
+          }
+        }
+      },
+      "marks": [
+        { "arrow": "near.foot", "phase": 1, "offset": [-5, 0] },
+        { "arrow": "near.foot", "phase": 2, "offset": [-5, 0] }
+      ],
+      "faults": [
+        {
+          "mistake": 1,
+          "at": "leg_up",
+          "wrong": {
+            "hip": [-45.43, 15.64],
+            "torso": 153.84,
+            "spine": -3,
+            "arms": { "near": { "to": [-49.08, 26.35], "bend": 1 } },
+            "legs": {
+              "near": { "to": [2.6, 33.32], "bend": 1 },
+              "far": { "to": [-1.52, 3.81], "bend": -1 }
             }
           }
         }
-      }
+      ]
     },
     {
       "id": "core_side.S3",
-      "view": "side",
-      "facing": 1,
+      "view": "front",
       "props": [],
       "highlight": ["torso", "near.thigh"],
       "keyframes": {
         "down": {
-          "hip": [46.98, 5.5],
-          "torso": 4.78,
+          "hip": [-43.47, 9.87],
+          "torso": 144.19,
           "head": 0,
           "arms": {
-            "near": {
-              "joint": [70.88, 2.5],
-              "end": [84.07, 1]
-            },
-            "far": {
-              "to": [47.51, 11.16]
-            }
+            "near": { "to": [-45.27, 21.03], "bend": 1 },
+            "far": { "joint": [-75.71, 2.5], "end": [-83.71, 1.2] }
           },
           "legs": {
-            "near": {
-              "joint": [23.02, 6.82],
-              "end": [0.05, 8.08],
-              "tip": [-1.36, 4.77]
-            },
-            "far": {
-              "to": [0, 3.6],
-              "tip": [-1.6, 0.3]
-            }
+            "near": { "to": [6.96, 11.6], "bend": 1 },
+            "far": { "to": [0, 3.6], "bend": -1 }
           }
         },
         "plank": {
-          "hip": [46.13, 12.7],
-          "torso": 11.15,
+          "hip": [-43.89, 21.44],
+          "torso": 165.15,
           "head": 0,
           "arms": {
-            "near": {
-              "joint": [75.57, 2.5],
-              "end": [84.07, 1]
-            },
-            "far": {
-              "to": [46.03, 18.38]
-            }
+            "near": { "to": [-49.58, 31.23], "bend": 1 },
+            "far": { "joint": [-75.71, 2.5], "end": [-83.71, 1.2] }
           },
           "legs": {
-            "near": {
-              "joint": [22.25, 10.32],
-              "end": [-0.64, 8.04],
-              "tip": [-1.53, 4.55]
-            },
-            "far": {
-              "to": [0, 3.6],
-              "tip": [-1.6, 0.3]
-            }
+            "near": { "to": [1.92, 10.85], "bend": 1 },
+            "far": { "to": [0, 3.6], "bend": -1 }
           }
         },
         "star": {
-          "hip": [46.13, 12.7],
-          "torso": 11.15,
+          "hip": [-43.89, 21.44],
+          "torso": 165.15,
           "head": 0,
           "arms": {
-            "near": {
-              "joint": [75.57, 2.5],
-              "end": [84.07, 1]
-            },
-            "far": {
-              "to": [75.57, 49.52]
-            }
+            "near": { "to": [-70.07, 70.82], "bend": 1 },
+            "far": { "joint": [-75.71, 2.5], "end": [-83.71, 1.2] }
           },
           "legs": {
-            "near": {
-              "joint": [24.26, 22.58],
-              "end": [3.3, 32.05],
-              "tip": [0.79, 29.47]
-            },
-            "far": {
-              "to": [0, 3.6],
-              "tip": [-1.6, 0.3]
-            }
+            "near": { "to": [3.03, 39.53], "bend": 1 },
+            "far": { "to": [0, 3.6], "bend": -1 }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "near.hand", "phase": 2, "offset": [6, 0] },
+        { "cue": "Hoften højt", "at": "star", "point": "hip", "place": "below" }
+      ]
     },
     {
       "id": "core_side.S4",
-      "view": "side",
-      "facing": 1,
+      "view": "front",
       "props": [],
       "highlight": ["torso", "near.thigh"],
       "keyframes": {
         "down": {
-          "hip": [46.98, 5.5],
-          "torso": 4.78,
+          "hip": [-41.55, 7.56],
+          "torso": 115.27,
           "head": 0,
           "arms": {
-            "near": {
-              "to": [71.97, 0]
-            },
-            "far": {
-              "to": [47.51, 11.16]
-            }
+            "near": { "to": [-37.73, 18.21], "bend": 1 },
+            "far": { "to": [-72.13, -0.02], "bend": -1 }
           },
           "legs": {
-            "near": {
-              "joint": [23.02, 6.82],
-              "end": [0.05, 8.08],
-              "tip": [-1.36, 4.77]
-            },
-            "far": {
-              "to": [0, 3.6],
-              "tip": [-1.6, 0.3]
-            }
+            "near": { "to": [10.87, 11.6], "bend": 1 },
+            "far": { "to": [0, 3.6], "bend": -1 }
           }
         },
         "plank": {
-          "hip": [43.94, 20.34],
-          "torso": 20.86,
+          "hip": [-40.27, 28.56],
+          "torso": 155.49,
           "head": 0,
           "arms": {
-            "near": {
-              "to": [71.97, 0]
-            },
-            "far": {
-              "to": [42.88, 25.93]
-            }
+            "near": { "to": [-44.23, 39.16], "bend": 1 },
+            "far": { "to": [-72.13, -0.02], "bend": -1 }
           },
           "legs": {
-            "near": {
-              "joint": [20.8, 13.97],
-              "end": [-1.38, 7.87],
-              "tip": [-1.67, 4.28]
-            },
-            "far": {
-              "to": [0, 3.6],
-              "tip": [-1.6, 0.3]
-            }
+            "near": { "to": [3.11, 10.42], "bend": 1 },
+            "far": { "to": [0, 3.6], "bend": -1 }
           }
         },
         "star": {
-          "hip": [43.94, 20.34],
-          "torso": 20.86,
+          "hip": [-40.27, 28.56],
+          "torso": 155.49,
           "head": 0,
           "arms": {
-            "near": {
-              "to": [71.97, 0]
-            },
-            "far": {
-              "to": [71.97, 62.04]
-            }
+            "near": { "to": [-63.01, 82.07], "bend": 1 },
+            "far": { "to": [-72.13, -0.02], "bend": -1 }
           },
           "legs": {
-            "near": {
-              "joint": [20.72, 26.39],
-              "end": [-1.54, 32.2],
-              "tip": [-3.59, 29.23]
-            },
-            "far": {
-              "to": [0, 3.6],
-              "tip": [-1.6, 0.3]
-            }
+            "near": { "to": [9.02, 38.51], "bend": 1 },
+            "far": { "to": [0, 3.6], "bend": -1 }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "hip", "phase": 1, "offset": [9, 0] },
+        { "cue": "Under skulder", "at": "star", "point": "far.hand", "place": "left" }
+      ]
     },
     {
       "id": "core_side.S5",
-      "view": "top",
+      "view": "front",
       "props": [],
-      "highlight": ["torso", "near.thigh"],
+      "highlight": ["torso"],
       "keyframes": {
         "star": {
-          "hip": [0, 0],
-          "torso": 0,
+          "hip": [-43.89, 21.44],
+          "torso": 165.15,
           "head": 0,
           "arms": {
-            "near": null,
-            "far": {
-              "joint": [31, 8],
-              "end": [32, 23]
-            }
+            "near": { "to": [-70.07, 70.82], "bend": 1 },
+            "far": { "joint": [-75.71, 2.5], "end": [-83.71, 1.2] }
           },
           "legs": {
-            "near": {
-              "joint": [-20.73, -1.45],
-              "end": [-40.6, -2.84],
-              "tip": [-41.09, 4.14]
-            },
-            "far": {
-              "joint": [-24, 0],
-              "end": [-47, 0],
-              "tip": [-46, 7]
-            }
+            "near": { "to": [3.03, 39.53], "bend": 1 },
+            "far": { "to": [0, 3.6], "bend": -1 }
           }
         },
         "knee": {
-          "hip": [0, 0],
-          "torso": 0,
+          "hip": [-43.89, 21.44],
+          "torso": 165.15,
           "head": 0,
           "arms": {
-            "near": null,
-            "far": {
-              "joint": [31, 8],
-              "end": [32, 23]
-            }
+            "near": { "to": [-70.07, 70.82], "bend": 1 },
+            "far": { "joint": [-75.71, 2.5], "end": [-83.71, 1.2] }
           },
           "legs": {
-            "near": {
-              "joint": [4.17, 23.64],
-              "end": [-18.48, 27.63],
-              "tip": [-17.27, 34.52]
-            },
-            "far": {
-              "joint": [-24, 0],
-              "end": [-47, 0],
-              "tip": [-46, 7]
-            }
+            "near": { "joint": [-50.09, 36.42], "end": [-28.46, 28.61] },
+            "far": { "to": [0, 3.6], "bend": -1 }
           }
         },
         "teep": {
-          "hip": [0, 0],
-          "torso": 0,
+          "hip": [-43.89, 21.44],
+          "torso": 165.15,
           "head": 0,
           "arms": {
-            "near": null,
-            "far": {
-              "joint": [31, 8],
-              "end": [32, 23]
-            }
+            "near": { "to": [-70.07, 70.82], "bend": 1 },
+            "far": { "joint": [-75.71, 2.5], "end": [-83.71, 1.2] }
           },
           "legs": {
-            "near": {
-              "joint": [0, 24],
-              "end": [0, 47],
-              "tip": [6.4, 48.2]
-            },
-            "far": {
-              "joint": [-24, 0],
-              "end": [-47, 0],
-              "tip": [-46, 7]
-            }
+            "near": { "to": [-63.46, 37.93], "bend": 1, "upper": 12, "lower": 11.6 },
+            "far": { "to": [0, 3.6], "bend": -1 }
           }
         }
+      },
+      "marks": [{ "cue": "Hoften oppe", "phase": 1, "point": "hip", "place": "below" }],
+      "second": {
+        "view": "top",
+        "props": [],
+        "highlight": ["torso", "near.thigh"],
+        "keyframes": {
+          "star": {
+            "hip": [0, 0],
+            "torso": 0,
+            "head": 0,
+            "arms": { "near": null, "far": { "joint": [31, 8], "end": [32, 23] } },
+            "legs": {
+              "near": { "joint": [-20.73, -1.45], "end": [-40.6, -2.84], "tip": [-41.09, 4.14] },
+              "far": { "joint": [-24, 0], "end": [-47, 0], "tip": [-46, 7] }
+            }
+          },
+          "knee": {
+            "hip": [0, 0],
+            "torso": 0,
+            "head": 0,
+            "arms": { "near": null, "far": { "joint": [31, 8], "end": [32, 23] } },
+            "legs": {
+              "near": { "joint": [4.17, 23.64], "end": [-18.48, 27.63], "tip": [-17.27, 34.52] },
+              "far": { "joint": [-24, 0], "end": [-47, 0], "tip": [-46, 7] }
+            }
+          },
+          "teep": {
+            "hip": [0, 0],
+            "torso": 0,
+            "head": 0,
+            "arms": { "near": null, "far": { "joint": [31, 8], "end": [32, 23] } },
+            "legs": {
+              "near": { "joint": [0, 24], "end": [0, 47], "tip": [6.4, 48.2] },
+              "far": { "joint": [-24, 0], "end": [-47, 0], "tip": [-46, 7] }
+            }
+          }
+        },
+        "marks": [{ "arrow": "near.foot", "phase": 2, "offset": [0, 4] }]
       }
     }
   ]

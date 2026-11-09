@@ -180,7 +180,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "På ryggen under bordet med hænderne om kanten i skulderbredde og strakte, lodrette arme. Benene strakte, så kroppen er lige fra hæl til hoved, og kun hælene rører gulvet.",
+              "text": "På ryggen under bordet med hænderne om kanten i skulderbredde og helt strakte arme. Skuldrene er lidt længere inde under bordet end hænderne. Benene strakte, så kroppen er lige fra hæl til hoved, og kun hælene rører gulvet.",
               "contacts": [
                 { "part": "hand", "on": "table" },
                 { "part": "heel", "on": "floor" }
@@ -572,7 +572,7 @@
             {
               "id": "down",
               "name": "Nede",
-              "text": "Liggende på venstre side med underarmen i gulvet, albuen lige under skulderen og underarmen pegende frem. Benene strakte og fødderne oven på hinanden. Den øverste hånd på hoften, og hoften hviler i gulvet.",
+              "text": "Liggende på venstre side med underarmen i gulvet pegende frem og albuen næsten under skulderen. Benene strakte og fødderne oven på hinanden. Den øverste hånd på hoften, og hoften hviler i gulvet.",
               "contacts": [
                 { "part": "side", "on": "floor" },
                 { "part": "forearm", "on": "floor", "count": 1 },

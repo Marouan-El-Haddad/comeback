@@ -112,7 +112,7 @@
             {
               "id": "top",
               "name": "Oppe",
-              "text": "Forreste fod fladt i gulvet et stort skridt foran sofaen, vristen af bagerste fod på sofakanten. Forreste ben næsten strakt, bagerste knæ let bøjet og pegende mod gulvet. Overkroppen lidt frem, hænderne på hofterne.",
+              "text": "Forreste fod fladt i gulvet et stort skridt foran sofaen, vristen af bagerste fod på sofakanten. Forreste ben næsten strakt, bagerste knæ bøjet ca. 120° og pegende mod gulvet. Overkroppen lidt frem, hænderne på hofterne.",
               "contacts": [
                 { "part": "foot", "on": "floor", "count": 1 },
                 { "part": "foot", "on": "sofa", "count": 1 }

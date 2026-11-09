@@ -20,16 +20,34 @@
           }
         },
         "top": {
-          "hip": [-0.13, 7.8],
-          "torso": 185.36,
-          "head": -14.76,
+          "hip": [-0.95, 12.5],
+          "torso": 194.48,
+          "spine": 2.5,
+          "head": -23.88,
           "arms": { "near": { "to": [0.9, 2.9] }, "far": { "to": [1.2, 3.2] } },
           "legs": {
-            "near": { "to": [2.06, 40.97], "tip": 100 },
-            "far": { "to": [2.08, 41], "tip": 101 }
+            "near": { "to": [-1.66, 45.73], "tip": 105 },
+            "far": { "to": [-2.3, 46.1], "tip": 106 }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "near.knee", "phase": 1, "offset": [-6, 0] },
+        { "cue": "Langsomt ned", "phase": 2 }
+      ],
+      "faults": [
+        {
+          "mistake": 2,
+          "at": "start",
+          "wrong": {
+            "spine": -2,
+            "legs": {
+              "near": { "to": [39.19, 16.02], "tip": 45 },
+              "far": { "to": [38.89, 17.04], "tip": 46.5 }
+            }
+          }
+        }
+      ]
     },
     {
       "id": "core_situp.2",
@@ -54,6 +72,7 @@
         "up": {
           "hip": [0, 5],
           "torso": 78,
+          "spine": 1,
           "head": -6,
           "arms": {
             "near": { "to": [12.46, 29.95], "upper": 12, "lower": 9 },
@@ -64,7 +83,69 @@
             "far": { "to": [32.4, 3.6], "tip": [39.6, 0.3] }
           }
         }
-      }
+      },
+      "transitions": [
+        {
+          "from": "down",
+          "to": "up",
+          "via": {
+            "hip": [0, 5],
+            "torso": 129,
+            "spine": 4,
+            "head": -25,
+            "arms": {
+              "near": { "to": [-11.55, 30.38], "upper": 12, "lower": 9 },
+              "far": { "to": [-13.59, 31.31], "upper": 11, "lower": 9 }
+            },
+            "legs": {
+              "near": { "to": [33.2, 3.6], "tip": [40.4, 0.3] },
+              "far": { "to": [32.4, 3.6], "tip": [39.6, 0.3] }
+            }
+          }
+        },
+        {
+          "from": "up",
+          "to": "down",
+          "via": {
+            "hip": [0, 5],
+            "torso": 129,
+            "spine": 4,
+            "head": -25,
+            "arms": {
+              "near": { "to": [-11.55, 30.38], "upper": 12, "lower": 9 },
+              "far": { "to": [-13.59, 31.31], "upper": 11, "lower": 9 }
+            },
+            "legs": {
+              "near": { "to": [33.2, 3.6], "tip": [40.4, 0.3] },
+              "far": { "to": [32.4, 3.6], "tip": [39.6, 0.3] }
+            }
+          }
+        }
+      ],
+      "marks": [
+        { "arrow": "head", "phase": 1, "offset": [-5, 0] },
+        { "cue": "Fødder i gulvet", "phase": 2, "point": "near.foot", "place": "right" }
+      ],
+      "faults": [
+        {
+          "mistake": 1,
+          "at": "up",
+          "contacts": [{ "part": "hip", "on": "floor" }],
+          "wrong": {
+            "torso": 66,
+            "spine": 0,
+            "head": -2,
+            "arms": {
+              "near": { "to": [17.38, 26.82], "upper": 12, "lower": 9 },
+              "far": { "to": [17.28, 29.05], "upper": 11, "lower": 9 }
+            },
+            "legs": {
+              "near": { "to": [26.73, 8.6], "tip": [33.93, 5.6] },
+              "far": { "to": [25.93, 8.6], "tip": [33.13, 5.6] }
+            }
+          }
+        }
+      ]
     },
     {
       "id": "core_situp.3",
@@ -74,18 +155,20 @@
       "highlight": ["torso"],
       "keyframes": {
         "back": {
-          "hip": [0, 7.61],
+          "hip": [0, 9.44],
           "torso": 185,
+          "spine": 3,
           "head": -25,
-          "arms": { "near": { "to": [-60.91, 5] }, "far": { "to": [-60.9, 5.81] } },
+          "arms": { "near": { "to": [-60.94, 6.83] }, "far": { "to": [-60.92, 7.6] } },
           "legs": {
-            "near": { "to": [38.51, 34.58], "tip": 40 },
-            "far": { "to": [37.94, 35.38], "tip": 41.2 }
+            "near": { "to": [38.54, 36.43], "tip": 40 },
+            "far": { "to": [37.96, 37.22], "tip": 41.2 }
           }
         },
         "front": {
           "hip": [0, 5],
           "torso": 155,
+          "spine": 3,
           "head": -25,
           "arms": { "near": { "to": [-54.05, 33.19] }, "far": { "to": [-53.64, 33.89] } },
           "legs": {
@@ -93,7 +176,11 @@
             "far": { "to": [46.74, 10.08], "tip": 11.2 }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "shoulder", "phase": 1, "offset": [0, 7] },
+        { "cue": "Samme bue", "phase": 2 }
+      ]
     },
     {
       "id": "core_situp.4",
@@ -128,20 +215,24 @@
             "far": { "to": [15.15, 49.51], "tip": 76.2 }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "near.foot", "phase": 1, "offset": [5, 0] },
+        { "cue": "Strakte ben", "phase": 2 }
+      ]
     },
     {
       "id": "core_situp.5",
       "view": "side",
       "facing": 1,
-      "props": [{ "type": "sofa", "x": -64, "width": 42, "height": 21, "back": 36 }],
+      "props": [{ "type": "sofa", "x": -65.3, "width": 42, "height": 21, "back": 36 }],
       "highlight": ["torso"],
       "keyframes": {
         "start": {
           "hip": [30, 5],
           "torso": 180,
           "head": -7.78,
-          "arms": { "near": { "to": [-20.4, 7.2] }, "far": { "to": [-20.9, 8.4] } },
+          "arms": { "near": { "to": [-21.7, 7.2] }, "far": { "to": [-22.2, 8.4] } },
           "legs": {
             "near": { "to": [63.17, 3.6], "tip": [70.37, 0.3] },
             "far": { "to": [62.17, 3.6], "tip": [69.37, 0.3] }
@@ -151,7 +242,7 @@
           "hip": [24.57, 22.21],
           "torso": 215,
           "head": -42.78,
-          "arms": { "near": { "to": [-20.4, 7.2] }, "far": { "to": [-20.9, 8.4] } },
+          "arms": { "near": { "to": [-21.7, 7.2] }, "far": { "to": [-22.2, 8.4] } },
           "legs": {
             "near": { "to": [25.4, 42.08], "tip": 25 },
             "far": { "to": [24.88, 42.09], "tip": 26.5 }
@@ -161,7 +252,7 @@
           "hip": [5.21, 34.54],
           "torso": 260,
           "head": -87.78,
-          "arms": { "near": { "to": [-20.4, 7.2] }, "far": { "to": [-20.9, 8.4] } },
+          "arms": { "near": { "to": [-21.7, 7.2] }, "far": { "to": [-22.2, 8.4] } },
           "legs": {
             "near": { "to": [13.37, 80.85], "tip": 85 },
             "far": { "to": [12.4, 81.01], "tip": 86.2 }
@@ -171,26 +262,30 @@
           "hip": [29.54, 10.21],
           "torso": 190,
           "head": -17.78,
-          "arms": { "near": { "to": [-20.4, 7.2] }, "far": { "to": [-20.9, 8.4] } },
+          "arms": { "near": { "to": [-21.7, 7.2] }, "far": { "to": [-22.2, 8.4] } },
           "legs": {
             "near": { "to": [75.85, 18.37], "tip": 15 },
             "far": { "to": [75.66, 19.34], "tip": 16.2 }
           }
         }
-      }
+      },
+      "marks": [
+        { "cue": "Ikke på nakken", "phase": 2, "point": "shoulder", "place": "right" },
+        { "arrow": "near.foot", "phase": 3, "offset": [5, 0] }
+      ]
     },
     {
       "id": "core_situp.6",
       "view": "side",
       "facing": 1,
-      "props": [{ "type": "sofa", "x": -64, "width": 42, "height": 21, "back": 36 }],
+      "props": [{ "type": "sofa", "x": -65.3, "width": 42, "height": 21, "back": 36 }],
       "highlight": ["torso"],
       "keyframes": {
         "top": {
           "hip": [5.21, 34.54],
           "torso": 260,
           "head": -87.78,
-          "arms": { "near": { "to": [-20.4, 7.2] }, "far": { "to": [-20.9, 8.4] } },
+          "arms": { "near": { "to": [-21.7, 7.2] }, "far": { "to": [-22.2, 8.4] } },
           "legs": {
             "near": { "to": [13.37, 80.85], "tip": 85 },
             "far": { "to": [12.4, 81.01], "tip": 86.2 }
@@ -200,26 +295,30 @@
           "hip": [29.54, 10.21],
           "torso": 190,
           "head": -17.78,
-          "arms": { "near": { "to": [-20.4, 7.2] }, "far": { "to": [-20.9, 8.4] } },
+          "arms": { "near": { "to": [-21.7, 7.2] }, "far": { "to": [-22.2, 8.4] } },
           "legs": {
             "near": { "to": [75.85, 18.37], "tip": 15 },
             "far": { "to": [75.66, 19.34], "tip": 16.2 }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "near.foot", "phase": 1, "offset": [5, 0] },
+        { "cue": "Én planke", "phase": 2 }
+      ]
     },
     {
       "id": "core_situp.7",
       "view": "side",
       "facing": 1,
-      "props": [{ "type": "sofa", "x": -64, "width": 42, "height": 21, "back": 36 }],
+      "props": [{ "type": "sofa", "x": -65.3, "width": 42, "height": 21, "back": 36 }],
       "highlight": ["torso"],
       "keyframes": {
         "top": {
           "hip": [5.21, 34.54],
           "torso": 260,
           "head": -87.78,
-          "arms": { "near": { "to": [-20.4, 7.2] }, "far": { "to": [-20.9, 8.4] } },
+          "arms": { "near": { "to": [-21.7, 7.2] }, "far": { "to": [-22.2, 8.4] } },
           "legs": {
             "near": { "to": [13.37, 80.85], "tip": 85 },
             "far": { "to": [12.4, 81.01], "tip": 86.2 }
@@ -229,7 +328,7 @@
           "hip": [21.21, 26.21],
           "torso": 225,
           "head": -52.78,
-          "arms": { "near": { "to": [-20.4, 7.2] }, "far": { "to": [-20.9, 8.4] } },
+          "arms": { "near": { "to": [-21.7, 7.2] }, "far": { "to": [-22.2, 8.4] } },
           "legs": {
             "near": { "to": [54.46, 59.46], "tip": 50 },
             "far": { "to": [53.75, 60.15], "tip": 51.2 }
@@ -239,13 +338,18 @@
           "hip": [29.54, 10.21],
           "torso": 190,
           "head": -17.78,
-          "arms": { "near": { "to": [-20.4, 7.2] }, "far": { "to": [-20.9, 8.4] } },
+          "arms": { "near": { "to": [-21.7, 7.2] }, "far": { "to": [-22.2, 8.4] } },
           "legs": {
             "near": { "to": [75.85, 18.37], "tip": 15 },
             "far": { "to": [75.66, 19.34], "tip": 16.2 }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "near.foot", "phase": 1, "offset": [5, 0] },
+        { "cue": "Pause halvvejs", "at": "half", "point": "near.knee", "place": "right" },
+        { "arrow": "near.foot", "phase": 4, "offset": [5, 0] }
+      ]
     }
   ]
 }

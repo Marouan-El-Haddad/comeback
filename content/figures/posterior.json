@@ -27,9 +27,27 @@
           "legs": {
             "near": { "to": [49.32, 3.6], "tip": [56.52, 0.3] },
             "far": { "joint": [49.32, 26.6], "end": [70.32, 35.97], "tip": [67.87, 43.06] }
+          },
+          "spine": -0.2
+        }
+      },
+      "marks": [
+        { "arrow": "hip", "phase": 1, "offset": [0, 9] },
+        { "cue": "Ribben nede", "at": "top", "point": "chest", "place": "above" }
+      ],
+      "faults": [
+        {
+          "mistake": 1,
+          "at": "top",
+          "wrong": {
+            "hip": [25.25, 20.81],
+            "torso": 212.7,
+            "head": -43.7,
+            "spine": -4,
+            "legs": { "far": { "to": [71.06, 32.17], "tip": [69.7, 39.53] } }
           }
         }
-      }
+      ]
     },
     {
       "id": "posterior.2",
@@ -61,7 +79,26 @@
             "far": { "to": [74.9, 5.6], "tip": 85 }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "near.foot", "phase": 1, "offset": [0, 10] },
+        { "cue": "Hoften oppe", "at": "out", "point": "hip", "place": "above" }
+      ],
+      "faults": [
+        {
+          "mistake": 1,
+          "at": "out",
+          "wrong": {
+            "hip": [30, 5],
+            "torso": 180.76,
+            "head": -11.76,
+            "legs": {
+              "near": { "to": [77.2, 5.6], "tip": 88 },
+              "far": { "to": [77.1, 5.8], "tip": 88 }
+            }
+          }
+        }
+      ]
     },
     {
       "id": "posterior.3",
@@ -90,7 +127,11 @@
             "far": { "to": [52.51, 34], "tip": 90 }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "near.foot", "phase": 1, "offset": [0, 10] },
+        { "arrow": "near.foot", "phase": 3, "offset": [0, 10] }
+      ]
     },
     {
       "id": "posterior.4",
@@ -135,7 +176,27 @@
             "far": { "to": [-22.99, 4.2], "tip": [-31.19, 1.2] }
           }
         }
-      }
+      },
+      "transitions": [
+        {
+          "from": "catch",
+          "to": "up",
+          "via": {
+            "hip": [20.99, 16.04],
+            "torso": 29,
+            "head": 0,
+            "arms": { "near": { "to": [52.3, 0] }, "far": { "to": [51.3, 0] } },
+            "legs": {
+              "near": { "to": [-22.99, 3.6], "tip": [-30.19, 0.8] },
+              "far": { "to": [-22.99, 4.2], "tip": [-31.19, 1.2] }
+            }
+          }
+        }
+      ],
+      "marks": [
+        { "arrow": "shoulder", "phase": 1, "offset": [5, 5] },
+        { "cue": "Lige linje", "phase": 2, "point": "near.knee" }
+      ]
     },
     {
       "id": "posterior.5",
@@ -170,7 +231,27 @@
             "far": { "to": [-22.99, 4.2], "tip": [-31.19, 1.2] }
           }
         }
-      }
+      },
+      "transitions": [
+        {
+          "from": "bottom",
+          "to": "up",
+          "via": {
+            "hip": [20.99, 16.04],
+            "torso": 29,
+            "head": 0,
+            "arms": { "near": { "to": [52.3, 0] }, "far": { "to": [51.3, 0] } },
+            "legs": {
+              "near": { "to": [-22.99, 3.6], "tip": [-30.19, 0.8] },
+              "far": { "to": [-22.99, 4.2], "tip": [-31.19, 1.2] }
+            }
+          }
+        }
+      ],
+      "marks": [
+        { "arrow": "shoulder", "phase": 1, "offset": [5, 5] },
+        { "cue": "Lige linje", "phase": 2, "point": "near.knee" }
+      ]
     },
     {
       "id": "posterior.6",
@@ -215,7 +296,11 @@
             "far": { "to": [-22.99, 4.2], "tip": [-31.19, 1.2] }
           }
         }
-      }
+      },
+      "marks": [
+        { "cue": "Lille skub", "phase": 2, "point": [52.3, 0], "place": "right" },
+        { "arrow": "shoulder", "phase": 3, "offset": [-6, 6] }
+      ]
     }
   ]
 }
