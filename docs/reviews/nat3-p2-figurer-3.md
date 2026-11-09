@@ -407,3 +407,186 @@ Alle i `screenshots/`, taget med Playwright (kortet i `pixel9a`/Firefox, filmstr
   - `review-p2-3-os2-arm-over-hovedet.png` og `review-p2-3-os3-y-usynligt.png`;
   - `review-p2-3-spiderman-arm-bagud.png` og `review-p2-3-kosak-fejlpar.png`;
   - `review-p2-3-airplane-drejning-usynlig.png` og `review-p2-3-skygge-slag-i-bue.png`.
+
+## Opfølgning
+
+2026-11-09 · 2e0909b (motorrunde 2 og figurernes rettelser, 7a300af–2e0909b; D62) · worktree `scratchpad/wt/p3b`
+
+Metode:
+
+- `git diff da9abf8 2e0909b -- content/` for de seks filer. Forklaringerne i mine filer er uændrede. Figurerne er ændret i groin, neck, os, warmup, club_sequence og measures (base-check).
+- `node scripts/check-explain.ts` på de 12 filer: alle OK.
+- Kontaktark i dobbelt opløsning og filmstrimler af hver ændret bevægelse med `src/figure` (`viewModels`, `poseAt`, `solve`). Hånden i os.2 er målt hvert 0,1 sek.
+- **Kortet i `pixel9a`:** Firefox uden JIT og 127.0.0.1:4188, med `page.clock` stoppet i faserne og fejlparrene foldet ud. Vandret overløb er målt på alle 129 kort.
+- **»Nu«:**
+  - tirsdag 10/11 i tidsmaskinen kørt frem til nakken N1 og set midt i holdet;
+  - Open & Strong: `screenshots/os-nu.png` fra 2e0909b.
+- **Afprøvede rettelser** i scratch-kopier uden for repoet (check-explain OK): os.2 med bredde, groin.3 »Hoften nede« og markeringerne i N1 og N2.
+
+### Resultat
+
+52 figurer: **50 godkendt, 2 afvist** (os.2 og groin.3).
+
+- **De oprindelige 23 fund:**
+  - 20 er rettet;
+  - M4 er kun delvist rettet;
+  - L6 er rettet undtagen i pogo;
+  - L7 og L8 er ikke rettet. Begge er lave.
+- **Nye fund:** 0 høj, 0 middel og 5 lav.
+
+Tirsdagens N1 er nu rigtig: overkroppen ligger stille, og hagen er et nik med baghovedet i gulvet.
+
+### De afviste figurer
+
+| Fil › punkt › bevægelse | Status | Grund |
+|---|---|---|
+| groin › groin.2 | Godkendt | Det nederste ben hænger med knæet 6,4 over gulvet; der er luft under det |
+| groin › groin.3 | Afvist (O1) | Planken er rigtig. Men i »Hoften nede« står knæet 3,1 over gulvet, så dets kant går 0,2 ned i gulvet, og benet ser ud til at hvile. Værdierne var min egen anvisning |
+| groin › groin.4 | Godkendt | Det nederste ben er strakt, med enden 7 over gulvet. »Strakt knæ« har afløst 180° (L5) |
+| groin › groin.5 | Godkendt | Benet hænger strakt lige over gulvet og løftes strakt op til sofaen under den øverste fod |
+| neck › N1 | Godkendt | Overkroppen ligger stille i gulvet (skulderen 4,3 over). Nakken flader ud mod gulvet, og hovedet nikker 28° med baghovedet i gulvet. Fejlparret viser hagen op. Se O2 og O3 |
+| neck › N2 | Godkendt | Som N1, og hovedet løftes 2,2 med hagen inde. Fejlparret (mavebøjning) er tydeligt. Se O2 |
+| neck › N5 › mave | Godkendt | Hånden føres fra panden op langs siden og ned til hoften med albuen op som i en roning. Ingen umulig skulderstilling |
+| os › os.1 | Godkendt | Ryggen buer over håndklædet (buens top 10,9 og skulderen 8,4), og hovedet ligger i forlængelse af den øvre ryg, båret af hænderne |
+| os › os.2 | Afvist (M4) | Via-posen er nu en kort stump. Men på vej til »Åben« går hånden op til 20 enheder mod hovedet (1,1–1,9 sek og 2,1–2,9 sek), og pilen tegner vejen rundt om hovedet. Brystets drejning ses stadig ikke |
+| os › os.3 | Godkendt | Y'et ses ovenfra med armene ±45° fra skulderen, og de forkortes, når de løftes |
+| os › os.4 | Godkendt | Cuen er fjernet; hænderne ses i »Løft 2 cm« |
+| os › os.5 | Godkendt | Hovedet går 3,1 lige bagud med ansigtet lodret (`nod`), og cuen er fjernet. Se O3 om fejlparret |
+| warmup › warmup.1 › skygge | Godkendt | Slagene går lige frem i hage- og skulderhøjde, og cuen, der blinkede, er væk |
+| warmup › warmup.2 › spiderman | Godkendt | Armen går frem og op og ikke længere bagud. Ovenfra står foden uden for hånden, og brystet drejer som en skulderlinje, der skrumper. Se O5 |
+| warmup › warmup.2 › kosak | Godkendt | Fejlparret viser hælen, der letter, med knæet over tæerne og ringen om foden |
+| warmup › warmup.3 › airplane | Godkendt | Det bagerste ben ligger vandret, cuen »Drej bækkenet« står ved hoften, og bækkenet ses ovenfra skrumpe fra 12 til 4. Teksten dækker ikke kroppen på kortet |
+| club_sequence › C6 | Godkendt | Ovenfra: hænderne samlet under brystet og albuerne tilbage langs kroppen. Fejl 1 (albuerne ud) er tegnet ovenfra |
+| measures › base_check | Godkendt | Cuen, der blinkede, er fjernet |
+
+### Fundene
+
+| Fund | Status |
+|---|---|
+| H1 os.1 | Rettet |
+| M1 groin.2–5 | Rettet i groin.2, groin.4 og groin.5, men ikke i groin.3 »Hoften nede« (O1) |
+| M2 N1 og N2 | Rettet |
+| M3 N5 › mave | Rettet (med min anvisning) |
+| M4 os.2 | Delvist rettet. Stadig afvist; se nedenfor |
+| M5 os.3 | Rettet (ovenfra) |
+| M6 os.4 og os.5 | Rettet (cuerne er fjernet) |
+| M7 spiderman | Rettet (via med løftet hånd) |
+| M8 kosak | Rettet |
+| M9 airplane | Rettet |
+| M10 hovedets drejepunkt | Rettet (`nod`) |
+| M11 drejning om længdeaksen | Rettet (`width` forfra og ovenfra) |
+| M12 tekst over kroppen | Rettet. N3's »Halv kraft« står nu ved hovedet, og os.6's og airplanes tekster står fri af kroppen |
+| M13 kort bredere end skærmen | Rettet: 0 af 129 kort er bredere end 414 px |
+| L1 skyggeboksning | Rettet |
+| L2 C6 | Rettet |
+| L3 base-check | Rettet |
+| L4 groin.1 | Rettet (`inFront`) |
+| L5 groin.4 | Rettet |
+| L6 fejlringen | Rettet, undtagen i pogo: ringen står ved albuen. Hænderne beholder deres punkt, mens kroppen synker 14, så albuen bøjer mest. Rettelse: `"ring": "near.knee"` på fejl 2 (`content/figures/warmup.json:673`), og sænk armenes punkter 14 i `wrong` |
+| L7 tjekket ser ikke skulderens bevægelighed | Ikke rettet. Stadig lav, og D62 nævner det ikke |
+| L8 ingen skulderblade | Ikke rettet. Det står som en kendt grænse |
+| L9 lånt piktogram på N3–N6 | Rettet: bevægelsernes figurer står øverst (`screenshots/review-p2-3-opf-n3-figurer-oeverst.png`) |
+
+#### M4 – os.2: hånden går stadig rundt om hovedet
+- **Alvor:** middel.
+- **Hvor:**
+  - `content/figures/os.json:89–124`: via'erne;
+  - `content/figures/os.json:126`: pilen;
+  - `screenshots/review-p2-3-opf-os2-arm-mod-hovedet.png` og `review-p2-3-opf-os2-strimmel.png`.
+- **Hvorfor:**
+  - Ovenfra interpoleres armens vinkel. Fra stumpen, der peger frem (+y), og til armen bagud (−y) drejer den 180° gennem retningen mod hovedet, mens den bliver længere.
+  - Ved 1,5 sek peger armen 19,6 lige mod hovedet. Det ligner et armsving over hovedet langs gulvet, ikke »i en bue op og over til den anden side« (positionen »Åben«).
+  - Uden `width` udgår armene ovenfra fra ét punkt, så brystet, der vender mod loftet, ses ikke.
+  - Rutinen tages hver dag.
+- **Rettelse** (afprøvet: check-explain OK, kontaktark set i `review-p2-3-opf-os2-forslag.png`). Den anden vinkel forfra er ikke nødvendig:
+  - **Bredde i alle positioner og via-poser:**
+    - `closed`: `{ "shoulders": 3, "hips": 3 }`, skuldrene ligger over hinanden;
+    - via'erne: `{ "shoulders": 11, "hips": 3 }`;
+    - `open`: `{ "shoulders": 20, "hips": 3 }`, brystet mod loftet.
+  - **Via'ernes øverste arm** er en kort stump mod hoften: near `{ "joint": [26, 19.7], "end": [22.2, 19.9] }`.
+  - **Den nederste arm** forbliver strakt og følger sin skulder:
+    - `closed` far `{ "joint": [29.58, 41.5], "end": [29.19, 56.5] }`;
+    - via'erne `{ "joint": [29.58, 46.3], "end": [29.19, 61.3] }`;
+    - `open` `{ "joint": [29.58, 51], "end": [29.19, 66] }`.
+  - **`open`** near `{ "joint": [30.5, 3], "end": [31, -8] }`.
+  - **Resultat:** hånden går højst 11 til siden mod hoften i stedet for 20 mod hovedet, og overkroppen bliver bred, når brystet drejer op.
+
+### Nye fund
+
+#### O1 – groin.3: knæet rører gulvet i »Hoften nede«
+- **Alvor:** lav.
+- **Hvor:**
+  - `content/figures/groin.json:141`;
+  - `screenshots/review-p2-3-opf-groin3-knae-i-gulvet.png`.
+- **Hvorfor:**
+  - Positionen siger »det nederste ben hænger frit«, men knæleddet står 3,09 over gulvet, og benets kant går 0,2 ned i gulvlinjen.
+  - Tjekket siger først fra under 3. Benet ser derfor ud til at hvile i bunden, og så tager det vægten fra lysken.
+  - Værdierne var min egen anvisning.
+- **Rettelse** (afprøvet, groin.3 består check-explain): near `{ "to": [3, 7], "bend": 1, "upper": 12, "lower": 11.4 }`. Knæet står 6,4 over gulvet og enden 7, som i planken.
+
+#### O2 – N1 og N2: markeringens prik dækker hovedet i holdet
+- **Alvor:** lav.
+- **Hvor:**
+  - `content/figures/neck.json:35` (»Blidt tryk«, `point: "head"`) og `:79` (»Kun 2 cm«);
+  - »Nu« tirsdag: `screenshots/review-p2-3-opf-n1-nu-prik-paa-hovedet.png`.
+- **Hvorfor:**
+  - I »Nu« er hovedet ca. 18 CSS-px, og prikken med hvid kant dækker det meste af det i hele holdet.
+  - Det eneste, der viser hage-ind, er nikket og ansigtets mærke på hovedet (SPEC 9.1: markeringerne må ikke dække det, de taler om).
+- **Rettelse** (afprøvet, format og tjek OK):
+  - N1 `"point": [7.8, 0.3]`, så prikken står i gulvet under baghovedet, der presser;
+  - N2 `"point": [7.9, 1.1]`, i luften under baghovedet.
+
+#### O3 – fejlpar, hvor kun ansigtets retning skifter, er næsten usynlige
+- **Alvor:** lav.
+- **Hvor:**
+  - N1 fejl 1 (`content/figures/neck.json:36`);
+  - os.5 fejl 1 (`content/figures/os.json:271`);
+  - `screenshots/review-p2-3-opf-n1-fejlpar-lille.png`.
+- **Hvorfor:**
+  - Fejlparret tegner hele kroppen, så hovedet er ca. 20 CSS-px i N1 og 12 i os.5. Forskellen er næsens prik på 2–3 px; kun ringen viser, hvor man skal se.
+  - SPEC 3.8 lover, at fejlparret viser fejlen.
+- **Rettelse:**
+  - Lad et fejlpar kunne tegnes som et udsnit om ringen (fx `"zoom": 2.5` i fejlen).
+  - Indtil da: fjern de to fejlpar. Teksten under fejlen står alene.
+
+#### O4 – motoren: ovenfra kan et lem ikke gå over sin rod, og `inFront` gælder hele vinklen
+- **Alvor:** lav.
+- **Hvor:** `src/figure/tween.ts` (vinkelinterpolationen) og D62 (7).
+- **Hvorfor:**
+  - En arm, der går lodret op og over kroppen, ses ovenfra som en lige linje gennem skulderen. Motoren drejer den i stedet om skulderen, så hånden altid fejer til siden (M4).
+  - Forfra kan armen ikke skifte fra foran til bag kroppen.
+  - Med rettelsen under M4 er os.2 tydelig nok uden den anden vinkel; fundet gælder kommende figurer.
+- **Rettelse:**
+  - Lad et lem med `joint`/`end` ovenfra interpolere hånden lineært i billedet.
+  - Lad `inFront` kunne stå pr. position.
+
+#### O5 – spiderman ovenfra: støttearmen læner sig ud i »Drejet op«
+- **Alvor:** lav.
+- **Hvor:**
+  - `content/figures/warmup.json:339–342` (`width` 6 og far arm `upper` 8,25 og `lower` 7,73);
+  - `screenshots/review-p2-3-opf-spiderman-ovenfra.png`.
+- **Hvorfor:**
+  - `width` skrumper symmetrisk om ryggen, så den fjerne skulder går 8 ind, mens hånden står.
+  - Armen, der står lodret under skulderen, tegnes derfor dobbelt så lang og skrå. Det ligner en hånd sat ud til siden.
+  - I virkeligheden er støtteskulderen omdrejningspunktet og bliver over hånden.
+- **Rettelse:**
+  - Giv `width` en forskydning (fx `"shift": 8`), så skulderlinjen kan skrumpe mod den fjerne side.
+  - Indtil da: godtag det. Brystets drejning og fodens plads, som er det vigtige, ses tydeligt.
+
+### Skærmbilleder i opfølgningen
+
+Alle i `screenshots/`:
+
+- **Afvist:**
+  - `review-p2-3-opf-os2-arm-mod-hovedet.png` og `review-p2-3-opf-os2-strimmel.png` (nu);
+  - `review-p2-3-opf-os2-forslag.png` (den afprøvede rettelse);
+  - `review-p2-3-opf-groin3-knae-i-gulvet.png`.
+- **Nye fund:**
+  - `review-p2-3-opf-n1-nu-prik-paa-hovedet.png` (»Nu« tirsdag 10/11 i tidsmaskinen);
+  - `review-p2-3-opf-n1-fejlpar-lille.png`;
+  - `review-p2-3-opf-spiderman-ovenfra.png`;
+  - `review-p2-3-opf-pogo-ring-ved-albuen.png`.
+- **Godkendt:**
+  - `review-p2-3-opf-os1-over-haandklaedet.png`;
+  - `review-p2-3-opf-airplane.png`;
+  - `review-p2-3-opf-n3-figurer-oeverst.png`.
