@@ -1,5 +1,14 @@
 // Small display helpers shared by the screens.
 import type { SessionPlan } from '../engine/plan.ts';
+import type { SessionKind } from '../engine/types.ts';
+
+export const SESSION_NAME: Record<SessionKind, string> = {
+  A: 'Styrke A',
+  B: 'Styrke B',
+  motor: 'Motor',
+  os: 'Open & Strong',
+  travel: 'Rejsepas',
+};
 
 export function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);

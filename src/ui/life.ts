@@ -2,10 +2,24 @@
 // when they are asked, for which day, and what was saved. Small, as I dag needs it at start; the
 // screens themselves are fetched after start with lazy() (src/ui/life/LifeForm.tsx).
 import { addDays, calendarWeek, mondayOf, statusOn, TIME_ZONE, weekday } from '../engine/index.ts';
-import type { ClubContent, Freshness, Hardness, ISODate, Program, State } from '../engine/types.ts';
+import type {
+  ClubContent,
+  Freshness,
+  Hardness,
+  ISODate,
+  Program,
+  SessionKind,
+  State,
+} from '../engine/types.ts';
 
-/** What I dag opens in its place: the club log of a club day, or the Sunday check of a Sunday. */
-export type LifeRequest = { kind: 'club'; date: ISODate } | { kind: 'sunday'; sunday: ISODate };
+/**
+ * What I dag or Uge opens in its place: the club log of a club day, the Sunday check of a Sunday,
+ * or »Flyt eller spring over« for the week plan's session on a day (D64).
+ */
+export type LifeRequest =
+  | { kind: 'club'; date: ISODate }
+  | { kind: 'sunday'; sunday: ISODate }
+  | { kind: 'move'; session: SessionKind; date: ISODate };
 
 export const CONTENT: Record<ClubContent, string> = {
   teknik: 'Teknik',

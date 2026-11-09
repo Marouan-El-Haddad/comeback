@@ -256,11 +256,23 @@
   font-weight: 700;
 }
 
-.missed {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+/* What the day's card says about a moved or a short session (D64), over the block lines. */
+.main-card-notes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+  font-weight: 600;
+  color: var(--c-navy);
+}
+
+/* Two buttons side by side in a card (»Flyt« and »Spring over«), or one across it. */
+.card-actions {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 8px;
 }
 
 .os-row {
@@ -303,7 +315,8 @@
 }
 
 .life-host.settling button,
-.today.settling button {
+.today.settling button,
+.week-screen.settling button {
   pointer-events: none;
 }
 
@@ -403,6 +416,35 @@
   list-style: none;
   display: grid;
   gap: 8px;
+}
+
+/* »Flyt eller spring over« (SPEC 3.1, D64): a button per day, the day first and what the move
+   costs under it; »Spring over« under a line at the bottom. */
+.move-days {
+  display: grid;
+  gap: 8px;
+}
+
+.btn.move-day {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 8px 16px;
+  text-align: left;
+}
+
+.move-day-name {
+  font-weight: 700;
+}
+
+.move-day-note {
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.move-skip {
+  padding-top: 16px;
+  border-top: 1px solid var(--c-line);
 }
 
 .backup-line {
@@ -962,6 +1004,27 @@
 .chip.status {
   background: var(--c-paper);
   border-color: var(--c-navy);
+}
+
+/* A session that is not started is a button (SPEC 3.4, D64): the chip at 56 px, like a button. */
+.chip.chip-button {
+  min-height: 56px;
+  padding: 0 16px;
+  border-width: 2px;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chip.chip-button.strength:active {
+  border-color: var(--c-navyDark);
+  background: var(--c-navyDark);
+}
+
+.chip.chip-button.motor:active {
+  border-color: var(--c-navy);
+  background: var(--c-navy);
 }
 
 /* Stiger (SPEC 3.5): a row per ladder with its figure, the ladder and the step in Kanit – the step in

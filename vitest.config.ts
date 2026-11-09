@@ -7,6 +7,7 @@ const DATE_TESTS = [
   'src/engine/__tests__/weeks.test.ts',
   'src/engine/__tests__/moves.test.ts',
   'src/ui/__tests__/life.test.ts',
+  'src/ui/__tests__/moves.test.ts',
 ];
 
 export default defineConfig({

@@ -1,9 +1,10 @@
 // I dag (docs/SPEC.md 3.1): today's session with one button to »Dagens pas«, Open & Strong, tomorrow,
 // the rest of the week, the »blev ikke logget« card and the backup line. Visible without a tap (SK1).
 // The club log and the Sunday check ask here (4.6, 4.7): a card that waits for an answer stands
-// over the day's card, and their screens open in place of I dag.
+// over the day's card, and their screens open in place of I dag – as does »Flyt eller spring over«
+// for today's session and a forgotten one (D64).
 import type { ComponentChildren } from 'preact';
-import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import {
   addDays,
   daysBetween,
@@ -21,9 +22,20 @@ import {
   type BlockPlan,
   type DayPlan,
 } from '../../engine/index.ts';
-import type { SessionKind, State } from '../../engine/types.ts';
-import { sessionMinutes } from '../format.ts';
-import { lazy } from '../lazy.tsx';
+import type { ISODate, SessionKind, State } from '../../engine/types.ts';
+import { SESSION_NAME, sessionMinutes } from '../format.ts';
+import { useSettle, useWriteOnce } from '../hooks.ts';
+import { LifeForm } from '../lifeScreen.ts';
+import {
+  canAct,
+  dayRef,
+  forgotten,
+  motorGone,
+  movable,
+  movedFrom,
+  weekdayWord,
+  type Movable,
+} from '../moves.ts';
 import {
   clubAsks,
   clubEnd,
@@ -40,23 +52,11 @@ import type { Model } from '../model.ts';
 import { markTodayVisible } from '../startup.ts';
 import { distanceText } from './Ladders.tsx';
 
-// The club log's and the Sunday check's screens are not needed for the first screen: fetched in
-// the background when I dag has something to ask, or at the tap (docs/SPEC.md 7).
-const LifeForm = lazy(() => import('../life/LifeForm.tsx').then((m) => m.LifeForm));
-
 const PHASE: Record<string, string> = {
   fundament: 'Fundament',
   opbygning: 'Opbygning',
   kampform: 'Kampform',
   let: 'Let uge',
-};
-
-const SESSION_NAME: Record<SessionKind, string> = {
-  A: 'Styrke A',
-  B: 'Styrke B',
-  motor: 'Motor',
-  os: 'Open & Strong',
-  travel: 'Rejsepas',
 };
 
 function capitalize(text: string): string {
@@ -122,16 +122,29 @@ export function Today(props: {
   const { model } = props;
   const { state, today } = model;
   const [form, setForm] = useState<LifeRequest | null>(null);
-  /** »✓ Klubtræningen i går er logget.« after a save that took its card away. */
-  const [saved, setSaved] = useState<string | null>(null);
-  const settling = useSettle(form);
+  /** »✓ Klubtræningen i går er logget.« after a save that took its card away; only on its day. */
+  const [savedLine, setSavedLine] = useState<{ text: string; on: ISODate } | null>(null);
+  const saved = savedLine?.on === today ? savedLine.text : null;
+  const setSaved = (text: string | null) => setSavedLine(text ? { text, on: today } : null);
+  /** Counts the cards that went away with a tap (»Spring over«): I dag settles after each (D57). */
+  const [gone, setGone] = useState(0);
+  const settling = useSettle([form, gone]);
+  // A screen in place of I dag and its »✓« line belong to their world: when the time machine
+  // starts or ends, they go (SPEC 3.7, D64).
+  const world = model.sim;
+  useEffect(() => {
+    setForm(null);
+    setSavedLine(null);
+  }, [world]);
   const asks = clubAsks(PROGRAM, state, today, minutesIn(model.now()));
   const sunday = sundayDue(state, today);
   useClubEnd(model, asks);
 
   // SK1: the plan of the day is on screen (with its fonts) – measured for Diagnose (SPEC 7).
   useEffect(() => markTodayVisible(), []);
-  const asking = asks.some((a) => a.ended && !a.log) || sunday !== null;
+  // A forgotten session from an earlier day of the week can be moved or skipped (D64).
+  const missed = forgotten(PROGRAM, state, today);
+  const asking = asks.some((a) => a.ended && !a.log) || sunday !== null || missed.length > 0;
   useEffect(() => {
     if (!asking) return;
     const id = setTimeout(() => void LifeForm.preload().catch(() => undefined), 1000);
@@ -149,8 +162,10 @@ export function Today(props: {
           request={form}
           model={model}
           onClose={() => setForm(null)}
-          onSaved={() => {
-            if (form.kind === 'club' && form.date !== today) {
+          onSaved={(message) => {
+            if (form.kind === 'move') {
+              setSaved(message ?? null);
+            } else if (form.kind === 'club' && form.date !== today) {
               setSaved('✓ Klubtræningen i går er logget.');
             } else if (
               form.kind === 'club' &&
@@ -196,6 +211,9 @@ export function Today(props: {
     sunday !== null && sunday.sunday === today && restCard(plan, paused) && !plan.club.day;
   const openClub = (ask: ClubAsk) => () => open({ kind: 'club', date: ask.date });
   const openSunday = () => sunday && open({ kind: 'sunday', sunday: sunday.sunday });
+  // Today's session too (D64).
+  const todayMove = movable(PROGRAM, state, today, today);
+  const openMove = (m: Movable) => () => open({ kind: 'move', session: m.kind, date: m.date });
 
   return (
     <div class={settling ? 'screen today settling' : 'screen today'} data-testid="today">
@@ -243,24 +261,18 @@ export function Today(props: {
         }
       })}
 
-      {plan.missed.map((m) => (
-        <div key={`${m.kind}${m.date}`} class="card missed">
-          <p>{SESSION_NAME[m.kind]} i går blev ikke logget.</p>
-          <button
-            type="button"
-            class="btn"
-            onClick={() =>
-              void model.commit([
-                model.ctx.make(
-                  { type: 'session_skipped', kind: m.kind, forDate: m.date, reason: 'user' },
-                  today,
-                ),
-              ])
-            }
-          >
-            Spring over
-          </button>
-        </div>
+      {missed.map((m) => (
+        <MissedCard
+          key={`${m.kind}${m.date}`}
+          item={m}
+          today={today}
+          model={model}
+          onMove={openMove(m)}
+          onSkipped={(text) => {
+            setSaved(text);
+            setGone((n) => n + 1);
+          }}
+        />
       ))}
 
       {saved && (
@@ -288,6 +300,8 @@ export function Today(props: {
         sunday={sundayMain ? sunday : null}
         onClub={() => todayAsk && openClub(todayAsk)()}
         onSunday={openSunday}
+        move={todayMove}
+        onMove={() => todayMove && openMove(todayMove)()}
       />
 
       {sunday && sunday.check && !sundayMain && (
@@ -373,20 +387,54 @@ function clubInMain(plan: DayPlan, paused: boolean): boolean {
   return restCard(plan, paused) && plan.club.day && !plan.club.closed;
 }
 
-/** Half a second without taps after the club log or the Sunday check opens or closes (D57). */
-function useSettle(form: LifeRequest | null): boolean {
-  const first = useRef(true);
-  const [settling, setSettling] = useState(false);
-  useLayoutEffect(() => {
-    if (first.current) {
-      first.current = false;
-      return;
-    }
-    setSettling(true);
-    const id = setTimeout(() => setSettling(false), 500);
-    return () => clearTimeout(id);
-  }, [form]);
-  return settling;
+/**
+ * A session from an earlier day that was not logged (SPEC 3.1, D64): »Flyt« opens the days it can
+ * go to, »Spring over« writes at once – the first tap only (D61), and the card goes away.
+ */
+function MissedCard(props: {
+  item: Movable;
+  today: ISODate;
+  model: Model;
+  onMove: () => void;
+  onSkipped: (text: string) => void;
+}) {
+  const { item, today, model } = props;
+  const { busy, run } = useWriteOnce();
+  const name = SESSION_NAME[item.shown];
+  const when = dayRef(item.date, today);
+  const skip = run(async () => {
+    await model.commit([
+      model.ctx.make(
+        { type: 'session_skipped', kind: item.kind, forDate: item.date, reason: 'user' },
+        today,
+      ),
+    ]);
+    props.onSkipped(`✓ ${name} ${when} er sprunget over.`);
+  });
+  return (
+    <div class="card life-card" data-testid="missed-card">
+      <p class="life-card-title">
+        {name} {when} blev ikke logget
+      </p>
+      {item.options.length === 0 && <p>Ingen dag tilbage i ugen kan tage det.</p>}
+      <div class="card-actions">
+        {item.options.length > 0 && (
+          <button
+            type="button"
+            class="btn"
+            disabled={busy}
+            data-testid="missed-move"
+            onClick={props.onMove}
+          >
+            Flyt
+          </button>
+        )}
+        <button type="button" class="btn" disabled={busy} data-testid="missed-skip" onClick={skip}>
+          Spring over
+        </button>
+      </div>
+    </div>
+  );
 }
 
 /** I dag is drawn again when today's club time ends, so »Hvordan var det?« comes by itself. */
@@ -485,6 +533,8 @@ function MainCard({
   sunday,
   onClub,
   onSunday,
+  move,
+  onMove,
 }: {
   plan: DayPlan;
   startDate: string;
@@ -497,6 +547,9 @@ function MainCard({
   sunday: SundayDue | null;
   onClub: () => void;
   onSunday: () => void;
+  /** Today's session when it is not started: »Flyt eller spring over« (D64). */
+  move: Movable | null;
+  onMove: () => void;
 }) {
   if (paused) {
     const kind = plan.open?.kind ?? plan.kind ?? 'A';
@@ -633,6 +686,42 @@ function MainCard({
   const session = plan.session;
   const lines = session.blocks.map(blockLine);
   const motor = session.motor;
+  // The day's own calm base (a moved motor), not the one after a hard club day: that one keeps
+  // »Kør intervallerne alligevel« on the traffic light (ENGINE 5.2, P25).
+  const start = () =>
+    onStart(plan.kind ?? 'A', plan.short, session.calmBase && !session.intervalsOption);
+  if (move?.skipped) {
+    // Skipped today: it stands, so a mistaken tap does not cost the session (D64).
+    return (
+      <Card title={SESSION_NAME[plan.kind]}>
+        <p class="main-card-done">Sprunget over i dag.</p>
+        <p>Du kan stadig tage passet{move.options.length > 0 ? ' eller flytte det' : ''}.</p>
+        <div class="card-actions">
+          <button type="button" class="btn" data-testid="start-session" onClick={start}>
+            Se dagens pas
+          </button>
+          {move.options.length > 0 && (
+            <button type="button" class="btn" data-testid="move-open" onClick={onMove}>
+              Flyt
+            </button>
+          )}
+        </div>
+      </Card>
+    );
+  }
+  // A moved session says where it came from, a short one what it is, and the motor that drops.
+  const from = movedFrom(PROGRAM, state, move?.kind ?? plan.kind, plan.date);
+  const clubName =
+    plan.club.day && !plan.club.closed && plan.club.time
+      ? `Muay Thai ${plan.club.time}`
+      : 'klubben';
+  const notes = [
+    from ? `Flyttet fra ${weekdayWord(from)}.` : '',
+    plan.short
+      ? `Kort version: 30 min med opvarmning, par 1 og 2 – om morgenen, før ${clubName}.`
+      : '',
+    from && motorGone(PROGRAM, state, plan.date) ? 'Motoren udgår denne uge.' : '',
+  ].filter((n) => n !== '');
   return (
     <Card
       title={SESSION_NAME[plan.kind]}
@@ -642,6 +731,13 @@ function MainCard({
         </p>
       }
     >
+      {notes.length > 0 && (
+        <ul class="main-card-notes" data-testid="main-card-notes">
+          {notes.map((n) => (
+            <li key={n}>{n}</li>
+          ))}
+        </ul>
+      )}
       {motor ? (
         <p class="block-line">{motor.title}</p>
       ) : (
@@ -665,18 +761,14 @@ function MainCard({
           I går var klubtræningen hård: rolig base i dag. Du kan vælge intervallerne før start.
         </p>
       )}
-      <button
-        type="button"
-        class="btn primary block"
-        data-testid="start-session"
-        // The day's own calm base (a moved motor), not the one after a hard club day: that one
-        // keeps »Kør intervallerne alligevel« on the traffic light (ENGINE 5.2, P25).
-        onClick={() =>
-          onStart(plan.kind ?? 'A', plan.short, session.calmBase && !session.intervalsOption)
-        }
-      >
+      <button type="button" class="btn primary block" data-testid="start-session" onClick={start}>
         Se dagens pas
       </button>
+      {move && canAct(move) && (
+        <button type="button" class="btn block" data-testid="move-open" onClick={onMove}>
+          Flyt eller spring over
+        </button>
+      )}
     </Card>
   );
 }

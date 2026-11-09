@@ -1,7 +1,8 @@
-// The club log and the Sunday check (docs/SPEC.md 4.6 and 4.7, DECISIONS.md D63): screens shown in
-// place of I dag with »Tilbage«, never a dialog. Fetched after start with lazy(). A button that
-// saves takes the screen from its first tap until I dag is back, so a double tap saves once (D61).
-import { useId, useRef, useState } from 'preact/hooks';
+// The club log, the Sunday check (docs/SPEC.md 4.6 and 4.7, DECISIONS.md D63) and »Flyt eller spring
+// over« (3.1, 3.4, D64): screens shown in place of I dag or Uge with »Tilbage«, never a dialog.
+// Fetched after start with lazy(). A button that saves takes the screen from its first tap until
+// the tab is back, so a double tap saves once (D61).
+import { useId, useState } from 'preact/hooks';
 import {
   addDays,
   calendarWeek,
@@ -32,6 +33,7 @@ import {
   hoursText,
   type LifeRequest,
 } from '../life.ts';
+import { useWriteOnce } from '../hooks.ts';
 import type { Model } from '../model.ts';
 import {
   filmWeek,
@@ -41,37 +43,27 @@ import {
   parseSleep,
   readyLadders,
 } from './choices.ts';
+import { Head } from './Head.tsx';
+import { MoveForm } from './MoveForm.tsx';
 
 export interface LifeFormProps {
   request: LifeRequest;
   model: Model;
   onClose: () => void;
-  /** Called once the events are written; I dag comes back. */
-  onSaved: () => void;
+  /** Called once the events are written, with the line the tab shows (»✓ …«); the tab comes back. */
+  onSaved: (message?: string) => void;
 }
 
 export function LifeForm(props: LifeFormProps) {
-  return props.request.kind === 'club' ? (
-    <ClubLogForm {...props} date={props.request.date} />
-  ) : (
-    <SundayCheckForm {...props} sunday={props.request.sunday} />
-  );
-}
-
-/** The first tap writes; the taps after it do nothing until the screen is gone (D61). */
-function useWriteOnce(): { busy: boolean; run: (action: () => Promise<void>) => () => void } {
-  const writing = useRef(false);
-  const [busy, setBusy] = useState(false);
-  const run = (action: () => Promise<void>) => () => {
-    if (writing.current) return;
-    writing.current = true;
-    setBusy(true);
-    action().catch(() => {
-      writing.current = false;
-      setBusy(false);
-    });
-  };
-  return { busy, run };
+  const request = props.request;
+  switch (request.kind) {
+    case 'club':
+      return <ClubLogForm {...props} date={request.date} />;
+    case 'sunday':
+      return <SundayCheckForm {...props} sunday={request.sunday} />;
+    case 'move':
+      return <MoveForm {...props} session={request.session} date={request.date} />;
+  }
 }
 
 const GRADES: Array<[number, string]> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => [n, String(n)]);
@@ -121,20 +113,6 @@ function Toggles<T extends string | number>(props: {
         })}
       </div>
     </section>
-  );
-}
-
-function Head(props: { kicker: string; title: string; onClose: () => void }) {
-  return (
-    <>
-      <button type="button" class="btn back" onClick={props.onClose}>
-        Tilbage
-      </button>
-      <header class="life-head">
-        <p class="life-kicker">{props.kicker}</p>
-        <h1>{props.title}</h1>
-      </header>
-    </>
   );
 }
 
