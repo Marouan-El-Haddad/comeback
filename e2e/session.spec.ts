@@ -1,6 +1,7 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { a11yProblems, SESSION_RULES } from './a11y.ts';
 import {
+  bodyUnderText,
   closeIntro,
   onboard,
   openApp,
@@ -160,7 +161,13 @@ async function driveUntil(page: Page, stop: () => Promise<boolean>): Promise<voi
       continue;
     }
     if (await page.getByTestId('as-planned').isVisible()) {
-      await page.getByTestId('as-planned').click();
+      // A tap that writes takes the screen until the next one (D61): a second look can find the
+      // button disabled on its way out, and a click that waited would wait for a pause that only
+      // runs out when the clock moves.
+      await page
+        .getByTestId('as-planned')
+        .click({ timeout: 5_000 })
+        .catch(() => undefined);
       continue;
     }
     const skip = page.getByRole('button', { name: 'Spring pausen over' });
@@ -1204,4 +1211,78 @@ test('et dobbelttryk på »Rød« og »Afslut den røde dag« gemmer én gang (D
   await doubleTapOn(page, page.getByRole('button', { name: 'Afslut den røde dag' }));
   await expect(page.getByTestId('done')).toBeVisible();
   await expectOneMore(page, before, 'session_completed');
+});
+
+// ---------------------------------------------------------------------------------------------
+// Engine round 2 after the figure reviews (D62): the steps from the reviews in »Dagens pas« and
+// »Nu«.
+// ---------------------------------------------------------------------------------------------
+
+test('etbens bounds har sin egen figur i »Dagens pas« og bevæger sig i »Nu« (D62)', async ({
+  page,
+}) => {
+  // Programme week 2, Tuesday, with power legs at step 6: before, the card showed the skater-hop's
+  // pictogram for it (H1 in the second figure review).
+  await openApp(page, '2026-11-17');
+  await onboardPowerLegs(page, 6);
+  await page.getByTestId('start-session').click();
+  const item = dayItem(page, 'Etbens bounds');
+  await expect(item.locator('svg.figure-svg')).toHaveCount(1);
+  await expect(item.locator('img.session-picto')).toHaveCount(0);
+  await stillFigures(page);
+  await page.getByTestId('day-start').click();
+  await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+  for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
+  await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+  await expect(intro(page).getByRole('heading', { level: 1 })).toHaveText(
+    'Power ben · Etbens bounds',
+  );
+  await closeIntro(page);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await expect(now(page).locator('.set-name')).toHaveText('Etbens bounds');
+  const figure = now(page).locator('.session-figure .figure');
+  await expect(figure.locator('.figure-stage')).toBeVisible();
+  await expect(figure).toHaveClass(/\btravels\b/);
+  await expect(now(page).locator('img.session-picto')).toHaveCount(0);
+  await expect(page.getByTestId('as-planned')).toBeInViewport();
+  await page.screenshot({
+    path: 'screenshots/pas-nu-bounds.png',
+    scale: 'css',
+    animations: 'disabled',
+  });
+});
+
+test('omvendt crunch i »Nu« fredag: »Langsomt ned« uden punkt dækker ikke kroppen (D62) @date', async ({
+  page,
+}) => {
+  await stillFigures(page);
+  // Programme week 2, Friday: Styrke B with the reverse crunch in its third pair.
+  await openApp(page, '2026-11-20');
+  await onboard(page);
+  await startSession(page);
+  await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+  for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
+  await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+  const crunch = now(page).locator('.set-name', { hasText: 'Omvendt crunch' });
+  await driveUntil(
+    page,
+    async () => (await crunch.isVisible()) && !(await intro(page).isVisible()),
+  );
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  const figure = now(page).locator('.session-figure .figure');
+  const mark = figure.locator('.figure-mark:visible');
+  for (let ms = 0; ms < 15_000 && (await mark.count()) === 0; ms += 50) await page.clock.runFor(50);
+  await expect(mark).toHaveText('Langsomt ned');
+  expect(await bodyUnderText(figure)).toEqual([]);
+  const text = await mark.boundingBox();
+  const stage = await figure.locator('.figure-stage').boundingBox();
+  expect(
+    text && stage && text.y >= stage.y - 1 && text.y + text.height <= stage.y + stage.height + 1,
+  ).toBe(true);
+  await expect(page.getByTestId('as-planned')).toBeInViewport();
+  await page.screenshot({
+    path: 'screenshots/pas-nu-omvendt-crunch-markering.png',
+    scale: 'css',
+    animations: 'disabled',
+  });
 });

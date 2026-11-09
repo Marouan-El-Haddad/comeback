@@ -1,6 +1,13 @@
 import { expect, test, type Page } from '@playwright/test';
 import { a11yProblems, SESSION_RULES } from './a11y.ts';
-import { closeIntro, onboard, openApp, startSession } from './helpers.ts';
+import {
+  bodyUnderText,
+  closeIntro,
+  onboard,
+  openApp,
+  startSession,
+  stillFigures,
+} from './helpers.ts';
 
 // The animated figure on the exercise card (docs/SPEC.md 3.8, 5 and 6; DECISIONS.md D48): it moves
 // in the step's tempo (push-up: 3 sek ned, 1 sek stille, op) with the running phase highlighted, a
@@ -660,7 +667,7 @@ async function untilNowPhase(page: Page, label: string): Promise<void> {
 test.describe('efter reviewet af P1b (D60)', () => {
   test.use({ serviceWorkers: 'block' });
 
-  test('H1: en cue på 24 tegn i den anden vinkel bliver i sin tegning på kortet og på stillbillederne', async ({
+  test('H1 og D62: en cue på 24 tegn i den anden vinkel holder sig fra kroppen på kortet og på stillbillederne', async ({
     page,
   }) => {
     await changeFigures(page, 'power_legs', longCueInFront);
@@ -677,10 +684,11 @@ test.describe('efter reviewet af P1b (D60)', () => {
     expect(await markText(figure, 1)).toBe(LONG_CUE);
     const front = figure.locator('.figure-draw').nth(1);
     const mark = await boxOf(front.locator('.figure-mark'));
-    // Inside its drawing, wrapped on at most two lines, and the page does not scroll sideways.
-    expect(inside(mark, await boxOf(front))).toBe(true);
+    // Off both bodies: in its drawing where it can be, else over the whole figure or on its own line
+    // over the drawings (D62); on at most two lines, and the page does not scroll sideways.
+    expect(await bodyUnderText(figure)).toEqual([]);
+    expect(inside(mark, await boxOf(figure.locator('.figure-stage')))).toBe(true);
     expect(mark.height).toBeLessThan(TWO_LINES);
-    expect(apart(mark, await boxOf(figure.locator('.figure-draw').nth(0)))).toBe(true);
     expect(await sideScroll(page)).toBe(false);
     await page.screenshot({ path: 'screenshots/kort-lang-cue.png', scale: 'css' });
 
@@ -695,6 +703,7 @@ test.describe('efter reviewet af P1b (D60)', () => {
     const still = await boxOf(landing.locator('.figure-mark'));
     expect(inside(still, await boxOf(landing.locator('.figure-draw')))).toBe(true);
     expect(still.height).toBeLessThan(TWO_LINES);
+    expect(await bodyUnderText(landing)).toEqual([]);
     expect(await sideScroll(page)).toBe(false);
     await landing.scrollIntoViewIfNeeded();
     await page.screenshot({ path: 'screenshots/kort-stillbilleder-lang-cue.png', scale: 'css' });
@@ -720,6 +729,7 @@ test.describe('efter reviewet af P1b (D60)', () => {
     expect(inside(text, await boxOf(figure.locator('.figure-stage')))).toBe(true);
     expect(text.height).toBeLessThan(TWO_LINES);
     expect(apart(text, await boxOf(now.locator('.now-target')))).toBe(true);
+    expect(await bodyUnderText(figure)).toEqual([]);
     expect(await sideScroll(page)).toBe(false);
     await expect(page.getByTestId('as-planned')).toBeInViewport();
     await page.screenshot({ path: 'screenshots/pas-nu-lang-cue.png', scale: 'css' });
@@ -772,6 +782,7 @@ test.describe('efter reviewet af P1b (D60)', () => {
     expect(inside(text, await boxOf(figure.locator('.figure-stage')))).toBe(true);
     expect(text.height).toBeLessThan(TWO_LINES);
     expect(apart(text, await boxOf(now.locator('.countdown')))).toBe(true);
+    expect(await bodyUnderText(figure)).toEqual([]);
     expect(await sideScroll(page)).toBe(false);
     await page.screenshot({ path: 'screenshots/pas-ur-lang-cue.png', scale: 'css' });
   });
@@ -880,5 +891,189 @@ test.describe('efter reviewet af P1b (D60)', () => {
     ).toBeLessThan(1.5);
     expect(later.text).toBe(start.text);
     await page.screenshot({ path: 'screenshots/kort-cue-foelger-hoften.png', scale: 'css' });
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+// Engine round 2 after the figure reviews (D62): a mark's text keeps off the body in »Nu«, in
+// narrow figures and on the stills, or stands on its own line outside the drawing; a step with
+// several movements has each one's figure at the top of its card; a figure that travels along the
+// floor is as large as a standing one.
+// ---------------------------------------------------------------------------------------------
+
+/** Moves time on until a mark's text is shown in `root`, and returns it. */
+async function untilMark(
+  page: Page,
+  root: ReturnType<Page['locator']>,
+  limit = 15_000,
+): Promise<string> {
+  const marks = root.locator('.figure-mark:visible');
+  for (let ms = 0; ms <= limit; ms += 50) {
+    if ((await marks.count()) > 0) return (await marks.first().innerText()).trim();
+    await page.clock.runFor(50);
+  }
+  throw new Error(`Ingen markering med tekst inden for ${limit} ms`);
+}
+
+/** Px per figure unit in each of a figure's drawings: how large the body is drawn. */
+async function unitPx(root: ReturnType<Page['locator']>): Promise<number[]> {
+  return root.locator('.figure-draw svg').evaluateAll((svgs) =>
+    svgs.map((svg) => {
+      const r = svg.getBoundingClientRect();
+      const [, , vw = 1, vh = 1] = (svg.getAttribute('viewBox') ?? '').split(/\s+/).map(Number);
+      return Math.min(r.width / vw, r.height / vh);
+    }),
+  );
+}
+
+test.describe('motorrunde 2 efter figur-reviewene (D62)', () => {
+  test.use({ serviceWorkers: 'block' });
+
+  test('i »Nu« dækker squat jumpets »Over tæerne« ikke kroppen, heller ikke på stillbilledet @date', async ({
+    page,
+  }) => {
+    await openApp(page, '2026-11-17');
+    await onboard(page);
+    const now = await toSquatJump(page);
+    const figure = now.locator('.now-stage .figure');
+    await pauseClock(page);
+    await untilNowPhase(page, 'Frys 2 sek');
+    await page.clock.runFor(200);
+    const mark = figure.locator('.figure-mark:visible');
+    await expect(mark).toHaveText('Over tæerne');
+    expect(await bodyUnderText(figure)).toEqual([]);
+    const text = await boxOf(mark);
+    expect(inside(text, await boxOf(figure.locator('.figure-stage')))).toBe(true);
+    expect(apart(text, await boxOf(now.locator('.now-target')))).toBe(true);
+    expect(await sideScroll(page)).toBe(false);
+    await expect(page.getByTestId('as-planned')).toBeInViewport();
+    await page.screenshot({
+      path: 'screenshots/pas-nu-squat-jump-markering.png',
+      scale: 'css',
+      animations: 'disabled',
+    });
+
+    // Reduced motion: the typical position as a still in both views, the texts off both bodies.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    const still = now.locator('.now-stage .figure-still-only');
+    await expect(still.locator('.figure-draw')).toHaveCount(2);
+    expect(await bodyUnderText(still)).toEqual([]);
+    for (const box of await still.locator('.figure-mark:visible').all())
+      expect(inside(await boxOf(box), await boxOf(still))).toBe(true);
+    await expect(page.getByTestId('as-planned')).toBeInViewport();
+  });
+
+  test('smalle figurer i »Nu«: wall slides og hage-ind i Open & Strong med deres cues @date', async ({
+    page,
+  }) => {
+    // os.4 and os.5 with the cues the review found on the body (M12 in part 3); the figure agents
+    // took them out until the engine kept them off it.
+    await changeFigures(page, 'os', (figures) => {
+      const slides = figures.find((f) => f.id === 'os.4');
+      const tuck = figures.find((f) => f.id === 'os.5');
+      if (!slides || !tuck) throw new Error('os.4 eller os.5 mangler');
+      slides.marks = [{ cue: 'Skuldrene nede', phase: 2, point: 'shoulder', place: 'left' }];
+      tuck.marks = [{ cue: 'Blikket vandret', at: 'tucked', point: 'head', place: 'right' }];
+    });
+    await openApp(page, '2026-11-17');
+    await onboard(page);
+    await stillFigures(page);
+    await page.getByTestId('os-start').click();
+    await page.getByTestId('os-go').click();
+    const title = page.locator('.session-title');
+    const now = page.locator('.session .stack.now');
+    const figure = now.locator('.session-figure .figure');
+    for (const [item, cue, shot] of [
+      ['4/6', 'Skuldrene nede', 'pas-os-wall-slides-markering'],
+      ['5/6', 'Blikket vandret', 'pas-os-hage-ind-markering'],
+    ] as const) {
+      await stillFigures(page);
+      for (let i = 0; i < 100 && !(await title.innerText()).includes(item); i++)
+        await page.clock.runFor(5_000);
+      await expect(title).toContainText(item);
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      expect(await untilMark(page, figure)).toBe(cue);
+      expect(await bodyUnderText(figure), cue).toEqual([]);
+      const text = await boxOf(figure.locator('.figure-mark:visible'));
+      expect(inside(text, await boxOf(figure))).toBe(true);
+      expect(await sideScroll(page)).toBe(false);
+      await page.screenshot({
+        path: `screenshots/${shot}.png`,
+        scale: 'css',
+        animations: 'disabled',
+      });
+    }
+  });
+
+  test('smalle figurer på kortet: nakkens N3 har hver retning animeret øverst, og »Halv kraft« dækker ikke kroppen', async ({
+    page,
+  }) => {
+    await openApp(page, '2026-11-17');
+    await onboard(page);
+    await page.getByRole('button', { name: 'Stiger', exact: true }).click();
+    await page.locator('.other-row', { hasText: 'Nakke' }).click();
+    await page.locator('.step-open', { hasText: 'Isometri, halv kraft' }).click();
+    const c = card(page);
+    const moves = c.locator('.card-moves .card-move');
+    await expect(moves.locator('.card-move-title')).toHaveText([
+      'Retning 1: pande',
+      'Retning 2: baghoved',
+      'Retning 3 og 4: siderne',
+    ]);
+    await expect(moves.locator('.figure-stage')).toHaveCount(3);
+    await expect(c.locator('img.card-picto')).toHaveCount(0);
+    await expect(c.locator('.card-similar')).toHaveCount(0);
+    await pauseClock(page);
+    for (let i = 0; i < 3; i++) {
+      const figure = moves.nth(i).locator('.figure');
+      await figure.scrollIntoViewIfNeeded();
+      expect(await untilMark(page, figure)).toBe('Halv kraft');
+      expect(await bodyUnderText(figure), `retning ${i + 1}`).toEqual([]);
+    }
+    expect(await sideScroll(page)).toBe(false);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.screenshot({ path: 'screenshots/kort-nakke-n3-retninger.png', scale: 'css' });
+  });
+
+  test('etbens bounds: begge bevægelser animeret øverst på kortet, og bounds så stor som drop-hoppet', async ({
+    page,
+  }) => {
+    await openApp(page, '2026-11-17');
+    await onboard(page);
+    await openCard(page, 'Power ben · trin 1', 'Etbens bounds');
+    const c = card(page);
+    const moves = c.locator('.card-moves .card-move');
+    await expect(moves.locator('.card-move-title')).toHaveText([
+      'Tre spring på ét ben',
+      'Drop-hop fra trappetrin',
+    ]);
+    await expect(moves.locator('.figure-stage')).toHaveCount(2);
+    // Its own figures, not the skater-hop's borrowed pictogram, and before the cues.
+    await expect(c.locator('img.card-picto')).toHaveCount(0);
+    await expect(c.locator('.card-similar')).toHaveCount(0);
+    await expect(c.getByRole('heading', { name: 'Bevægelserne' })).toHaveCount(0);
+    const first = await boxOf(moves.first().locator('.figure-stage'));
+    expect(first.y).toBeLessThan((await boxOf(c.locator('.card-cues'))).y);
+    expect(first.y + first.height / 2).toBeLessThan(847);
+    // Bounds travels: the card's whole width at a standing figure's height, drawn as large as the
+    // drop hop, which stands beside its phases.
+    const bounds = moves.nth(0).locator('.figure');
+    const drop = moves.nth(1).locator('.figure');
+    await expect(bounds).toHaveClass(/\btravels\b/);
+    await expect(drop).toHaveClass(/\btall\b/);
+    const [boundsPx = 0] = await unitPx(bounds);
+    const [dropPx = 0] = await unitPx(drop);
+    expect(boundsPx).toBeGreaterThanOrEqual(dropPx * 0.9);
+    expect(await sideScroll(page)).toBe(false);
+    await page.screenshot({ path: 'screenshots/kort-bounds-oeverst.png', scale: 'css' });
+
+    // The broad jump travels too: as large as the drop hop.
+    await c.getByRole('button', { name: 'Tilbage', exact: true }).first().click();
+    await page.locator('.step-open', { hasText: 'Længdespring' }).click();
+    const jump = card(page).locator('.card-figure .figure');
+    await expect(jump).toHaveClass(/\btravels\b/);
+    const [jumpPx = 0] = await unitPx(jump);
+    expect(jumpPx).toBeGreaterThanOrEqual(dropPx * 0.9);
+    await page.screenshot({ path: 'screenshots/kort-laengdespring.png', scale: 'css' });
   });
 });

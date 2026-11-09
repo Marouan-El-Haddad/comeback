@@ -88,7 +88,8 @@ async function driveUntil(page: Page, done: () => Promise<boolean>, what: string
     }
     const asPlanned = page.getByTestId('as-planned');
     if (await asPlanned.isVisible()) {
-      await asPlanned.click();
+      // Disabled on its way out after a tap that writes (D61): never wait for it.
+      await asPlanned.click({ timeout: 5_000 }).catch(() => undefined);
       continue;
     }
     const skip = page.getByRole('button', { name: 'Spring pausen over' });
@@ -263,18 +264,25 @@ test('»Øvrige« i Stiger: rotation, klubsekvens, nakke, burpee-varianter, læg
     await page.getByRole('button', { name: 'Tilbage', exact: true }).click();
   }
 
-  // Nakke trin 3: three directions, each with its name and phases on one line after the steps, so
-  // the cues and the steps still start on the first screen.
+  // Nakke trin 3: three directions, each animated under its name at the top of the card and the
+  // first on the first screen; no »Bevægelserne« after the steps (D62).
   await rows.filter({ hasText: 'Nakke' }).click();
   await expect(page.locator('.other-detail .mine-label')).toHaveText(['Dit trin']);
   await page.locator('.step-open', { hasText: 'Isometri, halv kraft' }).click();
   await expect(c.locator('.step-kicker')).toHaveText('Nakke · trin N3');
   await expect(c.locator('h2')).toHaveText(
-    skimmed('neck', 'neck.N3', ['Cues', 'Sådan gør du', 'Bevægelserne', 'Træner']),
+    skimmed('neck', 'neck.N3', ['Cues', 'Sådan gør du', 'Træner']),
   );
-  await expect(c.locator('.card-phases li')).toHaveCount(3);
-  await expect(c.locator('.card-phases li').first()).toContainText('Retning 1: pande');
-  await expectCuesAndStepsOnFirstScreen(page, PHONE_HEIGHT - TAB_BAR);
+  await expect(c.locator('.card-moves .card-move-title')).toHaveText([
+    'Retning 1: pande',
+    'Retning 2: baghoved',
+    'Retning 3 og 4: siderne',
+  ]);
+  await expect(c.locator('.card-moves .figure-stage')).toHaveCount(3);
+  await expect(c.locator('img.card-picto')).toHaveCount(0);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  const first = await c.locator('.card-moves .figure-stage').first().boundingBox();
+  expect(first && first.y + first.height).toBeLessThanOrEqual(PHONE_HEIGHT - TAB_BAR);
   await expectCardIsClean(page);
   await c.getByRole('button', { name: 'Tilbage', exact: true }).first().click();
   await page.getByRole('button', { name: 'Tilbage', exact: true }).click();
@@ -392,6 +400,9 @@ test('øvelseskortet fra et pas i tidsmaskinen: passet står stille, mens kortet
   await expect(page.locator('.session')).toBeHidden();
   await expect(page.locator('.banner.sim')).toBeVisible();
   await expectCardIsClean(page);
+  // Five minutes with the card open, and the warm-up after it, as still images: the card's two
+  // movements animate at its top (D62), and the fake clock would run every frame of them.
+  await stillFigures(page);
   await page.clock.runFor(300_000);
   await expect(c.getByRole('heading', { level: 1 })).toHaveText('Hæv pulsen');
   await c.getByRole('button', { name: 'Tilbage til passet' }).first().click();
@@ -400,6 +411,7 @@ test('øvelseskortet fra et pas i tidsmaskinen: passet står stille, mens kortet
   for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
   await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
   await closeIntro(page);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
 
   // The first set: the card of the exercise in hand.
   const count = page.locator('.set-count');

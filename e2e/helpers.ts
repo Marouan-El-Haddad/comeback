@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 /** 08:00 in Copenhagen on the given date (winter time, UTC+1). */
 export function morning(date: string): Date {
@@ -197,4 +197,42 @@ export async function runSessionToSummary(
     await page.clock.runFor(5_000);
   }
   throw new Error('The session did not reach its summary');
+}
+
+/**
+ * The drawn parts of a body that a shown mark's text lies over in `root` (docs/SPEC.md 3.8, D62):
+ * every limb, hand, foot, the torso and the head, followed along its line every px on the screen.
+ * Empty when every text keeps off the bodies, as it must where there is room.
+ */
+export async function bodyUnderText(root: Locator): Promise<string[]> {
+  return root.evaluate((el) => {
+    const found: string[] = [];
+    const texts = [...el.querySelectorAll<HTMLElement>('.figure-mark')].filter(
+      (t) => !t.hidden && t.getClientRects().length > 0,
+    );
+    const parts = [...el.querySelectorAll<SVGGeometryElement>('svg [data-k]')].filter(
+      (p) =>
+        !p.closest('g.figure-marks') &&
+        /^(torso|head|face|neck)$|\.(1|2|tip)$/.test(p.getAttribute('data-k') ?? ''),
+    );
+    for (const text of texts) {
+      const r = text.getBoundingClientRect();
+      for (const part of parts) {
+        const ctm = part.getScreenCTM();
+        if (!ctm || typeof part.getTotalLength !== 'function') continue;
+        const total = part.getTotalLength();
+        const step = Math.max(0.25, 1 / Math.max(Math.abs(ctm.a), Math.abs(ctm.d), 0.01));
+        for (let s = 0; s <= total; s += step) {
+          const p = part.getPointAtLength(s);
+          const x = ctm.a * p.x + ctm.c * p.y + ctm.e;
+          const y = ctm.b * p.x + ctm.d * p.y + ctm.f;
+          if (x > r.left + 1 && x < r.right - 1 && y > r.top + 1 && y < r.bottom - 1) {
+            found.push(`»${text.textContent ?? ''}« over ${part.getAttribute('data-k') ?? ''}`);
+            break;
+          }
+        }
+      }
+    }
+    return found;
+  });
 }
