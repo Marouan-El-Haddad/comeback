@@ -47,8 +47,8 @@ Alle hændelser har `id` (ulid), `at` (ISO-tidsstempel), `date` (`YYYY-MM-DD`, E
 | `set_logged` | `sessionId`, `blockId`, `trackId`, `stepId`, `setIndex`, `side?`, `reps?`, `seconds?`, `rir: 0 \| 1 \| 2 \| 3`, `pain?: 'light' \| 'sharp' \| 'stop'`, `asPlanned: boolean` | Hvert sæt. `rir 1` betyder »1 eller mindre«, `3` betyder »3+«, `0` kun ved målinger og boss |
 | `block_result` | `sessionId`, `trackId`, `stepId`, `result` (se 5.4) | EMOM, power, klubsekvens, nakke, W3 |
 | `session_completed` | `sessionId`, `status: 'green' \| 'yellow' \| 'red' \| 'travel'`, `aborted: boolean`, `done: boolean` | Passet afsluttes. Et afbrudt pas beholder trafiklysets status; blokke, der blev logget færdige før afbrydelsen, vurderes normalt (S-DP-11) |
-| `session_skipped` | `kind`, `reason: 'user' \| 'missed'` | Brugeren springer over, eller dagen er gået |
-| `session_moved` | `kind`, `fromDate`, `toDate`, `short: boolean` | Flytning |
+| `session_skipped` | `kind`, `forDate`, `reason: 'user' \| 'missed'` | Brugeren springer over, eller dagen er gået. `forDate` er passets dag i ugeplanen, `date` dagen, hændelsen skrives; `kind` er ugeplanens pas (A eller B, også på en rejsedag) |
+| `session_moved` | `kind`, `fromDate`, `toDate`, `short: boolean` | Flytning (5.9). `date` er dagen, flytningen skrives |
 | `step_changed` | `trackId`, `from`, `to`, `by: 'engine' \| 'user'`, `reason`, `explanation`, `until?` | Motor eller bruger |
 | `measurement_logged` | `measureId`, `value`, `programWeek`, `round` | Målinger |
 | `club_logged` | `attended`, `content?[]`, `hardness?`, `freshness?`, `technique?` | Efter klubtræning (Tilføjelse T1). `date` er klubdagen, også når loggen skrives dagen efter (`SPEC.md` 4.6) |
@@ -134,7 +134,7 @@ Tilstanden afledes fra bunden ved hver start og efter hver hændelse (loggen er 
 2. »Som planlagt« skriver `set_logged` med `reps/seconds = target`, `rir = plan`, `asPlanned = true`. I uger med »1–2 i reserve« (`rirPlan = 1`) er planen 2, når `target` er trinnets max, så et hit er muligt; under max er den 1 (P10). Afvigelser skrives med de rettede tal. Hold-timere skriver selv, når tiden er gået.
 3. `pain: 'sharp' \| 'stop'` afslutter blokken for det spor; resten af passet fortsætter.
 4. Ved »Færdig« skrives `session_completed`, derefter kører progressionen (5.4) og regressionen (5.5) for hvert spor i passet og skriver eventuelle `step_changed`. Opsummeringen viser forklaringerne.
-5. Et pas, der ikke er startet ved dagens udgang, får `session_skipped(reason: 'missed')`, når næste dag beregnes; næste dag tilbyder »Flyt« (kun gyldige dage efter 5.9; skriver `session_moved`) eller »Spring over«.
+5. Et pas, der ikke er startet ved dagens udgang, får `session_skipped(reason: 'missed')`, når næste dag beregnes; næste dag tilbyder »Flyt« (kun gyldige dage efter 5.9; skriver `session_moved`) eller »Spring over« (skriver `session_skipped(reason: 'user')`). Resten af ugen tilbydes det igen, så længe der er en gyldig dag (`SPEC.md` 3.1, `DECISIONS.md` D64). `reason: 'missed'` skjuler ikke tilbuddet; det gør `reason: 'user'` og en flytning.
 
 ### 5.4 Progression
 
@@ -216,13 +216,13 @@ Overlejringer er forslag med »OK«/»Vælg anden« (`overlay_choice`). De gæld
 
 ### 5.9 Flytning af pas (R-MOVE, R-REST)
 
-`validMoveDays(kind, date)` returnerer dage i samme kalenderuge (til og med søndag), hvor alle gælder:
+`validMoveDays(kind, date)` returnerer dage i samme kalenderuge fra i dag til og med søndag, hvor alle gælder:
 1. Dagen har ikke allerede A eller B. En motor-dag er gyldig for A og B: motoren udgår så den uge (»Motor-passet ryger først«, s. 47), og I dag viser »valgfri rolig tur« på en fri dag, hvis der er en. Motor kan kun flyttes til en fri dag.
 2. Dagen er ikke en klubdag – undtagen som »kort version« (30 min, par 1 og 2) om morgenen, som tilbydes separat.
 3. Dagen er ikke dagen før en begivenhed, hvis `kind ∈ {A, motor-intervaller}` eller passet indeholder Nordic-trin.
 4. Efter flytningen er der stadig mindst én hel hviledag uden klub og uden sekundært pas (R-REST). En dag i ugen, der er gået uden pas og uden klub, tæller som hviledag.
 5. A og B samme dag er ikke tilladt. A og B på to dage i træk tillades med advarslen »B skal efterlade dig frisk«.
-Ingen gyldige dage → »Spring over« eller »Kort version«. To pas kan aldrig lande på samme dag; det, der flyttes, taber.
+Ingen gyldige dage → »Spring over« eller »Kort version«. »Kort version« er den korte version på en klubdag efter regel 2; et pas gøres ikke kort på sin egen dag (`DECISIONS.md` D64). To pas kan aldrig lande på samme dag; det, der flyttes, taber. Det gælder også en flytning i loggen, som ikke blev prøvet mod reglerne (fx efter en fletning ved import): lander den på en dag, der allerede har A eller B – for motoren på en dag med et pas – eller uden for passets kalenderuge, gælder den ikke, og passet bliver, hvor det stod.
 
 ### 5.10 Ekstra Muay Thai-pas (R-EXTRA-MT)
 
@@ -514,7 +514,7 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 - **S-MOVE-01** Givet standardplan, A ikke logget tirsdag. Når onsdag beregnes. Så er de fulde flyttedage torsdag (motoren udgår den uge med forklaring; advarslen om A og B to dage i træk vises) og søndag (tirsdag blev hviledag, så R-REST holder). Onsdag og lørdag tilbydes kun som »Kort version« (klubdage), fredag slet ikke (B). »Spring over« tilbydes altid.
 - **S-MOVE-02** Givet B flyttes til lørdag (klubdag). Så kun »kort version« tilbydes.
 - **S-MOVE-03** Givet flytning, der fjerner den sidste hviledag. Så dagen er ugyldig (R-REST).
-- **S-MOVE-04** Givet to pas forsøgt på samme dag. Så det flyttede afvises.
+- **S-MOVE-04** Givet to pas forsøgt på samme dag. Så det flyttede afvises – både når flytningen skrives, og når en flytning i loggen lander på en dag med A eller B, en motor på en dag med et pas eller en dag i en anden uge: passet bliver på sin dag, og pladsens pas står uændret.
 - **S-EXTRA-01** Givet clubDays = [1, 3, 5, 6]. Så layout: hviledag søn, A tir, B tor, motor udgår med »valgfri rolig tur«.
 - **S-EXTRA-02** Givet clubDays = [1, 2, 3, 4, 5, 6]. Så A og B som kort version om morgenen på to klubdage med størst afstand; hviledag søn; motor udgår.
 
