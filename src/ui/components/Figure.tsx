@@ -4,10 +4,13 @@
 // it shows the positions as still images side by side with their names. It has a text alternative
 // with the positions, the phases, the views and the marks in words.
 //
-// A figure can have a second view beside it (a squat from the side and from the front), on the same
-// clock, and marks at the right moment: an arrow, an angle, a cue or a guide line in the figure's red,
-// one at a time, with its text in HTML at the size the session needs (SPEC 6), placed from the
-// drawing's measured size. A figure that travels along the floor gets a frame that follows it.
+// A figure can have a second view beside it or under it (a squat from the side and from the front
+// side by side, a plank from the side and from above over each other: whichever draws the smaller
+// larger, D60), on the same clock, and marks at the right moment: an arrow, an angle, a cue or a
+// guide line in the figure's red, one at a time, with its text in HTML at the size the session needs
+// (SPEC 6), inside its drawing on at most two lines or else on its own line over or under the figure.
+// A cue or a guide line at a part of the body follows it through its phase while its text stands
+// still. A figure that travels along the floor gets a frame that follows it.
 //
 // The phone runs without JIT, so the animation is cheap: the SVG is drawn once, and each frame only
 // moves the elements of the body (at most 30 times a second), not at all while the figure holds a
@@ -31,6 +34,9 @@ import {
 } from '../../figure/draw.ts';
 import { faultPair } from '../../figure/faults.ts';
 import {
+  bodyOf,
+  followPrims,
+  labelCovers,
   markAt,
   markPlans,
   placeLabel,
@@ -48,11 +54,12 @@ import {
   movingPrims,
   phaseAt,
   poseAt,
+  shiftAtTime,
   stillPrims,
   type FigureModel,
   type Move,
 } from '../../figure/motion.ts';
-import { figureViews, VIEW_NAME } from '../../figure/views.ts';
+import { stackViews, VIEW_GAP, VIEW_NAME, viewAspect, viewModels } from '../../figure/views.ts';
 // The figure's CSS comes with the card's code, so no start file lists it (docs/SPEC.md 7).
 import css from './figure.css?inline';
 
@@ -93,14 +100,54 @@ interface ViewModel {
 function useViews(figure: FigureItem, movement: OwnMovement, both = true): ViewModel[] {
   return useMemo(
     () =>
-      figureViews(figure)
+      // Both views on one clock with one loop length (L1 in the P1b review).
+      viewModels(figure, movement)
         .slice(0, both ? 2 : 1)
-        .map((view) => {
-          const model = buildModel(view, movement);
-          return { model, plans: markPlans(model) };
-        }),
+        .map((model) => ({ model, plans: markPlans(model) })),
     [figure, movement, both],
   );
+}
+
+/**
+ * Two views side by side or over each other in the place the figure has (M1 in the P1b review,
+ * D60): with the width it has and the height one view gets side by side (the CSS), whichever draws
+ * the smaller view larger. Over each other each view gets half that height less the gap, so the
+ * figure keeps its height. Returns that height in px, or null side by side (and for one view).
+ */
+function useStacked(
+  root: { current: HTMLElement | null },
+  views: readonly ViewModel[],
+  still: boolean,
+): number | null {
+  const [height, setHeight] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    const el = root.current;
+    if (!el || views.length < 2) {
+      setHeight(null);
+      return;
+    }
+    const aspects = views.map((v) => viewAspect(v.model, still));
+    const decide = () => {
+      const svg = el.querySelector<SVGSVGElement>('.figure-svg');
+      if (!svg || el.clientWidth <= 0) return;
+      // The height the CSS gives one view, without the height set here when stacked.
+      const set = svg.style.height;
+      svg.style.height = '';
+      const side = svg.getBoundingClientRect().height;
+      svg.style.height = set;
+      setHeight(
+        side > 0 && stackViews(aspects, el.clientWidth, side)
+          ? Math.floor((side - VIEW_GAP) / 2)
+          : null,
+      );
+    };
+    decide();
+    if (typeof ResizeObserver !== 'function') return;
+    const observer = new ResizeObserver(decide);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [views, still]);
+  return height;
 }
 
 /** The text alternative with the views and the marks in words (docs/SPEC.md 3.8 and 6). */
@@ -141,12 +188,13 @@ export function FigureStill({
   // »Næste« and »Dagens pas« draw many small stills: only the first view, without marks.
   const views = useViews(figure, movement, full);
   const text = useMemo(() => (full ? fullLabel(label, views) : label), [full, label, views]);
+  const root = useRef<HTMLDivElement>(null);
+  const stacked = useStacked(root, views, true);
+  const classes = ['figure-still-only', views.length > 1 ? 'two' : '', stacked ? 'stacked' : '']
+    .filter(Boolean)
+    .join(' ');
   return (
-    <div
-      class={views.length > 1 ? 'figure-still-only two' : 'figure-still-only'}
-      role="img"
-      aria-label={text}
-    >
+    <div class={classes} role="img" aria-label={text} ref={root}>
       {views.map(({ model }, i) => (
         <StillDrawing
           key={i}
@@ -154,6 +202,7 @@ export function FigureStill({
           box={model.stillBox}
           prims={stillPrims(model, position)}
           marks={full ? stillMarks(model, position) : []}
+          height={stacked}
         />
       ))}
     </div>
@@ -221,9 +270,23 @@ function setMark(el: HTMLElement, label: MarkLabel | null): void {
 }
 
 /**
+ * Whether a mark's text fits its drawing as the CSS wraps it there (H1 in the P1b review, D60): no
+ * word sticks out, and it takes at most two lines.
+ */
+function labelFits(el: HTMLElement): boolean {
+  if (el.scrollWidth > el.clientWidth + 1) return false;
+  const style = getComputedStyle(el);
+  const line = parseFloat(style.lineHeight) || 1.3 * parseFloat(style.fontSize);
+  return el.clientHeight <= 2 * line + 1;
+}
+
+/**
  * Places a mark's text by its point, off the body where it can (placeLabel): the SVG fills its box
  * (`width` × `height` px) and keeps its aspect ratio (»meet«), so every point's place in px follows
- * from the viewBox. The text never leaves the drawing.
+ * from the viewBox. The text stays inside its drawing, at most as wide as it and on at most two
+ * lines (figure.css), measured after it wraps. When it does not fit (two views side by side beside
+ * the clock), it stands on its own line over or under the body across the whole `figure` – both
+ * views – while its dot or line stays on the body (H1 in the P1b review, D60).
  */
 function placeMark(
   el: HTMLElement,
@@ -231,52 +294,107 @@ function placeMark(
   viewBoxText: string,
   width: number,
   height: number,
+  figure: HTMLElement | null = null,
+  /** The other views' bodies in px of `figure`, for a text on its own line over both. */
+  others: () => ReadonlyArray<readonly [number, number, number]> = () => [],
 ): void {
   const label = draw?.label;
   if (!draw || !label || el.hidden || width <= 0 || height <= 0) return;
+  const { px, scale } = pxOf(viewBoxText, width, height);
+  const body = (dx = 0, dy = 0) =>
+    draw.body.map(([bx, by, r]) => {
+      const [x0, y0] = px([bx, by], dx, dy);
+      return [x0, y0, r * scale] as const;
+    });
+  // First at most as wide as its drawing (figure.css).
+  el.style.maxWidth = '';
+  const drawing = el.parentElement;
+  if (labelFits(el) || !figure || !drawing) {
+    const [x, y] = placeLabel({
+      width,
+      height,
+      w: el.offsetWidth,
+      h: el.offsetHeight,
+      at: label.at ? px(label.at) : null,
+      place: label.place,
+      ray: label.ray
+        ? {
+            from: px(label.ray.from),
+            dir: [
+              Math.cos((label.ray.angle * Math.PI) / 180),
+              -Math.sin((label.ray.angle * Math.PI) / 180),
+            ],
+          }
+        : null,
+      body: body(),
+    });
+    el.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
+    return;
+  }
+  // Its own line over or under the body, across the whole figure: as wide as the figure, or half as
+  // wide on two lines, wherever it covers least of both views.
+  const area = figure.getBoundingClientRect();
+  const own = drawing.getBoundingClientRect();
+  const dx = own.left - area.left;
+  const dy = own.top - area.top;
+  const bodies = [...body(dx, dy), ...others()];
+  let best: { at: Point; covers: number; max: number } | null = null;
+  for (const max of [Math.floor(area.width), Math.floor(area.width / 2)]) {
+    el.style.maxWidth = `${max}px`;
+    if (best && !labelFits(el)) continue;
+    const w = el.offsetWidth;
+    const h = el.offsetHeight;
+    const at = placeLabel({
+      width: area.width,
+      height: area.height,
+      w,
+      h,
+      at: label.at ? px(label.at, dx, dy) : null,
+      place: label.place,
+      line: true,
+      body: bodies,
+    });
+    const covers = labelCovers(at, w, h, bodies);
+    if (!best || covers < best.covers) best = { at, covers, max };
+  }
+  if (!best) return;
+  el.style.maxWidth = `${best.max}px`;
+  el.style.transform = `translate(${Math.round(best.at[0] - dx)}px, ${Math.round(best.at[1] - dy)}px)`;
+}
+
+/** Figure units to px in a drawing of `width` × `height` px showing `viewBoxText` (»meet«). */
+function pxOf(
+  viewBoxText: string,
+  width: number,
+  height: number,
+): { px: (p: Point, dx?: number, dy?: number) => Point; scale: number } {
   const [vx = 0, vy = 0, vw = 1, vh = 1] = viewBoxText.split(/\s+/).map(Number);
   const scale = Math.min(width / vw, height / vh);
   const ox = (width - vw * scale) / 2;
   const oy = (height - vh * scale) / 2;
-  const px = (p: Point): Point => [ox + (p[0] - vx) * scale, oy + (-p[1] - vy) * scale];
-  const [x, y] = placeLabel({
-    width,
-    height,
-    w: el.offsetWidth,
-    h: el.offsetHeight,
-    at: label.at ? px(label.at) : null,
-    place: label.place,
-    ray: label.ray
-      ? {
-          from: px(label.ray.from),
-          dir: [
-            Math.cos((label.ray.angle * Math.PI) / 180),
-            -Math.sin((label.ray.angle * Math.PI) / 180),
-          ],
-        }
-      : null,
-    body: draw.body.map(([bx, by, r]) => {
-      const [x0, y0] = px([bx, by]);
-      return [x0, y0, r * scale] as const;
-    }),
-  });
-  el.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
+  return {
+    scale,
+    px: (p, dx = 0, dy = 0) => [ox + (p[0] - vx) * scale + dx, oy + (-p[1] - vy) * scale + dy],
+  };
 }
 
 /**
  * A still image of a view, with the marks it carries (reduced motion, »Nu« under reduced motion);
- * their texts are placed when it is drawn and when it changes size.
+ * their texts are placed when it is drawn and when it changes size. `height` sets the drawing's
+ * height when two views stand over each other (useStacked).
  */
 function StillDrawing({
   model,
   box,
   prims,
   marks,
+  height = null,
 }: {
   model: FigureModel;
   box: Box;
   prims: Prim[];
   marks: MarkDraw[];
+  height?: number | null;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const markup = svgBody([...prims, ...marks.flatMap((m) => m.prims)]);
@@ -285,9 +403,11 @@ function StillDrawing({
   useLayoutEffect(() => {
     const root = ref.current;
     if (!root || texts.length === 0) return;
+    // In a session's still the text that does not fit stands over or under both views.
+    const figure = root.closest<HTMLElement>('.figure-still-only');
     const place = () => {
       root.querySelectorAll<HTMLElement>('.figure-mark').forEach((el, i) => {
-        placeMark(el, texts[i] ?? null, vb, root.clientWidth, root.clientHeight);
+        placeMark(el, texts[i] ?? null, vb, root.clientWidth, root.clientHeight, figure);
       });
     };
     place();
@@ -295,7 +415,7 @@ function StillDrawing({
     const observer = new ResizeObserver(place);
     observer.observe(root);
     return () => observer.disconnect();
-  }, [markup, vb]);
+  }, [markup, vb, height]);
   return (
     <div class="figure-draw" data-view={model.figure.view} ref={ref}>
       <svg
@@ -303,6 +423,7 @@ function StillDrawing({
         viewBox={vb}
         preserveAspectRatio="xMidYMid meet"
         aria-hidden="true"
+        style={height ? { height: `${height}px` } : undefined}
         dangerouslySetInnerHTML={{ __html: markup }}
       />
       {texts.map((m, i) => (
@@ -329,8 +450,11 @@ interface Drawn {
   width: number;
   height: number;
   viewBox: string;
-  /** The mark shown now, or null. */
+  /** The mark shown now, or null, and its plan. */
   shown: MarkShow | null;
+  plan: MarkPlan | null;
+  /** The shapes of the mark shown now, by key: a mark that follows the body moves them (D60). */
+  markNodes: Map<string, Element>;
   /** The hold the body was last drawn in: it needs no drawing until the move changes. */
   held: Move | null;
 }
@@ -389,6 +513,8 @@ function Animated({
         height: box.clientHeight,
         viewBox: svg.getAttribute('viewBox') ?? '',
         shown: null,
+        plan: null,
+        markNodes: new Map(),
         held: null,
       });
     });
@@ -400,14 +526,31 @@ function Animated({
     let onScreen = true;
     let shown = document.visibilityState !== 'hidden';
     let current = phaseOrNull(main, t);
+    /** The other views' bodies now, in px of the stage: a text on its own line keeps off them. */
+    const othersOf = (d: Drawn) => () => {
+      const area = root.getBoundingClientRect();
+      return drawn
+        .filter((o) => o !== d && o.width > 0 && o.height > 0)
+        .flatMap((o) => {
+          const at = o.box.getBoundingClientRect();
+          const { px, scale } = pxOf(o.viewBox, o.width, o.height);
+          const model = o.view.model;
+          return bodyOf(model, poseAt(model, t ?? 0)).map(([bx, by, r]) => {
+            const [x, y] = px([bx, by], at.left - area.left, at.top - area.top);
+            return [x, y, r * scale] as const;
+          });
+        });
+    };
 
     const drawView = (d: Drawn) => {
       const { model, plans } = d.view;
       // The body: not while it holds a position it is already drawn in.
       const at = moveAt(model.timeline, t ?? 0);
       const hold = at && at.move.from === at.move.to ? at.move : null;
-      if (!hold || hold !== d.held) {
-        for (const p of movingPrims(model, poseAt(model, t ?? 0))) {
+      const still = hold !== null && hold === d.held;
+      const pose = still ? null : poseAt(model, t ?? 0);
+      if (pose) {
+        for (const p of movingPrims(model, pose)) {
           const node = d.nodes.get(p.key);
           if (node) for (const [name, value] of moving(p)) node.setAttribute(name, value);
         }
@@ -423,14 +566,31 @@ function Animated({
           moved = true;
         }
       }
-      // The mark of the moment, drawn once when it comes.
-      const show = markAt(plans, model.timeline.total, t)?.show ?? null;
+      // The mark of the moment, drawn once when it comes; its text stands still while it is shown.
+      const now = markAt(plans, model.timeline.total, t);
+      const show = now?.show ?? null;
       if (show !== d.shown) {
         d.shown = show;
-        if (d.marks) d.marks.innerHTML = show ? svgBody(show.prims) : '';
+        d.plan = now?.plan ?? null;
+        d.markNodes.clear();
+        if (d.marks) {
+          d.marks.innerHTML = show ? svgBody(show.prims, true) : '';
+          for (const node of d.marks.querySelectorAll('[data-k]'))
+            d.markNodes.set(node.getAttribute('data-k') ?? '', node);
+        }
         setMark(d.label, show?.label ?? null);
-        placeMark(d.label, show, d.viewBox, d.width, d.height);
-      } else if (moved && show?.label) placeMark(d.label, show, d.viewBox, d.width, d.height);
+        placeMark(d.label, show, d.viewBox, d.width, d.height, root, othersOf(d));
+      } else if (moved && show?.label) {
+        placeMark(d.label, show, d.viewBox, d.width, d.height, root, othersOf(d));
+      }
+      // A cue's dot or a guide line at a part of the body follows it through its phase (D60).
+      if (show?.follow && d.plan && pose) {
+        const dx = shiftAtTime(model, t ?? 0);
+        for (const p of followPrims(model, d.plan.mark, d.plan.index, pose, dx)) {
+          const node = d.markNodes.get(p.key);
+          if (node) for (const [name, value] of moving(p)) node.setAttribute(name, value);
+        }
+      }
     };
     const draw = () => {
       for (const d of drawn) drawView(d);
@@ -483,7 +643,7 @@ function Animated({
               d.width = d.box.clientWidth;
               d.height = d.box.clientHeight;
               d.held = null;
-              placeMark(d.label, d.shown, d.viewBox, d.width, d.height);
+              placeMark(d.label, d.shown, d.viewBox, d.width, d.height, root, othersOf(d));
             }
           })
         : null;
@@ -501,10 +661,12 @@ function Animated({
   const steady = compact || clock !== undefined;
   const toggle = steady ? undefined : () => setSlow((s) => !s);
   const two = views.length > 1;
+  const stacked = useStacked(stage, views, false);
   const classes = [
     'figure',
     !two && isTall(main) ? 'tall' : '',
     two ? 'two' : '',
+    stacked ? 'stacked' : '',
     compact ? 'compact' : '',
   ]
     .filter(Boolean)
@@ -521,6 +683,7 @@ function Animated({
                 viewBox={viewBox(model.box)}
                 preserveAspectRatio="xMidYMid meet"
                 aria-hidden="true"
+                style={stacked ? { height: `${stacked}px` } : undefined}
                 dangerouslySetInnerHTML={{ __html: markups[i] ?? '' }}
               />
               <span class="figure-mark" hidden />
@@ -580,7 +743,8 @@ export function stillColumns(count: number, width: number, height: number): numb
 
 /**
  * Reduced motion: every position as a still image with its name, at most three to a row, and the
- * marks of each position on it (D58). A second view follows under its name.
+ * marks of each position on it (D58). A second view follows under its name. A mark's text that
+ * cannot stand on two lines in its still gives the row fewer stills (H1 in the P1b review, D60).
  */
 function Stills({
   views,
@@ -593,19 +757,36 @@ function Stills({
 }) {
   const main = views[0]?.model as FigureModel;
   const two = views.length > 1;
+  const root = useRef<HTMLDivElement>(null);
+  // Each view at most three to a row, fewer while one of its marks' text does not fit; a new figure
+  // starts over.
+  const [cap, setCap] = useState<{ views: ViewModel[]; most: number[] }>({ views, most: [] });
+  const mostOf = (v: number) => (cap.views === views ? (cap.most[v] ?? 3) : 3);
+  useLayoutEffect(() => {
+    const grids = [...(root.current?.querySelectorAll<HTMLElement>('.figure-stills') ?? [])];
+    const most = grids.map((grid, v) => {
+      const marks = [...grid.querySelectorAll<HTMLElement>('.figure-mark')];
+      return mostOf(v) > 1 && marks.some((el) => !labelFits(el)) ? mostOf(v) - 1 : mostOf(v);
+    });
+    if (most.some((n, v) => n !== mostOf(v))) setCap({ views, most });
+  }, [views, cap]);
   return (
     <figure class={!two && isTall(main) ? 'figure stills tall' : 'figure stills'}>
       <div
         class="figure-stills-all"
         role={two ? 'img' : undefined}
         aria-label={two ? label : undefined}
+        ref={root}
       >
         {views.map(({ model }, v) => {
           // A figure that travels along x (`advance`) shows each position in its own box (H1, P1a).
-          const columns = stillColumns(
-            model.movement.positions.length,
-            model.stillBox.x1 - model.stillBox.x0,
-            model.stillBox.y1 - model.stillBox.y0,
+          const columns = Math.min(
+            mostOf(v),
+            stillColumns(
+              model.movement.positions.length,
+              model.stillBox.x1 - model.stillBox.x0,
+              model.stillBox.y1 - model.stillBox.y0,
+            ),
           );
           return (
             <div class="figure-stills-view" key={v}>

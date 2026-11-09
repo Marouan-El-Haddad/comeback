@@ -108,6 +108,12 @@
   height: 120px;
 }
 
+/* The drawing takes the still's whole width (the figure stays centred in it), so a mark's text has
+   the still's width to wrap in (D60). */
+.figure-still .figure-draw {
+  justify-self: stretch;
+}
+
 .figure-still-name {
   margin: 0;
   font-weight: 600;
@@ -137,6 +143,13 @@
   gap: 8px;
 }
 
+/* Two views over each other in the whole width (D60): a lying figure is not halved; the component
+   sets each drawing to half the height less the gap, so the figure keeps its height. */
+.figure.two.stacked .figure-stage,
+.figure-still-only.two.stacked {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .figure-view {
   min-width: 0;
   display: grid;
@@ -157,7 +170,9 @@
 }
 
 /* A drawing and the text of its mark: the text stands by its point, placed by the figure system
-   from the drawing's size, so it is 18 px wherever the figure stands (SPEC 6, D58). */
+   from the drawing's size, so it is 18 px wherever the figure stands (SPEC 6, D58). It is at most as
+   wide as its drawing and wraps there; the component measures it after wrapping and puts a text of
+   more than two lines on its own line over or under the figure (D60). */
 .figure-draw {
   position: relative;
   min-width: 0;
@@ -167,6 +182,8 @@
   position: absolute;
   left: 0;
   top: 0;
+  box-sizing: border-box;
+  max-width: 100%;
   padding: 0 8px;
   border: 1px solid var(--c-line);
   border-left: 4px solid var(--c-red);
@@ -176,7 +193,7 @@
   font-weight: 600;
   font-size: 18px;
   line-height: 1.3;
-  white-space: nowrap;
+  white-space: normal;
   pointer-events: none;
 }
 

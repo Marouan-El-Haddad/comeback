@@ -551,3 +551,334 @@ test('»Nu« i passet: begge vinkler og markeringen på sit tidspunkt (D52, D58)
   expect(await a11yProblems(page, '.session', SESSION_RULES)).toEqual([]);
   await page.screenshot({ path: 'screenshots/pas-nu-vinkler-markering.png', scale: 'css' });
 });
+
+// ---------------------------------------------------------------------------------------------
+// After the review of P1b (docs/reviews/nat3-p1b-figurmotor.md, DECISIONS.md D60): a mark's text
+// stays in its drawing or stands on its own line over or under the figure, two lying views stand
+// over each other, and a cue at a part of the body follows it through its phase. The figure files
+// are changed on their way to the app, so the tests do not depend on the figure agents' drawings.
+// ---------------------------------------------------------------------------------------------
+
+/** A cue of 24 letters, the most a cue may have, with a long word in it. */
+const LONG_CUE = 'Skinnebenene står lodret';
+
+type Json = Record<string, unknown>;
+interface FigureJson {
+  id: string;
+  movement?: string;
+  [key: string]: unknown;
+}
+
+/** Changes a figure file on its way to the app (the service worker is blocked in these tests). */
+async function changeFigures(
+  page: Page,
+  subject: string,
+  change: (figures: FigureJson[]) => void,
+): Promise<void> {
+  await page.route(
+    new RegExp(`/content/figures/${subject}\\.json|/assets/${subject}-[^/]+\\.json$`),
+    async (route) => {
+      const response = await route.fetch();
+      const data = (await response.json()) as Json;
+      if (Array.isArray(data.figures)) change(data.figures as FigureJson[]);
+      await route.fulfill({ response, json: data });
+    },
+  );
+}
+
+type Box = { x: number; y: number; width: number; height: number };
+
+async function boxOf(locator: ReturnType<Page['locator']>): Promise<Box> {
+  const box = await locator.boundingBox();
+  if (!box) throw new Error('ingen kasse');
+  return box;
+}
+
+const inside = (a: Box, b: Box) =>
+  a.x >= b.x - 1 &&
+  a.y >= b.y - 1 &&
+  a.x + a.width <= b.x + b.width + 1 &&
+  a.y + a.height <= b.y + b.height + 1;
+
+const apart = (a: Box, b: Box) =>
+  a.x + a.width <= b.x + 1 ||
+  b.x + b.width <= a.x + 1 ||
+  a.y + a.height <= b.y + 1 ||
+  b.y + b.height <= a.y + 1;
+
+/** Two lines of 18 px text with its border, the most a mark's text may take. */
+const TWO_LINES = 2 * 18 * 1.3 + 4;
+
+/** Whether the page can scroll sideways. */
+const sideScroll = (page: Page) =>
+  page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+
+/** Each view's drawing as drawn: the viewBox fitted into the SVG (»meet«), in px. */
+async function drawnSizes(root: ReturnType<Page['locator']>): Promise<Box[]> {
+  return root.locator('.figure-draw svg').evaluateAll((svgs) =>
+    svgs.map((svg) => {
+      const r = svg.getBoundingClientRect();
+      const [, , vw = 1, vh = 1] = (svg.getAttribute('viewBox') ?? '').split(/\s+/).map(Number);
+      const scale = Math.min(r.width / vw, r.height / vh);
+      return { x: r.x, y: r.y, width: vw * scale, height: vh * scale };
+    }),
+  );
+}
+
+/** The squat jump with the long cue in its front view at the landing. */
+const longCueInFront = (figures: FigureJson[]) => {
+  const squat = figures.find((f) => f.id === 'power_legs.1') as unknown as {
+    second: { marks: Array<{ cue: string }> };
+  };
+  const first = squat.second.marks[0];
+  if (first) first.cue = LONG_CUE;
+};
+
+/** From I dag to the first exercise's »Nu« (the squat jump), the warm-up as still images. */
+async function toSquatJump(page: Page): Promise<ReturnType<Page['locator']>> {
+  await startSession(page);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+  for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+  await closeIntro(page);
+  const now = page.locator('.session .stack.now');
+  await expect(now.locator('.set-name')).toHaveText('Squat jump');
+  return now;
+}
+
+/** Moves time on in »Nu« until the running phase is `label`. */
+async function untilNowPhase(page: Page, label: string): Promise<void> {
+  const phase = page.locator('.session .stack.now .figure-current .figure-phase');
+  for (let ms = 0; ms < 10_000 && (await phase.allTextContents())[0] !== label; ms += 50) {
+    await page.clock.runFor(50);
+  }
+  await expect(phase).toHaveText(label);
+}
+
+test.describe('efter reviewet af P1b (D60)', () => {
+  test.use({ serviceWorkers: 'block' });
+
+  test('H1: en cue på 24 tegn i den anden vinkel bliver i sin tegning på kortet og på stillbillederne', async ({
+    page,
+  }) => {
+    await changeFigures(page, 'power_legs', longCueInFront);
+    await openApp(page, '2026-11-17');
+    await onboard(page);
+    await openCard(page, 'Power ben · trin 1', 'Squat jump');
+    const figure = card(page).locator('.card-figure .figure');
+    // A standing figure: its two views side by side.
+    await expect(figure).not.toHaveClass(/\bstacked\b/);
+    await pauseClock(page);
+    await untilPhase(page, 'Rejs dig');
+    await untilPhase(page, 'Frys 2 sek');
+    await page.clock.runFor(200);
+    expect(await markText(figure, 1)).toBe(LONG_CUE);
+    const front = figure.locator('.figure-draw').nth(1);
+    const mark = await boxOf(front.locator('.figure-mark'));
+    // Inside its drawing, wrapped on at most two lines, and the page does not scroll sideways.
+    expect(inside(mark, await boxOf(front))).toBe(true);
+    expect(mark.height).toBeLessThan(TWO_LINES);
+    expect(apart(mark, await boxOf(figure.locator('.figure-draw').nth(0)))).toBe(true);
+    expect(await sideScroll(page)).toBe(false);
+    await page.screenshot({ path: 'screenshots/kort-lang-cue.png', scale: 'css' });
+
+    // Reduced motion: three stills to a row leave no room for it, so the row has fewer.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    const landing = card(page)
+      .locator('.card-figure .figure-stills-view')
+      .nth(1)
+      .locator('.figure-still')
+      .filter({ hasText: 'Landing' });
+    await expect(landing.locator('.figure-mark')).toHaveText(LONG_CUE);
+    const still = await boxOf(landing.locator('.figure-mark'));
+    expect(inside(still, await boxOf(landing.locator('.figure-draw')))).toBe(true);
+    expect(still.height).toBeLessThan(TWO_LINES);
+    expect(await sideScroll(page)).toBe(false);
+    await landing.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: 'screenshots/kort-stillbilleder-lang-cue.png', scale: 'css' });
+  });
+
+  test('H1: i »Nu« står en cue, der ikke kan stå i sin tegning, på sin egen linje over eller under figurerne, ikke over målet @date', async ({
+    page,
+  }) => {
+    await changeFigures(page, 'power_legs', longCueInFront);
+    await openApp(page, '2026-11-17');
+    await onboard(page);
+    const now = await toSquatJump(page);
+    const figure = now.locator('.now-stage .figure');
+    await expect(figure.locator('.figure-draw')).toHaveCount(2);
+    await pauseClock(page);
+    await untilNowPhase(page, 'Frys 2 sek');
+    await page.clock.runFor(200);
+    const mark = figure.locator('.figure-draw').nth(1).locator('.figure-mark');
+    await expect(mark).toBeVisible();
+    await expect(mark).toHaveText(LONG_CUE);
+    const text = await boxOf(mark);
+    // In the figure, on at most two lines, clear of the target and of the screen's edges.
+    expect(inside(text, await boxOf(figure.locator('.figure-stage')))).toBe(true);
+    expect(text.height).toBeLessThan(TWO_LINES);
+    expect(apart(text, await boxOf(now.locator('.now-target')))).toBe(true);
+    expect(await sideScroll(page)).toBe(false);
+    await expect(page.getByTestId('as-planned')).toBeInViewport();
+    await page.screenshot({ path: 'screenshots/pas-nu-lang-cue.png', scale: 'css' });
+  });
+
+  test('H1: ved uret står en lang cue i den anden vinkel over eller under figurerne, ikke over uret @date', async ({
+    page,
+  }) => {
+    // The jump rope of the warm-up with a view from the front and the long cue there: the warm-up
+    // has the clock beside the figure, as a hold does.
+    const front = (hip: number, feet: number) => ({
+      hip: [0, hip],
+      torso: 90,
+      arms: {
+        near: { to: [12.5, hip - 0.25], bend: 1 },
+        far: { to: [-12.5, hip - 0.25], bend: -1 },
+      },
+      legs: {
+        near: { to: [5, feet], bend: 1, tip: [7.5, feet - 2.6] },
+        far: { to: [-5, feet], bend: -1, tip: [-7.5, feet - 2.6] },
+      },
+    });
+    await changeFigures(page, 'warmup', (figures) => {
+      const rope = figures.find((f) => f.id === 'warmup.1' && f.movement === 'sjip');
+      if (!rope) throw new Error('sjip mangler');
+      rope.marks = [];
+      rope.second = {
+        view: 'front',
+        props: [],
+        keyframes: { nede: front(51, 3.6), oppe: front(57.4, 10) },
+        marks: [{ cue: LONG_CUE, phase: 1, point: 'near.knee' }],
+      };
+    });
+    await openApp(page, '2026-11-17');
+    await onboard(page);
+    await startSession(page);
+    await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+    await closeIntro(page);
+    const now = page.locator('.session .stack.now');
+    const figure = now.locator('.now-stage .figure');
+    await expect(figure.locator('.figure-draw')).toHaveCount(2);
+    await expect(now.locator('.countdown')).toBeVisible();
+    await pauseClock(page);
+    const mark = figure.locator('.figure-draw').nth(1).locator('.figure-mark');
+    for (let ms = 0; ms < 2_000 && !(await mark.isVisible()); ms += 50) {
+      await page.clock.runFor(50);
+    }
+    await expect(mark).toHaveText(LONG_CUE);
+    const text = await boxOf(mark);
+    expect(inside(text, await boxOf(figure.locator('.figure-stage')))).toBe(true);
+    expect(text.height).toBeLessThan(TWO_LINES);
+    expect(apart(text, await boxOf(now.locator('.countdown')))).toBe(true);
+    expect(await sideScroll(page)).toBe(false);
+    await page.screenshot({ path: 'screenshots/pas-ur-lang-cue.png', scale: 'css' });
+  });
+
+  test('M1: to liggende vinkler står over hinanden i »Nu« og i pausen, hver mindst 60 px høj @date', async ({
+    page,
+  }) => {
+    // The squat jump drawn as a push-up from the side and from above: a lying figure in two views.
+    const top = {
+      hip: [43.94, 20.33],
+      torso: 20.84,
+      head: -4,
+      arms: { near: { to: [69.2, 0] }, far: { to: [70.6, 0] } },
+      legs: {
+        near: { to: [0, 3.6], tip: [3.4, 0.3] },
+        far: { to: [-0.6, 3.6], tip: [2.8, 0.3] },
+      },
+    };
+    const bottom = {
+      ...top,
+      hip: [46.88, 7.2],
+      torso: 4.39,
+      arms: { near: { to: [69.2, 0], upper: 12.5 }, far: { to: [70.6, 0], upper: 12.5 } },
+    };
+    const poses = { stand: top, dip: bottom, takeoff: top, air: top, land: bottom };
+    await changeFigures(page, 'power_legs', (figures) => {
+      const squat = figures.find((f) => f.id === 'power_legs.1');
+      if (!squat) throw new Error('power_legs.1 mangler');
+      Object.assign(squat, {
+        keyframes: poses,
+        marks: [],
+        faults: [],
+        second: { view: 'top', props: [], keyframes: poses },
+      });
+    });
+    await openApp(page, '2026-11-17');
+    await onboard(page);
+    const now = await toSquatJump(page);
+    const figure = now.locator('.now-stage .figure');
+    await expect(figure).toHaveClass(/\bstacked\b/);
+    const sizes = await drawnSizes(figure);
+    expect(sizes).toHaveLength(2);
+    for (const s of sizes) expect(s.height).toBeGreaterThanOrEqual(60);
+    // Over each other in the figure's whole width, the second under the first.
+    expect((sizes[1]?.y ?? 0) - (sizes[0]?.y ?? 0)).toBeGreaterThan(60);
+    expect(await sideScroll(page)).toBe(false);
+    await page.screenshot({ path: 'screenshots/pas-nu-to-vinkler-liggende.png', scale: 'css' });
+
+    // The pause after the set: the next set big, both views at least 60 px high.
+    await page.getByTestId('as-planned').click();
+    const next = page.getByTestId('next-up');
+    await expect(next.locator('.figure-draw')).toHaveCount(2);
+    for (const s of await drawnSizes(next)) expect(s.height).toBeGreaterThanOrEqual(60);
+    await page.screenshot({ path: 'screenshots/pause-to-vinkler-liggende.png', scale: 'css' });
+  });
+
+  test('H2: en cue ved hoften i en fase følger hoften, mens teksten står stille', async ({
+    page,
+  }) => {
+    await changeFigures(page, 'power_legs', (figures) => {
+      const squat = figures.find((f) => f.id === 'power_legs.1');
+      if (!squat) throw new Error('power_legs.1 mangler');
+      squat.marks = [{ cue: 'Hoften bagud', phase: 1, point: 'hip' }];
+    });
+    await openApp(page, '2026-11-17');
+    await onboard(page);
+    await openCard(page, 'Power ben · trin 1', 'Squat jump');
+    const figure = card(page).locator('.card-figure .figure');
+    const side = figure.locator('.figure-draw').nth(0);
+    await pauseClock(page);
+    await untilPhase(page, 'Rejs dig');
+    await untilPhase(page, 'Sæt dig ned');
+    const state = () =>
+      side.evaluate((el) => {
+        const dot = el.querySelector('g.figure-marks circle:last-of-type');
+        const hip = el.querySelector('[data-k="torso"]');
+        const text = el.querySelector<HTMLElement>('.figure-mark');
+        return {
+          dot: [Number(dot?.getAttribute('cx')), Number(dot?.getAttribute('cy'))],
+          hip: [Number(hip?.getAttribute('x1')), Number(hip?.getAttribute('y1'))],
+          text: text?.style.transform ?? '',
+        };
+      });
+    const start = await state();
+    expect(
+      Math.hypot(
+        (start.dot[0] ?? 0) - (start.hip[0] ?? 0),
+        (start.dot[1] ?? 0) - (start.hip[1] ?? 0),
+      ),
+    ).toBeLessThan(1.5);
+    await page.clock.runFor(400);
+    await expect(current(page)).toHaveText('Sæt dig ned');
+    const later = await state();
+    // The hip went down and back; the dot went with it, and the text stayed where it was.
+    expect(
+      Math.hypot(
+        (later.hip[0] ?? 0) - (start.hip[0] ?? 0),
+        (later.hip[1] ?? 0) - (start.hip[1] ?? 0),
+      ),
+    ).toBeGreaterThan(5);
+    expect(
+      Math.hypot(
+        (later.dot[0] ?? 0) - (later.hip[0] ?? 0),
+        (later.dot[1] ?? 0) - (later.hip[1] ?? 0),
+      ),
+    ).toBeLessThan(1.5);
+    expect(later.text).toBe(start.text);
+    await page.screenshot({ path: 'screenshots/kort-cue-foelger-hoften.png', scale: 'css' });
+  });
+});
