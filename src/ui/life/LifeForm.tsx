@@ -2,12 +2,11 @@
 // over« (3.1, 3.4, D64): screens shown in place of I dag or Uge with »Tilbage«, never a dialog.
 // Fetched after start with lazy(). A button that saves takes the screen from its first tap until
 // the tab is back, so a double tap saves once (D61).
-import { useId, useState } from 'preact/hooks';
+import { useId, useMemo, useState } from 'preact/hooks';
 import {
   addDays,
   calendarWeek,
   formatLong,
-  getStep,
   getTrack,
   mondayOf,
   PROGRAM,
@@ -31,13 +30,18 @@ import {
   FRESHNESS,
   HARDNESS,
   hoursText,
+  standingChanges,
+  standingText,
+  trackDistance,
   type LifeRequest,
 } from '../life.ts';
-import { useWriteOnce } from '../hooks.ts';
+import { useSameWorld, useWriteOnce } from '../hooks.ts';
 import type { Model } from '../model.ts';
 import {
+  checkEffects,
   filmWeek,
   heavyChoices,
+  heavyLabel,
   lightPains,
   painChoices,
   parseSleep,
@@ -119,10 +123,23 @@ function Toggles<T extends string | number>(props: {
 // ---------------------------------------------------------------------------------------------
 // The club log (4.6)
 
+/**
+ * Opened in the time machine and still open after »Afslut« (or the other way round): nothing is
+ * written, and the screen closes (SPEC 3.7, D64, D65).
+ */
+function otherWorld(onClose: () => void): Error {
+  onClose();
+  return new Error('the time machine started or ended');
+}
+
 function ClubLogForm(props: LifeFormProps & { date: ISODate }) {
   const { model, date } = props;
+  const sameWorld = useSameWorld(model);
   const time = clubDay(PROGRAM, model.state, date)?.time;
   const saturday = weekday(date) === 6;
+  // Saturday's grade given already – in the Sunday check, say – stands; the rest is logged without
+  // it, so the flat rule reads one grade (D65).
+  const givenGrade = clubLogOn(model.state, date)?.technique;
   const [content, setContent] = useState<ClubContent[]>([]);
   const [hardness, setHardness] = useState<Hardness[]>([]);
   const [freshness, setFreshness] = useState<Freshness[]>([]);
@@ -131,6 +148,7 @@ function ClubLogForm(props: LifeFormProps & { date: ISODate }) {
   // The club day's date, also when it is logged the day after (ENGINE 3.1).
   const save = (body: EventBody) =>
     run(async () => {
+      if (!sameWorld()) throw otherWorld(props.onClose);
       await model.commit([model.ctx.make(body, date)]);
       props.onSaved();
     });
@@ -142,7 +160,7 @@ function ClubLogForm(props: LifeFormProps & { date: ISODate }) {
     ...(chosen.length > 0 ? { content: chosen } : {}),
     ...(hardness[0] ? { hardness: hardness[0] } : {}),
     ...(freshness[0] ? { freshness: freshness[0] } : {}),
-    ...(technique[0] !== undefined ? { technique: technique[0] } : {}),
+    ...(technique[0] !== undefined && givenGrade === undefined ? { technique: technique[0] } : {}),
   };
   const options = <K extends string>(names: Record<K, string>) =>
     (Object.keys(names) as K[]).map((key): [K, string] => [key, names[key]]);
@@ -182,15 +200,23 @@ function ClubLogForm(props: LifeFormProps & { date: ISODate }) {
         value={freshness}
         onChange={setFreshness}
       />
-      {saturday && (
-        <Toggles
-          label="Teknikken i sidste runde"
-          options={GRADES}
-          value={technique}
-          columns={5}
-          onChange={setTechnique}
-        />
-      )}
+      {saturday &&
+        (givenGrade !== undefined ? (
+          <section class="life-section">
+            <p class="life-label">Teknikken i sidste runde</p>
+            <p class="life-value" data-testid="club-grade">
+              <strong>{givenGrade}</strong> · allerede givet
+            </p>
+          </section>
+        ) : (
+          <Toggles
+            label="Teknikken i sidste runde"
+            options={GRADES}
+            value={technique}
+            columns={5}
+            onChange={setTechnique}
+          />
+        ))}
       <p class="muted">Alt er valgfrit. Uden svar tæller træningen som mødt.</p>
       <button
         type="button"
@@ -227,6 +253,7 @@ function SundayCheckForm(props: LifeFormProps & { sunday: ISODate }) {
   const [pain, setPain] = useState<string[]>(earlier?.painTracks ?? []);
   const [heavy, setHeavy] = useState<string[]>(earlier?.tooHeavy ?? []);
   const { busy, run } = useWriteOnce();
+  const sameWorld = useSameWorld(model);
   const sleepId = useId();
 
   const hours = parseSleep(sleep);
@@ -238,12 +265,18 @@ function SundayCheckForm(props: LifeFormProps & { sunday: ISODate }) {
   const missingPain = hurts && pain.length === 0;
   const canSave = hours !== 'invalid' && !missingPain;
   const short = (trackId: string) => getTrack(PROGRAM, trackId).short;
-  const stepKey = (trackId: string) => {
-    const t = state.tracks[trackId];
-    return t ? getStep(PROGRAM, t.stepId).key : '';
-  };
+  // What »Gem« does to each chosen track, from the engine's own events (D65).
+  const painTracks = hurts ? pain : [];
+  const effects = useMemo(
+    () => checkEffects(PROGRAM, model.events, state, { date: sunday, painTracks, tooHeavy: heavy }),
+    [model.events, state, sunday, painTracks.join(), heavy.join()],
+  );
+  // What an earlier check of the week took down and still stands (D65).
+  const due = { sunday, weekStart, late: model.today !== sunday, check: earlier };
+  const standing = standingChanges(PROGRAM, state, due, (id) => trackDistance(state, id));
 
   const save = run(async () => {
+    if (!sameWorld()) throw otherWorld(props.onClose);
     const extra: AppEvent[] = [];
     if (gradeField && loggedGrade === undefined && grade[0] !== undefined) {
       extra.push(
@@ -253,7 +286,7 @@ function SundayCheckForm(props: LifeFormProps & { sunday: ISODate }) {
     const check = submitSundayCheck(model.ctx, [...model.events, ...extra], {
       date: sunday,
       sleepAvg: typeof hours === 'number' ? hours : undefined,
-      painTracks: hurts ? pain : [],
+      painTracks,
       tooHeavy: heavy,
     });
     await model.commit([...extra, ...check]);
@@ -267,6 +300,12 @@ function SundayCheckForm(props: LifeFormProps & { sunday: ISODate }) {
         title="Søndagstjek"
         onClose={props.onClose}
       />
+      {standing.length > 0 && (
+        <div class="hint" data-testid="standing">
+          <p>Fra søndagstjekket: {standing.map((c) => standingText(PROGRAM, c)).join(' · ')}.</p>
+          <p>Fjerner du et valg, bliver øvelsen, hvor den er. Trinnet kan vælges under Stiger.</p>
+        </div>
+      )}
 
       <section class="life-section">
         <label class="life-label" for={sleepId}>
@@ -289,7 +328,7 @@ function SundayCheckForm(props: LifeFormProps & { sunday: ISODate }) {
           <section class="life-section">
             <p class="life-label">Lørdagskarakter</p>
             <p class="life-value" data-testid="saturday-grade">
-              <strong>{loggedGrade}</strong> · fra klubloggen
+              <strong>{loggedGrade}</strong> · allerede givet
             </p>
           </section>
         ) : (
@@ -337,9 +376,12 @@ function SundayCheckForm(props: LifeFormProps & { sunday: ISODate }) {
             {missingPain ? (
               <p class="error-text">Vælg øvelsen, der gør ondt.</p>
             ) : (
-              <p class="muted">
-                Øvelsen går ét trin ned i en uge, og spørgsmål 2 står på »nej« før de næste pas.
-              </p>
+              <ul class="life-effects" data-testid="pain-effects">
+                {pain.map((id) => (
+                  <li key={id}>{effects.get(id)}</li>
+                ))}
+                <li>Spørgsmål 2 står på »nej« før de næste pas.</li>
+              </ul>
             )}
           </>
         )}
@@ -367,16 +409,21 @@ function SundayCheckForm(props: LifeFormProps & { sunday: ISODate }) {
         <>
           <Toggles
             label="For tungt?"
-            options={heavyIds.map((id): [string, string] => [
-              id,
-              `${short(id)} · trin ${stepKey(id)}`,
-            ])}
+            options={heavyIds.map((id): [string, string] => [id, heavyLabel(PROGRAM, state, id)])}
             value={heavy}
             multiple
             columns={2}
             onChange={setHeavy}
           />
-          <p class="muted">Den valgte stige går ét trin ned, når du gemmer – dit eget valg.</p>
+          {heavy.length > 0 ? (
+            <ul class="life-effects" data-testid="heavy-effects">
+              {heavy.map((id) => (
+                <li key={id}>{effects.get(id)}</li>
+              ))}
+            </ul>
+          ) : (
+            <p class="muted">En valgt stige går ét trin ned, når du gemmer – dit eget valg.</p>
+          )}
         </>
       ) : (
         <section class="life-section">
@@ -387,8 +434,9 @@ function SundayCheckForm(props: LifeFormProps & { sunday: ISODate }) {
 
       {filmWeek(state, sunday) && (
         <p class="hint">
-          Film dig selv fra siden i et sæt i denne uge. Kig efter svaj i lænden, en hofte der
-          stikker op, albuer der flyver ud, og et hoved der skyder frem.
+          Film dig selv fra siden i et sæt {model.today === sunday ? 'i næste uge' : 'i denne uge'}.
+          Kig efter svaj i lænden, en hofte der stikker op, albuer der flyver ud, og et hoved der
+          skyder frem.
         </p>
       )}
 

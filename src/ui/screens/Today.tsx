@@ -24,7 +24,7 @@ import {
 } from '../../engine/index.ts';
 import type { ISODate, SessionKind, State } from '../../engine/types.ts';
 import { SESSION_NAME, sessionMinutes } from '../format.ts';
-import { useSameWorld, useSettle, useWriteOnce } from '../hooks.ts';
+import { screenSettled, useSameWorld, useScreenEntry, useSettle, useWriteOnce } from '../hooks.ts';
 import { LifeForm } from '../lifeScreen.ts';
 import {
   canAct,
@@ -43,14 +43,16 @@ import {
   clubSummary,
   hoursText,
   minutesIn,
+  standingChanges,
+  standingText,
   sundayDue,
+  trackDistance,
   type ClubAsk,
   type LifeRequest,
   type SundayDue,
 } from '../life.ts';
 import type { Model } from '../model.ts';
 import { markTodayVisible } from '../startup.ts';
-import { distanceText } from './Ladders.tsx';
 
 const PHASE: Record<string, string> = {
   fundament: 'Fundament',
@@ -129,13 +131,17 @@ export function Today(props: {
   /** Counts the cards that went away with a tap (»Spring over«): I dag settles after each (D57). */
   const [gone, setGone] = useState(0);
   const settling = useSettle([form, gone]);
-  // »Flyt eller spring over« and the »✓« line belong to their world – the real log or the time
-  // machine's copy: when the time machine starts or ends, they go (SPEC 3.7, D64).
+  // The screens in place of I dag (the club log, the Sunday check, »Flyt eller spring over«) and the
+  // »✓« line belong to their world – the real log or the time machine's copy: when the time machine
+  // starts or ends, they go, so nothing opened in one world is saved in the other (SPEC 3.7, D64,
+  // D65). Each screen also checks its world before it writes.
   const world = model.sim;
   useEffect(() => {
-    setForm((f) => (f?.kind === 'move' ? null : f));
+    setForm(null);
     setSavedLine(null);
   }, [world]);
+  // A screen is a step in the history: Android's back gesture closes it, not the app (D65).
+  useScreenEntry(form !== null, () => setForm(null));
   const asks = clubAsks(PROGRAM, state, today, minutesIn(model.now()));
   const sunday = sundayDue(state, today);
   useClubEnd(model, asks);
@@ -144,7 +150,7 @@ export function Today(props: {
   useEffect(() => markTodayVisible(), []);
   // A forgotten session from an earlier day of the week can be moved or skipped (D64).
   const missed = forgotten(PROGRAM, state, today);
-  const asking = asks.some((a) => a.ended && !a.log) || sunday !== null || missed.length > 0;
+  const asking = asks.some((a) => a.ended && !a.answered) || sunday !== null || missed.length > 0;
   useEffect(() => {
     if (!asking) return;
     const id = setTimeout(() => void LifeForm.preload().catch(() => undefined), 1000);
@@ -153,7 +159,7 @@ export function Today(props: {
 
   const open = (request: LifeRequest) => {
     const show = () => setForm(request);
-    void LifeForm.preload().then(show, show);
+    void Promise.all([LifeForm.preload(), screenSettled()]).then(show, show);
   };
   if (form) {
     return (
@@ -281,10 +287,10 @@ export function Today(props: {
           {saved}
         </p>
       )}
-      {yesterdayAsk && !yesterdayAsk.log && (
+      {yesterdayAsk && !yesterdayAsk.answered && (
         <ClubCard ask={yesterdayAsk} onOpen={openClub(yesterdayAsk)} />
       )}
-      {todayAsk && todayAsk.ended && !todayAsk.log && !clubMain && (
+      {todayAsk && todayAsk.ended && !todayAsk.answered && !clubMain && (
         <ClubCard ask={todayAsk} onOpen={openClub(todayAsk)} />
       )}
       {sunday && !sunday.check && !sundayMain && (
@@ -455,10 +461,6 @@ function useClubEnd(model: Model, asks: ClubAsk[]): void {
   }, [model, end]);
 }
 
-function lowerFirst(text: string): string {
-  return text.charAt(0).toLowerCase() + text.slice(1);
-}
-
 /** A club session that waits for »Hvordan var det?«: yesterday's, or today's on a session day. */
 function ClubCard({ ask, onOpen }: { ask: ClubAsk; onOpen: () => void }) {
   return (
@@ -466,6 +468,9 @@ function ClubCard({ ask, onOpen }: { ask: ClubAsk; onOpen: () => void }) {
       <p class="life-card-title">
         {ask.yesterday ? 'Muay Thai i går' : `Muay Thai ${ask.time ?? ''}`.trim()}
       </p>
+      {ask.log?.technique !== undefined && (
+        <p>Karakteren {ask.log.technique} er givet. Resten kan du logge her.</p>
+      )}
       <button type="button" class="btn block" onClick={onOpen}>
         Hvordan var det?
       </button>
@@ -473,7 +478,10 @@ function ClubCard({ ask, onOpen }: { ask: ClubAsk; onOpen: () => void }) {
   );
 }
 
-/** The saved Sunday check: the answers and what they changed (docs/SPEC.md 4.7). */
+/**
+ * The saved Sunday check: the answers and what the week's checks changed that still stands – also
+ * a track a correction no longer names, which stays where it is (docs/SPEC.md 4.7, D65).
+ */
 function SundaySummary({ due, state }: { due: SundayDue; state: State }) {
   const check = due.check;
   if (!check) return null;
@@ -482,19 +490,20 @@ function SundaySummary({ due, state }: { due: SundayDue; state: State }) {
   const lines: string[] = [];
   if (check.sleepAvg !== undefined) lines.push(`Søvn: ${hoursText(check.sleepAvg)} t i snit`);
   if (grade !== undefined) lines.push(`Lørdagskarakter: ${grade}`);
-  for (const id of check.painTracks) {
-    const t = state.tracks[id];
-    const now = t?.tempDown
-      ? ` – ${lowerFirst(distanceText(getTrack(PROGRAM, id), t, state.emom.pendingUp))}`
-      : '';
-    lines.push(`Ondt: ${name(id)}${now}`);
+  const standing = standingChanges(PROGRAM, state, due, (id) => trackDistance(state, id));
+  for (const change of standing) {
+    lines.push(
+      `${change.kind === 'pain' ? 'Ondt' : 'For tungt'}: ${standingText(PROGRAM, change)}`,
+    );
   }
-  for (const id of check.tooHeavy) {
-    const t = state.tracks[id];
-    if (check.painTracks.includes(id) || !t) continue;
-    lines.push(`For tungt: ${name(id)} – nu trin ${getStep(PROGRAM, t.stepId).key}`);
+  const named = new Set([...check.painTracks, ...check.tooHeavy]);
+  const dropped = standing.map((c) => c.trackId).filter((id) => !named.has(id));
+  if (dropped.length > 0) {
+    lines.push(
+      `Fjernet i rettelsen, men står stadig: ${dropped.map(name).join(', ')}. Trinnet kan vælges under Stiger.`,
+    );
   }
-  if (check.painTracks.length === 0 && check.tooHeavy.length === 0) {
+  if (standing.length === 0 && named.size === 0) {
     lines.push('Intet gør ondt, og intet er for tungt.');
   }
   return (

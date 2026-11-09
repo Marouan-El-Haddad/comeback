@@ -1,7 +1,17 @@
 // The club log and the Sunday check on I dag (docs/SPEC.md 3.1, 4.6 and 4.7, DECISIONS.md D63):
 // when they are asked, for which day, and what was saved. Small, as I dag needs it at start; the
 // screens themselves are fetched after start with lazy() (src/ui/life/LifeForm.tsx).
-import { addDays, calendarWeek, mondayOf, statusOn, TIME_ZONE, weekday } from '../engine/index.ts';
+import {
+  addDays,
+  calendarWeek,
+  getStep,
+  getTrack,
+  mondayOf,
+  PROGRAM,
+  statusOn,
+  TIME_ZONE,
+  weekday,
+} from '../engine/index.ts';
 import type {
   ClubContent,
   Freshness,
@@ -11,6 +21,7 @@ import type {
   SessionKind,
   State,
 } from '../engine/types.ts';
+import { distanceText } from './screens/Ladders.tsx';
 
 /**
  * What I dag or Uge opens in its place: the club log of a club day, the Sunday check of a Sunday,
@@ -111,12 +122,31 @@ export function clubSummary(log: ClubLog): string {
   return parts.length > 0 ? parts.join(' · ') : 'mødt';
 }
 
+/**
+ * Only Saturday's grade, as the Sunday check gives it when the club log is missing (D63, D65): it
+ * does not answer »Hvordan var det?«, so the day after still asks.
+ */
+export function gradeOnly(log: ClubLog): boolean {
+  return (
+    log.attended &&
+    log.technique !== undefined &&
+    log.content.length === 0 &&
+    log.hardness === undefined &&
+    log.freshness === undefined
+  );
+}
+
 export interface ClubAsk extends ClubDay {
   /** Yesterday's club session, asked about the day after. */
   yesterday: boolean;
   /** The club time has ended (always true for yesterday and a day without a club time). */
   ended: boolean;
   log: ClubLog | null;
+  /**
+   * »Hvordan var det?« is answered: a log on the club day itself, and the day after a log that is
+   * more than the grade from the Sunday check.
+   */
+  answered: boolean;
 }
 
 /**
@@ -133,16 +163,25 @@ export function clubAsks(
   const out: ClubAsk[] = [];
   const before = clubDay(program, state, addDays(today, -1));
   if (before) {
-    out.push({ ...before, yesterday: true, ended: true, log: clubLogOn(state, before.date) });
+    const log = clubLogOn(state, before.date);
+    out.push({
+      ...before,
+      yesterday: true,
+      ended: true,
+      log,
+      answered: log !== null && !gradeOnly(log),
+    });
   }
   const day = clubDay(program, state, today);
   if (day) {
     const end = clubEnd(day.time);
+    const log = clubLogOn(state, today);
     out.push({
       ...day,
       yesterday: false,
       ended: end === null || minutes >= end,
-      log: clubLogOn(state, today),
+      log,
+      answered: log !== null,
     });
   }
   return out;
@@ -180,4 +219,54 @@ export function sundayDue(state: State, today: ISODate): SundayDue | null {
 /** »7,5« – hours as the Danish write them. */
 export function hoursText(hours: number): string {
   return String(hours).replace('.', ',');
+}
+
+export interface StandingChange {
+  trackId: string;
+  /** Taken down for pain (»Ondt«) or one step down as your own choice (»For tungt«). */
+  kind: 'pain' | 'heavy';
+  /** »lettere variant til 22. november (smerte)«, »nu trin 2«. */
+  now: string;
+}
+
+/**
+ * What the week's Sunday checks changed that still stands (D65): a track one of them named and
+ * took down on the check's Sunday – for pain, while the pain period lasts, or as your own choice.
+ * Also a track a correction no longer names: it stays where it is. `distance` is Stiger's text for
+ * a track in a pain period.
+ */
+export function standingChanges(
+  program: Program,
+  state: State,
+  due: SundayDue,
+  distance: (trackId: string) => string,
+): StandingChange[] {
+  if (!due.check) return [];
+  const changed = (trackId: string, reason: string) =>
+    state.decisions.some(
+      (d) => d.trackId === trackId && d.date === due.sunday && d.reason === reason,
+    );
+  const out: StandingChange[] = [];
+  for (const id of due.check.taken) {
+    const t = state.tracks[id];
+    if (!t) continue;
+    if (t.tempDown && changed(id, 'pain')) {
+      const text = distance(id);
+      out.push({ trackId: id, kind: 'pain', now: text.charAt(0).toLowerCase() + text.slice(1) });
+    } else if (changed(id, 'user_choice')) {
+      out.push({ trackId: id, kind: 'heavy', now: `nu trin ${getStep(program, t.stepId).key}` });
+    }
+  }
+  return out;
+}
+
+/** Stiger's text for a track (»Lettere variant til 22. november (smerte)« in a pain period). */
+export function trackDistance(state: State, trackId: string): string {
+  const t = state.tracks[trackId];
+  return t ? distanceText(getTrack(PROGRAM, trackId), t, state.emom.pendingUp) : '';
+}
+
+/** »Lyske – lettere variant til 22. november (smerte)« for a standing change. */
+export function standingText(program: Program, change: StandingChange): string {
+  return `${getTrack(program, change.trackId).short} – ${change.now}`;
 }

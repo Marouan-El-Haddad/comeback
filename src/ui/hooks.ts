@@ -18,6 +18,59 @@ export function useSameWorld(model: Model): () => boolean {
   return () => (model.sim !== null) === simulated.current;
 }
 
+/** The history entry a screen shown in place of a tab adds (the club log, the Sunday check, »Flyt«). */
+const SCREEN_ENTRY = 'comebackScreen';
+
+function screenEntry(): boolean {
+  const state: unknown = history.state;
+  return typeof state === 'object' && state !== null && SCREEN_ENTRY in state;
+}
+
+/** A screen's own step back in the history on its way: the next screen opens after it. */
+let leaving: Promise<void> | null = null;
+
+/** Resolves once no screen is going back over its history step (opens wait for it). */
+export function screenSettled(): Promise<void> {
+  return leaving ?? Promise.resolve();
+}
+
+/**
+ * A screen shown in place of a tab is a step in the browser's history, as the exercise card is
+ * (D47): Android's back gesture closes the screen, not the app (D65). Closed any other way –
+ * »Tilbage«, a save, the time machine starting or ending, another tab – it goes back over its
+ * step, so the history does not grow.
+ */
+export function useScreenEntry(open: boolean, onBack: () => void): void {
+  const back = useRef(onBack);
+  back.current = onBack;
+  useEffect(() => {
+    if (!open) return;
+    if (!screenEntry()) history.pushState({ [SCREEN_ENTRY]: true }, '');
+    let popped = false;
+    const onPop = () => {
+      popped = true;
+      back.current();
+    };
+    window.addEventListener('popstate', onPop);
+    return () => {
+      window.removeEventListener('popstate', onPop);
+      if (popped || !screenEntry()) return;
+      leaving = new Promise<void>((resolve) => {
+        const done = () => {
+          window.removeEventListener('popstate', done);
+          clearTimeout(timer);
+          leaving = null;
+          resolve();
+        };
+        // A browser that never answers must not stop the next screen from opening.
+        const timer = setTimeout(done, 1000);
+        window.addEventListener('popstate', done);
+        history.back();
+      });
+    };
+  }, [open]);
+}
+
 /**
  * A button that writes: the first tap writes, the taps after it do nothing until the screen or
  * card is gone (D61). A failed write lets the next tap try again.

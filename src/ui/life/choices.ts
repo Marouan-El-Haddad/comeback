@@ -4,14 +4,17 @@
 import {
   addDays,
   calendarWeek,
+  formatDay,
   getSession,
   getStep,
   getTrack,
+  mondayOf,
   stepIndex,
+  submitSundayCheck,
   weekdayName,
   weekday,
 } from '../../engine/index.ts';
-import type { ISODate, Program, State } from '../../engine/types.ts';
+import type { AppEvent, EventFactory, ISODate, Program, State } from '../../engine/types.ts';
 import { distanceText } from '../screens/Ladders.tsx';
 
 /** The hours of sleep: a number (»7«, »6,5«), null when empty, 'invalid' when not a number of hours. */
@@ -53,14 +56,89 @@ function ladderTracks(program: Program): string[] {
 }
 
 /**
- * »For tungt?«: the ladders and power tracks with a step below your step, and the ones `keep`
- * names (a saved check's choices, shown again when it is corrected).
+ * The step »For tungt?« is about: your step, or in a pain period the step before the pain, which
+ * the period would bring back (»Ben · trin 3« while Ben stands on trin 2, D65).
+ */
+export function heavyStep(state: State, trackId: string): string | null {
+  const t = state.tracks[trackId];
+  if (!t) return null;
+  return t.tempDown && !t.tempDown.lighter ? t.tempDown.originalStepId : t.stepId;
+}
+
+/**
+ * »For tungt?«: the ladders and power tracks with a step below the step it is about, and the ones
+ * `keep` names (a saved check's choices, shown again when it is corrected).
  */
 export function heavyChoices(program: Program, state: State, keep: readonly string[]): string[] {
   return ladderTracks(program).filter((id) => {
-    const t = state.tracks[id];
-    return keep.includes(id) || (t !== undefined && stepIndex(program, t.stepId) > 0);
+    const step = heavyStep(state, id);
+    return keep.includes(id) || (step !== null && stepIndex(program, step) > 0);
   });
+}
+
+/** »Ben · trin 3«: the ladder and the step »For tungt?« is about. */
+export function heavyLabel(program: Program, state: State, trackId: string): string {
+  const step = heavyStep(state, trackId);
+  const key = step ? getStep(program, step).key : '';
+  return `${getTrack(program, trackId).short} · trin ${key}`;
+}
+
+/** Events made only to read what saving would do; never written. */
+const preview: EventFactory = (body, date) => ({ ...body, id: 'preview', at: '', date, v: 1 });
+
+/**
+ * What saving the check does, one line per chosen track, read from the engine's own events
+ * (submitSundayCheck), so the screen never promises a step change that does not happen (D65): »Ben
+ * går fra trin 3 til trin 2 – dit eget valg.«, »Lyske får en lettere variant til 22. november.«,
+ * »Ben bliver på trin 2 og kommer ikke tilbage til trin 3 – dit eget valg.«, or that a track is
+ * down already from an earlier check of the week, or follows the pain.
+ */
+export function checkEffects(
+  program: Program,
+  events: readonly AppEvent[],
+  state: State,
+  input: { date: ISODate; painTracks: string[]; tooHeavy: string[] },
+): Map<string, string> {
+  const ctx = { program, make: preview };
+  const written = submitSundayCheck(ctx, events, { ...input, sleepAvg: undefined });
+  const taken = state.sundayChecks.find((c) => c.weekStart === mondayOf(input.date))?.taken ?? [];
+  const out = new Map<string, string>();
+  for (const id of [...input.painTracks, ...input.tooHeavy]) {
+    if (out.has(id)) continue;
+    const short = getTrack(program, id).short;
+    const e = written.find((x) => x.type === 'step_changed' && x.trackId === id);
+    const t = state.tracks[id];
+    if (e && e.type === 'step_changed') {
+      const from = getStep(program, e.from).key;
+      const to = getStep(program, e.to).key;
+      if (e.reason === 'pain') {
+        const until = e.until ? formatDay(e.until) : '';
+        out.set(
+          id,
+          e.from !== e.to
+            ? `${short} går fra trin ${from} til trin ${to} til ${until}.`
+            : t?.tempDown
+              ? `${short} bliver på trin ${to} en uge mere (til ${until}).`
+              : `${short} får en lettere variant til ${until}.`,
+        );
+      } else if (e.from !== e.to) {
+        out.set(id, `${short} går fra trin ${from} til trin ${to} – dit eget valg.`);
+      } else {
+        const before = t?.tempDown ? getStep(program, t.tempDown.originalStepId).key : from;
+        out.set(
+          id,
+          `${short} bliver på trin ${to} og kommer ikke tilbage til trin ${before} – dit eget valg.`,
+        );
+      }
+    } else if (input.painTracks.includes(id) && input.tooHeavy.includes(id)) {
+      out.set(id, `${short} følger smertereglen.`);
+    } else if (taken.includes(id)) {
+      out.set(id, `${short} står allerede nede fra søndagstjekket.`);
+    } else {
+      out.set(id, `${short}: intet trin at gå ned til.`);
+    }
+  }
+  return out;
 }
 
 export interface ReadyLadder {

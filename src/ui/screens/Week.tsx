@@ -6,7 +6,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { formatLong, PROGRAM, weekPlan } from '../../engine/index.ts';
 import type { SessionKind } from '../../engine/types.ts';
 import { capitalize, SESSION_NAME, sessionMinutes } from '../format.ts';
-import { useSettle } from '../hooks.ts';
+import { screenSettled, useScreenEntry, useSettle } from '../hooks.ts';
 import type { LifeRequest } from '../life.ts';
 import { LifeForm } from '../lifeScreen.ts';
 import type { Model } from '../model.ts';
@@ -29,6 +29,8 @@ export function WeekView({ model }: { model: Model }) {
     setForm(null);
     setSaved(null);
   }, [world]);
+  // A screen is a step in the history: Android's back gesture closes it, not the app (D65).
+  useScreenEntry(form !== null, () => setForm(null));
 
   if (form) {
     return (
@@ -48,7 +50,7 @@ export function WeekView({ model }: { model: Model }) {
 
   const open = (request: LifeRequest) => {
     const show = () => setForm(request);
-    void LifeForm.preload().then(show, show);
+    void Promise.all([LifeForm.preload(), screenSettled()]).then(show, show);
   };
   const days = weekPlan(PROGRAM, state, today);
   const first = days.find((d) => !d.beforeStart) ?? days[0];
