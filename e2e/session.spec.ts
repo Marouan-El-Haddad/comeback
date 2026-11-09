@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 import { a11yProblems, SESSION_RULES } from './a11y.ts';
 import {
   closeIntro,
@@ -57,15 +57,95 @@ async function onboardPowerLegs(page: Page, step: number): Promise<void> {
  * lands on whatever stands there once the first has changed the screen.
  */
 async function doubleTap(page: Page, testId: string): Promise<void> {
+  await doubleTapOn(page, page.getByTestId(testId));
+}
+
+/** The same double tap on any button. */
+async function doubleTapOn(page: Page, target: Locator): Promise<void> {
   // First until the button takes taps (the half second after its own screen came, D33).
-  await page.getByTestId(testId).click({ trial: true });
-  const box = await page.getByTestId(testId).boundingBox();
-  if (!box) throw new Error(`${testId} ses ikke`);
+  await target.click({ trial: true });
+  const box = await target.boundingBox();
+  if (!box) throw new Error('knappen ses ikke');
   const x = box.x + box.width / 2;
   const y = box.y + box.height / 2;
   await page.mouse.click(x, y);
   await page.waitForTimeout(180);
   await page.mouse.click(x, y);
+}
+
+/**
+ * While `slow(page, true)` holds, every write to IndexedDB takes 400 ms more, as on a slow phone
+ * (D30: written to disk before it counts): the screen changes only after the write, so the second
+ * tap of a double tap meets the same button. The rest of the session runs at full speed.
+ */
+async function slowWrites(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    const own = Object.getOwnPropertyDescriptor(IDBTransaction.prototype, 'oncomplete');
+    if (!own?.set || !own.get) return;
+    const flags = window as unknown as { slowWrites?: boolean };
+    Object.defineProperty(IDBTransaction.prototype, 'oncomplete', {
+      configurable: true,
+      get(this: IDBTransaction) {
+        return own.get?.call(this) as unknown;
+      },
+      set(this: IDBTransaction, done: unknown) {
+        if (!flags.slowWrites || this.mode !== 'readwrite' || typeof done !== 'function') {
+          own.set?.call(this, done);
+          return;
+        }
+        own.set?.call(this, function (this: IDBTransaction, event: Event) {
+          setTimeout(() => (done as (e: Event) => void).call(this, event), 400);
+        });
+      },
+    });
+  });
+}
+
+/** The events stored in IndexedDB, counted by type. */
+async function storedTypes(page: Page): Promise<Record<string, number>> {
+  return page.evaluate(
+    () =>
+      new Promise<Record<string, number>>((resolve, reject) => {
+        const open = indexedDB.open('comeback');
+        open.onerror = () => reject(new Error(String(open.error)));
+        open.onsuccess = () => {
+          const db = open.result;
+          const all = db.transaction('events', 'readonly').objectStore('events').getAll();
+          all.onsuccess = () => {
+            const counts: Record<string, number> = {};
+            for (const e of all.result as Array<{ type: string }>)
+              counts[e.type] = (counts[e.type] ?? 0) + 1;
+            resolve(counts);
+            db.close();
+          };
+          all.onerror = () => reject(new Error(String(all.error)));
+        };
+      }),
+  );
+}
+
+async function slow(page: Page, on: boolean): Promise<void> {
+  await page.evaluate((value) => {
+    (window as unknown as { slowWrites?: boolean }).slowWrites = value;
+  }, on);
+}
+
+/**
+ * Exactly one more event of `type` than `before`, also a moment after the screen changed; then the
+ * writes are fast again.
+ */
+async function expectOneMore(
+  page: Page,
+  before: Record<string, number>,
+  type: string,
+): Promise<void> {
+  const wanted = (before[type] ?? 0) + 1;
+  await expect
+    .poll(async () => (await storedTypes(page))[type] ?? 0, { message: type })
+    .toBe(wanted);
+  await page.waitForTimeout(600);
+  expect((await storedTypes(page))[type] ?? 0, type).toBe(wanted);
+  await slow(page, false);
 }
 
 /**
@@ -995,4 +1075,133 @@ test('reduceret bevægelse: figurerne står stille, og intet glider ind', async 
       .evaluate((el) => getComputedStyle(el).animationName);
     expect(animation, part).toBe('none');
   }
+});
+
+// A double tap on an answer, a measurement, the start or the end of the session saves it once and
+// skips no step: the first tap takes the screen until the next one comes (D33, D57, D61). Real
+// sessions in a fresh profile, so the events can be counted in IndexedDB, with writes as slow as on
+// the phone, so the second tap comes before the screen changes.
+
+test('et dobbelttryk på spørgsmål 3, power, EMOM, nakken og »Afslut passet« gemmer én gang (D61) @date', async ({
+  page,
+}) => {
+  await stillFigures(page);
+  await slowWrites(page);
+  await openApp(page, '2026-11-17');
+  await onboard(page);
+  await startSession(page);
+  await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+  for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
+
+  // Question 3: one session started, and power's intro card next.
+  let before = await storedTypes(page);
+  await slow(page, true);
+  await doubleTapOn(page, page.getByRole('button', { name: 'GRØN – kør passet' }));
+  await expect(intro(page).getByRole('heading', { level: 1 })).toHaveText('Power ben · Squat jump');
+  await expectOneMore(page, before, 'session_started');
+
+  // Power's question: one result, then Par 1's first set – not its pause or its second set.
+  await closeIntro(page);
+  await driveUntil(page, () =>
+    page.getByRole('heading', { name: 'Alle hop/reps lige høje og hurtige?' }).isVisible(),
+  );
+  before = await storedTypes(page);
+  await slow(page, true);
+  await doubleTapOn(page, page.getByRole('button', { name: 'Ja', exact: true }));
+  await expect(now(page).locator('.set-name')).toHaveText('Push-up med tempo');
+  await expect(page.locator('.set-count')).toHaveText('Sæt 1 af 3');
+  await expectOneMore(page, before, 'block_result');
+
+  // The EMOM's questions: one result, then the neck's intro card.
+  await driveUntil(page, () => page.getByText('Alle minutter rene?').isVisible());
+  before = await storedTypes(page);
+  await slow(page, true);
+  await doubleTapOn(page, page.getByRole('button', { name: 'Gem', exact: true }));
+  await expect(intro(page)).toBeVisible();
+  await expectOneMore(page, before, 'block_result');
+
+  // The neck's question after its holds: one result, then the last screen.
+  await closeIntro(page);
+  const feel = page.getByRole('heading', { name: 'Hvordan føltes trinnet?' });
+  for (let i = 0; i < 80 && !(await feel.isVisible()); i++) await page.clock.runFor(5_000);
+  before = await storedTypes(page);
+  await slow(page, true);
+  await doubleTapOn(page, page.getByRole('button', { name: 'Passende', exact: true }));
+  await expect(page.getByTestId('finish')).toBeVisible();
+  await expectOneMore(page, before, 'block_result');
+
+  // »Afslut passet«: the session ends once, and the summary comes.
+  before = await storedTypes(page);
+  await slow(page, true);
+  await doubleTapOn(page, page.getByTestId('finish'));
+  await expect(page.getByTestId('done')).toBeVisible();
+  await expectOneMore(page, before, 'session_completed');
+});
+
+test('et dobbelttryk på klubsekvensens »Ren runde?« og nakkens »Stop« gemmer én gang (D61) @date', async ({
+  page,
+}) => {
+  await stillFigures(page);
+  await slowWrites(page);
+  // Programme week 2, Friday: Styrke B with the club sequence and the neck after it.
+  await openApp(page, '2026-11-20');
+  await onboard(page);
+  await startSession(page);
+  await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+  for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
+  await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+  await driveUntil(page, () => page.getByRole('heading', { name: 'Ren runde?' }).isVisible());
+  let before = await storedTypes(page);
+  await slow(page, true);
+  await doubleTapOn(page, page.getByRole('button', { name: 'Ja', exact: true }));
+  await expect(intro(page)).toBeVisible();
+  await expectOneMore(page, before, 'block_result');
+
+  // The neck's first hold, stopped: one set with »stop«, then the last screen.
+  await closeIntro(page);
+  const stop = page.getByRole('button', { name: /^Stop: snurren/ });
+  await expect(stop).toBeVisible();
+  before = await storedTypes(page);
+  await slow(page, true);
+  await doubleTapOn(page, stop);
+  await expect(page.getByTestId('finish')).toBeVisible();
+  await expectOneMore(page, before, 'set_logged');
+});
+
+test('et dobbelttryk på væg-testens »Gem målingen« gemmer målingen én gang (D61) @date', async ({
+  page,
+}) => {
+  await stillFigures(page);
+  await slowWrites(page);
+  // Programme week 1, Tuesday: the wall test before the warm-up.
+  await openApp(page, '2026-11-10');
+  await onboard(page);
+  await startSession(page);
+  await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+  await page.locator('.session-body input[type="number"]').fill('3');
+  const before = await storedTypes(page);
+  await slow(page, true);
+  await doubleTapOn(page, page.getByRole('button', { name: 'Gem målingen' }));
+  await expect(intro(page)).toContainText('Opvarmning · 8 min');
+  await expectOneMore(page, before, 'measurement_logged');
+});
+
+test('et dobbelttryk på »Rød« og »Afslut den røde dag« gemmer én gang (D61) @date', async ({
+  page,
+}) => {
+  await stillFigures(page);
+  await slowWrites(page);
+  await openApp(page, '2026-11-17');
+  await onboard(page);
+  await startSession(page);
+  let before = await storedTypes(page);
+  await slow(page, true);
+  await doubleTapOn(page, page.getByRole('button', { name: /^Rød: syg/ }));
+  await expect(page.getByRole('heading', { name: 'Rød dag' })).toBeVisible();
+  await expectOneMore(page, before, 'session_started');
+  before = await storedTypes(page);
+  await slow(page, true);
+  await doubleTapOn(page, page.getByRole('button', { name: 'Afslut den røde dag' }));
+  await expect(page.getByTestId('done')).toBeVisible();
+  await expectOneMore(page, before, 'session_completed');
 });
