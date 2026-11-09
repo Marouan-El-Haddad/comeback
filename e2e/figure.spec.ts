@@ -192,3 +192,131 @@ test('figuren står stille, når kortet er rullet væk, og fortsætter, hvor den
   await expect(current(page)).toHaveText('3 sek ned');
   expect(await untilPhase(page, '1 sek stille')).toBeGreaterThan(1_500);
 });
+
+/** The angle at the near knee in the drawing, from the thigh's and the shin's lines (180° = straight). */
+async function nearKnee(page: Page): Promise<number> {
+  return card(page)
+    .locator('.figure-stage svg')
+    .evaluate((svg) => {
+      const line = (k: string) => {
+        const el = svg.querySelector(`[data-k="${k}"]`);
+        const n = (a: string) => Number(el?.getAttribute(a));
+        return { x1: n('x1'), y1: n('y1'), x2: n('x2'), y2: n('y2') };
+      };
+      const thigh = line('near.leg.1');
+      const shin = line('near.leg.2');
+      const a = [thigh.x1 - thigh.x2, thigh.y1 - thigh.y2];
+      const b = [shin.x2 - shin.x1, shin.y2 - shin.y1];
+      const dot = (a[0] ?? 0) * (b[0] ?? 0) + (a[1] ?? 0) * (b[1] ?? 0);
+      const cos = dot / (Math.hypot(a[0] ?? 0, a[1] ?? 0) * Math.hypot(b[0] ?? 0, b[1] ?? 0));
+      return (Math.acos(Math.max(-1, Math.min(1, cos))) * 180) / Math.PI;
+    });
+}
+
+test('push-uppen knækker ikke midt i en fase: knæet er strakt hele vejen ned og op (H1)', async ({
+  page,
+}) => {
+  await openApp(page, '2026-11-17');
+  await onboard(page);
+  await openCard(page, 'Pres · trin 1', 'Push-up med tempo');
+  await pauseClock(page);
+  await untilPhase(page, 'Op');
+  await untilPhase(page, '3 sek ned');
+  // Every quarter of a second through »3 sek ned«, »1 sek stille« and »Op«.
+  const knees: number[] = [];
+  for (let ms = 0; ms < 5_000; ms += 250) {
+    knees.push(await nearKnee(page));
+    await page.clock.runFor(250);
+  }
+  expect(Math.min(...knees), knees.map((k) => Math.round(k)).join(' ')).toBeGreaterThanOrEqual(175);
+  // Halfway down: the body is still one line, and the screenshot shows it.
+  await untilPhase(page, '3 sek ned');
+  await page.clock.runFor(1_500);
+  expect(await nearKnee(page)).toBeGreaterThanOrEqual(175);
+  await page.screenshot({ path: 'screenshots/kort-figur-halvvejs.png', scale: 'css' });
+});
+
+test('figuren står stille i baggrunden og tegner højst 30 gange i sekundet (L2)', async ({
+  page,
+}) => {
+  await openApp(page, '2026-11-17');
+  await onboard(page);
+  await openCard(page, 'Pres · trin 1', 'Push-up med tempo');
+  await pauseClock(page);
+  await untilPhase(page, '3 sek ned');
+  // Count drawings: each one sets the torso's x1 once.
+  await card(page)
+    .locator('.figure-stage [data-k="torso"]')
+    .evaluate((el) => {
+      const counter = window as unknown as { draws: number };
+      counter.draws = 0;
+      const set = el.setAttribute.bind(el);
+      el.setAttribute = (name: string, value: string) => {
+        if (name === 'x1') counter.draws++;
+        set(name, value);
+      };
+    });
+  const draws = () => page.evaluate(() => (window as unknown as { draws: number }).draws);
+  await page.clock.runFor(1_000);
+  const perSecond = await draws();
+  expect(perSecond).toBeGreaterThan(5);
+  expect(perSecond).toBeLessThanOrEqual(30);
+
+  // The app goes to the background: no drawing, and the phase stands still.
+  const phase = await current(page).innerText();
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'hidden' });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  const before = await draws();
+  await page.clock.runFor(6_000);
+  expect(await draws()).toBe(before);
+  await expect(current(page)).toHaveText(phase);
+  // Back in front: it goes on from where it stood.
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => 'visible',
+    });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await page.clock.runFor(500);
+  expect(await draws()).toBeGreaterThan(before);
+  await expect(current(page)).toHaveText(phase);
+});
+
+test('reduceret bevægelse med fem positioner: højst tre stillbilleder pr. række, store nok at se (L1)', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openApp(page, '2026-11-17');
+  await onboard(page);
+  await openCard(page, 'Burpees · trin E1', 'EMOM 4 × 3');
+  const stills = card(page).locator('.figure-still');
+  await expect(stills).toHaveCount(5);
+  const boxes = await stills.evaluateAll((els) =>
+    els.map((el) => {
+      const r = el.getBoundingClientRect();
+      return { x: r.x, y: r.y, width: r.width, height: r.height };
+    }),
+  );
+  const rows = new Map<number, number>();
+  for (const b of boxes) rows.set(Math.round(b.y), (rows.get(Math.round(b.y)) ?? 0) + 1);
+  expect(rows.size).toBeGreaterThanOrEqual(2);
+  expect(Math.max(...rows.values())).toBeLessThanOrEqual(3);
+  for (const b of boxes) expect(b.width).toBeGreaterThanOrEqual(100);
+  // No still overlaps another.
+  for (const [i, a] of boxes.entries()) {
+    for (const b of boxes.slice(i + 1)) {
+      const apart =
+        a.x + a.width <= b.x + 1 ||
+        b.x + b.width <= a.x + 1 ||
+        a.y + a.height <= b.y + 1 ||
+        b.y + b.height <= a.y + 1;
+      expect(apart).toBe(true);
+    }
+  }
+  expect(await a11yProblems(page, '.exercise-card', SESSION_RULES)).toEqual([]);
+  await card(page).locator('.figure-stills').scrollIntoViewIfNeeded();
+  await page.screenshot({ path: 'screenshots/kort-figur-fem-stillbilleder.png', scale: 'css' });
+});

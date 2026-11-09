@@ -5,7 +5,14 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, test } from 'vitest';
 import { findSourceRef } from '../../content/refs.ts';
-import type { ExplainFile, ExplainItem, Movement } from '../../content/types.ts';
+import type {
+  ExplainFile,
+  ExplainItem,
+  FigureFile,
+  FigureItem,
+  Movement,
+  OwnMovement,
+} from '../../content/types.ts';
 import { PROGRAM } from '../../engine/program.ts';
 import type { Program } from '../../engine/types.ts';
 import {
@@ -15,6 +22,8 @@ import {
   routineLegend,
   equipmentText,
   explanationOf,
+  figureIn,
+  figureText,
   likeSubject,
   movementsText,
   phasesText,
@@ -295,5 +304,61 @@ describe('målinger, »like« på tværs af filer og »Potensér« (docs/SPEC.md
     const outside = cardMovements(potenser, null, null);
     expect(outside.map((m) => m.name)).toEqual(['Dagens første power-øvelse', 'Pogo-hop']);
     expect(phasesText(potenser[0] as Movement)).toBe('');
+  });
+});
+
+describe('figuren på kortet: opslag og tekstalternativ (L2 i P3-reviewet)', () => {
+  const figure = (id: string, movement?: string): FigureItem => ({
+    id,
+    ...(movement ? { movement } : {}),
+    view: 'side',
+    facing: 1,
+    props: [],
+    highlight: ['torso'],
+    keyframes: {},
+  });
+  const file: FigureFile = {
+    format: 1,
+    subject: 'burpee_emom',
+    figures: [
+      figure('burpee_emom.E1'),
+      { id: 'burpee_emom.E2', like: 'burpee_emom.E1' },
+      figure('warmup.2', 'katko'),
+    ],
+  };
+
+  test('figureIn finder figuren, følger »like« i samme fil og skelner bevægelser', () => {
+    expect(figureIn(file, 'burpee_emom.E1')?.id).toBe('burpee_emom.E1');
+    expect(figureIn(file, 'burpee_emom.E2')?.id).toBe('burpee_emom.E1');
+    expect(figureIn(file, 'warmup.2', 'katko')?.movement).toBe('katko');
+    expect(figureIn(file, 'warmup.2')).toBeNull();
+    expect(figureIn(file, 'burpee_emom.E3')).toBeNull();
+    expect(figureIn(null, 'burpee_emom.E1')).toBeNull();
+  });
+
+  test('cardMovements siger, hvor positionerne kommer fra: punktet selv, en »like« og »Potensér«', () => {
+    const own = item('burpee_emom.E1');
+    expect(cardMovements(own.movements, null, null, 'burpee_emom.E1')[0]?.source).toEqual({
+      item: 'burpee_emom.E1',
+      movement: undefined,
+    });
+    // A like in the same file or in another (a measurement like its step) passes the target's id.
+    const like = cardMovements(item('core_front.2').movements, null, null, 'core_front.2');
+    expect(like[0]?.source?.item).toBe('core_front.2');
+    // »Potensér« in a session: the power step's own movement and figure.
+    const potenser: Movement[] = [{ id: 'power', name: 'Potensér', from: 'power' }];
+    const shown = cardMovements(
+      potenser,
+      { session: 'A', power: 'power_legs.1' },
+      { name: 'Squat jump', explained: item('power_legs.1') },
+    );
+    expect(shown[0]?.source).toEqual({ item: 'power_legs.1', movement: undefined });
+  });
+
+  test('figureText beskriver navnet, hver position og faserne', () => {
+    const movement = item('press.1').movements[0] as OwnMovement;
+    expect(figureText('Push-up med tempo', movement)).toBe(
+      'Push-up med tempo. Oppe: Oppe i ord. Nede: Nede i ord. Faserne: 3 sek ned og op.',
+    );
   });
 });
