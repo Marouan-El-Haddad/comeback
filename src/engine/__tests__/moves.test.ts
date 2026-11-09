@@ -108,6 +108,46 @@ describe('Flytning og ugeplan', () => {
         today: dayOf(0, 1),
       }),
     ).toBeNull();
+
+    // Moves in the log that were never checked against the rules (an import that merged two logs):
+    // A onto B's Friday, the motor onto A's Tuesday and B into the next week do not count.
+    log.push(
+      {
+        type: 'session_moved',
+        kind: 'A',
+        fromDate: dayOf(0, 2),
+        toDate: dayOf(0, 5),
+        short: false,
+      },
+      dayOf(0, 1),
+    );
+    log.push(
+      {
+        type: 'session_moved',
+        kind: 'motor',
+        fromDate: dayOf(0, 4),
+        toDate: dayOf(0, 2),
+        short: false,
+      },
+      dayOf(0, 1),
+    );
+    log.push(
+      { type: 'session_moved', kind: 'B', fromDate: dayOf(0, 5), toDate: dayOf(1, 3), short: true },
+      dayOf(0, 1),
+    );
+    const merged = log.state(dayOf(0, 1));
+    expect(planFor(log.program, merged, dayOf(0, 2))).toMatchObject({ kind: 'A', short: false });
+    expect(planFor(log.program, merged, dayOf(0, 4))).toMatchObject({ kind: 'motor' });
+    expect(planFor(log.program, merged, dayOf(0, 5))).toMatchObject({ kind: 'B', short: false });
+    expect(planFor(log.program, merged, dayOf(1, 3)).kind).toBeNull();
+    // A valid move afterwards still works from the day the session stands on.
+    const moved = moveSession(log.program, merged, log.make, {
+      kind: 'A',
+      fromDate: dayOf(0, 2),
+      toDate: dayOf(0, 7),
+      today: dayOf(0, 1),
+    });
+    expect(moved).toMatchObject({ type: 'session_moved', toDate: dayOf(0, 7), short: false });
   });
 
   test('S-EXTRA-01: klub man, ons, fre, lør: hviledag søn, A tir, B tor, motor udgår med valgfri rolig tur', () => {

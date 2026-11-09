@@ -212,6 +212,14 @@ export function scheduleForWeek(program: Program, state: State, monday: ISODate)
     if (move.fromDate < monday || move.fromDate > sunday) continue;
     const item = list.find((a) => a.kind === move.kind && a.date === move.fromDate);
     if (!item) continue;
+    // »To pas kan aldrig lande på samme dag; det, der flyttes, taber« (5.9, S-MOVE-04), also for a
+    // move in the log that was never checked (a merged import): not onto A or B, the motor not onto
+    // any session, and never out of the week.
+    if (move.toDate < monday || move.toDate > sunday) continue;
+    const there = list.filter((a) => a !== item && a.date === move.toDate);
+    if (there.some((a) => a.kind !== 'motor') || (move.kind === 'motor' && there.length > 0)) {
+      continue;
+    }
     item.date = move.toDate;
     item.short = move.short;
   }
