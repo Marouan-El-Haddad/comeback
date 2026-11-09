@@ -565,12 +565,15 @@ export interface State {
     pw: number;
     round: number;
   }>;
+  /** One per week: the newest check, which replaces the earlier ones (R-PAIN-SUNDAY). */
   sundayChecks: Array<{
     date: ISODate;
     weekStart: ISODate;
     painTracks: string[];
     tooHeavy: string[];
     sleepAvg?: number;
+    /** Every track a check of the week named under pain or »for tungt«: not taken down again. */
+    taken: string[];
   }>;
   moves: Array<{ kind: SessionKind; fromDate: ISODate; toDate: ISODate; short: boolean }>;
   skipped: Array<{ kind: SessionKind; forDate: ISODate; reason: 'user' | 'missed' }>;

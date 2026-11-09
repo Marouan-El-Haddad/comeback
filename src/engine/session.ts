@@ -560,8 +560,8 @@ export function submitSundayCheck(
   const { program, make } = ctx;
   const state = deriveState(program, events, input.date);
   const weekStart = mondayOf(input.date);
-  const earlier = state.sundayChecks.find((c) => c.weekStart === weekStart);
-  const handled = new Set([...(earlier?.painTracks ?? []), ...(earlier?.tooHeavy ?? [])]);
+  // Every track a check of the week named: none is taken down twice (S-PAIN-08, S-PAIN-10).
+  const handled = new Set(state.sundayChecks.find((c) => c.weekStart === weekStart)?.taken ?? []);
   const out: AppEvent[] = [
     make(
       {
@@ -615,7 +615,29 @@ export function submitSundayCheck(
   }
   for (const trackId of input.tooHeavy) {
     const t = state.tracks[trackId];
-    if (!t || handled.has(trackId) || input.painTracks.includes(trackId)) continue;
+    if (!t || input.painTracks.includes(trackId)) continue;
+    // In a pain period the lowered step becomes your step: no restore to the step that was too
+    // heavy, and no step further down – also when an earlier check of the week brought the pain
+    // (S-PAIN-09). The first step with the lighter variant has nothing lower.
+    if (t.tempDown) {
+      if (t.tempDown.lighter) continue;
+      out.push(
+        make(
+          {
+            type: 'step_changed',
+            trackId,
+            from: t.stepId,
+            to: t.stepId,
+            by: 'user',
+            reason: 'user_choice',
+            explanation: explainTooHeavy(program, t.tempDown.originalStepId, t.stepId),
+          },
+          input.date,
+        ),
+      );
+      continue;
+    }
+    if (handled.has(trackId)) continue;
     const to = previousStep(program, t.stepId);
     if (!to) continue;
     out.push(

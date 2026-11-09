@@ -427,8 +427,13 @@ function apply(program: Program, state: State, raw: AppEvent, emomHistory: EmomP
         content: e.content,
       });
       break;
-    case 'sunday_check':
-      // A new check for the same week replaces the earlier one (R-PAIN-SUNDAY, S-PAIN-08).
+    case 'sunday_check': {
+      // A new check for the same week replaces the earlier one, and the tracks the week's checks
+      // named add up, so none is taken down twice (R-PAIN-SUNDAY, S-PAIN-08, S-PAIN-10).
+      const before = state.sundayChecks.find((c) => c.weekStart === e.weekStart);
+      const taken = [
+        ...new Set([...(before?.taken ?? []), ...(e.painTracks ?? []), ...(e.tooHeavy ?? [])]),
+      ];
       state.sundayChecks = state.sundayChecks.filter((c) => c.weekStart !== e.weekStart);
       state.sundayChecks.push({
         date: e.date,
@@ -436,8 +441,10 @@ function apply(program: Program, state: State, raw: AppEvent, emomHistory: EmomP
         painTracks: e.painTracks ?? [],
         tooHeavy: e.tooHeavy ?? [],
         sleepAvg: e.sleepAvg,
+        taken,
       });
       break;
+    }
     case 'status_set':
       state.statuses.push({ status: e.status, from: e.from, to: e.to });
       break;

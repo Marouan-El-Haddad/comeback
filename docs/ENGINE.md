@@ -170,7 +170,7 @@ Tilstanden afledes fra bunden ved hver start og efter hver hændelse (loggen er 
 
 **R-PAIN-RESTORE (Tilføjelse T3):** første kvalificerende pas på eller efter `until` uden ny skarp smerte → `step_changed(to = originalStepId, reason: 'restore')`, `target = min`. Ny skarp smerte i perioden → `until` forlænges 7 dage og I dag viser Fysio-rådet »Bliver den værre fra gang til gang, så få den undersøgt«.
 
-**R-PAIN-SUNDAY:** `sunday_check.painTracks` ikke tom → R-PAIN-SHARP for de spor (Præcisering af side 46 + 48). `tooHeavy` → tilbud om ét trin ned (`by: 'user'`): tilbuddet står ved stigen i tjekket, før det gemmes, og når tjekket gemmes, skrives for hver stige i `tooHeavy` et `step_changed` til trinnet under (`by: 'user'`, `reason: 'user_choice'`, hits = 0, target = min) – ikke på stigens første trin, og ikke for et spor, der også står i `painTracks`, for det går ned efter smertereglen. Et nyt tjek for samme uge (`weekStart`) afløser det forrige: trafiklyset læser det nye, og et spor, som et tidligere tjek for ugen allerede har taget ned (smerte eller for tungt), tages ikke ned igen, så samme smerte hverken forlænger perioden eller giver Fysio-rådet. Et spor, det nye tjek ikke længere nævner, bliver, hvor det er (forsigtigt som standard); trinnet kan vælges under Stiger (Præcisering, `DECISIONS.md` D63).
+**R-PAIN-SUNDAY:** `sunday_check.painTracks` ikke tom → R-PAIN-SHARP for de spor (Præcisering af side 46 + 48). `tooHeavy` → tilbud om ét trin ned (`by: 'user'`): tilbuddet står ved stigen i tjekket, før det gemmes, og når tjekket gemmes, skrives for hver stige i `tooHeavy` et `step_changed` til trinnet under (`by: 'user'`, `reason: 'user_choice'`, hits = 0, target = min) – ikke på stigens første trin, og ikke for et spor, der også står i `painTracks`, for det går ned efter smertereglen. Står sporet i en smerteperiode (`tempDown`), bliver det sænkede trin dit trin: `step_changed` fra og til samme trin (`by: 'user'`, `reason: 'user_choice'`), så gendannelsen til det trin, der var for tungt, falder bort, uden at sporet går længere ned – også når smerten kom fra et tidligere tjek for ugen; på første trin med lettere variant sker intet. Et nyt tjek for samme uge (`weekStart`) afløser det forrige: trafiklyset læser det nye, og et spor, som et tjek for ugen allerede har nævnt under smerte eller for tungt, tages ikke ned igen – heller ikke af et tredje tjek – så samme smerte hverken forlænger perioden eller giver Fysio-rådet. Et spor, det nye tjek ikke længere nævner, bliver, hvor det er (forsigtigt som standard); trinnet kan vælges under Stiger (Præcisering, `DECISIONS.md` D63, D65).
 
 **R-ABSENCE-3:** tre på hinanden følgende kalenderuger uden gennemført uge → alle stiger ét trin ned (ikke under trin 1), EMOM ét trin ned, klubsekvens ét trin ned, `hits = 0`, `target = min`, én gang pr. fraværsperiode. Forklaring: »Tre uger uden styrkepas: alle stiger ét trin ned.« (uden sidetal, A2).
 
@@ -313,8 +313,8 @@ Præcisering: »3–4 sæt« i uge 5 er 3 med en valgfri +1 på par 1–2; »4 s
 | `light` | log + synlig i søndagstjek |
 | `sharp` / `stop` | –1 trin i 7 dage, hits = 0 |
 | Søndag: »gør ondt, ikke væk« | som `sharp` for sporet |
-| Søndag: »for tungt« | ét trin ned som dit eget valg (ikke på første trin, ikke for et spor med smerte) |
-| Nyt søndagstjek for samme uge | afløser det forrige; et spor, der allerede er taget ned, tages ikke ned igen |
+| Søndag: »for tungt« | ét trin ned som dit eget valg (ikke på første trin, ikke for et spor med smerte); i en smerteperiode bliver det sænkede trin dit trin |
+| Nyt søndagstjek for samme uge | afløser det forrige; et spor, som et tjek for ugen har nævnt, tages ikke ned igen |
 | Ny `sharp` i perioden | +7 dage, Fysio-råd |
 | Nakke `stop` | blok stopper, lægeadvarsel |
 | Efter perioden uden ny smerte | trin gendannes, target = min |
@@ -488,6 +488,8 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 - **S-PAIN-06** Givet `pain: light`. Så ingen `step_changed`; historik viser flaget.
 - **S-PAIN-07** Givet `legs.3`, `press.1` og `groin.2`. Når søndagstjekket gemmes med `tooHeavy = [legs, press, groin]` og `painTracks = [groin]`. Så `step_changed legs.3 → legs.2` med `by: 'user'` og `reason: 'user_choice'`, hits = 0 og target = min; `press.1` (første trin) får ingen ændring, og `groin` går kun ned efter smertereglen (én `step_changed` med `reason: 'pain'`). (Tilføjet ved NAT-3 P5a.)
 - **S-PAIN-08** Givet søndagstjek søndag med `painTracks = [groin]` på `groin.2` og `tooHeavy = [legs]` på `legs.3`. Når et nyt tjek for samme uge gemmes (fx mandag, stadig dateret søndag) med de samme svar. Så skrives ingen ny `step_changed` (ingen forlængelse, intet Fysio-råd, `legs` bliver på `legs.2`), og tilstanden har ét tjek for ugen. Når endnu et tjek for ugen gemmes uden smerte, så er q2 standard »ja« igen tirsdag, og `groin` bliver på `groin.1` til gendannelsen. (Tilføjet ved NAT-3 P5a.)
+- **S-PAIN-09** Givet `legs.3` og skarp smerte i ben tirsdag (`legs.2` midlertidigt). Når søndagstjekket gemmes med `tooHeavy = [legs]`. Så `step_changed legs.2 → legs.2` med `by: 'user'` og `reason: 'user_choice'`, intet `tempDown` og ingen `legs.1`, og et grønt pas efter perioden gendanner ikke `legs.3`. Givet i stedet et tjek med `painTracks = [legs]`, der rettes til `tooHeavy = [legs]`, så det samme, og et tredje tjek med `tooHeavy = [legs]` skriver intet. (Tilføjet ved reviewet af NAT-3 P5a, M1.)
+- **S-PAIN-10** Givet tre søndagstjek for samme uge: smerte i lysken (`groin.2`), så uden smerte, så smerte i lysken igen. Så skriver det tredje ingen `step_changed` (ingen forlængelse og intet Fysio-råd), og spørgsmål 2 står på »nej« tirsdag. (Tilføjet ved reviewet af NAT-3 P5a.)
 
 **Uger, fravær, kalender**
 - **S-WEEK-01** Givet k0 gennemført (A grønt). Så pw(k1) = 2.
@@ -589,7 +591,7 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 | 45 | Boss-udfordringer | R-BOSS | S-BOSS-01 |
 | 46 | Reglerne, comeback-fælden | R-PAIN-*, R-USER-STEP (advarsel), cues (knoer, nakke) | S-PAIN-* |
 | 47 | Flere Muay Thai-pas, motoren ryger først, tunge ben før en begivenhed, rejse, sygdom, sprungne uger | R-EXTRA-MT, R-MOVE, R-EVENT, R-TRAVEL, R-ILL, R-PW, R-ABSENCE-3, R-REST | S-WEEK-02..08, S-WEEK-11..12, S-EXTRA-*, S-MOVE-01, S-MOVE-03, S-EVENT-01..02 |
-| 48 | Restitution, søndagstjek | `sunday_check`, R-PAIN-SUNDAY | S-PAIN-05, S-PAIN-07..08 |
+| 48 | Restitution, søndagstjek | `sunday_check`, R-PAIN-SUNDAY | S-PAIN-05, S-PAIN-07..10 |
 | 49 | Log | Historik (SPEC 3.6), eksport | S-DATA-02 |
 | 51–54 | Bag om programmet, kilder | »Hvorfor« i appens egne ord (`content/explain/`, `SPEC.md` 9.1); appen viser ingen kilder (`DECISIONS.md` A2) | – |
 
