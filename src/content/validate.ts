@@ -941,11 +941,13 @@ function checkLimb(
     );
   }
   if (value.tip !== undefined && !finite(value.tip)) point(r, at(where, 'tip'), value.tip);
+  // A segment toward the viewer is drawn shorter, down to a quarter: a thigh straight forward in a
+  // squat seen from the front (DECISIONS.md D60).
   for (const seg of ['upper', 'lower'] as const) {
     const length = value[seg];
     const nominal = NOMINAL[kind][seg];
-    if (length !== undefined && (!finite(length) || length < nominal / 2 || length > nominal)) {
-      r.add(at(where, seg), `skal være mellem ${nominal / 2} og ${nominal} (forkortet led)`);
+    if (length !== undefined && (!finite(length) || length < nominal / 4 || length > nominal)) {
+      r.add(at(where, seg), `skal være mellem ${nominal / 4} og ${nominal} (forkortet led)`);
     }
   }
   return true;

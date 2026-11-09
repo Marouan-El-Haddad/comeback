@@ -26,7 +26,7 @@ import {
 } from '../check.ts';
 import { bodyPrims } from '../draw.ts';
 import { solve } from '../geometry.ts';
-import { buildModel } from '../motion.ts';
+import { buildModel, shiftPose } from '../motion.ts';
 
 function read<T>(dir: string, subject: string): T {
   return JSON.parse(
@@ -790,5 +790,69 @@ describe('D58: stilstand, markeringer, fejlpar og den anden vinkel i tjekket', (
     expect(messages(sagging, movement)).toEqual([]);
     const torso = bodyPrims(sagging, solve({ view: 'front', facing: null }, { ...up, spine: 3 }));
     expect(torso.find((p) => p.key === 'torso')?.t).toBe('poly');
+  });
+});
+
+describe('D60: tjekket læser landingen, og et led kan forkortes mere (reviewet af P1b)', () => {
+  /** The figure agents' bounds from P2: keyframes on the spot, 64 forward with `advance`. */
+  const bounds = (): { figure: FigureItem; movement: OwnMovement } => {
+    const tried = JSON.parse(
+      readFileSync(
+        join(process.cwd(), 'src', 'figure', '__tests__', 'p2', 'power_legs.6.bounds.json'),
+        'utf8',
+      ),
+    ) as { figure: FigureItem };
+    const movement = movementFor(
+      read<ExplainFile>('explain', 'power_legs'),
+      'power_legs.6',
+      'bounds',
+    );
+    if (!movement) throw new Error('bounds mangler');
+    return { figure: structuredClone(tried.figure), movement: structuredClone(movement) };
+  };
+
+  test('M2: bounds, der lander på stedet, selv om teksten siger 1–1,5 m frem, fanges', () => {
+    const { figure, movement } = bounds();
+    expect(messages(figure, movement)).toEqual([]);
+    // Without its `advance` the standing foot lands where it pushed off.
+    delete figure.transitions;
+    expect(messages(figure, movement).join('\n')).toMatch(
+      /power_legs\.6 › land: »Landing« lander -?0 enheder foran afsættet, men teksten siger »Ca\. 1–1,5 m foran afsættet« \(mindst 30\)/,
+    );
+  });
+
+  test('M2: et længdespring, der lander 80 fremme i sine keyframes, består; en landing uden hop før tjekkes ikke', () => {
+    const { figure, movement } = reference('power_legs', 'power_legs.2');
+    const land = figure.keyframes.land as Pose;
+    const ahead = (all: string) => all.includes('foran stregen« (mindst 30)');
+    expect(ahead(messages(figure, movement).join('\n'))).toBe(false);
+    // The landing drawn 25 further back: still more than 30 in front of the take-off.
+    figure.keyframes.land = shiftPose(land, -25);
+    expect(ahead(messages(figure, movement).join('\n'))).toBe(false);
+    // 70 further back: about 10 in front of the take-off, less than the text's 1,5–2 m.
+    figure.keyframes.land = shiftPose(land, -70);
+    expect(messages(figure, movement).join('\n')).toMatch(
+      /power_legs\.2 › land: »Landing« lander \d+(,\d)? enheder foran afsættet, men teksten siger »Ca\. 1,5–2 m foran stregen« \(mindst 30\)/,
+    );
+    // The take-off is the last position on the floor before the jump, not the jump itself: the
+    // flight (»I luften«) has no contacts, and a text without »foran« is not read.
+    expect(messages(figure, movement).join('\n')).not.toContain('› air: »I luften« lander');
+  });
+
+  test('et led givet som punkter må forkortes til en fjerdedel (et lår, der peger mod beskueren)', () => {
+    const { figure, movement } = reference('press', 'press.1');
+    const top = figure.keyframes.top as Pose;
+    const shoulder = solve({ view: 'side', facing: 1 }, top).shoulder;
+    // An upper arm of 5 (a third of 16) toward the viewer passes; one of 3 (under a quarter) does not.
+    const arm = (length: number) => ({
+      joint: [shoulder[0], shoulder[1] - length] as Point,
+      end: [shoulder[0] + 2, shoulder[1] - length - 14.8] as Point,
+    });
+    figure.keyframes.top = { ...top, arms: { ...top.arms, far: arm(5.5) } };
+    expect(messages(figure, movement).join('\n')).not.toContain('overarm/lår er');
+    figure.keyframes.top = { ...top, arms: { ...top.arms, far: arm(3) } };
+    expect(messages(figure, movement).join('\n')).toContain(
+      'press.1 › top: far.arms: overarm/lår er 3 lang (normalt 16); flyt »joint« eller »end«',
+    );
   });
 });

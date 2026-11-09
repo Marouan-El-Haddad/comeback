@@ -68,7 +68,7 @@ import {
   type Solid,
 } from './surfaces.ts';
 import { limbOfLift, type LimbId } from './tween.ts';
-import { figureViews, VIEW_NAME } from './views.ts';
+import { figureViews, viewModels, VIEW_NAME } from './views.ts';
 
 export { solids, TOUCH, type PointKind, type Solid } from './surfaces.ts';
 export { turn } from './geometry.ts';
@@ -656,7 +656,8 @@ function jointLimbProblems(pose: Pose, s: Skeleton): string[] {
         ['overarm/lår', distance(b.root, b.joint), nominal.upper],
         ['underarm/skinneben', distance(b.joint, b.end), nominal.lower],
       ] as const) {
-        if (length < want / 2 || length > want * 1.15) {
+        // Toward the viewer a segment is drawn shorter, down to a quarter (D60).
+        if (length < want / 4 || length > want * 1.15) {
           problems.push(
             `${side}.${kind}: ${segment} er ${num(length)} lang (normalt ${want}); flyt »joint« eller »end«`,
           );
@@ -1138,10 +1139,13 @@ function slideProblems(
  * marks of both views, the typical mistakes drawn as figures and whether it moves visibly (D58).
  */
 export function checkFigure(figure: FigureItem, movement: OwnMovement, where: string): Problem[] {
+  // Both views on one clock, as the app draws them (L1 in the P1b review).
+  const models = viewModels(figure, movement);
   const views = figureViews(figure).map((view, i) => {
     const prefix =
       i === 0 ? where : `${where} › ${VIEW_NAME[view.view].toLocaleLowerCase('da-DK')}`;
-    return { prefix, ...checkView(view, movement, prefix) };
+    const model = models[i] ?? buildModel(view, movement);
+    return { prefix, ...checkView(view, movement, prefix, model) };
   });
   return dedupe([
     ...views.flatMap((v) => v.problems),
@@ -1150,11 +1154,12 @@ export function checkFigure(figure: FigureItem, movement: OwnMovement, where: st
   ]);
 }
 
-/** The problems of one view of a figure, and its model for the checks that follow. */
+/** The problems of one view of a figure, drawn as `model`, for the checks that follow. */
 function checkView(
   figure: FigureItem,
   movement: OwnMovement,
   where: string,
+  model: FigureModel,
 ): { problems: Problem[]; model: FigureModel } {
   const frame = frameOf(figure);
   const problems: Problem[] = [];
@@ -1248,7 +1253,6 @@ function checkView(
   }
 
   // The frames between the keyframes (H1), and no jump from one move to the next.
-  const model = buildModel(figure, movement);
   for (const p of jumpProblems(model)) add(p.where, p.message);
   for (const move of distinctSteps(model)) {
     const place = `${placeName(move.from)} → ${placeName(move.to)}`;
@@ -1259,6 +1263,7 @@ function checkView(
 
   for (const p of slideProblems(figure, movement, model)) add(p.where, p.message);
   for (const p of stillnessProblems(model)) add(p.where, p.message);
+  for (const p of landingProblems(model)) add(p.where, p.message);
   return { problems, model };
 }
 
@@ -1329,6 +1334,82 @@ function stillnessProblems(model: FigureModel): Array<{ where: string; message: 
         message: `»${phase.label}« flytter figuren højst ${below(moved)} enheder fra »${names.get(from) ?? from}« til »${names.get(phase.to) ?? phase.to}« (mindst ${STILL_MOVE}), så fasen ligner en stillestående tegning`,
       });
     }
+  });
+  return problems;
+}
+
+/** A landing the text puts in front of the take-off stands at least this far in front of it. */
+export const LANDING_AHEAD = 30;
+
+/** »Ca. 1–1,5 m foran afsættet«, »Ca. 1,5–2 m foran stregen«: a distance in metres in front. */
+const METRES_AHEAD =
+  /(?:ca\.\s*)?(?<![\p{L}\d])\d+(?:[,.]\d+)?(?:\s*[–-]\s*\d+(?:[,.]\d+)?)?\s*m\s+foran(?:\s+\p{L}+)?/iu;
+const BEFORE_TAKEOFF = /foran afsættet/iu;
+
+/** The words of a position's text that put a landing in front of the take-off, or null. */
+export function aheadInText(text: string): string | null {
+  return (METRES_AHEAD.exec(text) ?? BEFORE_TAKEOFF.exec(text))?.[0] ?? null;
+}
+
+/** A foot on the floor: its toes (or, without a foot drawn, its ankle) rest on it. */
+function feetOnFloor(s: Skeleton): Point[] {
+  return s.bones
+    .filter((b) => b.kind === 'leg' && (b.tip ? b.tip[1] <= 2.5 : b.end[1] <= 5))
+    .map((b) => b.tip ?? b.end);
+}
+
+/**
+ * A landing the text puts in front of the take-off (M2 in the P1b review, D60): when a position
+ * after a jump (the one before it touches nothing) says the figure lands »foran afsættet« or »… m
+ * foran«, a foot on the floor lands at least LANDING_AHEAD in front of the feet on the floor at the
+ * take-off – the last position before the jump that stands on the floor – in the way the chest
+ * faces, with `advance` or in the keyframes. Side view only: from the front, forward is toward the
+ * viewer. Single-leg bounds that landed where they pushed off looked like a figure jumping on the
+ * spot, though the text says a metre forward.
+ */
+function landingProblems(model: FigureModel): Array<{ where: string; message: string }> {
+  const frame = model.frame;
+  if (frame.view !== 'side' || frame.facing === null) return [];
+  const facing = frame.facing;
+  const positions = new Map(model.movement.positions.map((p) => [p.id, p]));
+  const onFloor = (id: string) =>
+    positions
+      .get(id)
+      ?.contacts.some((c) => c.on === 'floor' && ['foot', 'toes', 'heel'].includes(c.part)) ??
+    false;
+  const moves = model.timeline.moves;
+  const problems: Array<{ where: string; message: string }> = [];
+  const told = new Set<string>();
+  moves.forEach((m, i) => {
+    const landing = positions.get(m.to);
+    if (m.from === m.to || !landing || told.has(m.to)) return;
+    const said = aheadInText(landing.text);
+    const before = positions.get(realEnds(m)?.[0] ?? m.from);
+    if (!said || !before || before.contacts.length > 0) return;
+    // Back over the jump to the last move that starts on the floor: the take-off.
+    let k = i;
+    while (k >= 0) {
+      const from = moves[k]?.from ?? '';
+      if (!from.includes('>') && onFloor(from)) break;
+      k--;
+    }
+    const start = moves[k];
+    const takeoff = start ? positions.get(start.from) : undefined;
+    const pa = start ? model.figure.keyframes[start.from] : undefined;
+    const pb = model.figure.keyframes[m.to];
+    if (!start || !takeoff || !pa || !pb) return;
+    const at = (pose: Pose, dx: number) =>
+      feetOnFloor(solve(frame, pose)).map((p) => facing * (p[0] + dx));
+    const landed = at(pb, m.shift?.[1] ?? 0);
+    const pushed = at(pa, start.shift?.[0] ?? 0);
+    if (landed.length === 0 || pushed.length === 0) return;
+    const ahead = Math.min(...landed) - Math.max(...pushed);
+    told.add(m.to);
+    if (ahead >= LANDING_AHEAD) return;
+    problems.push({
+      where: placeName(m.to),
+      message: `»${landing.name}« lander ${num(ahead)} enheder foran afsættet, men teksten siger »${said}« (mindst ${LANDING_AHEAD}): giv overgangene efter »${takeoff.name}« »advance«, eller tegn landingen længere fremme`,
+    });
   });
   return problems;
 }

@@ -348,7 +348,7 @@ describe('figurer', () => {
     [
       'for kort overarm',
       pressFigure((f) => (f.keyframes.bottom!.arms.near = { to: [69, 0], upper: 3 })),
-      'skal være mellem 8 og 16',
+      'skal være mellem 4 og 16',
     ],
     [
       'ukendt segment',
@@ -421,6 +421,15 @@ describe('figurer', () => {
       ];
       f.keyframes.top!.spine = -3;
       f.keyframes.top!.arms.near = { to: [69.17, 0], bend: 1 };
+    });
+    expect(figureProblems(file, 'press', PRESS)).toEqual([]);
+  });
+
+  test('et led, der peger mod beskueren, kan forkortes til en fjerdedel (D60)', () => {
+    // A thigh straight toward the viewer in a squat from the front: 6 of 24.
+    const file = pressFigure((f) => {
+      f.keyframes.bottom!.arms.near = { to: [69, 0], upper: 4, lower: 3.75 };
+      f.keyframes.bottom!.legs.near = { to: [0, 3.6], upper: 6, lower: 5.75 };
     });
     expect(figureProblems(file, 'press', PRESS)).toEqual([]);
   });

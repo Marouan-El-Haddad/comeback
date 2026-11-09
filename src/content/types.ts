@@ -344,7 +344,7 @@ export type MarkJoint = `${LimbSide}.${'knee' | 'elbow' | 'hip' | 'shoulder'}`;
 export type MarkPlace = 'right' | 'left' | 'above' | 'below';
 
 interface MarkWhen {
-  /** Shown while the figure stands at this position (its hold, and as it arrives and leaves). */
+  /** Shown while the figure stands still at this position (its holds and pauses), not on the way. */
   at?: string;
   /** Shown while this phase runs: its number in the explanation's phases, counted from 1. */
   phase?: number;
@@ -354,7 +354,8 @@ interface MarkWhen {
  * What the figure points out at the right moment (docs/SPEC.md 9.1, DECISIONS.md D58): the way a part
  * moves in a phase (`arrow`), the angle at a joint (`angle`), a short cue of at most three words
  * (`cue`) or a straight guide line between two points (`line`). Exactly one of the four, and exactly
- * one of `at` and `phase`; one mark at a time.
+ * one of `at` and `phase`; one mark at a time. In a phase a cue's dot and a line follow the parts of
+ * the body they name, while the text stands still (D60).
  */
 export type Mark = MarkWhen &
   (

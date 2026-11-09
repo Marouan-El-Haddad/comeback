@@ -1,7 +1,7 @@
 // Figures that fail the checks added to the figure system in NAT-3 P1a (DECISIONS.md D56) and P1b
-// (D58: a figure that does not move visibly) and wait for the figure agents in P2:
-// docs/runs/NAT-3-FIGURES.md says what each needs. The checks are not
-// loosened; Vitest (src/figure/__tests__/content-figures.test.ts) and `node scripts/check-explain.ts`
+// (D58: a figure that does not move visibly; D60: a landing the text puts in front of the take-off)
+// and wait for the figure agents in P2: docs/runs/NAT-3-FIGURES.md says what each needs. The checks
+// are not loosened; Vitest (src/figure/__tests__/content-figures.test.ts) and `check-explain`
 // without a file know these figures by name and still print their problems, and a figure checked on
 // its own (`node scripts/check-explain.ts content/figures/<spor>.json`) fails as before. Remove a
 // figure from the list when it passes: the test says which ones do. Never imported by the app.
@@ -22,6 +22,7 @@ export const WAITING_FOR_P2: readonly string[] = [
   'neck.N2',
   'neck.N5 › mave',
   'neck.N5 › side',
+  'power_legs.6 › bounds',
   'shoulder.3',
   'warmup.2 › spiderman',
 ];
