@@ -251,3 +251,75 @@ Pakke 2 i `docs/runs/NAT-3.md` (alle figurer i høj kvalitet), del 2: `content/f
 - `screenshots/review-p2-2-fejlpar-kort.png`
 - `screenshots/review-p2-2-klap.png`
 - `screenshots/review-p2-2-nu-cue.png`
+
+## Opfølgning
+
+Gennemgået igen på 2e0909b (7a300af–2e0909b: motorrunde 2 med D62 og figuragenternes rettelser). Jeg har set `git diff da9abf8 2e0909b -- content/` for de otte spor, de nye kontaktark i `screenshots/figures/`, kortene i `pixel9a` (Firefox uden JIT, `E2E_PORT=4187`) og »Nu« i tidsmaskinen tirsdag 10/11 og fredag 13/11.
+
+**Resultat:** 49 af 51 figurer er godkendt, og 2 er afvist: `burpee_skill.V4 › clap` (stadig) og `core_situp.2` (nyt, N1). Af de oprindelige fund er 1 høj, 7 middel og 6 lave rettet. Åbne er M5 for V4 › clap, M6 for to figurer, L2 og L6. Der er 3 nye fund: 1 middel og 2 lave.
+
+### De afviste figurer
+
+| Figur | Status | Hvad jeg så |
+|---|---|---|
+| core_front.6 | Godkendt | Via-posen fra M1 begge veje. Armene står ca. 35° frem midtvejs, og hoften sænkes gradvist mod væggen. |
+| core_front.7 | Godkendt | Som `core_front.6`. |
+| core_side.S1 | Godkendt | Hoften hænger nu ca. 9 lavere med krum ryg, og ringen ses med hvid kant ved hoften, også på kortet. |
+| core_rot.R1 | Godkendt | Fødderne bliver i hoftebredde, hoften glider ud, og ringen står på hoften. |
+| power_legs.2 | Godkendt | Hoppet baglæns er væk. Figuren rejser sig, hvor den landede (»Rejs dig« i forklaringen), og klipper til stregen. Kortet viser den i hele bredden. Fejlringen står dog ved skulderen (N2). |
+| power_upper.4 | Godkendt | »Klap under brystet« står i »Skub op, og klap« (0,4 sek) med prikken ved hånden. Pilen er flyttet til fase 1. |
+| burpee_skill.V4 › clap | **Stadig afvist** (M5) | Fasen er nu 0,4 sek, og »Bløde albuer« er fjernet, men der står ingen markering. Klappet kan stadig ikke ses (`screenshots/review-p2-2-opf-v4-klap.png`). Rettelse: `"marks": [{ "cue": "Klap under brystet", "phase": 3, "point": "near.hand", "place": "below" }]`. Den er afprøvet med 0,4 sek-fasen, og `check-explain` er OK. |
+
+### Fundene
+
+| Fund | Status |
+|---|---|
+| H1 – stillbillede øverst ved flere bevægelser | **Rettet** (D62 (1)). Bounds står øverst, animeret og i hele bredden, ca. 180 px høj. Hollow hold og burpee + tuck jump viser begge bevægelser øverst. Intet af kortene har piktogram eller »Tegningen viser en lignende øvelse.« (`screenshots/review-p2-2-opf-kort.png`). |
+| M1 – stående rollout | **Rettet.** |
+| M2 – længdespringets hop tilbage | **Rettet.** |
+| M3 – fejlparret i R1 | **Rettet.** |
+| M4 – fejlparret i S1 | **Rettet.** |
+| M5 – klappet kan ikke ses | **Delvist.** Rettet i `power_upper.4`, åbent i `burpee_skill.V4 › clap` (se ovenfor). |
+| M6 – fejlringen | **Rettet i motoren** (D62 (3): `ring`, hvid kant og ringen om leddet, der ændrer sig mest). Ringen står nu rigtigt i dead bug, hollow hold, S1, S2, R1, R2, omvendt crunch, hurtig push-up og plyo på sofaen. Den står forkert i `core_situp.2` (N1) og `power_legs.2` (N2). |
+| M7 – tekst over kroppen i »Nu« | **Rettet.** I squat jumpet står »Over tæerne« i striben over tegningerne i hele »Frys 2 sek«, og hovedet ses. I omvendt crunch står »Langsomt ned« på to linjer fri af foden (`screenshots/review-p2-2-opf-nu.png`). Se N3. |
+| M8 – rejsende figurer for små | **Rettet.** Bounds og længdespringet står i hele bredden i drop-hoppets skala. |
+| L1 – gør klar-teksten i S4 | **Rettet.** Gør klar-teksten og begrundelsen i udgangsstillingen står som foreslået. Navn, dosis og regler er uændrede. |
+| L2 – markeringer i korte faser | **Åben** (motoren). »Bløde albuer« står stadig i »Stræk armene« i `power_upper.2`–`.5`, og »Land stille« i »Rejs dig« i `power_legs.5`. Split jumps kan stadig ikke have en markering. |
+| L3 – drop-hoppets glid op på trinnet | **Rettet i figuren.** En via-pose sætter den frie fod op på trinnet først, så det ligner et skridt op. |
+| L4 – burpee + tuck jump uden afsæt | **Rettet.** En via-pose i luften med strakt krop og armene op før tucken. |
+| L5 – fejlparret i R2 | **Rettet.** Benet bliver i forlængelse af hoften, og ringen står på hoften. |
+| L6 – long-lever albuer under hagen | **Åben.** Motorens proportioner er uændrede; grænsen kan noteres. |
+| L7 – »Under skulder« langt fra punktet | **Rettet.** En stiplet linje lodret op ad armen viser det. |
+
+### Nye fund
+
+**N1 – Fejlringen i strikt sit-up står ved hoften, ikke ved fødderne (middel)**
+
+- **Hvor:** `content/figures/core_situp.json` › `core_situp.2`, `faults[0]`. Se `screenshots/review-p2-2-opf-fejlpar.png`.
+- **Hvorfor:** Fejl 1 er »Fødderne løfter sig fra gulvet«. Før D62 stod ringen ved fødderne. Nu står den ved hoften, fordi hoftens vinkel ændrer sig mest, og fødderne løfter sig kun lidt. Ringen leder øjet væk fra fejlen (SPEC 3.8). Trin 2 er fredagens næste sit-up-trin.
+- **Rettelse (afprøvet, `check-explain` OK):** `"ring": "near.foot"` i fejlen.
+
+**N2 – Fejlringen i længdespringet står ved skulderen (lav)**
+
+- **Hvor:** `content/figures/power_legs.json` › `power_legs.2`, `faults[0]`.
+- **Hvorfor:** Fejl 1 er »Du lander med strakte ben«, men skulderen ændrer sig mest, fordi armene også er flyttet. Forskellen på bøjede og strakte ben er tydelig, så fejlparret kan stadig læses.
+- **Rettelse (afprøvet, `check-explain` OK):** `"ring": "near.knee"` i fejlen.
+
+**N3 – Teksten i striben står over den anden vinkel (lav)**
+
+- **Hvor:** »Nu« for `power_legs.1` ved »Frys 2 sek«.
+- **Hvorfor:** »Over tæerne« står øverst til venstre over sidebilledet, mens linjen fra knæ til tæer er i frontbilledet til højre. Teksten dækker intet, men hører synligt til den forkerte tegning.
+- **Rettelse (motoren):** Lad en tekst i striben stå over den vinkel, dens markering hører til.
+
+### Kørt
+
+- `node scripts/check-explain.ts` på de otte figurfiler: alle OK.
+- Vitest (`content-figures` og `content`): 13/13.
+- Playwright `pixel9a` med egne flows i worktreens ignorerede `test-results/rv/` (ikke committet): kortene for 11 punkter med fejlpar, filmstrimler af `power_legs.6` og `burpee_skill.V4`, og »Nu« for squat jump (tirsdag) og omvendt crunch (fredag).
+
+**Skærmbilleder:**
+
+- `screenshots/review-p2-2-opf-kort.png`
+- `screenshots/review-p2-2-opf-fejlpar.png`
+- `screenshots/review-p2-2-opf-nu.png`
+- `screenshots/review-p2-2-opf-v4-klap.png`
