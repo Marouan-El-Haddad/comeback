@@ -47,7 +47,7 @@ Alle hændelser har `id` (ulid), `at` (ISO-tidsstempel), `date` (`YYYY-MM-DD`, E
 | `set_logged` | `sessionId`, `blockId`, `trackId`, `stepId`, `setIndex`, `side?`, `reps?`, `seconds?`, `rir: 0 \| 1 \| 2 \| 3`, `pain?: 'light' \| 'sharp' \| 'stop'`, `asPlanned: boolean` | Hvert sæt. `rir 1` betyder »1 eller mindre«, `3` betyder »3+«, `0` kun ved målinger og boss |
 | `block_result` | `sessionId`, `trackId`, `stepId`, `result` (se 5.4) | EMOM, power, klubsekvens, nakke, W3 |
 | `session_completed` | `sessionId`, `status: 'green' \| 'yellow' \| 'red' \| 'travel'`, `aborted: boolean`, `done: boolean` | Passet afsluttes. Et afbrudt pas beholder trafiklysets status; blokke, der blev logget færdige før afbrydelsen, vurderes normalt (S-DP-11) |
-| `session_skipped` | `kind`, `forDate`, `reason: 'user' \| 'missed'` | Brugeren springer over, eller dagen er gået. `forDate` er passets dag i ugeplanen, `date` dagen, hændelsen skrives; `kind` er ugeplanens pas (A eller B, også på en rejsedag) |
+| `session_skipped` | `kind`, `forDate`, `reason: 'user' \| 'missed'` | Brugeren springer over, eller dagen er gået. `forDate` er passets dag i ugeplanen. Ved `reason: 'user'` er `date` dagen, hændelsen skrives, og `kind` ugeplanens pas (A eller B, også på en rejsedag). Ved `reason: 'missed'` (skrevet af `catchUp`, 5.3) er `date` passets dag, og `kind` dagens pas (`travel` på en rejsedag) |
 | `session_moved` | `kind`, `fromDate`, `toDate`, `short: boolean` | Flytning (5.9). `date` er dagen, flytningen skrives |
 | `step_changed` | `trackId`, `from`, `to`, `by: 'engine' \| 'user'`, `reason`, `explanation`, `until?` | Motor eller bruger |
 | `measurement_logged` | `measureId`, `value`, `programWeek`, `round` | Målinger |
@@ -217,11 +217,12 @@ Overlejringer er forslag med »OK«/»Vælg anden« (`overlay_choice`). De gæld
 ### 5.9 Flytning af pas (R-MOVE, R-REST)
 
 `validMoveDays(kind, date)` returnerer dage i samme kalenderuge fra i dag til og med søndag, hvor alle gælder:
-1. Dagen har ikke allerede A eller B. En motor-dag er gyldig for A og B: motoren udgår så den uge (»Motor-passet ryger først«, s. 47), og I dag viser »valgfri rolig tur« på en fri dag, hvis der er en. Motor kan kun flyttes til en fri dag.
+1. Dagen har ikke allerede A eller B. En motor-dag er gyldig for A og B: motoren udgår så den uge (»Motor-passet ryger først«, s. 47), og I dag viser »valgfri rolig tur« på en fri dag, hvis der er en (»Behold én rolig tur, hvis du kan«): den første dag fra i dag til søndag, som motoren selv kunne flyttes til efter reglerne her (`calmTourDay`, `DECISIONS.md` D66). Motor kan kun flyttes til en fri dag.
 2. Dagen er ikke en klubdag – undtagen som »kort version« (30 min, par 1 og 2) om morgenen, som tilbydes separat.
 3. Dagen er ikke dagen før en begivenhed, hvis `kind ∈ {A, motor-intervaller}` eller passet indeholder Nordic-trin.
 4. Efter flytningen er der stadig mindst én hel hviledag uden klub og uden sekundært pas (R-REST). En dag i ugen, der er gået uden pas og uden klub, tæller som hviledag.
-5. A og B samme dag er ikke tilladt. A og B på to dage i træk tillades med advarslen »B skal efterlade dig frisk«.
+5. A og B samme dag er ikke tilladt. A og B på to dage i træk tillades med advarslen »B skal efterlade dig frisk«. Er partnerens dag gået, gælder advarslen kun, hvis partneren blev taget den dag.
+6. Dagen er ikke en syge- eller feriedag (`ill`, `holiday`, 5.7): den er rød eller hvile, og et pas, der blev flyttet dertil, ville forsvinde. En rejsedag kan tage A eller B, som så bliver rejsepasset (R-TRAVEL).
 Ingen gyldige dage → »Spring over« eller »Kort version«. »Kort version« er den korte version på en klubdag efter regel 2; et pas gøres ikke kort på sin egen dag (`DECISIONS.md` D64). To pas kan aldrig lande på samme dag; det, der flyttes, taber. Det gælder også en flytning i loggen, som ikke blev prøvet mod reglerne (fx efter en fletning ved import): lander den på en dag, der allerede har A eller B – for motoren på en dag med et pas – eller uden for passets kalenderuge, gælder den ikke, og passet bliver, hvor det stod.
 
 ### 5.10 Ekstra Muay Thai-pas (R-EXTRA-MT)
@@ -517,6 +518,11 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 - **S-MOVE-02** Givet B flyttes til lørdag (klubdag). Så kun »kort version« tilbydes.
 - **S-MOVE-03** Givet flytning, der fjerner den sidste hviledag. Så dagen er ugyldig (R-REST).
 - **S-MOVE-04** Givet to pas forsøgt på samme dag. Så det flyttede afvises – både når flytningen skrives, og når en flytning i loggen lander på en dag med A eller B, en motor på en dag med et pas eller en dag i en anden uge: passet bliver på sin dag, og pladsens pas står uændret.
+- **S-MOVE-05** Givet syg torsdag og ferie lørdag–søndag, A ikke logget tirsdag. Når onsdag beregnes. Så tilbydes hverken torsdag, lørdag eller søndag, kun onsdag som »Kort version«. Med rejse torsdag i stedet kan A flyttes til torsdag og bliver rejsepasset.
+- **S-MOVE-06** Givet A flyttet fra tirsdag til torsdag om onsdagen, så motoren udgår. Så er den valgfri rolige tur søndag (onsdag og lørdag er klubdage, torsdag A og fredag B); flyttes A om tirsdagen, er den tirsdag. Med motoren i ugen, eller når ugeplanen ikke har en motor (5.10), er der ingen.
+- **S-MOVE-07** Givet fredagens B ikke logget. Når tirsdagens A om lørdagen flyttes. Så har »Kort version i dag« ingen advarsel; blev B taget fredag, står »B skal efterlade dig frisk«.
+- **S-MOVE-08** Givet en begivenhed mandag. Så kan hverken A eller en motor i en intervaluge flyttes til søndag (dagen før); B kan, og en motor i en uge med rolig base kan.
+- **S-MOVE-09** Givet `clubDays` [1, 2, 3, 5, 6] og A flyttet til torsdag. Når fredag beregnes. Så kan B flyttes til søndag, når torsdag gik uden pas (en dag, der er gået, tæller som hviledag), men ikke, når A blev taget torsdag (R-REST).
 - **S-EXTRA-01** Givet clubDays = [1, 3, 5, 6]. Så layout: hviledag søn, A tir, B tor, motor udgår med »valgfri rolig tur«.
 - **S-EXTRA-02** Givet clubDays = [1, 2, 3, 4, 5, 6]. Så A og B som kort version om morgenen på to klubdage med størst afstand; hviledag søn; motor udgår.
 
@@ -590,7 +596,7 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 | 43–44 | Imponer-kataloget | R-IMPRESS | S-IMP-01 |
 | 45 | Boss-udfordringer | R-BOSS | S-BOSS-01 |
 | 46 | Reglerne, comeback-fælden | R-PAIN-*, R-USER-STEP (advarsel), cues (knoer, nakke) | S-PAIN-* |
-| 47 | Flere Muay Thai-pas, motoren ryger først, tunge ben før en begivenhed, rejse, sygdom, sprungne uger | R-EXTRA-MT, R-MOVE, R-EVENT, R-TRAVEL, R-ILL, R-PW, R-ABSENCE-3, R-REST | S-WEEK-02..08, S-WEEK-11..12, S-EXTRA-*, S-MOVE-01, S-MOVE-03, S-EVENT-01..02 |
+| 47 | Flere Muay Thai-pas, motoren ryger først, tunge ben før en begivenhed, rejse, sygdom, sprungne uger | R-EXTRA-MT, R-MOVE, R-EVENT, R-TRAVEL, R-ILL, R-PW, R-ABSENCE-3, R-REST | S-WEEK-02..08, S-WEEK-11..12, S-EXTRA-*, S-MOVE-01, S-MOVE-03, S-MOVE-05..09, S-EVENT-01..02 |
 | 48 | Restitution, søndagstjek | `sunday_check`, R-PAIN-SUNDAY | S-PAIN-05, S-PAIN-07..10 |
 | 49 | Log | Historik (SPEC 3.6), eksport | S-DATA-02 |
 | 51–54 | Bag om programmet, kilder | »Hvorfor« i appens egne ord (`content/explain/`, `SPEC.md` 9.1); appen viser ingen kilder (`DECISIONS.md` A2) | – |
