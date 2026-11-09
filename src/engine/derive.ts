@@ -428,6 +428,8 @@ function apply(program: Program, state: State, raw: AppEvent, emomHistory: EmomP
       });
       break;
     case 'sunday_check':
+      // A new check for the same week replaces the earlier one (R-PAIN-SUNDAY, S-PAIN-08).
+      state.sundayChecks = state.sundayChecks.filter((c) => c.weekStart !== e.weekStart);
       state.sundayChecks.push({
         date: e.date,
         weekStart: e.weekStart,

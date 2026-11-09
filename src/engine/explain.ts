@@ -94,3 +94,8 @@ export function explainAbsenceLoad(program: Program, stepId: string, to: number)
 export function explainUserChoice(program: Program, to: string): string {
   return `${label(program, to)}: trin ${key(program, to)} – dit eget valg.`;
 }
+
+/** R-PAIN-SUNDAY: »For tungt?« in the Sunday check, accepted when the check is saved. */
+export function explainTooHeavy(program: Program, from: string, to: string): string {
+  return `${label(program, to)}: trin ${key(program, to)} – dit eget valg i søndagstjekket, fordi trin ${key(program, from)} var for tungt.`;
+}

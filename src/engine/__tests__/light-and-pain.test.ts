@@ -213,6 +213,69 @@ describe('Smerte', () => {
     expect(defaultAnswers(log.state(TUE(2)), TUE(2)).answers[1]).toBe(false);
   });
 
+  test('S-PAIN-07: »for tungt« i søndagstjekket går ét trin ned som dit valg, ikke på første trin og ikke ved smerte', () => {
+    const log = from(1, {
+      legs: { stepId: 'legs.3', target: 9 },
+      press: 'press.1',
+      groin: 'groin.2',
+    });
+    const sunday = dayOf(1, 7);
+    const events = log.add(
+      submitSundayCheck(log.ctx, log.events, {
+        date: sunday,
+        painTracks: ['groin'],
+        tooHeavy: ['legs', 'press', 'groin'],
+      }),
+    );
+    const changes = events.filter((e) => e.type === 'step_changed');
+    expect(changes.filter((e) => e.trackId === 'legs')).toEqual([
+      expect.objectContaining({ from: 'legs.3', to: 'legs.2', by: 'user', reason: 'user_choice' }),
+    ]);
+    expect(changes.some((e) => e.trackId === 'press')).toBe(false);
+    expect(changes.filter((e) => e.trackId === 'groin')).toEqual([
+      expect.objectContaining({ from: 'groin.2', to: 'groin.1', by: 'engine', reason: 'pain' }),
+    ]);
+    expect(explanationOf(events, 'legs')).toMatch(/for tungt/);
+    const state = log.state(dayOf(2, 2));
+    expect(state.tracks.legs).toMatchObject({ stepId: 'legs.2', hits: 0, target: 6 });
+    expect(state.tracks.legs?.tempDown).toBeUndefined();
+    expect(state.tracks.press?.stepId).toBe('press.1');
+    expect(state.sundayChecks).toEqual([
+      expect.objectContaining({ weekStart: dayOf(1, 1), tooHeavy: ['legs', 'press', 'groin'] }),
+    ]);
+  });
+
+  test('S-PAIN-08: et nyt søndagstjek for samme uge afløser det forrige uden at tage et spor ned igen', () => {
+    const log = from(1, { groin: 'groin.2', legs: { stepId: 'legs.3', target: 9 } });
+    const sunday = dayOf(1, 7);
+    const first = { date: sunday, painTracks: ['groin'], tooHeavy: ['legs'] };
+    log.add(submitSundayCheck(log.ctx, log.events, first));
+    // The same week again, as on Monday with »Ret søndagstjekket«: still dated Sunday.
+    const again = log.add(submitSundayCheck(log.ctx, log.events, { ...first, sleepAvg: 7 }));
+    expect(again.filter((e) => e.type === 'step_changed')).toEqual([]);
+    expect(again.filter((e) => e.type === 'sunday_check')).toHaveLength(1);
+    const tuesday = dayOf(2, 2);
+    let state = log.state(tuesday);
+    expect(state.sundayChecks).toEqual([
+      expect.objectContaining({ weekStart: dayOf(1, 1), sleepAvg: 7, painTracks: ['groin'] }),
+    ]);
+    expect(state.tracks.groin?.tempDown).toMatchObject({ until: dayOf(2, 7), physio: false });
+    expect(state.tracks.legs?.stepId).toBe('legs.2');
+    expect(planFor(log.program, state, tuesday).flags).not.toContainEqual({
+      type: 'physio',
+      trackId: 'groin',
+    });
+    expect(defaultAnswers(state, tuesday).answers[1]).toBe(false);
+
+    // A newer check without pain replaces it: question 2 is »ja« again, the step stays down.
+    log.add(submitSundayCheck(log.ctx, log.events, { date: sunday, painTracks: [], tooHeavy: [] }));
+    state = log.state(tuesday);
+    expect(defaultAnswers(state, tuesday).answers[1]).toBe(true);
+    expect(state.tracks.groin?.stepId).toBe('groin.1');
+    expect(state.tracks.legs?.stepId).toBe('legs.2');
+    expect(state.sundayChecks).toHaveLength(1);
+  });
+
   test('S-PAIN-06: let smerte ændrer intet trin, men står i historikken', () => {
     const log = from(1, { press: { stepId: 'press.2', target: 8 } });
     const { finished } = log.session({

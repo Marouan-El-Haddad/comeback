@@ -11,6 +11,7 @@ import {
   explainPainAgain,
   explainRestore,
   explainStepUp,
+  explainTooHeavy,
   explainUserChoice,
 } from './explain.ts';
 import {
@@ -544,7 +545,13 @@ export function chooseStep(
   return { events: [event], warnUp: up && !t.warnedUp };
 }
 
-/** R-PAIN-SUNDAY: »gør ondt, ikke væk« counts as sharp pain for those tracks. */
+/**
+ * R-PAIN-SUNDAY: »gør ondt, ikke væk« counts as sharp pain for those tracks, and »For tungt?« takes
+ * a ladder one step down as the user's own choice (the offer, accepted by saving the check). The
+ * check belongs to its Sunday (`date`), also when it is taken on Monday. A new check for the same
+ * week replaces the earlier one: a track an earlier check of the week already took down is not
+ * taken down again, and a track the new check leaves out stays where it is (S-PAIN-07, S-PAIN-08).
+ */
 export function submitSundayCheck(
   ctx: Ctx,
   events: readonly AppEvent[],
@@ -552,11 +559,14 @@ export function submitSundayCheck(
 ): AppEvent[] {
   const { program, make } = ctx;
   const state = deriveState(program, events, input.date);
+  const weekStart = mondayOf(input.date);
+  const earlier = state.sundayChecks.find((c) => c.weekStart === weekStart);
+  const handled = new Set([...(earlier?.painTracks ?? []), ...(earlier?.tooHeavy ?? [])]);
   const out: AppEvent[] = [
     make(
       {
         type: 'sunday_check',
-        weekStart: mondayOf(input.date),
+        weekStart,
         sleepAvg: input.sleepAvg,
         painTracks: input.painTracks,
         tooHeavy: input.tooHeavy,
@@ -567,7 +577,7 @@ export function submitSundayCheck(
   const until = addDays(input.date, 7);
   for (const trackId of input.painTracks) {
     const t = state.tracks[trackId];
-    if (!t) continue;
+    if (!t || handled.has(trackId)) continue;
     if (t.tempDown) {
       out.push(
         make(
@@ -598,6 +608,26 @@ export function submitSundayCheck(
           reason: 'pain',
           explanation: explainPain(program, t.stepId, to, until, 'sunday'),
           until,
+        },
+        input.date,
+      ),
+    );
+  }
+  for (const trackId of input.tooHeavy) {
+    const t = state.tracks[trackId];
+    if (!t || handled.has(trackId) || input.painTracks.includes(trackId)) continue;
+    const to = previousStep(program, t.stepId);
+    if (!to) continue;
+    out.push(
+      make(
+        {
+          type: 'step_changed',
+          trackId,
+          from: t.stepId,
+          to: to.id,
+          by: 'user',
+          reason: 'user_choice',
+          explanation: explainTooHeavy(program, t.stepId, to.id),
         },
         input.date,
       ),
