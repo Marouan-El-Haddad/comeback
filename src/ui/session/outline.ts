@@ -6,7 +6,7 @@ import { formatDose } from '../../engine/format.ts';
 import { getStep, getTrack } from '../../engine/lookup.ts';
 import type { BlockPlan } from '../../engine/plan.ts';
 import { PROGRAM } from '../../engine/program.ts';
-import type { Program, Side } from '../../engine/types.ts';
+import type { LoggedSet, Program, Side } from '../../engine/types.ts';
 import { MEASURES } from '../../content/types.ts';
 import type { ClockPart } from '../../figure/sync.ts';
 import { setCount, type ExerciseStep, type Step } from './steps.ts';
@@ -87,6 +87,44 @@ export function stepPictoId(step: ExerciseStep): string | null {
 
 const QUESTIONS = new Set<Step['type']>(['power-q', 'emom-q', 'club-q', 'rounds-q', 'neck-q']);
 const EXERCISES = new Set<Step['type']>(['set', 'round', 'emom', 'club', 'neck', 'measure']);
+
+/** How a pair and a tri-set run: under their name in »Dagens pas« and where they start. */
+export function partNote(label: string): string | undefined {
+  return /^(Par \d|Tri-sæt)$/.test(label)
+    ? 'Et sæt af hver øvelse efter tur, med pause imellem'
+    : undefined;
+}
+
+/** A part of the session that an exercise starts: its number, the number of parts and its name. */
+export interface PartStart {
+  at: number;
+  of: number;
+  label: string;
+  note?: string;
+}
+
+/**
+ * The part the exercise at `index` starts, when it is the part's first exercise; null for the rest of
+ * the part, a pause, a question or the summary. In a session the part's big red number stands where
+ * the part begins: over the intro card and by »Næste« (docs/SPEC.md 5, DECISIONS.md D59).
+ */
+export function partStartedBy(
+  parts: readonly Section[],
+  steps: readonly Step[],
+  index: number,
+): PartStart | null {
+  const at = sectionOf(parts, 'run', index);
+  const part = parts[at - 1];
+  if (!part) return null;
+  for (let i = part.from; i <= part.to; i++) {
+    const step = steps[i];
+    if (!step || !EXERCISES.has(step.type)) continue;
+    if (i !== index) return null;
+    const note = partNote(part.label);
+    return { at, of: parts.length, label: part.label, ...(note ? { note } : {}) };
+  }
+  return null;
+}
 
 /** An exercise's intro card: the step it shows on, and whether it has its own 10-second clock. */
 export interface IntroHost {
@@ -228,6 +266,40 @@ export function upcomingOf(step: ExerciseStep, program: Program = PROGRAM): Upco
 }
 
 /** After the last exercise: the summary. */
+/**
+ * The set just logged, as the pause says it over its ring: »✓ Logget: sæt 1 af 3 · 3 reps«, with the
+ * side and pain when there are any; null when the step before the pause was no set or nothing was
+ * logged for it. What changed is said in words (docs/SPEC.md 5, Bevægelse; DECISIONS.md D59).
+ */
+export function loggedLine(step: Step | undefined, sets: readonly LoggedSet[]): string | null {
+  if (!step || step.type !== 'set') return null;
+  const block = step.block;
+  const last = sets
+    .filter(
+      (s) =>
+        s.blockId === block.blockId &&
+        s.setIndex === step.setIndex &&
+        (step.alternate === true || s.side === step.side),
+    )
+    .at(-1);
+  const value = last?.reps ?? last?.seconds;
+  if (!last || value === undefined) return null;
+  const what = step.measure
+    ? 'måling'
+    : `sæt ${step.setIndex} af ${setCount(block)}` +
+      (step.side ? `, ${sideWord(step.side, block).toLowerCase()}` : '');
+  const unit = step.alternate ? `${unitWord(block)} ${perWord(block)}` : unitWord(block);
+  const pain =
+    last.pain === 'light'
+      ? ' · let smerte'
+      : last.pain === 'sharp'
+        ? ' · skarp smerte'
+        : last.pain === 'stop'
+          ? ' · stoppet'
+          : '';
+  return `✓ Logget: ${what} · ${value} ${unit}${pain}`;
+}
+
 export const SUMMARY_NEXT: Upcoming = {
   cardId: null,
   pictoId: null,

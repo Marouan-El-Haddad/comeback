@@ -8,7 +8,7 @@ import { enableAudio, play } from '../audio.ts';
 import { ExerciseCard, useCard } from '../card.tsx';
 import type { Model } from '../model.ts';
 import { keepAwake, releaseAwake } from '../wakelock.ts';
-import { DayParts, type DayItem } from './DayPlan.tsx';
+import { DayParts, PlanTime, type DayItem } from './DayPlan.tsx';
 import { useSubjects } from './exercise.ts';
 import {
   ExerciseFigure,
@@ -124,7 +124,9 @@ export function OpenStrong({ model, onClose }: { model: Model; onClose: () => vo
               <header class="day-plan-facts">
                 <p class="step-kicker">Dagens pas</p>
                 <h1>Open &amp; Strong</h1>
-                <p class="day-plan-time">ca. {total} min</p>
+                <p class="day-plan-stats">
+                  <PlanTime minutes={total} />
+                </p>
                 <p>Seks øvelser som ét ur. Læg telefonen, så den kan ses og høres.</p>
               </header>
               <DayParts

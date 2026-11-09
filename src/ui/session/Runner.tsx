@@ -46,6 +46,7 @@ import {
   NextStrip,
   NowCues,
   NowHead,
+  PartHead,
   SessionProgress,
   useCues,
   useSessionStyle,
@@ -57,7 +58,9 @@ import {
   emomClock,
   holdClock,
   introHosts,
+  loggedLine,
   neckClock,
+  partStartedBy,
   roundClock,
   sectionOf,
   perWord,
@@ -66,6 +69,7 @@ import {
   SUMMARY_NEXT,
   unitWord,
   upcomingOf,
+  type PartStart,
   type Upcoming,
 } from './outline.ts';
 import { readRun, writeRun, type RunRequest, type RunState } from './resume.ts';
@@ -342,6 +346,9 @@ export function Runner({
   );
   const power = plan.blocks.find((b) => b.role === 'power');
   const warmupContext: CardContext = { session: run.kind, power: power?.stepId ?? null };
+  /** The part an exercise step begins, for its big red number where the part starts (D59). */
+  const partOf = (index: number): PartStart | null =>
+    index >= 0 && sections.length > 0 ? partStartedBy(sections, steps, index) : null;
 
   const begin = async (red: boolean) => {
     const sessionId = ulid(Date.now());
@@ -467,39 +474,45 @@ export function Runner({
     return withCard(
       <div class={sessionClass} hidden={hidden}>
         <SessionHeader title={plan.name} onClose={close} />
-        <div class="session-body">
+        {/* The questions sit low, over the buttons, where the thumb is (SPEC 6, D59). */}
+        <div class="session-body low">
           <h1>Før du starter – 10 sekunder</h1>
           {firstTime && (
             <p class="hint">Skru op for medielyden: lyden er dit signal i hold og pauser.</p>
           )}
-          {questions.map((q, i) => (
-            <YesNo
-              key={q}
-              label={q}
-              value={run.answers[i] ?? true}
-              onChange={(v) => setAnswer(i, v)}
-            />
-          ))}
-          {defaults.painReason === 'recent_sharp' && (
-            <p class="hint">Du har logget skarp smerte inden for 2 dage.</p>
-          )}
-          {defaults.painReason === 'sunday_check' && (
-            <p class="hint">Søndagstjekket noterede smerte, der ikke gik væk.</p>
-          )}
-          {defaults.hardYesterday && <p class="hint">I går var klubtræningen hård.</p>}
-          {motor && plan.intervalsOption && (
-            <label class="check">
-              <input
-                type="checkbox"
-                checked={run.intervalsAnyway}
-                onChange={(e) =>
-                  setRun((r) => ({ ...r, intervalsAnyway: (e.target as HTMLInputElement).checked }))
-                }
-              />{' '}
-              Kør intervallerne alligevel
-            </label>
-          )}
-          {!motor && <p class="muted">Spørgsmål 3 kommer efter opvarmningen.</p>}
+          <div class="low-group">
+            {questions.map((q, i) => (
+              <YesNo
+                key={q}
+                label={q}
+                value={run.answers[i] ?? true}
+                onChange={(v) => setAnswer(i, v)}
+              />
+            ))}
+            {defaults.painReason === 'recent_sharp' && (
+              <p class="hint">Du har logget skarp smerte inden for 2 dage.</p>
+            )}
+            {defaults.painReason === 'sunday_check' && (
+              <p class="hint">Søndagstjekket noterede smerte, der ikke gik væk.</p>
+            )}
+            {defaults.hardYesterday && <p class="hint">I går var klubtræningen hård.</p>}
+            {motor && plan.intervalsOption && (
+              <label class="check">
+                <input
+                  type="checkbox"
+                  checked={run.intervalsAnyway}
+                  onChange={(e) =>
+                    setRun((r) => ({
+                      ...r,
+                      intervalsAnyway: (e.target as HTMLInputElement).checked,
+                    }))
+                  }
+                />{' '}
+                Kør intervallerne alligevel
+              </label>
+            )}
+            {!motor && <p class="muted">Spørgsmål 3 kommer efter opvarmningen.</p>}
+          </div>
         </div>
         <div class="session-actions">
           <button
@@ -620,6 +633,8 @@ export function Runner({
       );
       // The warm-up's one intro card: 10 sek before its first timer, then it closes (D44).
       if (itemIndex === 0 && introShut !== 'warmup') {
+        const at = sectionOf(sections, 'warmup', 0);
+        const warmupPart = at > 0 ? { at, of: sections.length, label: 'Opvarmning' } : null;
         return withCard(
           <div class={sessionClass} hidden={hidden}>
             {header}
@@ -627,6 +642,7 @@ export function Runner({
               <WarmupIntro
                 ids={items.map((i) => `${WARMUP?.id ?? 'warmup'}.${i.key}`)}
                 context={warmupContext}
+                part={warmupPart}
                 paused={held}
                 onDone={() => setIntroShut('warmup')}
               />
@@ -666,18 +682,21 @@ export function Runner({
       <div class={sessionClass} hidden={hidden}>
         <SessionHeader title="Trafiklys" progress={progress('warmup')} onClose={askEnd} />
         {endBar}
-        <div class="session-body">
+        <div class="session-body low">
           <h1>Spørgsmål 3</h1>
-          <YesNo
-            label="Opvarmning og første hop normale?"
-            value={run.answers[2]}
-            onChange={(v) => setRun((r) => ({ ...r, answers: [r.answers[0], r.answers[1], v] }))}
-          />
-          {q1q2Yellow && <p class="hint">Et nej i spørgsmål 1 eller 2 giver en gul dag.</p>}
+          <div class="low-group">
+            <YesNo
+              label="Opvarmning og første hop normale?"
+              value={run.answers[2]}
+              onChange={(v) => setRun((r) => ({ ...r, answers: [r.answers[0], r.answers[1], v] }))}
+            />
+            {q1q2Yellow && <p class="hint">Et nej i spørgsmål 1 eller 2 giver en gul dag.</p>}
+          </div>
           {firstNext && (
             <NextBox
               next={firstNext}
               context={contextOf(firstExercise, run.kind)}
+              part={partOf(firstExercise ? steps.indexOf(firstExercise) : -1)}
               onCard={(id) => card.open(id, contextOf(firstExercise, run.kind) ?? undefined)}
             />
           )}
@@ -769,6 +788,7 @@ export function Runner({
   const upcomingStep = nextExercise(steps, run.stepIndex, ended);
   const upcoming: Upcoming = upcomingStep ? upcomingOf(upcomingStep) : SUMMARY_NEXT;
   const upcomingContext = contextOf(upcomingStep, run.kind);
+  const upcomingPart = partOf(upcomingStep ? steps.indexOf(upcomingStep) : -1);
   const openCard = (id: string, context: CardContext | null = null) =>
     card.open(id, context ?? undefined);
   const strip = <NextStrip next={upcoming} context={upcomingContext} />;
@@ -776,6 +796,7 @@ export function Runner({
     <NextBox
       next={upcoming}
       context={upcomingContext}
+      part={upcomingPart}
       onCard={(id) => openCard(id, upcomingContext)}
     />
   );
@@ -797,6 +818,7 @@ export function Runner({
         key={introKey}
         next={upcomingOf(target)}
         context={contextOf(target, run.kind)}
+        part={partOf(host.target)}
         paused={held}
         onDone={() => setIntroShut(introKey)}
       />
@@ -906,6 +928,8 @@ export function Runner({
             onDone={advance}
             next={upcoming}
             context={upcomingContext}
+            part={upcomingPart}
+            logged={loggedLine(steps[run.stepIndex - 1], session.sets)}
             intro={!!introHere}
             onIntroClose={() => setIntroShut(introKey)}
             onCard={(id) => openCard(id, upcomingContext)}
@@ -927,6 +951,7 @@ export function Runner({
           <EmomStep
             key={`emom${run.stepIndex}`}
             block={step.block}
+            part={partOf(run.stepIndex)}
             paused={held}
             next={strip}
             onDone={advance}
@@ -1336,16 +1361,27 @@ function RestStep(props: {
   onDone: () => void;
   next: Upcoming;
   context: CardContext | null;
+  /** The part the next exercise begins, if it begins one (D59). */
+  part: PartStart | null;
+  /** The set just logged, in words: what the tap changed (SPEC 5, Bevægelse). */
+  logged: string | null;
   intro: boolean;
   onIntroClose: () => void;
   onCard: (id: string) => void;
 }) {
   const timer = useCountdown(props.seconds, props.paused, { onDone: props.onDone, end: 'go' });
+  const logged = props.logged && (
+    <p class="rest-logged step-enter" data-testid="rest-logged">
+      {props.logged}
+    </p>
+  );
   if (props.intro) {
     return (
       <IntroCard
         next={props.next}
         context={props.context}
+        part={props.part}
+        above={logged}
         clock={<CountdownView state={timer} label="Pause" size="line" />}
         onClose={props.onIntroClose}
       />
@@ -1353,10 +1389,16 @@ function RestStep(props: {
   }
   return (
     <div class="rest">
+      {logged}
       <CountdownView state={timer} label="Pause" />
       <div class="step-enter">
         {props.next.cardId ? (
-          <NextBig next={props.next} context={props.context} onCard={props.onCard} />
+          <NextBig
+            next={props.next}
+            context={props.context}
+            part={props.part}
+            onCard={props.onCard}
+          />
         ) : (
           <NextStrip next={props.next} />
         )}
@@ -1727,6 +1769,8 @@ function TimedNow(props: {
  */
 function EmomStep(props: {
   block: BlockPlan;
+  /** The EMOM begins its part of the session: its number over the intro (D59). */
+  part: PartStart | null;
   paused: boolean;
   next: ComponentChildren;
   onDone: () => void;
@@ -1741,6 +1785,9 @@ function EmomStep(props: {
   if (!started) {
     return (
       <div class="stack">
+        {props.part && (
+          <PartHead at={props.part.at} label={props.part.label} note={props.part.note} />
+        )}
         <section class="intro-card" aria-label="Introkort" data-testid="intro">
           <IntroBody
             label={`Burpees · EMOM ${step.key}`}

@@ -14,7 +14,7 @@ import { Figure, FigureStill, useReducedMotion } from '../components/Figure.tsx'
 import { pictoUrl } from '../components/Picto.tsx';
 import { elapsedMs, type Clock } from '../timers/clock.ts';
 import { drawnMovement, useExercise } from './exercise.ts';
-import type { Upcoming } from './outline.ts';
+import type { PartStart, Upcoming } from './outline.ts';
 // The session's CSS comes with its code, so the start files do not grow (docs/SPEC.md 7).
 import css from './session.css?inline';
 
@@ -171,12 +171,52 @@ export function NextStrip({
         size="next"
         still
       />
-      <div class="next-text">
+      <div class="next-text step-enter">
         <p class="next-label">Næste</p>
         <p class="next-name">{next.title}</p>
         {next.line && <p class="next-line">{next.line}</p>}
       </div>
     </div>
+  );
+}
+
+/**
+ * A part of the session with its big red number under a navy line (docs/SPEC.md 5, D59): the parts
+ * of »Dagens pas«, and in the session where a part begins, over the intro card.
+ */
+export function PartHead({
+  at,
+  label,
+  note,
+  heading = false,
+}: {
+  at?: number;
+  label: string;
+  note?: string;
+  /** A heading in »Dagens pas«; over the intro card the exercise is the heading. */
+  heading?: boolean;
+}) {
+  return (
+    <div class="day-part-head">
+      {at !== undefined && <span class="day-part-number">{at}</span>}
+      <div class="day-part-title">
+        {heading ? <h2>{label}</h2> : <p class="part-name">{label}</p>}
+        {note && <p class="day-part-note">{note}</p>}
+      </div>
+    </div>
+  );
+}
+
+/** »Næste«, and when the next exercise starts a new part, the part's number and name beside it. */
+function NextLabel({ part }: { part?: PartStart | null }) {
+  if (!part) return <p class="next-label">Næste</p>;
+  return (
+    <p class="next-part">
+      <span class="next-label">Næste</span>
+      <span class="next-part-name">
+        Del {part.at} · {part.label}
+      </span>
+    </p>
   );
 }
 
@@ -187,10 +227,13 @@ export function NextStrip({
 export function NextBig({
   next,
   context = null,
+  part = null,
   onCard,
 }: {
   next: Upcoming;
   context?: CardContext | null;
+  /** The part the next exercise starts, if it starts one. */
+  part?: PartStart | null;
   onCard: (id: string) => void;
 }) {
   const exercise = useExercise(next.cardId, context);
@@ -199,7 +242,7 @@ export function NextBig({
     <section class="next-up next-big" data-testid="next-up" aria-label="Næste øvelse">
       <div class="next-head">
         <div class="next-text">
-          <p class="next-label">Næste</p>
+          <NextLabel part={part} />
           <p class="next-title">{next.title}</p>
           {next.line && <p class="next-line">{next.line}</p>}
         </div>
@@ -229,10 +272,13 @@ export function NextBig({
 export function NextBox({
   next,
   context = null,
+  part = null,
   onCard,
 }: {
   next: Upcoming;
   context?: CardContext | null;
+  /** The part the next exercise starts, if it starts one. */
+  part?: PartStart | null;
   onCard: (id: string) => void;
 }) {
   return (
@@ -247,7 +293,7 @@ export function NextBox({
           still
         />
         <div class="next-text">
-          <p class="next-label">Næste</p>
+          <NextLabel part={part} />
           <p class="next-title">{next.title}</p>
           {next.line && <p class="next-line">{next.line}</p>}
         </div>
@@ -293,7 +339,7 @@ export function NowHead({
   onCard?: () => void;
 }) {
   return (
-    <div class="now-head">
+    <div class="now-head step-enter">
       <p class="step-kicker">
         <span class="now-label">Nu</span> {kicker}
       </p>

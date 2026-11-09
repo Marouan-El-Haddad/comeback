@@ -11,8 +11,8 @@ import type { Equipment } from '../../content/types.ts';
 import { MEASURES } from '../../content/types.ts';
 import { loadedExplain } from '../../content/load.ts';
 import { loadedExplanation, subjectOf, useSubjects } from './exercise.ts';
-import { ExerciseFigure } from './NowNext.tsx';
-import { sessionSections, type Section } from './outline.ts';
+import { ExerciseFigure, PartHead } from './NowNext.tsx';
+import { partNote, sessionSections, type Section } from './outline.ts';
 import { isAlternating, type Step } from './steps.ts';
 
 export interface DayItem {
@@ -114,8 +114,6 @@ function blockItem(block: BlockPlan, kind: SessionPlan['kind']): DayItem {
   };
 }
 
-const PAIRED = /^(Par \d|Tri-sæt)$/;
-
 /**
  * A strength session's parts as the session runs them: the wall test and the warm-up first, then
  * each part of the session's steps with its exercises in order (docs/SPEC.md 3.2).
@@ -173,9 +171,7 @@ export function strengthParts(
     }
     return {
       label: section.label,
-      note: PAIRED.test(section.label)
-        ? 'Et sæt af hver øvelse efter tur, med pause imellem'
-        : undefined,
+      note: partNote(section.label),
       items: blocks.map((b) => blockItem(b, plan.kind)),
     };
   });
@@ -281,13 +277,7 @@ export function DayParts({
     <>
       {parts.map((part, i) => (
         <section class="day-part" key={`${i}-${part.label}`}>
-          <div class="day-part-head">
-            {numbered && <span class="day-part-number">{i + 1}</span>}
-            <div class="day-part-title">
-              <h2>{part.label}</h2>
-              {part.note && <p class="day-part-note">{part.note}</p>}
-            </div>
-          </div>
+          <PartHead at={numbered ? i + 1 : undefined} label={part.label} note={part.note} heading />
           {part.items.length > 0 && (
             <ul class="day-items">
               {part.items.map((item) => (
@@ -300,6 +290,15 @@ export function DayParts({
         </section>
       ))}
     </>
+  );
+}
+
+/** »ca. 55 min« with the number big and red; also Open & Strong's list (src/ui/session/OpenStrong.tsx). */
+export function PlanTime({ minutes }: { minutes: number }) {
+  return (
+    <span class="day-plan-time">
+      <span class="stat-word">ca.</span> {minutes} <span class="stat-word">min</span>
+    </span>
   );
 }
 
@@ -333,12 +332,17 @@ export function DayPlan({
     <div class="day-plan" data-testid="day-plan">
       <header class="day-plan-facts">
         <h1>{title}</h1>
-        <p class="day-plan-time">ca. {minutes} min</p>
-        <p>
-          {parts.length} {parts.length === 1 ? 'del' : 'dele'}
-          {strength && exercises > 0
-            ? ` · ${exercises} ${exercises === 1 ? 'øvelse' : 'øvelser'}`
-            : ''}
+        {/* The time, the parts and the exercises as big numbers, each with its word (SPEC 5). */}
+        <p class="day-plan-stats">
+          <PlanTime minutes={minutes} />
+          <span class="day-plan-stat">
+            <strong>{parts.length}</strong> {parts.length === 1 ? 'del' : 'dele'}
+          </span>
+          {strength && exercises > 0 && (
+            <span class="day-plan-stat">
+              <strong>{exercises}</strong> {exercises === 1 ? 'øvelse' : 'øvelser'}
+            </span>
+          )}
         </p>
         {strength && exercises > 0 && ready && (
           <p data-testid="day-equipment">Udstyr: {equipmentText(equipment)}</p>

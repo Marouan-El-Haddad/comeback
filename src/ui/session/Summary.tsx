@@ -10,6 +10,18 @@ const STATUS: Record<string, string> = {
   travel: 'Rejse',
 };
 
+/** »Pres: 7 reps …« with the name first in bold, so the list can be skimmed. */
+function Named({ text }: { text: string }) {
+  const at = text.indexOf(': ');
+  if (at < 0) return <>{text}</>;
+  return (
+    <>
+      <strong>{text.slice(0, at + 1)}</strong>
+      {text.slice(at + 1)}
+    </>
+  );
+}
+
 function values(sets: LoggedSet[]): string {
   const value = (s: LoggedSet) => `${s.reps ?? s.seconds ?? 0}`;
   const left = sets.filter((s) => s.side === 'L');
@@ -70,10 +82,14 @@ export function Summary({
   return (
     <div class="session">
       <div class="session-body">
-        <p class="step-kicker">{formatLong(session.date)}</p>
-        <h1>
-          {name} · {STATUS[session.status ?? session.light] ?? ''}
-        </h1>
+        <header class="summary-head">
+          <p class="step-kicker">{formatLong(session.date)}</p>
+          <h1>{name}</h1>
+          {/* The traffic light in words, with its colour as an edge (SPEC 6). */}
+          <p class={`light-badge ${session.status ?? session.light}`}>
+            {STATUS[session.status ?? session.light] ?? ''}
+          </p>
+        </header>
         {session.status === 'yellow' && <p class="hint">Gult pas tæller som gennemført.</p>}
         {session.aborted && <p class="hint">Passet blev afsluttet før tid. Det loggede er gemt.</p>}
 
@@ -84,14 +100,17 @@ export function Summary({
           )}
           <ul class="decisions" data-testid="decisions">
             {session.decisions.map((d) => (
-              <li key={d.explanation}>{d.explanation}</li>
+              <li key={d.explanation}>
+                <Named text={d.explanation} />
+              </li>
             ))}
             {targetChanges.map((e) => {
               const step = getStep(PROGRAM, e.stepId);
               const unit = step.dose.kind === 'hold' ? 'sek' : 'reps';
               return (
                 <li key={`t${e.trackId}`}>
-                  {getTrack(PROGRAM, e.trackId).short}: {e.targetAfter} {unit} pr. sæt næste gang.
+                  <strong>{getTrack(PROGRAM, e.trackId).short}:</strong> {e.targetAfter} {unit} pr.
+                  sæt næste gang.
                 </li>
               );
             })}
@@ -101,10 +120,10 @@ export function Summary({
         {pains.length > 0 && (
           <section class="stack">
             <h2>Smerte</h2>
-            <ul>
+            <ul class="logged">
               {pains.map((p, i) => (
                 <li key={i}>
-                  {getTrack(PROGRAM, p.trackId).short}:{' '}
+                  <strong>{getTrack(PROGRAM, p.trackId).short}:</strong>{' '}
                   {p.pain === 'light'
                     ? 'let (≤3)'
                     : p.pain === 'sharp'

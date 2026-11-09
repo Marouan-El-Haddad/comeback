@@ -4,12 +4,15 @@
 import { describe, expect, test } from 'vitest';
 import { PROGRAM } from '../../engine/program.ts';
 import type { BlockPlan } from '../../engine/plan.ts';
+import type { LoggedSet } from '../../engine/types.ts';
 import {
   clubClock,
   emomClock,
   holdClock,
   introHosts,
+  loggedLine,
   neckClock,
+  partStartedBy,
   sectionOf,
   sessionSections,
   stepCardId,
@@ -109,6 +112,60 @@ describe('passets dele (»Del 3 af 7«)', () => {
     expect(sectionOf(parts, 'run', 14)).toBe(6);
     expect(sectionOf(parts, 'warmup', 0)).toBe(2);
     expect(sectionOf(parts, 'wallTest', 0)).toBe(1);
+  });
+});
+
+describe('en ny del i passet: det store røde tal (SPEC 5, D59)', () => {
+  test('den første øvelse i en del starter delen; resten af delen og pauserne gør ikke', () => {
+    const parts = sessionSections(steps, { wallTest: true, warmup: true });
+    expect(partStartedBy(parts, steps, 0)).toEqual({ at: 3, of: 6, label: 'Power' });
+    expect(partStartedBy(parts, steps, 5)).toEqual({
+      at: 4,
+      of: 6,
+      label: 'Par 1',
+      note: 'Et sæt af hver øvelse efter tur, med pause imellem',
+    });
+    expect(partStartedBy(parts, steps, 12)).toEqual({ at: 5, of: 6, label: 'Burpees' });
+    expect(partStartedBy(parts, steps, 14)).toEqual({ at: 6, of: 6, label: 'Nakke' });
+    // Power's second set, pull in the middle of the pair, a pause and the summary start none.
+    for (const index of [1, 2, 7, 10, 11, 16])
+      expect(partStartedBy(parts, steps, index)).toBeNull();
+  });
+});
+
+describe('det loggede sæt over pausens ur (SPEC 5, Bevægelse; D59)', () => {
+  const logged = (b: BlockPlan, setIndex: number, extra: Partial<LoggedSet> = {}): LoggedSet => ({
+    blockId: b.blockId,
+    trackId: b.trackId,
+    stepId: b.stepId,
+    setIndex,
+    rir: 2,
+    asPlanned: true,
+    ...extra,
+  });
+
+  test('sættet, siden og tallet, der blev logget, og smerte, hvis den blev noteret', () => {
+    expect(loggedLine(steps[0], [logged(power, 1, { reps: 3 })])).toBe(
+      '✓ Logget: sæt 1 af 2 · 3 reps',
+    );
+    expect(
+      loggedLine(steps[8], [
+        logged(pull, 1, { side: 'L', reps: 8 }),
+        logged(pull, 1, { side: 'R', reps: 7 }),
+      ]),
+    ).toBe('✓ Logget: sæt 1 af 2, højre side · 7 reps');
+    expect(loggedLine(steps[5], [logged(press, 1, { reps: 20, measureId: 'pushups' })])).toBe(
+      '✓ Logget: måling · 20 reps',
+    );
+    expect(loggedLine(steps[10], [logged(press, 2, { reps: 6, pain: 'light' })])).toBe(
+      '✓ Logget: sæt 2 af 2 · 6 reps · let smerte',
+    );
+  });
+
+  test('intet, når skridtet før pausen ikke er et sæt, eller intet er logget', () => {
+    expect(loggedLine(steps[1], [logged(power, 1, { reps: 3 })])).toBeNull();
+    expect(loggedLine(steps[2], [logged(power, 1, { reps: 3 })])).toBeNull();
+    expect(loggedLine(undefined, [])).toBeNull();
   });
 });
 
