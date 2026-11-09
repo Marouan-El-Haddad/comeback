@@ -95,7 +95,7 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 - Kilder: SPEC 4.6 og 4.7, ENGINE (R-PAIN-SUNDAY, klubtræning), DECISIONS P25, PLAN M3.
 - Grønt: scenarierne; Playwright i tidsmaskinen (`@date`), bl.a. søndag 15/11.
 
-### [ ] P5b – Livet: flyt og spring over
+### [~] P5b – Livet: flyt og spring over
 
 - Agent: `comeback-builder`. Kilder: ENGINE 5.9 (R-MOVE, R-REST), SPEC 3.1 og 4.11, PLAN M3.
 - Grønt: scenarierne for R-MOVE og R-REST; Playwright i tidsmaskinen (`@date`).
