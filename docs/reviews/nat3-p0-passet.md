@@ -141,3 +141,28 @@ Reviewet: 73213a6, 62e3ca9, 504feea, 6f0d761 og 3c91d73 (`git diff 2894827 3c91d
 
 - **Tastaturet ved målingens felt** (væg-test, push-ups, bord-rows): kan tallet ses, mens det skrives? Playwright kan ikke vise IronFox' tastatur. I et vindue, der var gjort lavere som efterligning, lå feltet under bundblokken.
 - **Lyd og skærm:** lyden kan høres fra gulvet, og skærmen forbliver tændt hele passet, men må slukke efter »Hold pause«.
+
+## Opfølgning (rettelserne 61ad9fb–46ba00f; D57, R21)
+
+Jeg har gennemgået `git diff af65415 46ba00f` i worktree'et på 46ba00f. P3a, P3 og P1a er ikke med.
+
+- **`npm run check`** er grøn (exit 0): 629 tests og 92,8 kB gz JavaScript. Startfilerne er index 25,9 kB og engine 26,5 kB, det samme som før rettelserne.
+- **Hele Playwright-suiten** gav 71 af 71 grønne i `pixel9a` og `pixel9a-utc` (Firefox uden JIT, `E2E_PORT=4181`), uden flaky tests.
+- **Egne kørsler** (ikke committet) uden tidsmaskine:
+  - Tirsdag 10/11 og fredag 13/11 fra »Dagens pas« til opsummering. Der var ingen sidefejl, og tekst, kontrast og trykflader var i orden på alle skærme i passet.
+  - Tirsdag blev logget som før: 27 sæt, 3 målinger (væg-test, push-ups og bord-rows), 3 resultater og 8 dele.
+
+| Fund | Status | Tjekket |
+|---|---|---|
+| H1 | Rettet | Trykspærren starter nu i `useLayoutEffect` og også, når `introShut` og `card.id` ændres, og `.intro-card` tager ingen tryk, mens spærren gælder. Opvarmningens kort: et dobbelttryk lukker kortet, og titlen er stadig »Opvarmning · 1/4«. Pausens kort: pausen kører videre (e2e). Nakkens kort: et dobbelttryk (e2e) og to tryk i det øjeblik, »Gør klar« lukker kortet af sig selv (min test), gav ingen ny hændelse. Nakken kører, og »Stop« står der stadig. E2e'ens tryk ved udløb rammer power-kortet, hvor der ingen knap er bagved, men min test dækker nakken. |
+| M1 | Rettet | Fredag 13/11 har »Dagens pas« 9 dele: »Måling · Hollow hold« og derefter ét »Par 2« med Etbens RDL, Sideplanke på albuen og Planke med skulder-tap. I passet står »Del 4 af 9 · Måling« og »Del 5 af 9 · Par 2 · sæt 1–10/10«. Der blev logget RDL venstre og højre, sideplanke (måling), rotation venstre og højre, og så samme runde igen. Det gav 22 sæt og 5 målinger. Tirsdag er uændret. |
+| L1 | Rettet | Vitest dækker alle tre tilfælde. Et fredagspas, jeg gemte som 2894827 (uden nøgle) efter hollow og RDL sæt 1 venstre, blev genoptaget på »Etbens RDL · Sæt 1 af 2 · Højre ben« og ikke ved hollow, og der kom ingen ny hændelse. |
+| L2 | Rettet | Tidsmaskinens pas huskes kun i hukommelsen (`readRun`/`writeRun`, og `forgetSimRun`, når man skifter mellem tidsmaskinen og den rigtige app). E2e: et rigtigt pas med pause i opvarmningen står uændret i `comeback.run` efter et motorpas i tidsmaskinen og fortsætter på »Opvarmning · 2/4«. |
+| L3 | Rettet | Der står »Nu Måling · første sæt i Pres · max«, og tilsvarende ved Træk, Skuldre, Mave side og Wall sit. |
+| L4 | Ikke rettet (forslag) | »Gør klar« ligger stadig delvis under bundblokken i pauser med lange navne: før tåløft og EMOM om tirsdagen og før rygsæk-row og RDL om fredagen. |
+| L5 | Rettet | »Afslut« spørger nu i væg-testen, opvarmningen og ved spørgsmål 3, og »Fortsæt« beholder stedet. |
+| L6 | Rettet | EMOM'en spiller to korte toner 10 sek før hvert minut slutter. E2e'en måler tonerne med `page.clock`. |
+
+**Nye fund:** ingen. Rettelserne har ikke ændret tirsdagens eller fredagens pas på anden måde end tilsigtet.
+
+Skærmbillederne ligger i `C:\Users\marou\AppData\Local\Temp\claude\dcafe82b35807500\a9e3666a-ba5d-4baf-be20-562dde837f26\scratchpad\review-shots\opfoelgning\`: `tirsdag\`, `fredag\`, `nakke-efter-tryk-ved-udloeb.png` og `fredag-genoptaget.png`.

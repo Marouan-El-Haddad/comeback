@@ -21,7 +21,7 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 
 ### [~] P0 – Passet færdigt fra arbejdsmappen (opgavens pakke 0)
 
-- Status: bygget 04:30 (73213a6, 62e3ca9, 504feea, 6f0d761, 3c91d73); review i gang.
+- Status: bygget 04:30 (73213a6, 62e3ca9, 504feea, 6f0d761, 3c91d73). Review `docs/reviews/nat3-p0-passet.md`: 1 høj, 1 middel, 6 lave; H1, M1, L1–L3, L5 og L6 rettet (61ad9fb–46ba00f, D57, R21) og tjekket i »Opfølgning« uden nye fund; L4 er et forslag. Udgives med P3.
 - Agent: `comeback-builder`. Frist: udgivet før tirsdagens Styrke A (10/11).
 - Udgangspunkt: NAT-2's P6 stoppede midt i arbejdet. SPEC 3.2 og D50–D53 er committet; koden (`src/ui/session/DayPlan.tsx`, `NowNext.tsx`, `Intro.tsx`, `outline.ts`, `exercise.ts`, `session.css`, ændringer i `Runner.tsx`, `OpenStrong.tsx`, `timers.tsx`, `App.tsx`, `Today.tsx` m.fl.), testene (`e2e/session.spec.ts`, `src/ui/__tests__/outline.test.ts`, rettede specs) og skærmbillederne ligger ucommittet i arbejdsmappen sammen med et tillæg til D53. Det kasseres ikke.
 - Mål: »Dagens pas« før start (D50), »Nu« og »Næste« og fremdriften altid synlige (D51), figuren følger passets ur (D52), næste øvelse stort med animation og »Gør klar« i pausen, introkortet første gang (D44, D51), »Hold pause« til fanerne (D53). Desuden:
