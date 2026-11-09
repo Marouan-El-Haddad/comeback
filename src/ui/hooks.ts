@@ -10,11 +10,12 @@ export function useModel(model: Model): Model {
 
 /**
  * The world a screen was opened in – the real log or the time machine's copy (SPEC 3.7): false once
- * the time machine has started or ended since, so the screen never writes in the other world.
+ * the time machine has started or ended since, so what was opened in the time machine never writes
+ * in the real log, and the other way round.
  */
 export function useSameWorld(model: Model): () => boolean {
-  const world = useRef(model.sim);
-  return () => model.sim === world.current;
+  const simulated = useRef(model.sim !== null);
+  return () => (model.sim !== null) === simulated.current;
 }
 
 /**

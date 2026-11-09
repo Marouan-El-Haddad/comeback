@@ -58,7 +58,7 @@ export function MoveForm(props: MoveFormProps) {
   const name = SESSION_NAME[item.shown];
   const full = item.options.filter((o) => o.mode === 'full');
   const short = item.options.filter((o) => o.mode === 'short');
-  const note = item.missed ? ' · ikke logget' : item.skipped ? ' · sprunget over' : '';
+  const note = item.skipped ? ' · sprunget over' : item.missed ? ' · ikke logget' : '';
 
   // Opened in the time machine and still open after »Afslut«: nothing is written (SPEC 3.7).
   const otherWorld = () => {

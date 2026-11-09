@@ -437,8 +437,9 @@
   font-weight: 700;
 }
 
+/* What the move costs is important text: 600, not thinner (SPEC 6, sunlight). */
 .move-day-note {
-  font-weight: 400;
+  font-weight: 600;
   font-size: 16px;
 }
 

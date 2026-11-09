@@ -78,7 +78,10 @@ export function WeekView({ model }: { model: Model }) {
           const isToday = d.date === today;
           const session = d.done ?? d.open;
           const item = d.kind ? movable(PROGRAM, state, d.date, today) : null;
-          const skipped = state.skipped.some((s) => s.forDate === d.date && s.reason === 'user');
+          // A session skipped and then moved away leaves nothing on its old day.
+          const skipped =
+            d.kind !== null &&
+            state.skipped.some((s) => s.forDate === d.date && s.reason === 'user');
           const from = item ? movedFrom(PROGRAM, state, item.kind, d.date) : null;
           const [weekdayName = '', ...rest] = formatLong(d.date).split(' ');
           const date = rest.join(' ');
