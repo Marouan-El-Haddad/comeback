@@ -24,7 +24,7 @@ import {
 } from '../../engine/index.ts';
 import type { ISODate, SessionKind, State } from '../../engine/types.ts';
 import { SESSION_NAME, sessionMinutes } from '../format.ts';
-import { useSettle, useWriteOnce } from '../hooks.ts';
+import { useSameWorld, useSettle, useWriteOnce } from '../hooks.ts';
 import { LifeForm } from '../lifeScreen.ts';
 import {
   canAct,
@@ -129,11 +129,11 @@ export function Today(props: {
   /** Counts the cards that went away with a tap (»Spring over«): I dag settles after each (D57). */
   const [gone, setGone] = useState(0);
   const settling = useSettle([form, gone]);
-  // A screen in place of I dag and its »✓« line belong to their world: when the time machine
-  // starts or ends, they go (SPEC 3.7, D64).
+  // »Flyt eller spring over« and the »✓« line belong to their world – the real log or the time
+  // machine's copy: when the time machine starts or ends, they go (SPEC 3.7, D64).
   const world = model.sim;
   useEffect(() => {
-    setForm(null);
+    setForm((f) => (f?.kind === 'move' ? null : f));
     setSavedLine(null);
   }, [world]);
   const asks = clubAsks(PROGRAM, state, today, minutesIn(model.now()));
@@ -263,7 +263,8 @@ export function Today(props: {
 
       {missed.map((m) => (
         <MissedCard
-          key={`${m.kind}${m.date}`}
+          // A card of the time machine is never the same card as one of the real log.
+          key={`${world ? 'sim' : 'real'}-${m.kind}${m.date}`}
           item={m}
           today={today}
           model={model}
@@ -400,9 +401,12 @@ function MissedCard(props: {
 }) {
   const { item, today, model } = props;
   const { busy, run } = useWriteOnce();
+  const sameWorld = useSameWorld(model);
   const name = SESSION_NAME[item.shown];
   const when = dayRef(item.date, today);
   const skip = run(async () => {
+    // Shown in the time machine, never written in the real log (SPEC 3.7).
+    if (!sameWorld()) throw new Error('the time machine started or ended');
     await model.commit([
       model.ctx.make(
         { type: 'session_skipped', kind: item.kind, forDate: item.date, reason: 'user' },
