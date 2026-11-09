@@ -1129,6 +1129,8 @@ const VIEWS: readonly string[] = ['side', 'front', 'top'];
 interface ViewInfo {
   view: string;
   visibility: Record<string, Set<boolean>>;
+  /** The props it draws: a surface a pose touches must be one of them. */
+  props: Set<string>;
 }
 
 /**
@@ -1236,7 +1238,7 @@ function checkView(
   if (value.marks !== undefined) {
     checkMarks(r, at(where, 'marks'), value.marks, movement, visibility);
   }
-  return { view: show(view), visibility };
+  return { view: show(view), visibility, props };
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -1469,9 +1471,20 @@ function checkFaults(
       fault.contacts !== undefined &&
       list(r, at(w, 'contacts'), fault.contacts, 0, 8, 'kontakter')
     ) {
-      fault.contacts.forEach((c, j) =>
-        checkContact(r, at(at(w, 'contacts'), j), c, explained.equipment),
-      );
+      fault.contacts.forEach((c, j) => {
+        const wc = at(at(w, 'contacts'), j);
+        checkContact(r, wc, c, explained.equipment);
+        const on = isObject(c) ? c.on : undefined;
+        if (
+          info &&
+          typeof on === 'string' &&
+          on !== 'floor' &&
+          (explained.equipment as readonly string[]).includes(on) &&
+          !info.props.has(on)
+        ) {
+          r.add(at(wc, 'on'), `»${on}« er ikke tegnet i figuren; tilføj den i »props«`);
+        }
+      });
     }
   });
 }

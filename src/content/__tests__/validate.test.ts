@@ -1010,4 +1010,12 @@ describe('anden vinkel, markeringer og typiske fejl som figur (D58)', () => {
   test.each(cases)('%s', (_name, file, message) => {
     expect(figureProblems(file, 'press', PRESS).join('\n')).toContain(message);
   });
+
+  test('en fejls egen kontakt med en flade kræver rekvisitten i fejlens vinkel', () => {
+    const explain = press((i) => (i.equipment = ['chair']));
+    const file = full((f) => (f.faults![0]!.contacts = [{ part: 'knee', on: 'chair' }]));
+    expect(figureProblems(file, 'press', explain).join('\n')).toContain(
+      'faults[0] › contacts[0] › on: »chair« er ikke tegnet i figuren; tilføj den i »props«',
+    );
+  });
 });
