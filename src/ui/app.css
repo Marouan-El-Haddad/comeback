@@ -1028,7 +1028,7 @@
 
 /* A body followed by sticky actions (»Dagens pas«, the summary, the last step) needs no such room:
    no empty space under its last line. */
-.session-body:has(+ .session-actions) {
+.session-body.with-actions {
   padding-bottom: 16px;
 }
 

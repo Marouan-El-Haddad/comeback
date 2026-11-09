@@ -56,7 +56,7 @@ export function Summary({
   if (!session) {
     return (
       <div class="session">
-        <div class="session-body">
+        <div class="session-body with-actions">
           <h1>Passet er gemt</h1>
         </div>
         <div class="session-actions">
@@ -81,7 +81,7 @@ export function Summary({
   );
   return (
     <div class="session">
-      <div class="session-body">
+      <div class="session-body with-actions">
         <header class="summary-head">
           <p class="step-kicker">{formatLong(session.date)}</p>
           <h1>{name}</h1>

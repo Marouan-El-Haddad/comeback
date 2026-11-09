@@ -118,7 +118,7 @@ export function OpenStrong({ model, onClose }: { model: Model; onClose: () => vo
           </header>
           {item && <SessionProgress at={index + 1} of={items.length} label={item.name} />}
         </div>
-        <div class="session-body">
+        <div class={item ? 'session-body' : 'session-body with-actions'}>
           {index < 0 && (
             <div class="day-plan" data-testid="day-plan">
               <header class="day-plan-facts">

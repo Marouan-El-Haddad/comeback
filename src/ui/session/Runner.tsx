@@ -420,7 +420,7 @@ export function Runner({
     return withCard(
       <div class={sessionClass} hidden={hidden}>
         <SessionHeader title="Dagens pas" onClose={close} closeLabel="Tilbage" />
-        <div class="session-body">
+        <div class="session-body with-actions">
           <DayPlan
             title={plan.name}
             minutes={sessionMinutes(plan)}
@@ -1166,7 +1166,7 @@ export function Runner({
       {header}
       {endBar}
       <DeviceNotices />
-      <div class="session-body">{body}</div>
+      <div class={actions ? 'session-body with-actions' : 'session-body'}>{body}</div>
       {actions}
     </div>,
   );
