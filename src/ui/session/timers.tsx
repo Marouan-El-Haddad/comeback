@@ -14,14 +14,18 @@ import {
   type Clock,
 } from '../timers/clock.ts';
 
-/** Plays tik at 3, 2, 1 seconds left and `end` at 0; `half` once at half time. */
+/**
+ * Plays tik at 3, 2, 1 seconds left and `end` at 0; `half` once at half time; and the same double
+ * tone once `warn` seconds before the end (the EMOM's »10 sekunder tilbage«, SPEC 3.2, D57).
+ */
 function useCountdownSounds(
   remaining: number,
   total: number,
-  opts: { end?: Sound; half?: boolean; active: boolean },
+  opts: { end?: Sound; half?: boolean; warn?: number; active: boolean },
 ) {
   const last = useRef<number | null>(null);
   const halfDone = useRef(false);
+  const warnDone = useRef(false);
   useEffect(() => {
     if (!opts.active) return;
     const whole = Math.ceil(remaining);
@@ -33,8 +37,12 @@ function useCountdownSounds(
       halfDone.current = true;
       play('halv');
     }
+    if (opts.warn && !warnDone.current && remaining > 0 && remaining <= opts.warn) {
+      warnDone.current = true;
+      play('halv');
+    }
     last.current = whole;
-  }, [remaining, total, opts.active, opts.end, opts.half]);
+  }, [remaining, total, opts.active, opts.end, opts.half, opts.warn]);
 }
 
 export interface TimerControl {
@@ -58,7 +66,13 @@ export interface CountdownState {
 export function useCountdown(
   seconds: number,
   paused: boolean,
-  opts: { onDone: () => void; end?: Sound; half?: boolean; onClock?: (clock: Clock) => void },
+  opts: {
+    onDone: () => void;
+    end?: Sound;
+    half?: boolean;
+    warn?: number;
+    onClock?: (clock: Clock) => void;
+  },
 ): CountdownState {
   const [clock, setClock] = useState<Clock>(() => startClock());
   const done = useRef(false);
@@ -72,7 +86,12 @@ export function useCountdown(
   }, [clock]);
   const now = useTick(!paused && !done.current);
   const remaining = Math.max(0, seconds - elapsedMs(clock, now) / 1000);
-  useCountdownSounds(remaining, seconds, { end: opts.end, half: opts.half, active: !paused });
+  useCountdownSounds(remaining, seconds, {
+    end: opts.end,
+    half: opts.half,
+    warn: opts.warn,
+    active: !paused,
+  });
   useEffect(() => {
     if (remaining <= 0 && !done.current) {
       done.current = true;
@@ -125,6 +144,8 @@ export function Countdown(props: {
   label?: string;
   end?: Sound;
   half?: boolean;
+  /** A double tone this many seconds before the end. */
+  warn?: number;
   size?: CountdownSize;
   onClock?: (clock: Clock) => void;
 }) {
@@ -132,6 +153,7 @@ export function Countdown(props: {
     onDone: props.onDone,
     end: props.end,
     half: props.half,
+    warn: props.warn,
     onClock: props.onClock,
   });
   return <CountdownView state={state} label={props.label} size={props.size} />;
@@ -162,6 +184,8 @@ export interface Phase {
   seconds: number;
   detail?: string;
   sound?: Sound;
+  /** A double tone this many seconds before the phase ends (the EMOM's 10 sek). */
+  warn?: number;
 }
 
 /**
@@ -204,6 +228,7 @@ export function PhaseRunner(props: {
         paused={props.paused}
         onDone={next}
         end="go"
+        warn={phase.warn}
         size={props.beside ? 'medium' : 'big'}
         onClock={(clock) => onPart.current?.(index, clock)}
       />

@@ -6,6 +6,7 @@ import { PROGRAM } from '../../engine/program.ts';
 import type { BlockPlan } from '../../engine/plan.ts';
 import {
   clubClock,
+  emomClock,
   holdClock,
   introHosts,
   neckClock,
@@ -177,6 +178,12 @@ describe('urets dele, som figuren følger', () => {
       { kind: 'ready', seconds: 5 },
       { kind: 'work', seconds: 20 },
     ]);
+  });
+
+  test('EMOM: »Klar« og et minut pr. minut med en tone 10 sek før det slutter (SPEC 3.2, D57)', () => {
+    const { phases, parts } = emomClock(emom);
+    expect(parts.map((p) => p.seconds)).toEqual([5, 60, 60, 60, 60]);
+    expect(phases.map((p) => p.warn)).toEqual([undefined, 10, 10, 10, 10]);
   });
 
   test('klubsekvensen: »Klar« og rundens dele, så mange runder som dosis', () => {

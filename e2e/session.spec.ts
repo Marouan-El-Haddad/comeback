@@ -411,6 +411,8 @@ test('Styrke A i tidsmaskinen: dagens pas, nu og næste, pausen og introkortet @
   ).toBeVisible();
   await expect(nextUp(page).locator('.next-title')).toHaveText('Måling · Push-ups');
   await page.getByRole('button', { name: 'Ja', exact: true }).click();
+  // The measurement's »Nu« says max too, never the step's tempo push-up (D45, D57).
+  await expect(now(page).locator('.step-kicker')).toHaveText('Nu Måling · første sæt i Pres · max');
 
   // The rest of the session: »Nu« and »Næste« on every screen, the intro cards close themselves.
   await stillFigures(page);
@@ -780,6 +782,11 @@ test('et dobbelttryk på introkortets »Luk« logger og springer intet over (D57
   await expect(intro(page)).toHaveCount(0);
   await expect(title).toHaveText('Opvarmning · 1/4');
   await expect(now(page).locator('.set-name')).toHaveText('Hæv pulsen');
+  // »Afslut« next to »Hold pause« asks first, as in the session (SPEC 3, D57).
+  await page.getByRole('button', { name: 'Afslut passet' }).click();
+  await expect(page.getByRole('alertdialog')).toContainText('Afslut passet?');
+  await page.getByRole('alertdialog').getByRole('button', { name: 'Fortsæt' }).click();
+  await expect(title).toHaveText('Opvarmning · 1/4');
   for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
   await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
 
@@ -856,6 +863,58 @@ test('tidsmaskinen skriver aldrig over et rigtigt pas, der holder pause (D57)', 
   await expect(page.locator('.banner.sim')).toHaveCount(0);
   await page.getByTestId('start-session').click();
   await expect(page.locator('.session-title')).toHaveText('Opvarmning · 2/4');
+});
+
+test("EMOM'en giver en tone 10 sek før hvert minut slutter (SPEC 3.2, D57)", async ({ page }) => {
+  // Every tone the app plays, with the (fake) time it starts.
+  await page.addInitScript(() => {
+    const w = window as unknown as { tones: Array<{ freq: number; at: number }> };
+    w.tones = [];
+    const proto = AudioContext.prototype;
+    const create = Object.getOwnPropertyDescriptor(BaseAudioContext.prototype, 'createOscillator')
+      ?.value as (this: BaseAudioContext) => OscillatorNode;
+    proto.createOscillator = function (this: AudioContext) {
+      const oscillator = create.call(this);
+      const start = oscillator.start.bind(oscillator);
+      oscillator.start = (when?: number) => {
+        w.tones.push({ freq: oscillator.frequency.value, at: Date.now() });
+        start(when);
+      };
+      return oscillator;
+    };
+  });
+  await stillFigures(page);
+  await openApp(page, '2026-11-17');
+  await onboard(page);
+  await startSession(page);
+  await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+  for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
+  await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+  await driveUntil(page, () => page.getByRole('button', { name: 'Start EMOM' }).isVisible());
+
+  // The clock stands still from here and moves only when the test moves it.
+  await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1_000));
+  await page.getByRole('button', { name: 'Start EMOM' }).click();
+  const start = await page.evaluate(() => Date.now());
+  const tones = async (from: number, to: number, freq: number) =>
+    page.evaluate(
+      ({ from, to, freq }) =>
+        (window as unknown as { tones: Array<{ freq: number; at: number }> }).tones.filter(
+          (t) => t.freq === freq && t.at >= from && t.at < to,
+        ).length,
+      { from, to, freq },
+    );
+  // »Klar« 5 sek, then minute 1: nothing at 49 sek, the double tone at 50 sek (10 sek left), the
+  // 3-2-1 at 57–59 sek and minute 2's tone at 60 sek.
+  await page.clock.runFor(5_000 + 49_000);
+  expect(await tones(start + 6_000, start + 54_000, 880)).toBe(0);
+  await page.clock.runFor(2_000);
+  expect(await tones(start + 54_000, start + 56_000, 880)).toBe(2);
+  await page.clock.runFor(10_000);
+  expect(await tones(start + 61_000, start + 65_000, 880)).toBe(3);
+  // The new minute: its long tone (990 Hz), with the countdown's »go« (660 → 990 Hz) at the end.
+  expect(await tones(start + 64_000, start + 66_000, 990)).toBeGreaterThanOrEqual(1);
+  await expect(page.locator('.phase-label')).toHaveText('Minut 2 af 4');
 });
 
 test('»Lettere variant i dag« efter skarp smerte på trin 1 (N3) @date', async ({ page }) => {

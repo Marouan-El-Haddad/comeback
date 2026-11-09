@@ -378,6 +378,23 @@ export function Runner({
     onClose();
   };
 
+  // »Afslut« asks first from the wall test on, as in the session: »Hold pause« stands next to it,
+  // and a session left by mistake would start the warm-up and the wall test over (SPEC 3, D57).
+  const askEnd = () => setConfirmEnd(true);
+  const endBar = confirmEnd && (
+    <div class="confirm" role="alertdialog" aria-label="Afslut passet">
+      <p>Afslut passet? Det, du har logget, gemmes.</p>
+      <div class="row">
+        <button type="button" class="btn" onClick={() => setConfirmEnd(false)}>
+          Fortsæt
+        </button>
+        <button type="button" class="btn primary" onClick={() => void finish(true)}>
+          Afslut
+        </button>
+      </div>
+    </div>
+  );
+
   if (run.phase === 'summary') {
     return <Summary session={finished} onDone={close} />;
   }
@@ -548,8 +565,9 @@ export function Runner({
             title="Måling før opvarmning"
             progress={progress('wallTest')}
             onPause={pause}
-            onClose={close}
+            onClose={askEnd}
           />
+          {endBar}
           <div class="session-body">
             <MeasureInput
               paused={held}
@@ -590,12 +608,15 @@ export function Runner({
     const item = items[itemIndex];
     if (item) {
       const header = (
-        <SessionHeader
-          title={`Opvarmning · ${itemIndex + 1}/${items.length}`}
-          progress={progress('warmup')}
-          onPause={pause}
-          onClose={close}
-        />
+        <>
+          <SessionHeader
+            title={`Opvarmning · ${itemIndex + 1}/${items.length}`}
+            progress={progress('warmup')}
+            onPause={pause}
+            onClose={askEnd}
+          />
+          {endBar}
+        </>
       );
       // The warm-up's one intro card: 10 sek before its first timer, then it closes (D44).
       if (itemIndex === 0 && introShut !== 'warmup') {
@@ -643,7 +664,8 @@ export function Runner({
     // The warm-up's last timer can end while a card is open: the card stays until it is closed.
     return withCard(
       <div class={sessionClass} hidden={hidden}>
-        <SessionHeader title="Trafiklys" progress={progress('warmup')} onClose={close} />
+        <SessionHeader title="Trafiklys" progress={progress('warmup')} onClose={askEnd} />
+        {endBar}
         <div class="session-body">
           <h1>Spørgsmål 3</h1>
           <YesNo
@@ -731,24 +753,10 @@ export function Runner({
       onPause={pause}
       // On the last screen everything is logged: »Afslut passet« finishes it, and a second
       // »Afslut« at the top would mark it as ended early (D54).
-      onClose={step.type === 'finish' ? undefined : () => setConfirmEnd(true)}
+      onClose={step.type === 'finish' ? undefined : askEnd}
       progressWord={plan.kind === 'motor' ? 'Fase' : 'Del'}
     />
   );
-  const endBar = confirmEnd && (
-    <div class="confirm" role="alertdialog" aria-label="Afslut passet">
-      <p>Afslut passet? Det, du har logget, gemmes.</p>
-      <div class="row">
-        <button type="button" class="btn" onClick={() => setConfirmEnd(false)}>
-          Fortsæt
-        </button>
-        <button type="button" class="btn primary" onClick={() => void finish(true)}>
-          Afslut
-        </button>
-      </div>
-    </div>
-  );
-
   const logResult = async (
     block: BlockPlan,
     result: Parameters<typeof logBlockResult>[1]['result'],
@@ -804,7 +812,9 @@ export function Runner({
               key={`m-${step.block.blockId}`}
               measureId={measureId}
               state={state}
-              firstSetOf={`${trackName(step.block.trackId)} · ${getStep(PROGRAM, step.block.stepId).name}`}
+              // »første sæt i Pres · max«, as on the intro card: a max test is an ordinary push-up
+              // or row, not the step's exercise (D45, D57).
+              firstSetOf={`${trackName(step.block.trackId)} · max`}
               onCard={() => card.open(`${MEASURES}.${measureId}`)}
               figure={
                 <ExerciseFigure

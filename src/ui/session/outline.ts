@@ -266,6 +266,8 @@ export function emomClock(block: BlockPlan): StepClock {
       detail: `${emom?.reps ?? 0} burpees, resten af minuttet er pause`,
       seconds: 60,
       sound: 'minut' as const,
+      // »Lyd ved hvert nyt minut og ved 10 sekunder tilbage« (SPEC 3.2, D57).
+      warn: 10,
     })),
   ];
   return {
