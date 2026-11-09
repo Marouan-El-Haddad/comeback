@@ -2,7 +2,7 @@
 
 Figurmotoren er rettet efter `docs/runs/NAT-2-P3-FIX.md` og efter reviewet af P1a (`docs/reviews/nat3-p1a-figurmotor.md`): `docs/DECISIONS.md` D56 og R22, `docs/SPEC.md` 9.1 og vejledningen i `tools/pictos/README.md`. Kroppen bevæger sig nu mellem positionerne ud fra det, der står stille, og tjekket ser også billederne imellem. Denne fil siger, hvilke figurer der fejler tjekkene, hvad der skal til, og hvilke der kan tegnes bedre med de nye muligheder.
 
-Status efter reviewets rettelser og P1b: `node scripts/check-explain.ts` uden fil er grøn med 15 figurer på ventelisten i `src/figure/waiting.ts`. De to nye er nakkens N1 og N2, som står næsten stille (P1b's tjek af, at figuren bevæger sig synligt, D58). En fil, der tjekkes for sig, fejler på dem. `burpee_emom.E1` er tegnet som eksempel og består, og dermed også E2–E9, der er `like`.
+Status efter reviewets rettelser, P1b og rettelserne efter reviewet af P1b: `node scripts/check-explain.ts` uden fil er grøn med 16 figurer på ventelisten i `src/figure/waiting.ts`. Nakkens N1 og N2 står næsten stille (P1b's tjek af, at figuren bevæger sig synligt, D58), og etbens bounds hopper på stedet, selv om landingen siger »Ca. 1–1,5 m foran afsættet« (tjekket af landingen, D60). En fil, der tjekkes for sig, fejler på dem. `burpee_emom.E1` er tegnet som eksempel og består, og dermed også E2–E9, der er `like`.
 
 **Hver anvisning herunder er afprøvet.** Figuren, som anvisningen giver, står som en hel figur i `src/figure/__tests__/p2/<punkt>.json`. Vitest (`src/figure/__tests__/p2-instructions.test.ts`) tjekker, at den består formatet og alle tjek mod forklaringen, som den er i dag. Sådan bruger du den:
 
@@ -22,7 +22,7 @@ Kør tjekket igen, når positionernes tekst ændres: tjekket af strakte led læs
   - Lemmet svinger med leddenes vinkler og drejer fri af fladen med hånd, fod, knæ og albue.
   - Det går helst i en bue på en tiendedel af vejen, 3–8 høj.
 - **`advance`**: hele figuren flyttes langs x (bounds og spring frem).
-  - Holdene og de næste faser står, hvor figuren kom til, og vejen tilbage til start fører den tilbage.
+  - Holdene og de næste faser står, hvor figuren kom til. Står den til sidst igen i sin første stilling, begynder løkken forfra ved start med et klip; ellers fører vejen tilbage til start den tilbage.
   - Tegn hver keyframe på stedet med samme fodpunkt.
 - **`via`**: en pose på vejen, skrevet som en hel keyframe, uden at forklaringen får en ny position. Bevægelsen går til via-posen og videre, med halvdelen af tiden til hver halvdel.
   - Via-posen tjekkes som en position. Den rører det, begge positioner rører, men en hånd eller fod med `lift` giver slip. Den rører intet, som ingen af dem rører.
@@ -60,6 +60,14 @@ Se `tools/pictos/README.md` (»Vinkler, markeringer og typiske fejl«) for felte
 - **`marks`:** pil (`arrow`), vinkel (`angle`), cue (`cue`, højst 3 ord) og hjælpelinje (`line`), hver med `at` (vises i holdet ved positionen) eller `phase` (fasens nummer fra 1). Én ad gangen, mindst 0,4 sek i kortet.
 - **`faults`:** rigtigt og forkert under fejlen på kortet: `mistake` (nummeret fra 1), `at`, `wrong` (de felter i posen, der ændres) og evt. `view` og `contacts`. Mindst 3 enheder forskel.
 - **Tjekket afviser en figur, der står næsten stille** (et punkt skal flytte sig 3 i løkken og 2 i hver fase til en ny position).
+- **Efter reviewet af P1b (D60):**
+  - En cue ved en kropsdel og en linje mellem kropsdele i en fase følger kroppen hvert billede; teksten står stille.
+  - Teksten er højst så bred som sin tegning og brydes på højst to linjer, ellers står den over eller under figuren.
+  - To vinkler står over hinanden, når figuren ligger.
+  - Forfra bliver armene foran kroppen eller udelades.
+  - En landing »foran afsættet« eller »… m foran« skal stå mindst 30 foran afsættet.
+  - En fejl med `spine` tegnes krum.
+  - `upper` og `lower` kan forkorte et led til en fjerdedel.
 - **Eksempler:** `press.1` (pile, hjælpelinjen »Én planke« og fejlparret »hoften hænger«), `power_legs.1` (squat jump fra siden og forfra med »Knæ over tæer« og knæene, der falder ind, set forfra) og `wallsit.W1` (90° ved knæet i holdet). De står i `content/figures/`; behold dem, når I tegner filerne om.
 
 ## Figurer, der fejler nu (ventelisten)
@@ -81,6 +89,7 @@ Tallene i midterkolonnen er fra tjekket i dag. Højre kolonne er afprøvet, og d
 | `neck.json` › `neck.N2` | Som N1, og »Løft 2 cm« og »Ned og slip« flytter figuren højst 1,9 og 1,2 enheder | Som N1 i `rest` og `tuck` og `head` −26 i `lift`: hovedet løftes 2,1 over hage ind, så luften under baghovedet kan ses (briefen: overdriv højst til ca. 2 enheder) |
 | `neck.json` › `neck.N5 › mave` (stotte ↔ hold) | Hånden og albuen går 12 og 8,8 ned i sengen undervejs | `lift` på `near.hand` og en `via` i begge overgange. Via'en løfter hånden fra panden op over sengen (`near` til [30; 42], tå [36; 44]); resten som i positionerne, med hoften [51; 31] og `torso` 180 |
 | `neck.json` › `neck.N5 › side` (frontbillede) | Albuen bøjer til hver sin side i de to positioner og skifter side undervejs | En `via` i begge overgange med den nederste arm strakt op foran brystet (`joint` [85,3; 33,5], `end` [81; 41], `tip` [78; 46,2]). Samme `bend` kan ikke løse det: i `stotte` hviler albuen på sengen med hånden under hovedet. I `hold` skal den være mindst 3 over sengen, for positionen nævner den ikke. Gennem den strakte arm folder den sig ud og ind igen |
+| `power_legs.json` › `power_legs.6 › bounds` (push → air → land) | »Landing« lander 0 enheder foran afsættet, men teksten siger »Ca. 1–1,5 m foran afsættet« (mindst 30, D60). Figuren hopper på stedet: standfoden lander, hvor den satte af | Keyframes på stedet og `advance` 31,64 på push → air og 32,36 på air → land, så foden lander 64 foran afsættet (din tegning fra P2, afprøvet: `p2/power_legs.6.bounds.json`). Figuren rejser hen over scenen, står, hvor den landede, og begynder forfra ved start med et klip |
 | `shoulder.json` › `shoulder.3` (wall walk) | walk → handstand og tilbage: hænderne går 2,7 og 4 ned i gulvet | `walk` med hænderne fladt på samme punkt som i `plank`, hoften i [48,62; 39,49], `torso` −16,45 og fødderne på væggen i [3,5; 52,85] og [3,35; 52,35]. `lift` på fødderne i plank ↔ walk. `lift` på hænderne og en `via` halvvejs i walk ↔ handstand, med hoften i [27; 55,5], `torso` −52, hænderne i [45,47; −0,05] og [46,87; 0] og fødderne højt på væggen med det fjerne ben på fuld længde (`far` til [3,56; 96,58]) |
 | `warmup.json` › `warmup.2 › spiderman` (planke ↔ udfald) | Knæet går 3,9 ned i gulvet og bøjer 51,6° mere; foden går 2,9 ned | `lift` på `near.foot` og en `via` med knæet højt i begge overgange. Hoften i [44; 24], `torso` 14, `near`-benet til [38; 10] med `upper` 22 og `tip` −125 og det bageste ben som i udfald (`far` til [0,38; 4,9], `tip` [2,78; 0,3]). Så er armene og det bageste ben strakte hele vejen (H3) |
 
@@ -91,7 +100,6 @@ Tallene i midterkolonnen er fra tjekket i dag. Højre kolonne er afprøvet, og d
 - **Bunden i underarmsplanken** (mavekontakten): `core_front.json` › `core_front.3`, `core_front.4` (`down`).
 - **Håndklædet:** `os.json` › `os.1` behøver ikke længere en ekstra håndklædehale.
 - **Flasken på ryggen** tegnes nu langs ryggen. Se efter på kontaktarket: `core_rot.json` › `core_rot.R2`, `core_rot.R3`, `core_rot.R4`.
-- **Etbens bounds, der flytter sig frem** (brugerens eksempel på en figur, der ligner en stillestående tegning): `power_legs.json` › `power_legs.6 › bounds`. `advance` 14 på push → air og air → land (afprøvet: `p2/power_legs.6.bounds.json`). Figuren rejser hen over scenen, står, hvor den landede, og går tilbage til start på vejen tilbage.
 - **Længdespringet:** `power_legs.json` › `power_legs.2` lander 90 enheder fremme og glider tilbage på vejen til start. Giv vejen land → start `lift` på begge fødder, så figuren hopper tilbage (afprøvet: `p2/power_legs.2.json`). Du kan også tegne springet på stedet med `advance`.
 - **Albuerne i håndstanden:** `shoulder.json` › `shoulder.4`–`shoulder.7` (facing −1). Tegn bunden som teksten og P68: hovedet ned mod væggen foran fingerspidserne. Giv armene ingen `bend`, så peger albuerne skråt ud i rummet af sig selv; `bend` −1 sender dem mod væggen.
 - **Kip op på væggen:** en `via` kan gøre opgangen i `shoulder.3` og `shoulder.4` tydeligere.
