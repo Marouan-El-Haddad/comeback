@@ -188,7 +188,7 @@ export function ExerciseCard({ id, back, onClose, context = null, status }: Card
             </section>
           )}
           {explained ? (
-            <Explained x={explained} name={item.name} movements={movements} figureOf={figureOf} />
+            <Explained x={explained} movements={movements} figureOf={figureOf} />
           ) : (
             <ProgrammeOnly item={item} />
           )}
@@ -207,10 +207,17 @@ function named(movements: Movement[]): boolean {
   return movements.length > 1 || (movements.length === 1 && !!movements[0]?.name);
 }
 
+/** Whether some movement of the step is drawn: then the figures stand at the top of the card. */
+function drawnAny(movements: readonly CardMovement[], figureOf: FigureOf): boolean {
+  return movements.some((m) => m.positions.length > 0 && figureOf(m) !== null);
+}
+
 /**
  * The step's figure: the animated figure with the phases under it when the step is drawn, and until
- * then its pictogram with the phases as text. Several movements have their figures and phases in
- * »Bevægelserne« instead, so the cues and the steps still start on the first screen (D47).
+ * then its pictogram with the phases as text. Several movements each have their animated figure
+ * under their name, one after another at the top (D62: the user's »etbens bounds« was a still
+ * drawing of another exercise); a movement not drawn yet has its name and phases. The pictogram,
+ * and »Tegningen viser en lignende øvelse.« with a borrowed one, only stand where nothing is drawn.
  */
 function Figure({
   id,
@@ -230,6 +237,26 @@ function Figure({
     return (
       <div class="card-figure">
         <AnimatedFigure figure={figure} movement={single} label={figureText(name, single)} />
+      </div>
+    );
+  }
+  if (!single && drawnAny(movements, figureOf)) {
+    return (
+      <div class="card-figure card-moves">
+        {movements.map((m) => {
+          const drawn = m.positions.length > 0 ? figureOf(m) : null;
+          const text = phasesText(m);
+          return (
+            <section key={m.id ?? m.name} class="card-move" aria-label={m.name}>
+              <h3 class="card-move-title">{m.name}</h3>
+              {drawn ? (
+                <AnimatedFigure figure={drawn} movement={m} label={figureText(m.name ?? name, m)} />
+              ) : (
+                text && <p class="card-phases">{text}</p>
+              )}
+            </section>
+          );
+        })}
       </div>
     );
   }
@@ -270,18 +297,16 @@ function Section({ title, children }: { title: string; children: ComponentChildr
 /**
  * Visible without unfolding, in the order that lets the card be skimmed in a pause (D47): the cues,
  * »Sådan gør du« with the start position first and the numbered steps, the movements when there are
- * several (the warm-up's »Mobilisér«, the session's power step in »Potensér«, docs/SPEC.md 9.1:
- * each with its figure under its name when it is drawn, otherwise its name and phases on one line),
- * then »Træner« and »Mærk«: where the step should be felt, when the explanation has it (D55).
+ * several and none of them is drawn yet (the drawn ones stand at the top, D62), each with its name
+ * and phases on one line, then »Træner« and »Mærk«: where the step should be felt, when the
+ * explanation has it (D55).
  */
 function Explained({
   x,
-  name,
   movements,
   figureOf,
 }: {
   x: ExplainItem;
-  name: string;
   movements: CardMovement[];
   figureOf: FigureOf;
 }) {
@@ -300,23 +325,10 @@ function Explained({
           ))}
         </ol>
       </Section>
-      {named(movements) && (
+      {named(movements) && !drawnAny(movements, figureOf) && (
         <Section title="Bevægelserne">
           <ul class="card-phases">
             {movements.map((m) => {
-              const figure = figureOf(m);
-              if (figure) {
-                return (
-                  <li key={m.id ?? m.name} class="card-move">
-                    <h3 class="card-move-title">{m.name}</h3>
-                    <AnimatedFigure
-                      figure={figure}
-                      movement={m}
-                      label={figureText(m.name ?? name, m)}
-                    />
-                  </li>
-                );
-              }
               const text = phasesText(m);
               return (
                 <li key={m.id ?? m.name}>

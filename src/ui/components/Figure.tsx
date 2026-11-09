@@ -8,7 +8,8 @@
 // side by side, a plank from the side and from above over each other: whichever draws the smaller
 // larger, D60), on the same clock, and marks at the right moment: an arrow, an angle, a cue or a
 // guide line in the figure's red, one at a time, with its text in HTML at the size the session needs
-// (SPEC 6), inside its drawing on at most two lines or else on its own line over or under the figure.
+// (SPEC 6), never over the body where there is another place: inside its drawing on at most two
+// lines, else on its own line over or under the bodies, else in a band over the drawings (D62).
 // A cue or a guide line at a part of the body follows it through its phase while its text stands
 // still. A figure that travels along the floor gets a frame that follows it.
 //
@@ -32,7 +33,7 @@ import {
   type Box,
   type Prim,
 } from '../../figure/draw.ts';
-import { faultPair } from '../../figure/faults.ts';
+import { faultPair, ringPrims } from '../../figure/faults.ts';
 import {
   bodyOf,
   followPrims,
@@ -108,46 +109,61 @@ function useViews(figure: FigureItem, movement: OwnMovement, both = true): ViewM
   );
 }
 
+/** How a figure's views stand: over each other or not, and the height the CSS gives one view. */
+interface ViewLayout {
+  stacked: boolean;
+  /** The height in px the CSS gives one view side by side; null before it is measured. */
+  side: number | null;
+}
+
 /**
  * Two views side by side or over each other in the place the figure has (M1 in the P1b review,
  * D60): with the width it has and the height one view gets side by side (the CSS), whichever draws
- * the smaller view larger. Over each other each view gets half that height less the gap, so the
- * figure keeps its height. Returns that height in px, or null side by side (and for one view).
+ * the smaller view larger. Measured again when the figure changes size; one view is only measured
+ * where it can give a mark's text a band from its height (`keep`, a session), so the many small
+ * stills of »Dagens pas« do no work.
  */
-function useStacked(
+function useViewLayout(
   root: { current: HTMLElement | null },
   views: readonly ViewModel[],
   still: boolean,
-): number | null {
-  const [height, setHeight] = useState<number | null>(null);
+  keep: boolean,
+): ViewLayout {
+  const [layout, setLayout] = useState<ViewLayout>({ stacked: false, side: null });
   useLayoutEffect(() => {
     const el = root.current;
-    if (!el || views.length < 2) {
-      setHeight(null);
-      return;
-    }
+    if (!el || (views.length < 2 && !keep)) return;
     const aspects = views.map((v) => viewAspect(v.model, still));
     const decide = () => {
-      const svg = el.querySelector<SVGSVGElement>('.figure-svg');
-      if (!svg || el.clientWidth <= 0) return;
-      // The height the CSS gives one view, without the height set here when stacked.
-      const set = svg.style.height;
-      svg.style.height = '';
-      const side = svg.getBoundingClientRect().height;
-      svg.style.height = set;
-      setHeight(
-        side > 0 && stackViews(aspects, el.clientWidth, side)
-          ? Math.floor((side - VIEW_GAP) / 2)
-          : null,
-      );
+      const svgs = [...el.querySelectorAll<SVGSVGElement>('.figure-svg')];
+      if (!svgs[0] || el.clientWidth <= 0) return;
+      // The height the CSS gives one view, without the heights set here.
+      const set = svgs.map((svg) => svg.style.height);
+      for (const svg of svgs) svg.style.height = '';
+      const side = svgs[0].getBoundingClientRect().height;
+      svgs.forEach((svg, i) => (svg.style.height = set[i] ?? ''));
+      const stacked = views.length > 1 && side > 0 && stackViews(aspects, el.clientWidth, side);
+      setLayout((l) => (l.stacked === stacked && l.side === side ? l : { stacked, side }));
     };
     decide();
     if (typeof ResizeObserver !== 'function') return;
     const observer = new ResizeObserver(decide);
     observer.observe(el);
     return () => observer.disconnect();
-  }, [views, still]);
-  return height;
+  }, [views, still, keep]);
+  return layout;
+}
+
+/**
+ * Each drawing's height in px, or null for the CSS's: over each other each view gets half the height
+ * less the gap, so the figure keeps its height. `taken` is the band over the drawings for a mark's
+ * text (D62) where the figure keeps its place (a session): the drawings give it the room.
+ */
+function drawHeight(layout: ViewLayout, taken: number): number | null {
+  const { stacked, side } = layout;
+  if (side === null) return null;
+  if (stacked) return Math.max(0, Math.floor((side - VIEW_GAP - taken) / 2));
+  return taken > 0 ? Math.max(0, Math.floor(side - taken)) : null;
 }
 
 /** The text alternative with the views and the marks in words (docs/SPEC.md 3.8 and 6). */
@@ -189,12 +205,41 @@ export function FigureStill({
   const views = useViews(figure, movement, full);
   const text = useMemo(() => (full ? fullLabel(label, views) : label), [full, label, views]);
   const root = useRef<HTMLDivElement>(null);
-  const stacked = useStacked(root, views, true);
-  const classes = ['figure-still-only', views.length > 1 ? 'two' : '', stacked ? 'stacked' : '']
+  const layout = useViewLayout(root, views, true, full);
+  // The band over the drawings for a mark's text without a free place (D62), taken from their
+  // height, so the still keeps its place in the session. It only grows for the same figure.
+  const [band, setBand] = useState<{ views: ViewModel[]; px: number }>({ views, px: 0 });
+  const bandPx = band.views === views ? band.px : 0;
+  const report = (need: number) =>
+    setBand((b) => (need > (b.views === views ? b.px : 0) ? { views, px: need } : b));
+  /** The other view's body at the position, in px of the figure: a text over both keeps off it. */
+  const othersOf =
+    (i: number) =>
+    (area: DOMRect): Bodies => {
+      const svgs = root.current?.querySelectorAll('.figure-draw svg') ?? [];
+      return views.flatMap(({ model }, j) => {
+        const svg = svgs[j];
+        const pose = model.figure.keyframes[position];
+        if (j === i || !svg || !pose) return [];
+        return bodyInArea(area, svg, viewBox(model.stillBox), bodyOf(model, pose));
+      });
+    };
+  const height = drawHeight(layout, bandPx);
+  const classes = [
+    'figure-still-only',
+    views.length > 1 ? 'two' : '',
+    layout.stacked ? 'stacked' : '',
+  ]
     .filter(Boolean)
     .join(' ');
   return (
-    <div class={classes} role="img" aria-label={text} ref={root}>
+    <div
+      class={classes}
+      role="img"
+      aria-label={text}
+      ref={root}
+      style={bandPx ? { paddingTop: `${bandPx}px` } : undefined}
+    >
       {views.map(({ model }, i) => (
         <StillDrawing
           key={i}
@@ -202,7 +247,10 @@ export function FigureStill({
           box={model.stillBox}
           prims={stillPrims(model, position)}
           marks={full ? stillMarks(model, position) : []}
-          height={stacked}
+          height={height}
+          band={bandPx}
+          others={othersOf(i)}
+          onNeed={report}
         />
       ))}
     </div>
@@ -259,6 +307,16 @@ function isTall(model: FigureModel): boolean {
   return box.y1 - box.y0 > (box.x1 - box.x0) * 0.9;
 }
 
+/**
+ * A figure that travels along the floor with a frame that follows it (bounds, the broad jump) gets
+ * the card's whole width at a standing figure's height, with its phases under it: in a tall figure's
+ * half of the width its frame had to grow to show its way, and the figure became 65 % of a standing
+ * one (M8 in the P2 review, D62).
+ */
+function travels(model: FigureModel): boolean {
+  return model.travel !== null && !model.fixed;
+}
+
 // ---------------------------------------------------------------------------------------------
 // The marks' text, placed by its point on the drawing (D58)
 // ---------------------------------------------------------------------------------------------
@@ -308,13 +366,33 @@ function tighten(el: HTMLElement): void {
   if (widest + extra < el.offsetWidth - 1) el.style.width = `${Math.ceil(widest + extra) + 1}px`;
 }
 
+/** The points of a body in px, with the half widths of their strokes. */
+type Bodies = ReadonlyArray<readonly [number, number, number]>;
+
+/** The gap between a mark's text in the band over the drawings and the drawings (px). */
+const BAND_GAP = 8;
+
+/** A place for a mark's text: its top left in px of a box whose top left is (ox, oy) px of its drawing. */
+interface TextPlace {
+  covers: number;
+  max: string;
+  at: Point;
+  ox: number;
+  oy: number;
+}
+
 /**
- * Places a mark's text by its point, off the body where it can (placeLabel): the SVG fills its box
- * (`width` × `height` px) and keeps its aspect ratio (»meet«), so every point's place in px follows
- * from the viewBox. The text stays inside its drawing, at most as wide as it and on at most two
- * lines (figure.css), measured after it wraps. When it does not fit (two views side by side beside
- * the clock), it stands on its own line over or under the body across the whole `figure` – both
- * views – while its dot or line stays on the body (H1 in the P1b review, D60).
+ * Places a mark's text and returns the height in px of the band over the drawings it needs, or 0
+ * when it found a free place in or over them (D58, D60, D62). It stands, in this order:
+ * 1. by its point inside its drawing, as wide as it or half as wide and on at most two lines
+ *    (figure.css), off the body (placeLabel);
+ * 2. on its own line over or under the bodies across the whole figure (`area`: both views, in the
+ *    drawings' height), as wide as the figure or half as wide, off all of them;
+ * 3. on its own line in the band over the drawings (the top `band` px of `area`), outside them;
+ * 4. where it covers least of the body, while the figure has no band yet.
+ * Its dot or line stays on the body. The SVG fills its box (`width` × `height` px) and keeps its
+ * aspect ratio (»meet«), so every point's place in px follows from the viewBox; the text is measured
+ * after it wraps.
  */
 function placeMark(
   el: HTMLElement,
@@ -322,29 +400,49 @@ function placeMark(
   viewBoxText: string,
   width: number,
   height: number,
-  figure: HTMLElement | null = null,
-  /** The other views' bodies in px of `figure`, for a text on its own line over both. */
-  others: () => ReadonlyArray<readonly [number, number, number]> = () => [],
-): void {
+  area: HTMLElement | null,
+  /** The other views' bodies in px of the area's top left: a text over all views keeps off them. */
+  others: (area: DOMRect) => Bodies = () => [],
+  band = 0,
+): number {
   const label = draw?.label;
-  if (!draw || !label || el.hidden || width <= 0 || height <= 0) return;
+  const host = el.parentElement;
+  const svg = host?.querySelector('svg');
+  if (!draw || !label || !host || !svg || el.hidden || width <= 0 || height <= 0) return 0;
   const { px, scale } = pxOf(viewBoxText, width, height);
-  const body = (dx = 0, dy = 0) =>
+  const hostBox = host.getBoundingClientRect();
+  const svgBox = svg.getBoundingClientRect();
+  const areaBox = (area ?? host).getBoundingClientRect();
+  const bodyAt = (dx: number, dy: number): Bodies =>
     draw.body.map(([bx, by, r]) => {
-      const [x0, y0] = px([bx, by], dx, dy);
-      return [x0, y0, r * scale] as const;
+      const [x, y] = px([bx, by], dx, dy);
+      return [x, y, r * scale] as const;
     });
-  // First at most as wide as its drawing (figure.css).
-  el.style.maxWidth = '';
-  el.style.width = '';
-  const drawing = el.parentElement;
-  if (labelFits(el) || !figure || !drawing) {
+  const put = (p: TextPlace) => {
+    el.style.maxWidth = p.max;
     tighten(el);
-    const [x, y] = placeLabel({
+    el.style.transform = `translate(${Math.round(p.at[0] + p.ox)}px, ${Math.round(p.at[1] + p.oy)}px)`;
+  };
+  /** Sets the text's width limit; whether it then stands on at most two lines. */
+  const limit = (max: string): boolean => {
+    el.style.maxWidth = max;
+    el.style.width = '';
+    return labelFits(el);
+  };
+  // The place that covers least so far (4).
+  const tried: TextPlace[] = [];
+  // 1. In its drawing: as wide as it, or half as wide on two lines beside a narrow body.
+  const body = bodyAt(0, 0);
+  for (const max of ['', `${Math.floor(width / 2)}px`]) {
+    if (!limit(max)) continue;
+    tighten(el);
+    const w = el.offsetWidth;
+    const h = el.offsetHeight;
+    const at = placeLabel({
       width,
       height,
-      w: el.offsetWidth,
-      h: el.offsetHeight,
+      w,
+      h,
       at: label.at ? px(label.at) : null,
       place: label.place,
       ray: label.ray
@@ -356,43 +454,90 @@ function placeMark(
             ],
           }
         : null,
-      body: body(),
+      body,
     });
-    el.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
-    return;
+    const place = {
+      covers: labelCovers(at, w, h, body),
+      max,
+      at,
+      ox: svgBox.left - hostBox.left,
+      oy: svgBox.top - hostBox.top,
+    };
+    if (place.covers === 0) {
+      put(place);
+      return 0;
+    }
+    tried.push(place);
   }
-  // Its own line over or under the body, across the whole figure: as wide as the figure, or half as
-  // wide on two lines, wherever it covers least of both views.
-  const area = figure.getBoundingClientRect();
-  const own = drawing.getBoundingClientRect();
-  const dx = own.left - area.left;
-  const dy = own.top - area.top;
-  const bodies = [...body(dx, dy), ...others()];
-  let best: { at: Point; covers: number; max: number } | null = null;
-  for (const max of [Math.floor(area.width), Math.floor(area.width / 2)]) {
-    el.style.maxWidth = `${max}px`;
-    el.style.width = '';
-    if (best && !labelFits(el)) continue;
+  // 2. Over or under the bodies across the whole figure: the area's width and its drawings' height
+  // (not the views' names over them, nor the band).
+  const drawings = [...(area ?? host).querySelectorAll('svg.figure-svg')].map((d) =>
+    d.getBoundingClientRect(),
+  );
+  const top = Math.min(...drawings.map((d) => d.top));
+  const fw = areaBox.width;
+  const fh = Math.max(...drawings.map((d) => d.bottom)) - top;
+  const ax = svgBox.left - areaBox.left;
+  const ay = svgBox.top - top;
+  const ox = areaBox.left - hostBox.left;
+  const oy = areaBox.top - hostBox.top;
+  const bodies = [
+    ...bodyAt(ax, ay),
+    ...others(areaBox).map(([x, y, r]) => [x, y - (top - areaBox.top), r] as const),
+  ];
+  const point = label.at ? px(label.at, ax, ay) : null;
+  for (const max of [`${Math.floor(fw)}px`, `${Math.floor(fw / 2)}px`]) {
+    if (!limit(max)) continue;
     tighten(el);
     const w = el.offsetWidth;
     const h = el.offsetHeight;
     const at = placeLabel({
-      width: area.width,
-      height: area.height,
+      width: fw,
+      height: fh,
       w,
       h,
-      at: label.at ? px(label.at, dx, dy) : null,
+      at: point,
       place: label.place,
       line: true,
       body: bodies,
     });
-    const covers = labelCovers(at, w, h, bodies);
-    if (!best || covers < best.covers) best = { at, covers, max };
+    const place = { covers: labelCovers(at, w, h, bodies), max, at, ox, oy: top - hostBox.top };
+    if (place.covers === 0) {
+      put(place);
+      return 0;
+    }
+    tried.push(place);
   }
-  if (!best) return;
-  el.style.maxWidth = `${best.max}px`;
+  // 3. In the band over the drawings, at the figure's width, by its point.
+  const max = `${Math.floor(fw)}px`;
+  limit(max);
   tighten(el);
-  el.style.transform = `translate(${Math.round(best.at[0] - dx)}px, ${Math.round(best.at[1] - dy)}px)`;
+  const w = el.offsetWidth;
+  const need = Math.ceil(el.offsetHeight) + BAND_GAP;
+  if (band >= need) {
+    const x = Math.max(0, Math.min((point ? point[0] : fw / 2) - w / 2, fw - w));
+    put({ covers: 0, max, at: [x, band - need], ox, oy });
+    return need;
+  }
+  // 4. No band yet: where it covers least.
+  const least = tried.reduce<TextPlace | null>((a, b) => (a && a.covers <= b.covers ? a : b), null);
+  if (least) put(least);
+  return need;
+}
+
+/** A view's body (figure units) in px of `area`, through its viewBox and its drawing's place. */
+function bodyInArea(
+  area: DOMRect,
+  svg: Element,
+  viewBoxText: string,
+  body: ReadonlyArray<readonly [number, number, number]>,
+): Bodies {
+  const box = svg.getBoundingClientRect();
+  const { px, scale } = pxOf(viewBoxText, box.width, box.height);
+  return body.map(([bx, by, r]) => {
+    const [x, y] = px([bx, by], box.left - area.left, box.top - area.top);
+    return [x, y, r * scale] as const;
+  });
 }
 
 /** Figure units to px in a drawing of `width` × `height` px showing `viewBoxText` (»meet«). */
@@ -414,7 +559,8 @@ function pxOf(
 /**
  * A still image of a view, with the marks it carries (reduced motion, »Nu« under reduced motion);
  * their texts are placed when it is drawn and when it changes size. `height` sets the drawing's
- * height when two views stand over each other (useStacked).
+ * height (useViewLayout, drawHeight). A text without a free place stands in the band over the
+ * drawing: its own (`pad`, a still on the card) or the figure's (a session's still, both views).
  */
 function StillDrawing({
   model,
@@ -422,12 +568,27 @@ function StillDrawing({
   prims,
   marks,
   height = null,
+  band = 0,
+  pad = false,
+  across = 1,
+  others,
+  onNeed,
 }: {
   model: FigureModel;
   box: Box;
   prims: Prim[];
   marks: MarkDraw[];
   height?: number | null;
+  /** The band over the drawing for a mark's text in px (D62). */
+  band?: number;
+  /** The band is this drawing's own padding; else the top of the figure around it. */
+  pad?: boolean;
+  /** Stills to a row: the texts are placed again in the same layout when it changes. */
+  across?: number;
+  /** The other views' bodies in px of the figure. */
+  others?: (area: DOMRect) => Bodies;
+  /** Told the band this drawing's texts need (px), each time they are placed. */
+  onNeed?: (need: number) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const markup = svgBody([...prims, ...marks.flatMap((m) => m.prims)]);
@@ -436,12 +597,17 @@ function StillDrawing({
   useLayoutEffect(() => {
     const root = ref.current;
     if (!root || texts.length === 0) return;
-    // In a session's still the text that does not fit stands over or under both views.
-    const figure = root.closest<HTMLElement>('.figure-still-only');
+    // In a session's still a text without a free place stands over both views.
+    const area = pad ? root : (root.closest<HTMLElement>('.figure-still-only') ?? root);
     const place = () => {
+      const svg = root.querySelector('svg');
+      if (!svg) return;
+      const { width, height: high } = svg.getBoundingClientRect();
+      let need = 0;
       root.querySelectorAll<HTMLElement>('.figure-mark').forEach((el, i) => {
-        placeMark(el, texts[i] ?? null, vb, root.clientWidth, root.clientHeight, figure);
+        need = Math.max(need, placeMark(el, texts[i] ?? null, vb, width, high, area, others, band));
       });
+      onNeed?.(need);
     };
     place();
     const offFonts = onFonts(place);
@@ -452,9 +618,14 @@ function StillDrawing({
       offFonts();
       observer.disconnect();
     };
-  }, [markup, vb, height]);
+  }, [markup, vb, height, band, across]);
   return (
-    <div class="figure-draw" data-view={model.figure.view} ref={ref}>
+    <div
+      class="figure-draw"
+      data-view={model.figure.view}
+      ref={ref}
+      style={pad && band ? { paddingTop: `${band}px` } : undefined}
+    >
       <svg
         class="figure-svg"
         viewBox={vb}
@@ -517,6 +688,13 @@ function Animated({
   const [slow, setSlow] = useState(false);
   const speed = useRef(1);
   speed.current = slow ? 0.5 : 1;
+  // The band over the drawings for a mark's text without a free place in or over them (D62), from
+  // all the figure's marks, so the figure does not change size when one comes.
+  const [band, setBand] = useState(0);
+  const bandNow = useRef(0);
+  bandNow.current = band;
+  /** Places the marks shown now again (set by the animation): after the band or the layout changed. */
+  const replace = useRef<() => void>(() => undefined);
   const markups = useMemo(
     () =>
       views.map(
@@ -563,20 +741,94 @@ function Animated({
     let onScreen = true;
     let shown = document.visibilityState !== 'hidden';
     let current = phaseOrNull(main, t);
-    /** The other views' bodies now, in px of the stage: a text on its own line keeps off them. */
-    const othersOf = (d: Drawn) => () => {
-      const area = root.getBoundingClientRect();
-      return drawn
-        .filter((o) => o !== d && o.width > 0 && o.height > 0)
-        .flatMap((o) => {
-          const at = o.box.getBoundingClientRect();
-          const { px, scale } = pxOf(o.viewBox, o.width, o.height);
-          const model = o.view.model;
-          return bodyOf(model, poseAt(model, t ?? 0)).map(([bx, by, r]) => {
-            const [x, y] = px([bx, by], at.left - area.left, at.top - area.top);
-            return [x, y, r * scale] as const;
+    /** The other views' bodies while `show` is shown, in px of the stage: a text over all keeps off them. */
+    const othersOf =
+      (d: Drawn, show: MarkShow | null) =>
+      (area: DOMRect): Bodies => {
+        if (!show) return [];
+        const times = [0, 0.25, 0.5, 0.75, 1].map((k) => show.start + (show.end - show.start) * k);
+        return drawn
+          .filter((o) => o !== d && o.width > 0 && o.height > 0)
+          .flatMap((o) => {
+            const model = o.view.model;
+            const body = times.flatMap((at) => {
+              const dx = shiftAtTime(model, at);
+              return bodyOf(model, poseAt(model, at)).map(([x, y, r]) => [x + dx, y, r] as const);
+            });
+            return bodyInArea(area, o.svg, o.viewBox, body);
           });
-        });
+      };
+    /** A view's viewBox at `at` seconds: a figure that travels has a frame that follows it. */
+    const boxAt = (d: Drawn, at: number) => {
+      const model = d.view.model;
+      return model.travel && !model.fixed
+        ? viewBox(frameBox(model, at, d.width / d.height))
+        : d.viewBox;
+    };
+    const place = (d: Drawn) =>
+      placeMark(
+        d.label,
+        d.shown,
+        d.viewBox,
+        d.width,
+        d.height,
+        root,
+        othersOf(d, d.shown),
+        bandNow.current,
+      );
+    /** The band all the marks' texts need, each placed at the start of its moment. */
+    const measure = (): number => {
+      let need = 0;
+      for (const d of drawn) {
+        if (d.width <= 0 || d.height <= 0) continue;
+        for (const plan of d.view.plans) {
+          for (const show of plan.shows) {
+            if (!show.label) continue;
+            setMark(d.label, show.label);
+            const vb = boxAt(d, show.start);
+            const one = placeMark(
+              d.label,
+              show,
+              vb,
+              d.width,
+              d.height,
+              root,
+              othersOf(d, show),
+              bandNow.current,
+            );
+            need = Math.max(need, one);
+          }
+        }
+        setMark(d.label, d.shown?.label ?? null);
+      }
+      return need;
+    };
+    /**
+     * Decides the band and places the marks shown now. The band only grows while the figure keeps
+     * its width, so it does not jump between two sizes; a new width decides it anew.
+     */
+    let measuredAt = -1;
+    const arrange = () => {
+      for (const d of drawn) {
+        d.width = d.box.clientWidth;
+        d.height = d.box.clientHeight;
+      }
+      const need = measure();
+      const width = root.clientWidth;
+      const next = width === measuredAt ? Math.max(bandNow.current, need) : need;
+      measuredAt = width;
+      if (next !== bandNow.current) {
+        bandNow.current = next;
+        setBand(next);
+      }
+      for (const d of drawn) place(d);
+    };
+    replace.current = () => {
+      for (const d of drawn) {
+        d.width = d.box.clientWidth;
+        d.height = d.box.clientHeight;
+        place(d);
+      }
     };
 
     const drawView = (d: Drawn) => {
@@ -616,9 +868,9 @@ function Animated({
             d.markNodes.set(node.getAttribute('data-k') ?? '', node);
         }
         setMark(d.label, show?.label ?? null);
-        placeMark(d.label, show, d.viewBox, d.width, d.height, root, othersOf(d));
+        place(d);
       } else if (moved && show?.label) {
-        placeMark(d.label, show, d.viewBox, d.width, d.height, root, othersOf(d));
+        place(d);
       }
       // A cue's dot or a guide line at a part of the body follows it through its phase (D60).
       if (show?.follow && d.plan && pose) {
@@ -672,29 +924,28 @@ function Animated({
           })
         : null;
     observer?.observe(root);
-    // The drawing's size decides the frame of a figure that travels and where a mark's text stands.
+    // The drawing's size decides the frame of a figure that travels, the band over the drawings and
+    // where a mark's text stands.
     const resize =
       typeof ResizeObserver === 'function'
         ? new ResizeObserver(() => {
-            for (const d of drawn) {
-              d.width = d.box.clientWidth;
-              d.height = d.box.clientHeight;
-              d.held = null;
-              placeMark(d.label, d.shown, d.viewBox, d.width, d.height, root, othersOf(d));
-            }
+            for (const d of drawn) d.held = null;
+            arrange();
           })
         : null;
     for (const d of drawn) resize?.observe(d.box);
     const offFonts = onFonts(() => {
-      for (const d of drawn)
-        placeMark(d.label, d.shown, d.viewBox, d.width, d.height, root, othersOf(d));
+      measuredAt = -1;
+      arrange();
     });
+    arrange();
     run();
     return () => {
       stop();
       offFonts();
       observer?.disconnect();
       resize?.disconnect();
+      replace.current = () => undefined;
       document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [views]);
@@ -703,19 +954,30 @@ function Animated({
   const steady = compact || clock !== undefined;
   const toggle = steady ? undefined : () => setSlow((s) => !s);
   const two = views.length > 1;
-  const stacked = useStacked(stage, views, false);
+  const layout = useViewLayout(stage, views, false, compact);
+  // In a session the figure keeps its place: the band is taken from the drawings' height. On the
+  // card it stands over them.
+  const height = drawHeight(layout, compact ? band : 0);
+  useLayoutEffect(() => replace.current(), [band, height]);
   const classes = [
     'figure',
-    !two && isTall(main) ? 'tall' : '',
+    !two && travels(main) ? 'travels' : !two && isTall(main) ? 'tall' : '',
     two ? 'two' : '',
-    stacked ? 'stacked' : '',
+    layout.stacked ? 'stacked' : '',
     compact ? 'compact' : '',
   ]
     .filter(Boolean)
     .join(' ');
   return (
     <figure class={classes} data-speed={slow ? 'slow' : 'normal'}>
-      <div class="figure-stage" role="img" aria-label={label} onClick={toggle} ref={stage}>
+      <div
+        class="figure-stage"
+        role="img"
+        aria-label={label}
+        onClick={toggle}
+        ref={stage}
+        style={band ? { paddingTop: `${band}px` } : undefined}
+      >
         {views.map(({ model }, i) => (
           <div class="figure-view" key={i}>
             {two && !compact && <p class="figure-view-name">{VIEW_NAME[model.figure.view]}</p>}
@@ -725,7 +987,7 @@ function Animated({
                 viewBox={viewBox(model.box)}
                 preserveAspectRatio="xMidYMid meet"
                 aria-hidden="true"
-                style={stacked ? { height: `${stacked}px` } : undefined}
+                style={height !== null ? { height: `${height}px` } : undefined}
                 dangerouslySetInnerHTML={{ __html: markups[i] ?? '' }}
               />
               <span class="figure-mark" hidden />
@@ -812,6 +1074,34 @@ function Stills({
     });
     if (most.some((n, v) => n !== mostOf(v))) setCap({ views, most });
   }, [views, cap]);
+  // A figure that travels along x (`advance`) shows each position in its own box (H1, P1a).
+  const columns = views.map(({ model }, v) =>
+    Math.min(
+      mostOf(v),
+      stillColumns(
+        model.movement.positions.length,
+        model.stillBox.x1 - model.stillBox.x0,
+        model.stillBox.y1 - model.stillBox.y0,
+      ),
+    ),
+  );
+  // The band over a row of stills for a mark's text without a free place in its still (D62): as
+  // high as the highest such text in the row, so the row's stills stand in line. It only grows for
+  // the same figure and rows.
+  const rows = columns.join(',');
+  const [bands, setBands] = useState<{
+    views: ViewModel[];
+    rows: string;
+    px: Record<string, number>;
+  }>({ views, rows, px: {} });
+  const same = (b: typeof bands) => b.views === views && b.rows === rows;
+  const bandOf = (row: string) => (same(bands) ? (bands.px[row] ?? 0) : 0);
+  const report = (row: string) => (need: number) =>
+    setBands((b) => {
+      const px = same(b) ? b.px : {};
+      if (need <= (px[row] ?? 0)) return same(b) ? b : { views, rows, px };
+      return { views, rows, px: { ...px, [row]: need } };
+    });
   return (
     <figure class={!two && isTall(main) ? 'figure stills tall' : 'figure stills'}>
       <div
@@ -821,15 +1111,7 @@ function Stills({
         ref={root}
       >
         {views.map(({ model }, v) => {
-          // A figure that travels along x (`advance`) shows each position in its own box (H1, P1a).
-          const columns = Math.min(
-            mostOf(v),
-            stillColumns(
-              model.movement.positions.length,
-              model.stillBox.x1 - model.stillBox.x0,
-              model.stillBox.y1 - model.stillBox.y0,
-            ),
-          );
+          const across = columns[v] ?? 1;
           return (
             <div class="figure-stills-view" key={v}>
               {two && !compact && <p class="figure-view-name">{VIEW_NAME[model.figure.view]}</p>}
@@ -837,15 +1119,19 @@ function Stills({
                 class="figure-stills"
                 role={two ? undefined : 'img'}
                 aria-label={two ? undefined : label}
-                style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
+                style={{ gridTemplateColumns: `repeat(${across}, minmax(0, 1fr))` }}
               >
-                {model.movement.positions.map((p) => (
+                {model.movement.positions.map((p, i) => (
                   <div class="figure-still" key={p.id}>
                     <StillDrawing
                       model={model}
                       box={model.stillBox}
                       prims={stillPrims(model, p.id)}
                       marks={stillMarks(model, p.id)}
+                      band={bandOf(`${v}:${Math.floor(i / across)}`)}
+                      pad
+                      across={across}
+                      onNeed={report(`${v}:${Math.floor(i / across)}`)}
                     />
                     <p class="figure-still-name">{p.name}</p>
                   </div>
@@ -865,21 +1151,6 @@ function Stills({
 // ---------------------------------------------------------------------------------------------
 // A typical mistake as right and wrong side by side (docs/SPEC.md 3.8, D58)
 // ---------------------------------------------------------------------------------------------
-
-/** The dashed ring round the place where the wrong pose differs most. */
-function ring(at: Point): Prim {
-  return {
-    key: 'ring',
-    z: 40,
-    t: 'circle',
-    c: at,
-    r: 7,
-    f: 'none',
-    s: 'hi',
-    w: 1.4,
-    dash: '2.6 1.8',
-  };
-}
 
 /**
  * »Rigtigt« and »Forkert« under a typical mistake on the card: the same position twice at the same
@@ -903,7 +1174,7 @@ export function FaultFigure({
     if (!pair) return null;
     const model = buildModel(pair.figure, movement);
     const right = [...model.still, ...movingPrims(model, pair.right)];
-    const wrong = [...model.still, ...movingPrims(model, pair.wrong), ring(pair.differs.at)];
+    const wrong = [...model.still, ...movingPrims(model, pair.wrong), ...ringPrims(pair)];
     const box = track(track(emptyBox(), right), wrong);
     return { box, right, wrong };
   }, [figure, movement, fault]);

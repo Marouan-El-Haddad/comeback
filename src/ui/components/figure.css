@@ -92,6 +92,12 @@
   height: 180px;
 }
 
+/* A figure that travels along the floor: the whole width at a standing figure's height, the phases
+   under it, so it is as big as standing still while its frame follows it (D62). */
+.figure.travels:not(.compact) .figure-svg {
+  height: 216px;
+}
+
 /* Reduced motion: the positions side by side, each with its name; at most three to a row (two for a
    wide figure), the columns set by the component. */
 .figure-stills {
@@ -126,7 +132,12 @@
   text-align: center;
 }
 
-/* Several movements: each figure under its name (docs/SPEC.md 3.8). */
+/* Several movements: each figure under its name, one after another at the top of the card (docs/SPEC.md
+   3.8, D62). */
+.card-figure.card-moves {
+  gap: 24px;
+}
+
 .card-move {
   display: grid;
   gap: 8px;

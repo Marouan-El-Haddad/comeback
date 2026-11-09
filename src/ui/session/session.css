@@ -203,7 +203,8 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
-.session-figure.now .figure.tall:not(.stills) .figure-svg {
+.session-figure.now .figure.tall:not(.stills) .figure-svg,
+.session-figure.now .figure.travels .figure-svg {
   height: 152px;
 }
 
@@ -235,7 +236,8 @@
   height: 144px;
 }
 
-.session-figure.big .figure.tall:not(.stills) .figure-svg {
+.session-figure.big .figure.tall:not(.stills) .figure-svg,
+.session-figure.big .figure.travels .figure-svg {
   height: 160px;
 }
 
@@ -243,7 +245,8 @@
   height: 130px;
 }
 
-.intro-card .session-figure.big .figure.tall:not(.stills) .figure-svg {
+.intro-card .session-figure.big .figure.tall:not(.stills) .figure-svg,
+.intro-card .session-figure.big .figure.travels .figure-svg {
   height: 150px;
 }
 
