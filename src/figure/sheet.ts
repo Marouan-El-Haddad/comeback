@@ -1,8 +1,10 @@
-// The contact sheet of a figure file (docs/SPEC.md 9.1, DECISIONS.md D36 and D48): every position of
-// every figure as a still image at the same scale, with the chest's direction (`facing`) as a blue
-// arrow, rings on the contacts the explanation names (blue = the figure keeps it, red = it does not),
-// the movement as an onion skin, the phases with their times, and the problems the checks found.
-// Pure: scripts/figure-sheet.ts turns the page into a PNG in a browser. Never part of the app.
+// The contact sheet of a figure file (docs/SPEC.md 9.1, DECISIONS.md D36, D48 and D56): every
+// position of every figure as a still image at the same scale, with the chest's direction (`facing`)
+// as a blue arrow, rings on the contacts the explanation names (blue = the figure keeps it, red = it
+// does not) and the angles of the knees and elbows; the middle of every move as a frame of its own,
+// so a joint that kinks on the way can be seen; the movement as an onion skin, the phases with their
+// times, the transitions, and the problems the checks found. Pure: scripts/figure-sheet.ts turns the
+// page into a PNG in a browser. Never part of the app.
 import {
   isFigureLike,
   type Contact,
@@ -13,10 +15,19 @@ import {
 } from '../content/types.ts';
 import type { Problem } from '../content/validate.ts';
 import type { Program } from '../engine/types.ts';
-import { evaluatePose, movementFor } from './check.ts';
-import { bodyPrims, svgBody, viewBox, type Box } from './draw.ts';
-import { chestDirection, polar, solve, type Frame } from './geometry.ts';
-import { buildModel, phaseSeconds, sampledPoses, stillPrims, type FigureModel } from './motion.ts';
+import { evaluatePose, jointDegrees, movementFor } from './check.ts';
+import { bodyPrims, svgBody, viewBox, type Box, type Prim } from './draw.ts';
+import { chestDirection, polar, solve, type Frame, type Skeleton } from './geometry.ts';
+import {
+  buildModel,
+  movePose,
+  movingPrims,
+  phaseSeconds,
+  sampledPoses,
+  stillPrims,
+  type FigureModel,
+  type Move,
+} from './motion.ts';
 
 export interface SheetInput {
   file: FigureFile;
@@ -151,6 +162,50 @@ function phasesLine(movement: OwnMovement): string {
   return `${parts.join(' · ')}${back} — i alt ${num(total)} sek i kortet`;
 }
 
+/** The angles of the knees and elbows: »knæ 180°/178° · albuer 163°/160°« (near/far; 180° = straight). */
+function anglesText(s: Skeleton): string {
+  const part = (kind: 'leg' | 'arm', name: string) => {
+    const bones = ['near', 'far'].flatMap((side) =>
+      s.bones.filter((b) => b.kind === kind && b.side === side),
+    );
+    return bones.length === 0
+      ? ''
+      : `${name} ${bones.map((b) => `${Math.round(jointDegrees(b))}°`).join('/')}`;
+  };
+  return [part('leg', 'knæ'), part('arm', 'albuer')].filter(Boolean).join(' · ');
+}
+
+/**
+ * The moves between two different positions, one of each: repeats share one, and the way back
+ * shares the way there when it lifts nothing else and moves as far (its middle is the same frame).
+ */
+function distinctMoves(model: FigureModel): Move[] {
+  const seen = new Set<string>();
+  return model.timeline.moves.filter((m) => {
+    if (m.from === m.to || !model.steps.has(m)) return false;
+    const pair = [m.from, m.to].sort().join('>');
+    const key = `${pair}>${m.shift ? Math.abs(m.shift[1] - m.shift[0]) : 0}>${(m.lift ?? []).join(',')}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function transitionText(entry: FigureItem, names: Map<string, string>): string {
+  const all = entry.transitions ?? [];
+  if (all.length === 0) return '';
+  const parts = all.map((t) => {
+    const what = [
+      t.lift ? `løfter ${t.lift.join(', ')}` : '',
+      t.advance ? `flytter ${num(t.advance)} langs x` : '',
+    ]
+      .filter(Boolean)
+      .join(' og ');
+    return `${names.get(t.from) ?? t.from} → ${names.get(t.to) ?? t.to}: ${what}`;
+  });
+  return `<p class="meta">Overgange: ${escape(parts.join(' · '))}</p>`;
+}
+
 function figureSection(input: SheetInput, entry: FigureItem): string {
   const movement = movementFor(input.explain, entry.id, entry.movement);
   if (!movement) return '';
@@ -163,16 +218,35 @@ function figureSection(input: SheetInput, entry: FigureItem): string {
       ? ` · facing ${frame.facing} (brystet mod ${frame.facing === 1 ? 'højre' : 'venstre'}, når figuren står op)`
       : '';
   const props = entry.props.length > 0 ? entry.props.map((p) => p.type).join(', ') : 'ingen';
+  const names = new Map(movement.positions.map((p) => [p.id, p.name]));
   const cells = movement.positions.map((position) => {
-    const own = mine.filter((p) => p.where.startsWith(`${where} › ${position.id}`));
+    const own = mine.filter(
+      (p) =>
+        p.where === `${where} › ${position.id}` ||
+        p.where.startsWith(`${where} › ${position.id} ›`),
+    );
     const inner =
       svgBody(stillPrims(model, position.id)) +
       facingArrow(frame, model, position.id) +
       contactRings(entry, position.id, position.contacts);
     const contacts =
       position.contacts.length > 0 ? position.contacts.map(contactText).join(', ') : 'i luften';
-    return `<div class="cell">${svg(model, inner)}<p class="name">${escape(position.name)} <span>(${position.id})</span></p><p class="contacts">${escape(contacts)}</p>${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div>`;
+    const solved = model.solved[position.id];
+    const angles = solved ? anglesText(solved) : '';
+    return `<div class="cell">${svg(model, inner)}<p class="name">${escape(position.name)} <span>(${position.id})</span></p><p class="contacts">${escape(contacts)}</p>${angles ? `<p class="angles">${escape(angles)}</p>` : ''}${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div>`;
   });
+  // The middle of every move (H1): the frame where a kinking knee or a joint through the floor shows.
+  for (const move of distinctMoves(model)) {
+    const pose = movePose(model, move, 0.5);
+    const s = solve(frame, pose);
+    const moving: Prim[] = movingPrims(model, pose);
+    const place = `${where} › ${move.from} → ${move.to}`;
+    const own = mine.filter((p) => p.where === place);
+    const label = `Midt i: ${names.get(move.from) ?? move.from} → ${names.get(move.to) ?? move.to}`;
+    cells.push(
+      `<div class="cell mid">${svg(model, svgBody([...model.still, ...moving]))}<p class="name">${escape(label)}</p><p class="angles">${escape(anglesText(s))}</p>${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div>`,
+    );
+  }
   // The onion skin: a pale frame every quarter of a second, the first position on top.
   const ghosts = sampledPoses(model, 0.25)
     .map((pose) => svgBody(bodyPrims(entry, solve(frame, pose), 'ghost', 'g')))
@@ -181,10 +255,14 @@ function figureSection(input: SheetInput, entry: FigureItem): string {
   cells.push(
     `<div class="cell">${svg(model, svgBody(model.still) + ghosts + svgBody(stillPrims(model, first).filter((p) => !model.still.includes(p))))}<p class="name">Bevægelsen</p><p class="contacts">hver 0,25 sek; mørk = ${escape(movement.positions[0]?.name ?? '')}</p></div>`,
   );
-  const general = mine.filter((p) =>
-    movement.positions.every((pos) => !p.where.startsWith(`${where} › ${pos.id}`)),
+  const shown = new Set([
+    ...movement.positions.map((pos) => `${where} › ${pos.id}`),
+    ...distinctMoves(model).map((m) => `${where} › ${m.from} → ${m.to}`),
+  ]);
+  const general = mine.filter(
+    (p) => ![...shown].some((s) => p.where === s || p.where.startsWith(`${s} ›`)),
   );
-  return `<section><h2>${escape(where)} · ${escape(itemName(input.program, entry.id))}${entry.movement ? ` · ${escape(movement.name ?? '')}` : ''}</h2><p class="meta">${frame.view}${escape(facing)} · rødt: ${escape(entry.highlight.join(', '))} · rekvisitter: ${escape(props)}</p><div class="cells">${cells.join('')}</div><p class="phases">${phasesLine(movement)}</p>${general.map((p) => `<p class="problem">${escape(p.where)}: ${escape(p.message)}</p>`).join('')}</section>`;
+  return `<section><h2>${escape(where)} · ${escape(itemName(input.program, entry.id))}${entry.movement ? ` · ${escape(movement.name ?? '')}` : ''}</h2><p class="meta">${frame.view}${escape(facing)} · rødt: ${escape(entry.highlight.join(', '))} · rekvisitter: ${escape(props)}</p>${transitionText(entry, names)}<div class="cells">${cells.join('')}</div><p class="phases">${phasesLine(movement)}</p>${general.map((p) => `<p class="problem">${escape(p.where)}: ${escape(p.message)}</p>`).join('')}</section>`;
 }
 
 /** The whole sheet as an HTML page. */
@@ -212,13 +290,15 @@ h1{font:600 28px/1.2 'Kanit',system-ui,sans-serif;color:var(--c-navy);margin:0 0
 h2{font:600 20px/1.2 'Kanit',system-ui,sans-serif;color:var(--c-navy);margin:0 0 2px}
 section{border-top:2px solid var(--c-navy);padding:12px 0 16px}
 .meta,.legend{margin:0 0 8px;color:var(--c-ink)}
-.cells{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end}
-.cell{display:grid;gap:2px;justify-items:center;max-width:420px}
-.cell svg{border:1px solid var(--c-line);border-radius:8px}
+.cells{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.cell{display:grid;gap:2px;justify-items:center;width:min-content;min-width:120px}
+.cell svg{border:1px solid var(--c-line);border-radius:8px;max-width:none}
+.cell.mid svg{border-style:dashed}
+.angles{margin:0;font-size:14px;text-align:center;white-space:nowrap}
 .name{margin:4px 0 0;font-weight:600;color:var(--c-navy)}.name span{font-weight:400}
 .contacts{margin:0;font-size:14px;text-align:center}
 .phases{margin:8px 0 0}
 .problem{margin:4px 0 0;color:var(--c-redDark);font-weight:600}
 .ok{color:var(--c-green);font-weight:600}
-</style></head><body><h1>Kontaktark · ${escape(input.file.subject)}</h1><p class="meta">${escape(input.source)} · ${drawn.length} ${drawn.length === 1 ? 'figur' : 'figurer'}${figures.length > drawn.length ? ` og ${figures.length - drawn.length} »like«` : ''} · ${count === 0 ? '<span class="ok">ingen problemer</span>' : `<span class="problem">${count} ${count === 1 ? 'problem' : 'problemer'}</span>`}</p><p class="legend">Blå pil: brystets retning. Ringe: kontakterne i forklaringen (blå = passer, rød = passer ikke). Samme skala på alle figurer.</p>${sections.join('')}</body></html>`;
+</style></head><body><h1>Kontaktark · ${escape(input.file.subject)}</h1><p class="meta">${escape(input.source)} · ${drawn.length} ${drawn.length === 1 ? 'figur' : 'figurer'}${figures.length > drawn.length ? ` og ${figures.length - drawn.length} »like«` : ''} · ${count === 0 ? '<span class="ok">ingen problemer</span>' : `<span class="problem">${count} ${count === 1 ? 'problem' : 'problemer'}</span>`}</p><p class="legend">Blå pil: brystets retning. Ringe: kontakterne i forklaringen (blå = passer, rød = passer ikke). Under hver position: knæ- og albuevinklerne (180° = strakt, nær/fjern). Stiplet ramme: billedet midt i en bevægelse. Samme skala på alle figurer.</p>${sections.join('')}</body></html>`;
 }

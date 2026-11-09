@@ -1,22 +1,23 @@
-// The figure system (docs/SPEC.md 5 and 9.1, DECISIONS.md D48): the port of picto.py's geometry, the
-// anatomical bend from `facing`, the timeline in the dose's tempo, the interpolation that keeps
-// planted hands and feet still, and the drawing with stable keys for the app.
+// The figure system (docs/SPEC.md 5 and 9.1, DECISIONS.md D48 and D56): the port of picto.py's
+// geometry, the anatomical bend from `facing`, the timeline in the dose's tempo, the frames between
+// the keyframes (joint angles from the point that stands still), and the drawing with stable keys.
 import { describe, expect, test } from 'vitest';
 import type { Contact, FigureItem, OwnMovement, Pose } from '../../content/types.ts';
 import { bendProblems, turn } from '../check.ts';
 import { bodyPrims, moving, propPrims, svgBody, track, emptyBox } from '../draw.ts';
-import { bendOf, frameOf, ik, solve, type Frame } from '../geometry.ts';
+import { bendOf, distance, frameOf, ik, solve, type Frame } from '../geometry.ts';
 import {
   buildModel,
   CARD_TIMING,
   lerpAngle,
-  lerpPose,
   moveAt,
+  movePose,
   movingPrims,
   phaseAt,
   poseAt,
   timeline,
 } from '../motion.ts';
+import { swingDelta } from '../tween.ts';
 
 const SIDE_RIGHT: Frame = { view: 'side', facing: 1 };
 const SIDE_LEFT: Frame = { view: 'side', facing: -1 };
@@ -304,18 +305,36 @@ describe('animationen mellem positionerne', () => {
     }
   });
 
-  test('halvvejs ned er hoften halvvejs, og vinklerne tager den korte vej', () => {
-    const mid = poseAt(model, 1.5);
-    expect(mid.hip[1]).toBeCloseTo((20.02 + 7.2) / 2, 5);
+  test('H1: hoften drejer om fødderne, så benene er strakte og kroppen én linje hele vejen', () => {
+    // Not the straight line between the two hips (the old interpolation): an arc about the ankle.
+    for (let t = 0; t <= 3; t += 0.1) {
+      const s = solve(model.frame, poseAt(model, t));
+      for (const leg of s.bones.filter((b) => b.kind === 'leg')) {
+        expect(180 - Math.abs(turn(leg.root, leg.joint, leg.end))).toBeGreaterThan(175);
+      }
+      const leg = s.bones.find((b) => b.side === 'near' && b.kind === 'leg');
+      if (!leg) throw new Error('intet ben');
+      expect(distance(s.hip, leg.end)).toBeCloseTo(47, 1);
+    }
     expect(lerpAngle(170, -170, 0.5)).toBeCloseTo(180);
     expect(lerpAngle(10, 350, 0.25)).toBeCloseTo(5);
   });
 
   test('et led givet som punkter i den ene position og som IK i den anden glider jævnt', () => {
     const a = PUSH_UP_FIGURE.keyframes.top as Pose;
-    const b: Pose = { ...a, arms: { ...a.arms, near: { joint: [70, 15], end: [69.2, 0] } } };
-    const mid = lerpPose(a, b, 0.5, solve(model.frame, a), solve(model.frame, b));
-    expect(mid.arms.near && 'joint' in mid.arms.near).toBe(true);
+    const b: Pose = { ...a, arms: { ...a.arms, near: { joint: [70, 15.5], end: [69.2, 0] } } };
+    const figure: FigureItem = { ...PUSH_UP_FIGURE, keyframes: { top: a, bottom: b } };
+    const m = buildModel(figure, PUSH_UP);
+    const move = m.timeline.moves[0];
+    if (!move) throw new Error('ingen bevægelse');
+    for (const u of [0.25, 0.5, 0.75]) {
+      const arm = solve(m.frame, movePose(m, move, u)).bones.find(
+        (x) => x.side === 'near' && x.kind === 'arm',
+      );
+      if (!arm) throw new Error('ingen arm');
+      expect(arm.end[1]).toBeCloseTo(0, 1);
+      expect(distance(arm.joint, arm.end)).toBeGreaterThan(15);
+    }
   });
 
   test('fasen skifter, når tiden går: 3 sek ned, 1 sek stille, op', () => {
@@ -397,5 +416,243 @@ describe('tegningen', () => {
     const wall = prims.filter((p) => p.key.startsWith('prop1.'));
     expect(wall[0]).toMatchObject({ t: 'line', a: [0, 0], b: [0, 64] });
     expect(wall[1]).toMatchObject({ t: 'line', b: [-4, 7] });
+  });
+});
+
+describe('fremad-kinematik fra det, der står stille (D56)', () => {
+  test('foden drejer om tæerne, når hælen løftes: tæerne står, og foden holder længden', () => {
+    const calf: FigureItem = {
+      id: 'calf.1',
+      view: 'side',
+      facing: 1,
+      props: [],
+      highlight: ['near.shin'],
+      keyframes: {
+        bottom: {
+          hip: [0, 50.4],
+          torso: 90,
+          arms: { near: { to: [2, 52] }, far: { to: [1, 52] } },
+          legs: {
+            near: { to: [0, 3.6], tip: [7.2, 0.3] },
+            far: { to: [-0.6, 3.6], tip: [6.6, 0.3] },
+          },
+        },
+        top: {
+          hip: [3.24, 54.16],
+          torso: 90,
+          arms: { near: { to: [5.2, 56] }, far: { to: [4.2, 56] } },
+          legs: {
+            // The heel lifted: the same foot, turned about the toes to 120°.
+            near: { to: [3.24, 7.16], tip: [7.2, 0.3] },
+            far: { to: [2.64, 7.16], tip: [6.6, 0.3] },
+          },
+        },
+      },
+    };
+    const movement: OwnMovement = {
+      positions: [
+        { id: 'bottom', name: 'Nede', text: 'Nede.', contacts: [{ part: 'toes', on: 'floor' }] },
+        { id: 'top', name: 'Oppe', text: 'Oppe.', contacts: [{ part: 'toes', on: 'floor' }] },
+      ],
+      phases: [{ to: 'top', seconds: 2, label: 'Op' }],
+    };
+    const m = buildModel(calf, movement);
+    const move = m.timeline.moves[0];
+    if (!move) throw new Error('ingen bevægelse');
+    expect(m.steps.get(move)?.plan.anchor).toBe('toe');
+    for (const u of [0.25, 0.5, 0.75]) {
+      const leg = solve(m.frame, movePose(m, move, u)).bones.find(
+        (b) => b.side === 'near' && b.kind === 'leg',
+      );
+      if (!leg?.tip) throw new Error('ingen fod');
+      expect(leg.tip[0]).toBeCloseTo(7.2, 5);
+      expect(leg.tip[1]).toBeCloseTo(0.3, 5);
+      expect(distance(leg.end, leg.tip)).toBeCloseTo(Math.hypot(7.2, 3.3), 1);
+    }
+  });
+
+  test('en arm svinger frem over hovedet, ikke tilbage gennem kroppen, og holder længden', () => {
+    // Behind the body (-30) to over the head (180): forward through 75, not back through -105.
+    expect(swingDelta(-30, 180, 'arm')).toBeCloseTo(210);
+    expect(swingDelta(10, 80, 'arm')).toBeCloseTo(70);
+    const jump: FigureItem = {
+      id: 'jump',
+      view: 'side',
+      facing: 1,
+      props: [],
+      highlight: ['near.thigh'],
+      keyframes: {
+        dip: {
+          hip: [0, 40],
+          torso: 70,
+          arms: { near: { to: [-14, 40] }, far: { to: [-13, 40] } },
+          legs: { near: { to: [4, 3.6], tip: [11, 0.3] }, far: { to: [3, 3.6], tip: [10, 0.3] } },
+        },
+        air: {
+          hip: [0, 60],
+          torso: 90,
+          arms: { near: { to: [1, 121] }, far: { to: [1.5, 121] } },
+          legs: { near: { to: [1, 13], tip: -60 }, far: { to: [0, 13], tip: -60 } },
+        },
+      },
+    };
+    const movement: OwnMovement = {
+      positions: [
+        { id: 'dip', name: 'Nede', text: 'Nede.', contacts: [{ part: 'foot', on: 'floor' }] },
+        { id: 'air', name: 'Luften', text: 'Oppe.', contacts: [] },
+      ],
+      phases: [{ to: 'air', seconds: 0.6, label: 'Hop' }],
+    };
+    const m = buildModel(jump, movement);
+    const move = m.timeline.moves[0];
+    if (!move) throw new Error('ingen bevægelse');
+    const s = solve(m.frame, movePose(m, move, 0.5));
+    const arm = s.bones.find((b) => b.side === 'near' && b.kind === 'arm');
+    if (!arm) throw new Error('ingen arm');
+    // Halfway the hand is in front of the body (the chest side), and the arm has its full length.
+    expect(arm.end[0]).toBeGreaterThan(s.shoulder[0] + 10);
+    expect(distance(arm.root, arm.end)).toBeGreaterThan(30);
+  });
+
+  test('et løftet ben (»lift«) går i en bue over gulvet og lander på sit nye punkt', () => {
+    const step: FigureItem = {
+      id: 'step',
+      view: 'side',
+      facing: 1,
+      props: [],
+      highlight: ['near.thigh'],
+      keyframes: {
+        a: {
+          hip: [0, 44],
+          torso: 90,
+          arms: { near: { to: [2, 46] }, far: { to: [1, 46] } },
+          legs: {
+            near: { to: [0, 3.6], tip: [7.2, 0.3] },
+            far: { to: [-1, 3.6], tip: [6.2, 0.3] },
+          },
+        },
+        b: {
+          hip: [0, 44],
+          torso: 90,
+          arms: { near: { to: [2, 46] }, far: { to: [1, 46] } },
+          legs: {
+            near: { to: [20, 3.6], tip: [27.2, 0.3] },
+            far: { to: [-1, 3.6], tip: [6.2, 0.3] },
+          },
+        },
+      },
+      transitions: [{ from: 'a', to: 'b', lift: ['near.foot'] }],
+    };
+    const movement: OwnMovement = {
+      positions: [
+        { id: 'a', name: 'Samlet', text: 'Samlet.', contacts: [{ part: 'foot', on: 'floor' }] },
+        { id: 'b', name: 'Skridt', text: 'Skridt.', contacts: [{ part: 'foot', on: 'floor' }] },
+      ],
+      phases: [{ to: 'b', seconds: 1, label: 'Skridt frem' }],
+    };
+    const m = buildModel(step, movement);
+    const move = m.timeline.moves[0];
+    if (!move) throw new Error('ingen bevægelse');
+    expect(move.lift).toEqual(['near.foot']);
+    const ankle = (u: number) =>
+      solve(m.frame, movePose(m, move, u)).bones.find((b) => b.side === 'near' && b.kind === 'leg')
+        ?.end ?? [0, 0];
+    expect(ankle(0.5)[1]).toBeGreaterThan(3.6 + 3);
+    expect(ankle(1)[0]).toBeCloseTo(20, 1);
+  });
+
+  test('»advance« flytter figuren langs x, og vejen tilbage fører den til start', () => {
+    const movement: OwnMovement = {
+      positions: [
+        { id: 'land', name: 'Landet', text: 'Landet.', contacts: [] },
+        { id: 'air', name: 'Luften', text: 'Oppe.', contacts: [] },
+      ],
+      phases: [{ to: 'air', seconds: 1, repeat: 3, label: '3 bounds' }],
+    };
+    const line = timeline(movement, CARD_TIMING, [
+      { from: 'land', to: 'air', advance: 10 },
+      { from: 'air', to: 'land', advance: 10 },
+    ]);
+    expect(line.moves.map((m) => m.shift)).toEqual([
+      [0, 10],
+      [10, 20],
+      [20, 30],
+      [30, 40],
+      [40, 50],
+      [50, 60],
+      [60, 0],
+    ]);
+    expect(line.moves.at(-1)?.phase).toBeNull();
+  });
+});
+
+describe('tegningen af ryg, ansigt og flasker (D56)', () => {
+  const frame = frameOf(PUSH_UP_FIGURE);
+  const top = PUSH_UP_FIGURE.keyframes.top as Pose;
+
+  test('»spine« tegner ryggen som en kurve, der buer mod ryggen (rund ryg)', () => {
+    const cat: FigureItem = {
+      ...PUSH_UP_FIGURE,
+      keyframes: { top: { ...top, spine: 4 }, bottom: PUSH_UP_FIGURE.keyframes.bottom as Pose },
+    };
+    const s = solve(frame, cat.keyframes.top as Pose);
+    const torso = bodyPrims(cat, s).find((p) => p.key === 'torso');
+    if (!torso || torso.t !== 'curve') throw new Error('ryggen er ikke en kurve');
+    // A push-up's chest faces the floor, so a round back bulges up.
+    const mid: [number, number] = [(s.hip[0] + s.shoulder[0]) / 2, (s.hip[1] + s.shoulder[1]) / 2];
+    expect(torso.c[1]).toBeGreaterThan(mid[1] + 6);
+    expect(moving(torso)[0]?.[0]).toBe('d');
+    // The other keyframe has a straight back but is drawn as a curve too, so the element stays.
+    const flat = bodyPrims(cat, solve(frame, cat.keyframes.bottom as Pose));
+    expect(flat.find((p) => p.key === 'torso')?.t).toBe('curve');
+    expect(bodyPrims(PUSH_UP_FIGURE, solve(frame, top)).find((p) => p.key === 'torso')?.t).toBe(
+      'line',
+    );
+  });
+
+  test('i sidebilledet viser et lille mærke på hovedet, hvor ansigtet vender; forfra ikke', () => {
+    const s = solve(frame, top);
+    const face = bodyPrims(PUSH_UP_FIGURE, s).find((p) => p.key === 'face');
+    if (!face || face.t !== 'circle') throw new Error('intet ansigt');
+    // A push-up looks down at the floor: the mark is below the head's centre.
+    expect(face.c[1]).toBeLessThan(s.head[1] - 4);
+    const front = solve({ view: 'front', facing: null }, standing());
+    const prims = bodyPrims({ view: 'front', highlight: ['torso'] }, front);
+    expect(prims.some((p) => p.key === 'face')).toBe(false);
+  });
+
+  test('flasker på ryggen ligger langs ryggen på ryggens side, ikke under maven', () => {
+    const s = solve(frame, top);
+    const extent = { x0: 0, x1: 0, top: 0 };
+    const [bottle] = propPrims([{ type: 'bottles', attach: 'back' }], s, extent, 1);
+    if (!bottle || bottle.t !== 'poly') throw new Error('ingen flaske');
+    const lowest = Math.min(...bottle.pts.map((p) => p[1]));
+    const mid = (s.hip[1] + s.shoulder[1]) / 2;
+    expect(lowest).toBeGreaterThan(mid);
+  });
+
+  test('en arm over hovedet med »bend« vender albuen (håndstand), og tjekket godtager det', () => {
+    const handstand: Pose = {
+      hip: [10, 52],
+      torso: -90,
+      arms: { near: { to: [10, 0], upper: 12.5 }, far: { to: [11, 0], upper: 12.5 } },
+      legs: {
+        near: { to: [10, 98], tip: [12, 105] },
+        far: { to: [10.5, 98], tip: [12.5, 105] },
+      },
+    };
+    const left: Frame = { view: 'side', facing: -1 };
+    const plain = solve(left, handstand);
+    const flipped = solve(left, {
+      ...handstand,
+      arms: {
+        near: { to: [10, 0], upper: 12.5, bend: -1 },
+        far: { to: [11, 0], upper: 12.5, bend: -1 },
+      },
+    });
+    const elbowX = (s: typeof plain) =>
+      s.bones.find((b) => b.side === 'near' && b.kind === 'arm')?.joint[0] ?? 0;
+    expect(Math.sign(elbowX(plain) - 10)).toBe(-Math.sign(elbowX(flipped) - 10));
+    expect(bendProblems(left, flipped)).toEqual([]);
   });
 });

@@ -927,10 +927,12 @@ function checkLimb(
   if (!shape(r, where, value, ['to'], ['bend', 'tip', 'upper', 'lower'])) return undefined;
   point(r, at(where, 'to'), value.to);
   if (view === 'side' && value.bend !== undefined) {
-    r.add(
-      at(where, 'bend'),
-      'i sidebilledet bøjer albuer og knæ selv den rigtige vej; fjern »bend«',
-    );
+    // An arm over the head may turn its elbow the other way (a handstand, DECISIONS.md D56).
+    if (kind === 'legs') {
+      r.add(at(where, 'bend'), 'i sidebilledet bøjer knæene selv den rigtige vej; fjern »bend«');
+    } else if (value.bend !== 1 && value.bend !== -1) {
+      r.add(at(where, 'bend'), 'skal være 1 eller -1 (albuen den anden vej over hovedet)');
+    }
   }
   if (view !== 'side' && value.bend !== 1 && value.bend !== -1) {
     r.add(
@@ -956,12 +958,20 @@ function checkPose(
   view: string,
 ): Record<string, boolean> {
   const shown: Record<string, boolean> = {};
-  if (!shape(r, where, value, ['hip', 'torso', 'arms', 'legs'], ['head', 'width'])) return shown;
+  if (!shape(r, where, value, ['hip', 'torso', 'arms', 'legs'], ['head', 'width', 'spine'])) {
+    return shown;
+  }
   point(r, at(where, 'hip'), value.hip);
   if (!finite(value.torso) || Math.abs(value.torso) > 360)
     r.add(at(where, 'torso'), 'en vinkel i grader');
   if (value.head !== undefined && (!finite(value.head) || Math.abs(value.head) > 90)) {
     r.add(at(where, 'head'), 'en vinkel mellem -90 og 90 grader');
+  }
+  if (value.spine !== undefined) {
+    if (view !== 'side') r.add(at(where, 'spine'), '»spine« bruges kun i sidebilledet');
+    else if (!finite(value.spine) || Math.abs(value.spine) > 10) {
+      r.add(at(where, 'spine'), 'et tal fra -10 til 10 (+ rund ryg, − svajet ryg)');
+    }
   }
   if (value.width !== undefined) {
     if (view !== 'front') r.add(at(where, 'width'), '»width« bruges kun i frontbilledet');
@@ -1074,7 +1084,7 @@ export function validateFigureFile(
       return;
     }
     const required = ['id', 'view', 'props', 'highlight', 'keyframes'];
-    if (!shape(r, where, entry, required, ['movement', 'facing'])) return;
+    if (!shape(r, where, entry, required, ['movement', 'facing', 'transitions'])) return;
     const view = entry.view;
     if (view !== 'side' && view !== 'front' && view !== 'top') {
       r.add(at(where, 'view'), 'skal være "side", "front" eller "top"');
@@ -1149,8 +1159,78 @@ export function validateFigureFile(
           `${limb} er skjult (null) i nogle positioner og vist i andre`,
         );
     }
+    if (entry.transitions !== undefined) {
+      checkTransitions(r, at(where, 'transitions'), entry.transitions, movement, visibility);
+    }
   });
   return r.problems;
+}
+
+const LIFTABLE = ['near.hand', 'far.hand', 'near.foot', 'far.foot'];
+
+/** The moves between two different positions a movement makes, as »from>to«. */
+function movesOf(movement: OwnMovement): Set<string> {
+  const moves = new Set<string>();
+  let at = movement.positions[0]?.id ?? '';
+  for (const phase of movement.phases) {
+    if (phase.to !== at) {
+      moves.add(`${at}>${phase.to}`);
+      if (phase.repeat !== undefined) moves.add(`${phase.to}>${at}`);
+    }
+    if (phase.repeat === undefined) at = phase.to;
+  }
+  return moves;
+}
+
+/**
+ * A figure's transitions (DECISIONS.md D56): each names a way the movement goes, from one position to
+ * another, and lifts shown hands or feet on it or moves the figure along x.
+ */
+function checkTransitions(
+  r: Report,
+  where: string,
+  value: unknown,
+  movement: OwnMovement,
+  visibility: Record<string, Set<boolean>>,
+): void {
+  if (!list(r, where, value, 1, 24, 'overgange')) return;
+  const moves = movesOf(movement);
+  const seen = new Set<string>();
+  value.forEach((t, i) => {
+    const w = at(where, i);
+    if (!shape(r, w, t, ['from', 'to'], ['lift', 'advance'])) return;
+    const key = `${show(t.from)}>${show(t.to)}`;
+    if (!moves.has(key)) {
+      r.add(
+        w,
+        `bevægelsen går aldrig fra »${show(t.from)}« til »${show(t.to)}« (den går: ${[...moves].map((m) => m.replace('>', ' → ')).join(', ')})`,
+      );
+    }
+    if (seen.has(key)) r.add(w, 'står to gange');
+    seen.add(key);
+    if (t.lift === undefined && t.advance === undefined)
+      r.add(w, 'skal have »lift« eller »advance«');
+    if (t.lift !== undefined && list(r, at(w, 'lift'), t.lift, 1, 4, 'lemmer')) {
+      const names = new Set<string>();
+      t.lift.forEach((l, j) => {
+        if (typeof l !== 'string' || !LIFTABLE.includes(l)) {
+          r.add(at(at(w, 'lift'), j), `skal være en af: ${LIFTABLE.join(', ')}`);
+          return;
+        }
+        if (names.has(l)) r.add(at(at(w, 'lift'), j), 'står to gange');
+        names.add(l);
+        const [side, part] = l.split('.');
+        const limb = `${side}.${part === 'hand' ? 'arms' : 'legs'}`;
+        if (visibility[limb]?.has(false)) r.add(at(at(w, 'lift'), j), `${limb} er skjult (null)`);
+      });
+    }
+    if (
+      t.advance !== undefined &&
+      (!finite(t.advance) || t.advance === 0 || Math.abs(t.advance) > 60)
+    ) {
+      r.add(at(w, 'advance'), 'et tal fra -60 til 60, ikke 0 (figurenheder langs x)');
+    }
+  });
 }
 
 // ---------------------------------------------------------------------------------------------

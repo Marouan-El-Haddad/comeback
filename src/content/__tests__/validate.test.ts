@@ -277,9 +277,48 @@ describe('figurer', () => {
       '»mid« er ikke en position',
     ],
     [
-      'bend i sidebilledet',
-      pressFigure((f) => (f.keyframes.top!.arms.near = { to: [69, 0], bend: 1 })),
-      'fjern »bend«',
+      'bend på et ben i sidebilledet',
+      pressFigure((f) => (f.keyframes.top!.legs.near = { to: [0, 3.6], tip: [3.4, 0.3], bend: 1 })),
+      'i sidebilledet bøjer knæene selv den rigtige vej; fjern »bend«',
+    ],
+    [
+      'bend på en arm i sidebilledet skal være 1 eller -1',
+      pressFigure((f) => (f.keyframes.top!.arms.near = { to: [69, 0], bend: 2 as unknown as 1 })),
+      'skal være 1 eller -1 (albuen den anden vej over hovedet)',
+    ],
+    [
+      'spine forfra',
+      pressFigure((f) => {
+        f.view = 'front';
+        f.keyframes.top!.spine = 3;
+      }),
+      '»spine« bruges kun i sidebilledet',
+    ],
+    ['spine for meget', pressFigure((f) => (f.keyframes.top!.spine = 12)), 'et tal fra -10 til 10'],
+    [
+      'overgang mellem positioner, bevægelsen ikke går imellem',
+      pressFigure((f) => (f.transitions = [{ from: 'top', to: 'top', lift: ['near.foot'] }])),
+      'bevægelsen går aldrig fra »top« til »top«',
+    ],
+    [
+      'overgang uden lift og advance',
+      pressFigure((f) => (f.transitions = [{ from: 'top', to: 'bottom' }])),
+      'skal have »lift« eller »advance«',
+    ],
+    [
+      'overgang løfter et ukendt lem',
+      pressFigure(
+        (f) =>
+          (f.transitions = [
+            { from: 'top', to: 'bottom', lift: ['near.knee' as unknown as 'near.foot'] },
+          ]),
+      ),
+      'skal være en af: near.hand, far.hand, near.foot, far.foot',
+    ],
+    [
+      'overgang flytter 0',
+      pressFigure((f) => (f.transitions = [{ from: 'top', to: 'bottom', advance: 0 }])),
+      'et tal fra -60 til 60, ikke 0',
     ],
     [
       'bend mangler forfra',
@@ -340,6 +379,18 @@ describe('figurer', () => {
   ];
   test.each(cases)('%s', (_, file, fragment) => {
     expect(figureProblems(file, 'press', PRESS).join('\n')).toContain(fragment);
+  });
+
+  test('overgange, »spine« og en arm med »bend« i sidebilledet er gyldige (D56)', () => {
+    const file = pressFigure((f) => {
+      f.transitions = [
+        { from: 'top', to: 'bottom', lift: ['near.foot', 'far.foot'] },
+        { from: 'bottom', to: 'top', advance: 12 },
+      ];
+      f.keyframes.top!.spine = -3;
+      f.keyframes.top!.arms.near = { to: [69.17, 0], bend: 1 };
+    });
+    expect(figureProblems(file, 'press', PRESS)).toEqual([]);
   });
 
   test('kontakt med en flade kræver rekvisitten', () => {

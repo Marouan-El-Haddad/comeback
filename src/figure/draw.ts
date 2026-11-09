@@ -1,12 +1,16 @@
 // Drawing a solved figure as SVG in the pictograms' style (tools/pictos/picto.py Canvas): navy near
-// limbs, pale far limbs, Thai red on the working segments, light props on a floor line. A frame is a
+// limbs, pale far limbs, Thai red on the working segments, light props on a floor line, and in side
+// view a small mark on the head for the way the face looks (DECISIONS.md D56). A frame is a
 // list of primitives with stable keys, so the app can draw the first frame once and then move the
 // same elements (src/ui/components/Figure.tsx), and the contact sheet can print them as a string.
 // Colours are the design tokens as CSS variables (docs/SPEC.md 5): the app injects them, and the
 // contact sheet defines them from src/ui/design-tokens.json.
 import type { FigureItem, Point, Prop, Segment } from '../content/types.ts';
 import { BODY } from '../content/units.ts';
-import { polar, type Bone, type Skeleton } from './geometry.ts';
+import { angleOf, polar, type Bone, type Skeleton } from './geometry.ts';
+import { SOFA_LOW } from './surfaces.ts';
+
+export { SOFA_LOW } from './surfaces.ts';
 
 /** The colour roles of a figure; PAINT maps them to the design tokens. */
 export type Paint = 'near' | 'far' | 'hi' | 'ghost' | 'prop' | 'fill' | 'fill2' | 'towel' | 'pack';
@@ -48,6 +52,8 @@ export type Prim = Base &
         w: number;
       }
     | { t: 'poly'; pts: Point[]; s: Paint; f: Paint; w: number }
+    /** A quadratic curve from a to b through the control point c: a round back. */
+    | { t: 'curve'; a: Point; c: Point; b: Point; w: number; s: Paint }
   );
 
 export type Mode = 'solid' | 'ghost';
@@ -63,9 +69,20 @@ function highlighted(highlight: readonly Segment[], b: Bone, segment: 1 | 2): bo
   });
 }
 
-/** The body of one frame: limbs, torso, neck (when it is red) and head, in picto.py's z order. */
+/** Whether a figure draws its back as a curve: a keyframe bends it (`spine`). */
+export function curvedBack(figure: { keyframes?: FigureItem['keyframes'] }): boolean {
+  return Object.values(figure.keyframes ?? {}).some((pose) => (pose.spine ?? 0) !== 0);
+}
+
+/** The face mark: a small round nose on the head, the way the face looks (side view). */
+const FACE = { r: 1.9, at: BODY.headRadius - 0.4 } as const;
+
+/**
+ * The body of one frame: limbs, torso, neck (when it is red), head and, in side view, the face mark,
+ * in picto.py's z order. A figure with a round back somewhere draws its back as a curve in every frame.
+ */
 export function bodyPrims(
-  figure: Pick<FigureItem, 'view' | 'highlight'>,
+  figure: Pick<FigureItem, 'view' | 'highlight'> & { keyframes?: FigureItem['keyframes'] },
   s: Skeleton,
   mode: Mode = 'solid',
   prefix = '',
@@ -124,6 +141,17 @@ export function bodyPrims(
       f: torso,
       w: WIDTH.limb,
     });
+  } else if (curvedBack(figure)) {
+    prims.push({
+      key: `${prefix}torso`,
+      z: zBase + 1,
+      t: 'curve',
+      a: s.hip,
+      c: s.back,
+      b: s.shoulder,
+      w: WIDTH.torso,
+      s: torso,
+    });
   } else {
     prims.push({
       key: `${prefix}torso`,
@@ -154,15 +182,28 @@ export function bodyPrims(
     r: BODY.headRadius,
     f: ghost ? 'ghost' : 'near',
   });
+  if (s.face !== null) {
+    prims.push({
+      key: `${prefix}face`,
+      z: zBase + 1.3,
+      t: 'circle',
+      c: polar(s.head, FACE.at, s.face),
+      r: FACE.r,
+      f: ghost ? 'ghost' : 'near',
+    });
+  }
   return prims;
 }
 
 /** Where a carried prop sits in this frame: the hand's or foot's end, or the middle of the back. */
 function anchorPoint(s: Skeleton, attach: string): { at: Point; back: number } | null {
   if (attach === 'back') {
-    const mid: Point = [(s.hip[0] + s.shoulder[0]) / 2, (s.hip[1] + s.shoulder[1]) / 2];
-    const along = (Math.atan2(s.shoulder[1] - s.hip[1], s.shoulder[0] - s.hip[0]) * 180) / Math.PI;
-    return { at: mid, back: along };
+    // The middle of the back as drawn: on the curve when the back is round.
+    const mid: Point = [
+      (s.hip[0] + 2 * s.back[0] + s.shoulder[0]) / 4,
+      (s.hip[1] + 2 * s.back[1] + s.shoulder[1]) / 4,
+    ];
+    return { at: mid, back: angleOf(s.hip, s.shoulder) };
   }
   const [side, part] = attach.split('.');
   const kind = part === 'hand' ? 'arm' : 'leg';
@@ -320,19 +361,11 @@ export function propPrims(
         if (!a) break;
         if (prop.attach === 'back') {
           // On the back: a 9 × 11 bag along the torso, on the side away from the chest.
-          const away = a.back + 90 * (facing ?? 1);
-          const c = polar(a.at, 8.4, away);
-          const corners = [
-            [-5.5, -4.5],
-            [5.5, -4.5],
-            [5.5, 4.5],
-            [-5.5, 4.5],
-          ].map(([u, v]) => polar(polar(c, u ?? 0, a.back), v ?? 0, a.back + 90));
           prims.push({
             key: next(),
             z: 13,
             t: 'poly',
-            pts: corners,
+            pts: onBack(a, facing, 11, 9),
             s: 'prop',
             f: fill('pack'),
             w: 1,
@@ -358,6 +391,20 @@ export function propPrims(
       case 'bottles': {
         const a = s ? anchorPoint(s, prop.attach) : null;
         if (!a) break;
+        if (prop.attach === 'back') {
+          // On the back: a bottle lying along the torso, on the side away from the chest; seen from
+          // above it lies on the middle of the back (DECISIONS.md D56).
+          prims.push({
+            key: next(),
+            z: 13,
+            t: 'poly',
+            pts: onBack(a, facing, 10, 3.6),
+            s: 'prop',
+            f: fill('fill2'),
+            w: 1,
+          });
+          break;
+        }
         prims.push({
           key: next(),
           z: 13,
@@ -378,8 +425,47 @@ export function propPrims(
   return prims;
 }
 
-/** The height of the opening under a sofa's front edge (picto.py couch(side_low)). */
-export const SOFA_LOW = 7.5;
+/**
+ * The corners of a thing lying on the back: `length` along the torso and `thickness` out from it, on
+ * the side away from the chest (side view), or on the middle of the back seen from above (`facing`
+ * null). The torso is drawn 8.6 wide, so it starts 4.3 off the line.
+ */
+function onBack(
+  a: { at: Point; back: number },
+  facing: 1 | -1 | null,
+  length: number,
+  thickness: number,
+): Point[] {
+  const away = a.back + 90 * (facing ?? 1);
+  const c = facing === null ? a.at : polar(a.at, WIDTH.torso / 2 + thickness / 2 - 0.2, away);
+  return [
+    [-length / 2, -thickness / 2],
+    [length / 2, -thickness / 2],
+    [length / 2, thickness / 2],
+    [-length / 2, thickness / 2],
+  ].map(([u, v]) => polar(polar(c, u ?? 0, a.back), v ?? 0, a.back + 90));
+}
+
+/** The outline of a prop's primitive, for the checks: corners of a box, points of a polygon. */
+export function outline(p: Prim): Point[] {
+  switch (p.t) {
+    case 'rect':
+      return [
+        [p.x, p.y],
+        [p.x + p.width, p.y],
+        [p.x + p.width, p.y + p.height],
+        [p.x, p.y + p.height],
+      ];
+    case 'poly':
+      return p.pts;
+    case 'circle':
+      return [0, 90, 180, 270].map((d) => polar(p.c, p.r, d));
+    case 'line':
+      return [p.a, p.b];
+    case 'curve':
+      return [p.a, p.c, p.b];
+  }
+}
 
 export function floorPrim(extent: Extent): Prim {
   return {
@@ -434,6 +520,16 @@ export function track(box: Box, prims: readonly Prim[]): Box {
       case 'poly':
         for (const q of p.pts) grow(box, q, p.w / 2);
         break;
+      case 'curve':
+        grow(box, p.a, p.w / 2);
+        grow(box, p.b, p.w / 2);
+        // The curve stays inside its control polygon; its middle is halfway to the control point.
+        grow(
+          box,
+          [(p.a[0] + 2 * p.c[0] + p.b[0]) / 4, (p.a[1] + 2 * p.c[1] + p.b[1]) / 4],
+          p.w / 2,
+        );
+        break;
     }
   }
   return box;
@@ -473,6 +569,8 @@ export function moving(p: Prim): Array<[string, string]> {
       ];
     case 'poly':
       return [['points', p.pts.map(pt).join(' ')]];
+    case 'curve':
+      return [['d', `M${pt(p.a)} Q${pt(p.c)} ${pt(p.b)}`]];
   }
 }
 
@@ -493,6 +591,8 @@ export function primSvg(p: Prim, withKey = false): string {
       return `<rect${k} ${attrs} width="${n(p.width)}" height="${n(p.height)}" rx="${n(p.rx)}" fill="${PAINT[p.f]}" stroke="${PAINT[p.s]}" stroke-width="${n(p.w)}"/>`;
     case 'poly':
       return `<polygon${k} ${attrs} fill="${PAINT[p.f]}" stroke="${PAINT[p.s]}" stroke-width="${n(p.w)}" stroke-linejoin="round"/>`;
+    case 'curve':
+      return `<path${k} ${attrs} fill="none" stroke="${PAINT[p.s]}" stroke-width="${n(p.w)}" stroke-linecap="round"/>`;
   }
 }
 

@@ -31,6 +31,12 @@ describe('kontaktarkets side', () => {
     expect(html).toContain('<b>3 sek ned</b> (3 sek) → Nede');
     expect(html).toContain('i alt 5 sek i kortet');
     expect(html).toContain('ingen problemer');
+    // The middle of the move as a frame of its own, and the angles of knees and elbows (H1, M2);
+    // the cells are as wide as their figure, so wide figures do not overlap (D56).
+    expect(html).toContain('Midt i: Oppe → Nede');
+    expect(html).not.toContain('Midt i: Nede → Oppe');
+    expect(html).toMatch(/knæ 180°\/180° · albuer 1[5-8]\d°\/1[5-8]\d°/);
+    expect(html).toContain('width:min-content');
     // The figure in the app's colours, from the tokens; the facing arrow in blue.
     expect(html).toContain(`--c-picto-near:${tokens.pictogram.near}`);
     expect(html).toContain('stroke="var(--c-blue)"');
@@ -48,7 +54,7 @@ describe('kontaktarkets side', () => {
       { tokens },
     );
     expect(problems.length).toBeGreaterThan(0);
-    expect(html).toContain('hånden (begge) skal røre gulvet');
+    expect(html).toContain('near.hand skal røre gulvet, men er 6 over');
     expect(html).toContain('stroke="var(--c-red)"');
   });
 });

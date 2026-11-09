@@ -1,18 +1,18 @@
-// The figure's motion (docs/SPEC.md 3.8 and 9.1, DECISIONS.md D45 and D48): a movement's phases as a
-// timeline, and the pose at any moment of it. Between two keyframes the pose's own numbers are
-// interpolated – the hip, the torso and head angles, and the points the hands and feet reach – and
-// the limbs are solved again in every frame, so the limbs keep their length, the joints keep bending
-// the anatomical way, and a hand or foot with the same point in both keyframes stays planted.
-import { FRONT_WIDTH } from '../content/units.ts';
+// The figure's motion (docs/SPEC.md 3.8 and 9.1, DECISIONS.md D45, D48 and D56): a movement's phases
+// as a timeline, and the pose at any moment of it. Between two keyframes the body moves as joint
+// angles with forward kinematics from the point that stands still (tween.ts), so the limbs keep their
+// length, a straight joint stays straight, the joints keep bending the anatomical way, and a hand or
+// foot with the same point in both keyframes stays planted. The figure's transitions can lift hands
+// and feet on the way between two positions (`lift`) and move the whole figure along x (`advance`).
 import {
   type FigureItem,
-  type IkLimb,
-  type JointLimb,
+  type LiftLimb,
   type Limb,
   type OwnMovement,
   type Phase,
   type Point,
   type Pose,
+  type Transition,
 } from '../content/types.ts';
 import {
   bodyPrims,
@@ -26,18 +26,10 @@ import {
   type Mode,
   type Prim,
 } from './draw.ts';
-import {
-  angleOf,
-  frameOf,
-  isJointLimb,
-  NOMINAL,
-  solve,
-  tipPoint,
-  type Bone,
-  type Frame,
-  type Kind,
-  type Skeleton,
-} from './geometry.ts';
+import { frameOf, isJointLimb, solve, type Frame, type Skeleton } from './geometry.ts';
+import { planMove, rigOf, shiftRig, tween, type Plan, type Rig } from './tween.ts';
+
+export { lerpAngle } from './geometry.ts';
 
 /**
  * Times that are not in the data. In the card a "dose" phase lasts 2 sek and "repeat": "dose" runs 3
@@ -59,6 +51,10 @@ export interface Move {
   seconds: number;
   /** The phase whose label is highlighted; null on the way back to the start. */
   phase: number | null;
+  /** The figure's offset along x at the start and the end of the move (a transition's `advance`). */
+  shift?: [number, number];
+  /** The hands and feet lifted on the way (a transition's `lift`). */
+  lift?: readonly LiftLimb[];
 }
 
 export interface Timeline {
@@ -78,39 +74,55 @@ export function phaseSeconds(phase: Phase, timing: Timing = CARD_TIMING): number
 
 /**
  * The phases as moves: a phase goes to `to` in its seconds; a repeated phase goes out to `to` and
- * back to the position before, half its seconds each way, as many times as it repeats. A movement
- * that ends elsewhere than it started gets a way back without a label.
+ * back to the position before, half its seconds each way, as many times as it repeats. A figure's
+ * transition from one position to another lifts hands and feet on that way (`lift`) and moves the
+ * figure along x (`advance`). A movement that ends elsewhere than it started, or moved along x, gets
+ * a way back without a label.
  */
-export function timeline(movement: OwnMovement, timing: Timing = CARD_TIMING): Timeline {
+export function timeline(
+  movement: OwnMovement,
+  timing: Timing = CARD_TIMING,
+  transitions: readonly Transition[] = [],
+): Timeline {
   const first = movement.positions[0]?.id ?? '';
   const moves: Move[] = [];
   const phases: Timeline['phases'] = [];
   let at = first;
   let t = 0;
+  let x = 0;
+  const push = (move: Move) => {
+    const tr =
+      move.from === move.to
+        ? undefined
+        : transitions.find((y) => y.from === move.from && y.to === move.to);
+    const dx = tr?.advance ?? 0;
+    if (dx !== 0) move.shift = [x, x + dx];
+    if (tr?.lift && tr.lift.length > 0) move.lift = tr.lift;
+    x += dx;
+    moves.push(move);
+  };
   movement.phases.forEach((phase, i) => {
     const seconds = phaseSeconds(phase, timing);
     phases.push({ start: t, seconds });
     if (phase.repeat === undefined) {
-      moves.push({ from: at, to: phase.to, start: t, seconds, phase: i });
+      push({ from: at, to: phase.to, start: t, seconds, phase: i });
       at = phase.to;
     } else {
       const times = phase.repeat === 'dose' ? timing.doseRepeats : phase.repeat;
       const half = seconds / times / 2;
       for (let k = 0; k < times; k++) {
-        moves.push({ from: at, to: phase.to, start: t + 2 * k * half, seconds: half, phase: i });
-        moves.push({
-          from: phase.to,
-          to: at,
-          start: t + (2 * k + 1) * half,
-          seconds: half,
-          phase: i,
-        });
+        push({ from: at, to: phase.to, start: t + 2 * k * half, seconds: half, phase: i });
+        push({ from: phase.to, to: at, start: t + (2 * k + 1) * half, seconds: half, phase: i });
       }
     }
     t += seconds;
   });
-  if (at !== first && moves.length > 0) {
-    moves.push({ from: at, to: first, start: t, seconds: timing.back, phase: null });
+  if ((at !== first || Math.abs(x) > 1e-9) && moves.length > 0) {
+    const back: Move = { from: at, to: first, start: t, seconds: timing.back, phase: null };
+    if (Math.abs(x) > 1e-9) back.shift = [x, 0];
+    const lift = transitions.find((y) => y.from === at && y.to === first)?.lift;
+    if (lift && lift.length > 0 && at !== first) back.lift = lift;
+    moves.push(back);
     t += timing.back;
   }
   return { moves, total: t, phases };
@@ -134,139 +146,39 @@ export function ease(u: number): number {
   return 0.5 - 0.5 * Math.cos(Math.PI * u);
 }
 
-const lerp = (a: number, b: number, u: number) => a + (b - a) * u;
-const lerpPoint = (a: Point, b: Point, u: number): Point => [
-  lerp(a[0], b[0], u),
-  lerp(a[1], b[1], u),
-];
-
-/** The shorter way round from one angle to the other. */
-export function lerpAngle(a: number, b: number, u: number): number {
-  const d = ((((b - a) % 360) + 540) % 360) - 180;
-  return a + d * u;
-}
-
-function lerpTip(
-  a: Point | number | undefined,
-  b: Point | number | undefined,
-  endA: Point,
-  endB: Point,
-  u: number,
-): Point | number | undefined {
-  if (a === undefined && b === undefined) return undefined;
-  if (typeof a === 'number' && typeof b === 'number') return lerpAngle(a, b, u);
-  if (Array.isArray(a) && Array.isArray(b)) return lerpPoint(a, b, u);
-  // A tip in only one keyframe keeps its angle; a point and an angle meet as points.
-  if (a === undefined || b === undefined) {
-    const [tip, end] = a === undefined ? [b, endB] : [a, endA];
-    return typeof tip === 'number' ? tip : angleOf(end, tip as Point);
-  }
-  return lerpPoint(tipPoint(endA, a) as Point, tipPoint(endB, b) as Point, u);
-}
-
-function lerpLimb(
-  kind: Kind,
-  a: Limb,
-  b: Limb,
-  boneA: Bone | undefined,
-  boneB: Bone | undefined,
-  u: number,
-): Limb {
-  if (a === null || b === null) return u < 0.5 ? a : b;
-  if (!isJointLimb(a) && !isJointLimb(b)) {
-    const nominal = NOMINAL[kind];
-    const limb: IkLimb = {
-      to: lerpPoint(a.to, b.to, u),
-      upper: lerp(a.upper ?? nominal.upper, b.upper ?? nominal.upper, u),
-      lower: lerp(a.lower ?? nominal.lower, b.lower ?? nominal.lower, u),
-    };
-    const bend = u < 0.5 ? a.bend : b.bend;
-    if (bend !== undefined) limb.bend = bend;
-    const tip = lerpTip(a.tip, b.tip, boneA?.end ?? a.to, boneB?.end ?? b.to, u);
-    if (tip !== undefined) limb.tip = tip;
-    return limb;
-  }
-  // A limb given by its joints in one keyframe (or both) moves joint by joint.
-  const joints = (l: IkLimb | JointLimb, bone: Bone | undefined): JointLimb =>
-    isJointLimb(l) ? l : { joint: bone?.joint ?? l.to, end: bone?.end ?? l.to };
-  const ja = joints(a, boneA);
-  const jb = joints(b, boneB);
-  const limb: JointLimb = {
-    joint: lerpPoint(ja.joint, jb.joint, u),
-    end: lerpPoint(ja.end, jb.end, u),
+/** A pose moved `dx` along x (a phase's `advance`). */
+export function shiftPose(pose: Pose, dx: number): Pose {
+  if (dx === 0) return pose;
+  const move = (p: Point): Point => [p[0] + dx, p[1]];
+  const limb = (l: Limb): Limb => {
+    if (l === null) return null;
+    if (isJointLimb(l)) {
+      const moved = { ...l, joint: move(l.joint), end: move(l.end) };
+      if (l.tip) moved.tip = move(l.tip);
+      return moved;
+    }
+    const moved = { ...l, to: move(l.to) };
+    if (Array.isArray(l.tip)) moved.tip = move(l.tip);
+    return moved;
   };
-  const tipA = isJointLimb(a) ? a.tip : (tipPoint(ja.end, a.tip) ?? undefined);
-  const tipB = isJointLimb(b) ? b.tip : (tipPoint(jb.end, b.tip) ?? undefined);
-  const tip = lerpTip(tipA, tipB, ja.end, jb.end, u);
-  if (tip !== undefined) limb.tip = tipPoint(limb.end, tip) as Point;
-  return limb;
-}
-
-/** The pose a fraction `u` of the way from `a` to `b`. */
-export function lerpPose(
-  a: Pose,
-  b: Pose,
-  u: number,
-  solvedA?: Skeleton,
-  solvedB?: Skeleton,
-): Pose {
-  const bone = (s: Skeleton | undefined, side: 'near' | 'far', kind: Kind) =>
-    s?.bones.find((x) => x.side === side && x.kind === kind);
-  const pose: Pose = {
-    hip: lerpPoint(a.hip, b.hip, u),
-    torso: lerpAngle(a.torso, b.torso, u),
-    head: lerp(a.head ?? 0, b.head ?? 0, u),
-    arms: {
-      near: lerpLimb(
-        'arm',
-        a.arms.near,
-        b.arms.near,
-        bone(solvedA, 'near', 'arm'),
-        bone(solvedB, 'near', 'arm'),
-        u,
-      ),
-      far: lerpLimb(
-        'arm',
-        a.arms.far,
-        b.arms.far,
-        bone(solvedA, 'far', 'arm'),
-        bone(solvedB, 'far', 'arm'),
-        u,
-      ),
-    },
-    legs: {
-      near: lerpLimb(
-        'leg',
-        a.legs.near,
-        b.legs.near,
-        bone(solvedA, 'near', 'leg'),
-        bone(solvedB, 'near', 'leg'),
-        u,
-      ),
-      far: lerpLimb(
-        'leg',
-        a.legs.far,
-        b.legs.far,
-        bone(solvedA, 'far', 'leg'),
-        bone(solvedB, 'far', 'leg'),
-        u,
-      ),
-    },
+  return {
+    ...pose,
+    hip: move(pose.hip),
+    arms: { near: limb(pose.arms.near), far: limb(pose.arms.far) },
+    legs: { near: limb(pose.legs.near), far: limb(pose.legs.far) },
   };
-  if (a.width || b.width) {
-    const wa = a.width ?? FRONT_WIDTH;
-    const wb = b.width ?? FRONT_WIDTH;
-    pose.width = {
-      shoulders: lerp(wa.shoulders, wb.shoulders, u),
-      hips: lerp(wa.hips, wb.hips, u),
-    };
-  }
-  return pose;
 }
 
 // ---------------------------------------------------------------------------------------------
 // A figure ready to draw: its timeline, its keyframes solved and the box every frame fits in
 // ---------------------------------------------------------------------------------------------
+
+/** A move between two different positions: its keyframes as rigs (moved by any `advance`) and its plan. */
+export interface Step {
+  a: Rig;
+  b: Rig;
+  plan: Plan;
+}
 
 export interface FigureModel {
   figure: FigureItem;
@@ -275,6 +187,8 @@ export interface FigureModel {
   timeline: Timeline;
   /** Each position's keyframe, solved. */
   solved: Record<string, Skeleton>;
+  /** Each move between two different positions, ready for tween(). */
+  steps: Map<Move, Step>;
   /** The box every frame and prop fits in (before padding). */
   box: Box;
   /** The props that never move, and the floor line when the figure stands on a floor. */
@@ -290,17 +204,25 @@ function onFloor(figure: FigureItem, movement: OwnMovement): boolean {
   return figure.props.some((p) => !carried(p) && (!('at' in p) || p.at[1] <= 0.5));
 }
 
+/** The pose `u` (0–1, not eased) of the way through a move. */
+export function movePose(model: FigureModel, move: Move, u: number): Pose {
+  const a = model.figure.keyframes[move.from] as Pose;
+  const shift = move.shift ?? [0, 0];
+  const step = model.steps.get(move);
+  if (move.from === move.to || !step) {
+    return shiftPose(a, shift[0] + (shift[1] - shift[0]) * ease(u));
+  }
+  if (u <= 0) return shiftPose(a, shift[0]);
+  if (u >= 1) return shiftPose(model.figure.keyframes[move.to] as Pose, shift[1]);
+  return tween(model.frame, step.a, step.b, step.plan, ease(u));
+}
+
 /** The pose at `t` seconds of the loop. */
 export function poseAt(model: FigureModel, t: number): Pose {
-  const { figure, solved } = model;
   const at = moveAt(model.timeline, t);
   const firstId = model.movement.positions[0]?.id ?? '';
-  if (!at) return figure.keyframes[firstId] as Pose;
-  const { move, u } = at;
-  const a = figure.keyframes[move.from] as Pose;
-  if (move.from === move.to) return a;
-  const b = figure.keyframes[move.to] as Pose;
-  return lerpPose(a, b, ease(u), solved[move.from], solved[move.to]);
+  if (!at) return model.figure.keyframes[firstId] as Pose;
+  return movePose(model, at.move, at.u);
 }
 
 /** What moves in a frame: the body and the props it carries. */
@@ -327,11 +249,33 @@ export function buildModel(
   timing: Timing = CARD_TIMING,
 ): FigureModel {
   const frame = frameOf(figure);
-  const line = timeline(movement, timing);
+  const line = timeline(movement, timing, figure.transitions);
   const solved: Record<string, Skeleton> = {};
+  const rigs: Record<string, Rig> = {};
   for (const p of movement.positions) {
     const pose = figure.keyframes[p.id];
-    if (pose) solved[p.id] = solve(frame, pose);
+    if (!pose) continue;
+    const s = solve(frame, pose);
+    solved[p.id] = s;
+    rigs[p.id] = rigOf(pose, s);
+  }
+  // Every move between two positions gets its plan; moves alike share it (30 punches, 20 squats).
+  const steps = new Map<Move, Step>();
+  const plans = new Map<string, Plan>();
+  for (const m of line.moves) {
+    const ra = rigs[m.from];
+    const rb = rigs[m.to];
+    if (m.from === m.to || !ra || !rb) continue;
+    const [s0, s1] = m.shift ?? [0, 0];
+    const a = shiftRig(ra, s0);
+    const b = shiftRig(rb, s1);
+    const key = `${m.from}>${m.to}>${s1 - s0}>${(m.lift ?? []).join(',')}`;
+    let plan = plans.get(key);
+    if (!plan) {
+      plan = planMove(figure, frame, a, b, m.lift);
+      plans.set(key, plan);
+    }
+    steps.set(m, { a, b, plan });
   }
   const model: FigureModel = {
     figure,
@@ -339,6 +283,7 @@ export function buildModel(
     frame,
     timeline: line,
     solved,
+    steps,
     box: emptyBox(),
     still: [],
     frozen: movement.positions.length < 2 && movement.phases.length < 2,
@@ -351,14 +296,15 @@ export function buildModel(
     const pose = figure.keyframes[p.id];
     if (pose) track(box, movingPrims(model, pose));
   }
-  // A repeated move (30 punches in a wall sit) passes the same poses: it is measured once.
+  // A repeated move (30 punches in a wall sit) passes the same poses: it is measured once, unless
+  // the figure moves along x (bounds).
   const measured = new Set<string>();
   for (const m of line.moves) {
-    const key = `${m.from}>${m.to}`;
-    if (m.from === m.to || measured.has(key)) continue;
+    const key = `${m.from}>${m.to}>${(m.shift ?? [0, 0]).join(',')}`;
+    if ((m.from === m.to && !m.shift) || measured.has(key)) continue;
     measured.add(key);
-    for (let k = 1; k < SAMPLES; k++)
-      track(box, movingPrims(model, poseAt(model, m.start + (m.seconds * k) / SAMPLES)));
+    for (let k = 0; k <= SAMPLES; k++)
+      track(box, movingPrims(model, movePose(model, m, k / SAMPLES)));
   }
   // The props that stand still: measured once, then drawn with the walls reaching above the figure.
   const fixed = (p: Parameters<typeof carried>[0]) => !carried(p);

@@ -224,7 +224,8 @@ export type LimbSide = 'near' | 'far';
 /**
  * A limb solved with two-bone IK: the hand (arm) or the ankle (leg) reaches `to`. In side view the
  * elbow or knee bends the anatomical way by itself (see `FigureItem.facing`); in front and top view
- * `bend` picks the side, as picto.py's bend.
+ * `bend` picks the side, as picto.py's bend. In side view an arm over the head may have `bend` to
+ * turn the elbow the other way, as in a handstand (DECISIONS.md D56).
  */
 export interface IkLimb {
   to: Point;
@@ -256,6 +257,12 @@ export interface Pose {
   head?: number;
   /** Front view only: shoulder and pelvis width (default FRONT_WIDTH). */
   width?: { shoulders: number; hips: number };
+  /**
+   * Side view only: the back as a curve whose middle lies this many units off the straight line
+   * from the hip to the shoulders, + toward the back (a round back, the cat), − toward the chest
+   * (an arched back, the cow); default 0 (DECISIONS.md D56).
+   */
+  spine?: number;
   arms: Record<LimbSide, Limb>;
   legs: Record<LimbSide, Limb>;
 }
@@ -288,6 +295,24 @@ export type Prop =
 
 export type PropType = Prop['type'];
 
+/** A hand or a foot a figure can lift on the way between two positions (`Transition.lift`). */
+export type LiftLimb = 'near.hand' | 'far.hand' | 'near.foot' | 'far.foot';
+
+/**
+ * What happens on the way from one position to another, beyond the keyframes (DECISIONS.md D56):
+ * hands or feet that leave their surface and land somewhere else (`lift`: a step, the feet jumping
+ * back in a burpee, the hands walking toward a wall) go in an arc, and the check lets them move; and
+ * the whole figure can move along x (`advance`, figure units, + to the right: bounds that travel
+ * forward; with a `repeat` each way out and back is a move of its own). It applies every time the
+ * movement goes from `from` to `to`.
+ */
+export interface Transition {
+  from: string;
+  to: string;
+  lift?: LiftLimb[];
+  advance?: number;
+}
+
 /** The segments drawn in Thai red: the muscles that work; `neck` = between shoulders and head. */
 export type Segment = 'torso' | 'neck' | `${LimbSide}.${'upperArm' | 'forearm' | 'thigh' | 'shin'}`;
 
@@ -301,6 +326,8 @@ interface FigureBase {
   highlight: Segment[];
   /** One pose per position id of the movement in content/explain. */
   keyframes: Record<string, Pose>;
+  /** Lifted hands and feet, and the figure moving along x, between positions (D56). */
+  transitions?: Transition[];
 }
 
 /** The figure of one step, routine item or measurement (one movement of it). */

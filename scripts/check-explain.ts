@@ -4,14 +4,17 @@
 // A figure file is checked against the explanation file of the same name, first its format and then
 // the figure system's quality checks (joints, contacts, sliding hands and feet; src/figure/check.ts),
 // and a »like« into another file is looked up there. Prints short Danish messages and exits with
-// code 1 when a file has a problem, also when prettier would change it. The contact sheet:
-// node scripts/figure-sheet.ts <figurfil>.
+// code 1 when a file has a problem, also when prettier would change it. Without a file, the figures
+// that wait for the figure agents in P2 (src/figure/waiting.ts, docs/runs/NAT-3-FIGURES.md) are
+// printed as »VENTER« and do not fail the run; a file checked on its own fails on every problem.
+// The contact sheet: node scripts/figure-sheet.ts <figurfil>.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as prettier from 'prettier';
 import { PROGRAM } from '../src/engine/program.ts';
 import { checkFigureFile } from '../src/figure/check.ts';
+import { figureKeyOf, WAITING_FOR_P2 } from '../src/figure/waiting.ts';
 import { isLike, type ExplainFile, type FigureFile } from '../src/content/types.ts';
 import {
   coverage,
@@ -75,6 +78,8 @@ interface Result {
   summary: string;
   explain?: ExplainFile;
   figures?: FigureFile;
+  /** The figure file as read, so problems can be told apart by figure. */
+  figureData?: FigureFile;
 }
 
 async function check(file: string): Promise<Result> {
@@ -118,6 +123,7 @@ async function check(file: string): Promise<Result> {
     // A valid file is drawn and checked: joints, contacts, sliding hands and feet (src/figure/check.ts).
     if (problems.length === 0 && explain) {
       problems = checkFigureFile(loaded.data as FigureFile, explain);
+      result.figureData = loaded.data as FigureFile;
     }
     const figures = (loaded.data as { figures?: unknown[] }).figures?.length ?? 0;
     summary = `${figures} ${figures === 1 ? 'figur' : 'figurer'}`;
@@ -150,14 +156,37 @@ const results: Result[] = [];
 for (const file of files) results.push(await check(file));
 
 let failed = 0;
+const waiting = new Set<string>();
 for (const r of results) {
-  if (r.problems.length === 0) {
-    console.log(`OK    ${r.file} (${r.summary})`);
-    continue;
+  // Without a file, a figure on the P2 list prints its problems as »VENTER« and does not fail.
+  const waits = (p: Problem) =>
+    all && !!r.figureData && WAITING_FOR_P2.includes(figureKeyOf(r.figureData, p.where));
+  const own = r.problems.filter((p) => !waits(p));
+  const later = r.problems.filter(waits);
+  if (r.figureData) for (const p of later) waiting.add(figureKeyOf(r.figureData, p.where));
+  // A file whose only problems wait for P2 is drawn: it counts in the coverage.
+  if (own.length === 0 && later.length > 0 && r.figureData) r.figures = r.figureData;
+  if (own.length === 0) {
+    console.log(
+      `OK    ${r.file} (${r.summary})${later.length > 0 ? `; ${later.length} fejl venter på P2` : ''}`,
+    );
+  } else {
+    failed++;
+    console.log(`FEJL  ${r.file}: ${own.length} fejl`);
+    for (const p of own) console.log(`      ${p.where ? `${p.where}: ` : ''}${p.message}`);
   }
-  failed++;
-  console.log(`FEJL  ${r.file}: ${r.problems.length} fejl`);
-  for (const p of r.problems) console.log(`      ${p.where ? `${p.where}: ` : ''}${p.message}`);
+  for (const p of later) console.log(`      VENTER ${p.where}: ${p.message}`);
+}
+if (all && waiting.size > 0) {
+  console.log(
+    `\n${waiting.size} figurer venter på figuragenterne i P2 (src/figure/waiting.ts, docs/runs/NAT-3-FIGURES.md).`,
+  );
+}
+if (all) {
+  const fixed = WAITING_FOR_P2.filter((k) => !waiting.has(k));
+  if (fixed.length > 0) {
+    console.log(`Består nu, fjern dem fra src/figure/waiting.ts: ${fixed.join(', ')}`);
+  }
 }
 
 if (all) {

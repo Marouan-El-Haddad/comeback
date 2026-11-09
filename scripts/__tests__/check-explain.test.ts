@@ -8,6 +8,7 @@ import * as prettier from 'prettier';
 import { afterAll, describe, expect, test } from 'vitest';
 import { PRESS, PRESS_FIGURES } from '../../src/content/__tests__/fixtures.ts';
 import type { ExplainItem, FigureItem, Pose } from '../../src/content/types.ts';
+import { WAITING_FOR_P2 } from '../../src/figure/waiting.ts';
 
 const dir = mkdtempSync(join(tmpdir(), 'comeback-content-'));
 afterAll(() => rmSync(dir, { recursive: true, force: true }));
@@ -57,7 +58,7 @@ describe('check-explain', () => {
     top.arms = { near: { to: [69.17, 6] }, far: { to: [70.57, 6] } };
     const result = run(await write('figures', 'press', floating));
     expect(result.status).toBe(1);
-    expect(result.out).toContain('press.1 › top: hånden (begge) skal røre gulvet');
+    expect(result.out).toContain('press.1 › top: near.hand skal røre gulvet, men er 6 over');
   });
 
   test('en figur kræver en gyldig forklaring', async () => {
@@ -84,5 +85,18 @@ describe('check-explain', () => {
     const result = run();
     expect(result.out).toContain('Forklaret:');
     expect(result.status).toBe(0);
+  });
+
+  test('uden fil står figurerne, der venter på P2, som »VENTER«; en fil for sig fejler på dem', () => {
+    const all = run();
+    expect(all.status).toBe(0);
+    if (WAITING_FOR_P2.length === 0) return;
+    expect(all.out).toContain('VENTER ');
+    expect(all.out).toContain('venter på figuragenterne i P2');
+    // The file of the first waiting figure fails when it is checked on its own.
+    const line = all.out.split('\n').find((l) => l.includes('fejl venter på P2')) ?? '';
+    const file = /(content\/figures\/\w+\.json)/.exec(line)?.[1];
+    expect(file).toBeDefined();
+    expect(run(file ?? '').status).toBe(1);
   });
 });
