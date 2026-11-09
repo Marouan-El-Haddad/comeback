@@ -65,6 +65,11 @@ export interface Move {
   lift?: readonly LiftLimb[];
   /** Half of a transition's way through its `via` pose: one end is the via (`viaId`). */
   bridge?: true;
+  /**
+   * The end of a loop that travelled and came back to its first position (bounds): the figure stands
+   * where it got to, and the loop starts over at the start – a cut, not a glide backward.
+   */
+  cut?: true;
 }
 
 /** The id of a transition's `via` pose among the figure's poses: »squat>chest«. */
@@ -149,6 +154,13 @@ export function timeline(
     }
     t += seconds;
   });
+  if (at === first && Math.abs(x) > 1e-9 && moves.length > 0) {
+    // Back in its first position after travelling (bounds): it stands a moment where it got to,
+    // and the loop starts over at the start – a cut, never a glide backward in the same pose.
+    const seconds = timing.back / 2;
+    moves.push({ from: at, to: at, start: t, seconds, phase: null, shift: [x, x], cut: true });
+    return { moves, total: t + seconds, phases };
+  }
   if ((at !== first || Math.abs(x) > 1e-9) && moves.length > 0) {
     const back: Move = { from: at, to: first, start: t, seconds: timing.back, phase: null };
     const tr = at !== first ? transitions.find((y) => y.from === at && y.to === first) : undefined;

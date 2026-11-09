@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, test } from 'vitest';
 import type { Contact, ExplainFile, FigureItem, OwnMovement, Pose } from '../../content/types.ts';
-import { bendProblems, movementFor, turn } from '../check.ts';
+import { bendProblems, jumpProblems, movementFor, turn } from '../check.ts';
 import { bodyPrims, moving, propPrims, svgBody, track, emptyBox, type Box } from '../draw.ts';
 import { deviation, faultPair, wrongPose } from '../faults.ts';
 import {
@@ -584,7 +584,7 @@ describe('fremad-kinematik fra det, der står stille (D56)', () => {
     }
   });
 
-  test('»advance« flytter figuren langs x, og vejen tilbage fører den til start', () => {
+  test('»advance« flytter figuren langs x, og ender den i startstillingen, begynder den forfra med et klip', () => {
     const movement: OwnMovement = {
       positions: [
         { id: 'land', name: 'Landet', text: 'Landet.', contacts: [] },
@@ -603,9 +603,13 @@ describe('fremad-kinematik fra det, der står stille (D56)', () => {
       [30, 40],
       [40, 50],
       [50, 60],
-      [60, 0],
+      [60, 60],
     ]);
-    expect(line.moves.at(-1)?.phase).toBeNull();
+    // Back in its first position it never glides backward to the start: it stands a moment where it
+    // landed, and the loop starts over at the start (the figure agents' bounds, P1b).
+    const back = line.moves.at(-1);
+    expect(back).toMatchObject({ from: 'land', to: 'land', phase: null, cut: true });
+    expect(back?.seconds).toBeCloseTo(CARD_TIMING.back / 2, 9);
   });
 });
 
@@ -761,8 +765,9 @@ describe('»advance« uden spring (H1 i P1a-reviewet)', () => {
       [60, 80],
       [80, 80],
       [80, 80],
-      [80, 0],
+      [80, 80],
     ]);
+    expect(line.moves.at(-1)?.cut).toBe(true);
   });
 
   test('hoften springer ikke mellem to billeder ved 30 billeder i sekundet', () => {
@@ -770,13 +775,20 @@ describe('»advance« uden spring (H1 i P1a-reviewet)', () => {
     const model = buildModel(figure, movement);
     let last: number | null = null;
     let worst = 0;
-    for (let t = 0; t < model.timeline.total * 2; t += 1 / 30) {
+    // One loop: it starts over with a cut (below), never with a jump in the middle.
+    for (let t = 0; t < model.timeline.total - 1e-9; t += 1 / 30) {
       const x = solve(model.frame, poseAt(model, t)).hip[0];
       if (last !== null) worst = Math.max(worst, Math.abs(x - last));
       last = x;
     }
     // The fastest way: 20 units in 0.4 sek with easing, about 2,6 units a frame at its peak.
     expect(worst).toBeLessThan(5);
+    // The last frame stands where it landed, the next loop at the start: a cut, and the check
+    // knows it (no »figuren springer« between the way back and the first move).
+    const end = solve(model.frame, poseAt(model, model.timeline.total - 1e-6)).hip[0];
+    expect(end).toBeGreaterThan(70);
+    expect(solve(model.frame, poseAt(model, model.timeline.total)).hip[0]).toBeLessThan(10);
+    expect(jumpProblems(model)).toEqual([]);
   });
 
   test('stillbillederne står i deres egen kasse uden turen langs gulvet', () => {

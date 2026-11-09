@@ -839,7 +839,8 @@ export function jumpProblems(model: FigureModel): Array<{ where: string; message
     const end = framePoints(solve(model.frame, movePose(model, m, 1)));
     const start = framePoints(solve(model.frame, movePose(model, next, 0)));
     const d = farthest(end, start);
-    if (d > 0.5) {
+    // A loop that travelled starts over with a cut (`cut`): the jump back to the start is meant.
+    if (d > 0.5 && !m.cut) {
       problems.push({
         where: `${placeName(m.from)} → ${placeName(m.to)}`,
         message: `figuren springer ${num(d)} mellem ${label(m)} og ${label(next)}; tjek »advance« og overgangene`,
