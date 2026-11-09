@@ -52,6 +52,63 @@ async function onboardPowerLegs(page: Page, step: number): Promise<void> {
   await expect(page.getByTestId('today')).toBeVisible();
 }
 
+/**
+ * Two taps 180 ms apart in the middle of a button, as a clumsy double tap (SPEC 6, D33): the second
+ * lands on whatever stands there once the first has changed the screen.
+ */
+async function doubleTap(page: Page, testId: string): Promise<void> {
+  // First until the button takes taps (the half second after its own screen came, D33).
+  await page.getByTestId(testId).click({ trial: true });
+  const box = await page.getByTestId(testId).boundingBox();
+  if (!box) throw new Error(`${testId} ses ikke`);
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+  await page.mouse.click(x, y);
+  await page.waitForTimeout(180);
+  await page.mouse.click(x, y);
+}
+
+/**
+ * Taps through a running session as planned until `stop` holds: intro cards closed with »Luk«,
+ * pauses skipped, questions answered yes, the EMOM's minutes run (unless `stop` stops before it).
+ */
+async function driveUntil(page: Page, stop: () => Promise<boolean>): Promise<void> {
+  for (let i = 0; i < 400; i++) {
+    if (await stop()) return;
+    if (await page.getByTestId('intro-close').isVisible()) {
+      await closeIntro(page);
+      continue;
+    }
+    if (await page.getByTestId('as-planned').isVisible()) {
+      await page.getByTestId('as-planned').click();
+      continue;
+    }
+    const skip = page.getByRole('button', { name: 'Spring pausen over' });
+    if (await skip.isVisible()) {
+      await skip.click();
+      continue;
+    }
+    const startEmom = page.getByRole('button', { name: 'Start EMOM' });
+    if (await startEmom.isVisible()) {
+      await startEmom.click();
+      for (let s = 0; s < 60 && !(await page.getByText('Alle minutter rene?').isVisible()); s++)
+        await page.clock.runFor(5_000);
+      continue;
+    }
+    let answered = false;
+    for (const name of ['Gem', 'Ja']) {
+      const button = page.getByRole('button', { name, exact: true });
+      if (await button.isVisible()) {
+        await button.click();
+        answered = true;
+        break;
+      }
+    }
+    if (!answered) await page.clock.runFor(2_000);
+  }
+  throw new Error('Passet nåede ikke frem');
+}
+
 /** The session as the previous version saved it: the step's index without its key (D54). */
 async function saveAsPreviousVersion(page: Page, stepIndex?: number): Promise<void> {
   await page.evaluate((index) => {
@@ -693,6 +750,68 @@ test('et pas gemt af den forrige version genoptages samme sted uden fejl og tab'
   await page.getByTestId('as-planned').click();
   await expect.poll(() => storedEventCount(page)).toBe(events + 1);
   expect(errors).toEqual([]);
+});
+
+test('et dobbelttryk på introkortets »Luk« logger og springer intet over (D57)', async ({
+  page,
+}) => {
+  await stillFigures(page);
+  // Programme week 2, Tuesday, in the real app (a fresh profile), so every event can be counted.
+  await openApp(page, '2026-11-17');
+  await onboard(page);
+  await startSession(page);
+  await page.getByRole('button', { name: 'Start opvarmningen' }).click();
+  const title = page.locator('.session-title');
+
+  // The warm-up's card: under »Luk« is the first item's »Videre«.
+  await expect(intro(page)).toContainText('Opvarmning · 8 min');
+  await doubleTap(page, 'intro-close');
+  await expect(intro(page)).toHaveCount(0);
+  await expect(title).toHaveText('Opvarmning · 1/4');
+  await expect(now(page).locator('.set-name')).toHaveText('Hæv pulsen');
+  for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
+  await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+
+  // Power's card closes by itself after 10 sek; a tap at »Luk« in that moment changes nothing.
+  await expect(intro(page).getByRole('heading', { level: 1 })).toHaveText('Power ben · Squat jump');
+  const close = await page.getByTestId('intro-close').boundingBox();
+  const events = await storedEventCount(page);
+  await page.clock.runFor(10_000);
+  await expect(intro(page)).toHaveCount(0);
+  await page.mouse.click((close?.x ?? 0) + 100, (close?.y ?? 0) + 20);
+  await page.waitForTimeout(100);
+  expect(await storedEventCount(page)).toBe(events);
+  await expect(page.getByTestId('as-planned')).toHaveText('Som planlagt (3 reps)');
+
+  // The pause before Pres with its intro card: under »Luk« is »Spring pausen over«.
+  for (let i = 0; i < 2; i++) {
+    await page.getByTestId('as-planned').click();
+    await page.getByText('Spring pausen over').click();
+  }
+  await page.getByTestId('as-planned').click();
+  await expect(intro(page).getByRole('heading', { level: 1 })).toHaveText(
+    'Pres · Push-up med tempo',
+  );
+  await doubleTap(page, 'intro-close');
+  await expect(page.locator('.session .rest')).toBeVisible();
+  await expect(nextUp(page).locator('.next-title')).toHaveText('Pres · Push-up med tempo');
+  await expect(page.getByText('Spring pausen over')).toBeVisible();
+
+  // To the neck's card (no pause before it): under »Luk« is the neck's »Stop«.
+  await driveUntil(
+    page,
+    async () =>
+      (await intro(page).isVisible()) &&
+      (await intro(page).locator('h1').allTextContents())[0] === 'Nakke · Hage-ind liggende',
+  );
+  const beforeNeck = await storedEventCount(page);
+  await doubleTap(page, 'intro-close');
+  await expect(intro(page)).toHaveCount(0);
+  await expect(now(page).locator('.set-name')).toHaveText('Hage-ind liggende');
+  await expect(page.getByRole('button', { name: /^Stop: snurren/ })).toBeVisible();
+  await page.waitForTimeout(600);
+  expect(await storedEventCount(page)).toBe(beforeNeck);
+  await expect(page.getByRole('heading', { name: 'Hvordan føltes trinnet?' })).toHaveCount(0);
 });
 
 test('»Lettere variant i dag« efter skarp smerte på trin 1 (N3) @date', async ({ page }) => {

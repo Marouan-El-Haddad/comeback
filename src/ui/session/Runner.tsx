@@ -5,7 +5,7 @@
 // first time an exercise comes it has an intro card (DECISIONS.md D44, D50–D53). »Hold pause« leaves
 // the session standing still under the tabs, and »Fortsæt passet« comes back to the same place.
 import type { ComponentChildren } from 'preact';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 import {
   defaultAnswers,
   finishSession,
@@ -218,14 +218,24 @@ export function Runner({
       sim: model.sim !== null,
     };
   });
+  /** The intro card that was closed: »warmup« or »step-<index>« (D44). */
+  const [introShut, setIntroShut] = useState<string | null>(null);
+  // »Sådan gør du« opens the exercise card in place of the session (docs/SPEC.md 3.8). While it is
+  // open the session stands still – every clock, also the pause – so nothing starts or is logged
+  // behind it (DECISIONS.md D47). Away under the tabs it stands still too. `held` is what the timers
+  // get.
+  const card = useCard();
   // A button that appears after a change of screen cannot be hit by the same clumsy double tap
-  // (SPEC 6, design review D1): taps are ignored for half a second.
+  // (SPEC 6, design review D1): taps are ignored for half a second. An intro card that closes – a
+  // tap, »Luk« or its own clock – and the exercise card that closes are changes of screen too, so
+  // the second tap never lands on the neck's »Stop«, »Videre« or »Spring pausen over« under »Luk«
+  // (D57). Set before the screen is painted, so not even the first frame takes a tap.
   const [settling, setSettling] = useState(false);
-  useEffect(() => {
+  useLayoutEffect(() => {
     setSettling(true);
     const id = setTimeout(() => setSettling(false), 500);
     return () => clearTimeout(id);
-  }, [run.phase, run.preIndex, run.stepIndex, away]);
+  }, [run.phase, run.preIndex, run.stepIndex, away, introShut, card.id]);
   // A new step starts at the top, with »Nu« and the clock in view, wherever the last one was rolled.
   useEffect(() => {
     if (!away) window.scrollTo(0, 0);
@@ -235,15 +245,8 @@ export function Runner({
   const soundNoted = () => writeLocal(true, SOUND_KEY);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [finished, setFinished] = useState<SessionSummary | null>(null);
-  /** The intro card that was closed: »warmup« or »step-<index>« (D44). */
-  const [introShut, setIntroShut] = useState<string | null>(null);
   /** The motor's phase, for the part in the header. */
   const [motorPhase, setMotorPhase] = useState(0);
-  // »Sådan gør du« opens the exercise card in place of the session (docs/SPEC.md 3.8). While it is
-  // open the session stands still – every clock, also the pause – so nothing starts or is logged
-  // behind it (DECISIONS.md D47). Away under the tabs it stands still too. `held` is what the timers
-  // get.
-  const card = useCard();
   const held = away || card.id !== null;
   const withCard = (view: preact.JSX.Element, overview = false) => (
     <>

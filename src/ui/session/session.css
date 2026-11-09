@@ -408,6 +408,12 @@
   background: var(--c-paper);
 }
 
+/* The card closes at a tap, so like a button it takes none in the first half second after a change
+   of screen: the second tap of a double tap on »Som planlagt« never closes it (D57). */
+.session.settling .intro-card {
+  pointer-events: none;
+}
+
 .intro-label {
   font-family: 'Kanit', system-ui, sans-serif;
   font-weight: 700;
