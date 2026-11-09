@@ -127,6 +127,21 @@
   font-size: 20px;
 }
 
+/* A measurement's »Nu«: the figure beside the programme's text, so the field stays on the first
+   screen above the actions (D54). */
+.measure-stage > .cue {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* A button that cannot be pressed yet (»Gem målingen« before a value) still reads at 7:1 in a
+   session (SPEC 6); a dashed edge and the grey ground say that it is not active, not the text. */
+.session .btn.primary:disabled {
+  border-style: dashed;
+  border-color: var(--c-muted);
+  color: var(--c-ink);
+}
+
 /* A figure in a session: no frame, the size of the place it stands in. */
 .session-figure {
   width: 100%;

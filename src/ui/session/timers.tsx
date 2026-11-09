@@ -208,12 +208,12 @@ export function PhaseRunner(props: {
         onClock={(clock) => onPart.current?.(index, clock)}
       />
     ) : null;
+  // No »2 af 5« over the phase: it counted »Klar« and the pauses, next to »Minut 1 af 4« and the
+  // part in the header (D54). A phase's label says where it is: »Minut 1 af 4«, »Sæt 3 af 10«,
+  // »Runde 1: …«.
   return (
     <div class="phase-runner">
       {props.title && <p class="step-kicker">{props.title}</p>}
-      <p class="phase-count">
-        {index + 1} af {props.phases.length}
-      </p>
       <h2 class="phase-label">{phase.label}</h2>
       {phase.detail && <p class="cue">{phase.detail}</p>}
       {props.beside ? (

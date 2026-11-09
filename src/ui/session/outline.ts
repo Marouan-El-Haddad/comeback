@@ -165,7 +165,19 @@ export function upcomingOf(step: ExerciseStep, program: Program = PROGRAM): Upco
   const cardId = stepCardId(step);
   const pictoId = stepPictoId(step);
   switch (step.type) {
-    case 'set':
+    case 'set': {
+      if (step.measure) {
+        // A measurement in place of the first set is its own exercise (D45, D51): a max test is
+        // an ordinary push-up or row, whatever the step.
+        const measure = program.measures.find((m) => m.id === block.measureId);
+        return {
+          cardId,
+          pictoId,
+          title: `Måling · ${measure?.name ?? ''}`,
+          line: `Første sæt i ${getTrack(program, block.trackId).short} · max`,
+        };
+      }
+      // Short enough for one line in the strip: »Sæt 2 af 2 · Venstre ben · 8 reps«.
       return {
         cardId,
         pictoId,
@@ -173,12 +185,11 @@ export function upcomingOf(step: ExerciseStep, program: Program = PROGRAM): Upco
         line:
           `Sæt ${step.setIndex} af ${setCount(block)}` +
           (step.side ? ` · ${sideWord(step.side, block)}` : '') +
-          (step.measure
-            ? ' · måling: max'
-            : step.alternate
-              ? ` · skiftevis · mål ${block.target} ${perWord(block)}`
-              : ` · mål ${block.target} ${unitWord(block)}`),
+          (step.alternate
+            ? ` · skiftevis · ${block.target} ${perWord(block)}`
+            : ` · ${block.target} ${unitWord(block)}`),
       };
+    }
     case 'round':
       return {
         cardId,
@@ -307,15 +318,12 @@ export function neckClock(block: BlockPlan): StepClock & { direction: (index: nu
   const of: number[] = [0];
   for (let s = 1; s <= block.sets; s++) {
     for (let d = 1; d <= directions; d++) {
-      const where = directions > 1 ? ` · retning ${d} af ${directions}` : '';
+      // »Sæt 3 af 10«: the label is where the neck is (no »6 af 20« counting the pauses, D54).
+      const label = `Sæt ${s} af ${block.sets}${directions > 1 ? ` · retning ${d} af ${directions}` : ''}`;
       phases.push(
         holds
-          ? {
-              label: `Sæt ${s}${where}`,
-              detail: `Hold ${block.target} sek.`,
-              seconds: block.target,
-            }
-          : { label: `Sæt ${s}${where}`, detail: `${block.target} langsomme reps.`, seconds: 0 },
+          ? { label, detail: `Hold ${block.target} sek.`, seconds: block.target }
+          : { label, detail: `${block.target} langsomme reps.`, seconds: 0 },
       );
       parts.push({ kind: 'work', seconds: holds ? block.target : 0 });
       of.push(d - 1);

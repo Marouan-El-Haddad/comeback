@@ -724,7 +724,9 @@ export function Runner({
       }
       progress={progress}
       onPause={pause}
-      onClose={() => setConfirmEnd(true)}
+      // On the last screen everything is logged: »Afslut passet« finishes it, and a second
+      // »Afslut« at the top would mark it as ended early (D54).
+      onClose={step.type === 'finish' ? undefined : () => setConfirmEnd(true)}
       progressWord={plan.kind === 'motor' ? 'Fase' : 'Del'}
     />
   );
@@ -1159,7 +1161,8 @@ function SessionHeader(props: {
   progress?: { at: number; of: number; label: string };
   progressWord?: string;
   onPause?: () => void;
-  onClose: () => void;
+  /** »Afslut« (or `closeLabel`); none on the last screen. */
+  onClose?: () => void;
   closeLabel?: string;
 }) {
   const progress = props.progress && props.progress.of > 1 ? props.progress : undefined;
@@ -1184,14 +1187,16 @@ function SessionHeader(props: {
             Hold pause
           </button>
         )}
-        <button
-          type="button"
-          class="btn small"
-          onClick={props.onClose}
-          aria-label={props.closeLabel ? undefined : 'Afslut passet'}
-        >
-          {props.closeLabel ?? 'Afslut'}
-        </button>
+        {props.onClose && (
+          <button
+            type="button"
+            class="btn small"
+            onClick={props.onClose}
+            aria-label={props.closeLabel ? undefined : 'Afslut passet'}
+          >
+            {props.closeLabel ?? 'Afslut'}
+          </button>
+        )}
       </header>
       {progress && <SessionProgress at={progress.at} of={progress.of} label={progress.label} />}
     </div>

@@ -92,11 +92,16 @@ async function driveChecking(page: Page): Promise<Record<string, number>> {
   const count = (what: string) => (seen[what] = (seen[what] ?? 0) + 1);
   for (let i = 0; i < 500; i++) {
     if (await page.getByTestId('done').isVisible()) return seen;
-    // The EMOM's intro stands on its own screen until »Start EMOM« (D44).
+    // The EMOM's intro stands on its own screen until »Start EMOM« (D44); then its minutes run
+    // to the questions without a touch (SK3).
     const startEmom = page.getByRole('button', { name: 'Start EMOM' });
     if (await startEmom.isVisible()) {
       count('emom');
       await startEmom.click();
+      await expectNowAndNext(page);
+      for (let s = 0; s < 60 && !(await page.getByText('Alle minutter rene?').isVisible()); s++)
+        await page.clock.runFor(5_000);
+      await expect(page.getByText('Alle minutter rene?')).toBeVisible();
       continue;
     }
     if (await intro(page).isVisible()) {
@@ -200,11 +205,20 @@ test('Styrke A i tidsmaskinen: dagens pas, nu og næste, pausen og introkortet @
     '8',
   ]);
   await expect(dayItem(page, 'Squat jump')).toContainText('Pause 75 sek');
+  // A measurement in place of the first set comes before the sets, and its equipment counts:
+  // bord-rows need a table.
   await expect(dayItem(page, 'Push-up med tempo')).toContainText(
     'Første sæt er en måling: Push-ups',
   );
-  await expect(dayItem(page, 'Rygsæk-row med én arm')).toContainText('1 × 8 pr. side');
+  await expect(dayItem(page, 'Push-up med tempo').locator('.day-item-dose')).toHaveText(
+    '1 × 6 + måling',
+  );
+  await expect(dayItem(page, 'Rygsæk-row med én arm')).toContainText('1 × 8 pr. side + måling');
+  await expect(dayItem(page, 'Rygsæk-row med én arm')).toContainText(
+    'Udstyr: Rygsæk, stol og bord',
+  );
   await expect(plan.getByTestId('day-equipment')).toContainText(/rygsæk/i);
+  await expect(plan.getByTestId('day-equipment')).toContainText(/bord/i);
   // Every exercise has its drawn figure or its pictogram; only a measurement can have neither.
   expect(await plan.locator('.day-item .figure-still-only').count()).toBeGreaterThan(5);
   const bare = await plan
@@ -238,15 +252,26 @@ test('Styrke A i tidsmaskinen: dagens pas, nu og næste, pausen og introkortet @
   await expect(plan).toBeVisible();
 
   await page.getByTestId('day-start').click();
-  // The warm-up is fast-forwarded with its figures as stills; they move again from the first set.
-  await stillFigures(page);
   await page.getByRole('button', { name: 'Start opvarmningen' }).click();
 
-  // The wall test before the warm-up: the part in the header, the warm-up as »Næste«.
+  // The wall test before the warm-up: the part in the header, the warm-up as »Næste«, and the
+  // field on the first screen above the actions, even under the time machine's banner (D54).
   await expect(page.getByRole('heading', { name: 'Væg-testen' })).toBeVisible();
   await expect(progress(page)).toHaveText('Del 1 af 8');
   await expect(strip(page).locator('.next-name')).toHaveText('Opvarmning · Hæv pulsen');
+  await expect(now(page).getByRole('button', { name: 'Sådan gør du' })).toBeVisible();
+  const field = await page.locator('.session-body input[type="number"]').boundingBox();
+  const actions = await page.locator('.fixed-actions').boundingBox();
+  expect((field?.y ?? 0) + (field?.height ?? 0)).toBeLessThanOrEqual(actions?.y ?? 0);
+  expect(await a11yProblems(page, '.session', SESSION_RULES)).toEqual([]);
+  await page.screenshot({
+    path: 'screenshots/maaling-nu.png',
+    scale: 'css',
+    animations: 'disabled',
+  });
   await page.locator('.session-body input[type="number"]').fill('3');
+  // The warm-up is fast-forwarded with its figures as stills; they move again from the first set.
+  await stillFigures(page);
   await page.getByRole('button', { name: 'Gem målingen' }).click();
 
   // The warm-up's one card: its four items with name and figure for 10 sek, then the first timer
@@ -284,7 +309,7 @@ test('Styrke A i tidsmaskinen: dagens pas, nu og næste, pausen og introkortet @
   await expect(now(page).locator('.figure-stage')).toHaveAttribute('role', 'img');
   await expect(now(page).locator('.now-cues li')).toHaveCount(2);
   await expect(page.getByTestId('target').locator('.number')).toHaveText('3');
-  await expect(strip(page).locator('.next-line')).toHaveText('Sæt 2 af 2 · mål 3 reps');
+  await expect(strip(page).locator('.next-line')).toHaveText('Sæt 2 af 2 · 3 reps');
   expect(await a11yProblems(page, '.session', SESSION_RULES)).toEqual([]);
   await page.screenshot({
     path: 'screenshots/pas-nu-og-naeste.png',
@@ -302,11 +327,10 @@ test('Styrke A i tidsmaskinen: dagens pas, nu og næste, pausen og introkortet @
   await page.getByTestId('as-planned').click();
 
   // The pause after power: the push-ups measurement comes for the first time, so its intro card
-  // stands in the pause with the pause's clock; a tap closes it, and the pause shows »Næste«.
-  await expect(intro(page).getByRole('heading', { level: 1 })).toHaveText(
-    'Pres · Push-up med tempo',
-  );
-  await expect(intro(page).locator('.intro-line')).toHaveText('Sæt 1 af 2 · måling: max');
+  // stands in the pause with the pause's clock; a tap closes it, and the pause shows »Næste«. The
+  // measurement is its own exercise – an ordinary push-up, not the step's tempo push-up (D45).
+  await expect(intro(page).getByRole('heading', { level: 1 })).toHaveText('Måling · Push-ups');
+  await expect(intro(page).locator('.intro-line')).toHaveText('Første sæt i Pres · max');
   await expect(intro(page).locator('.countdown-label')).toHaveText('Pause');
   await page.clock.runFor(2_000);
   expect(await a11yProblems(page, '.session', SESSION_RULES)).toEqual([]);
@@ -317,7 +341,7 @@ test('Styrke A i tidsmaskinen: dagens pas, nu og næste, pausen og introkortet @
   });
   const left = await secondsLeft(page);
   await closeIntro(page);
-  await expect(nextUp(page).locator('.next-title')).toHaveText('Pres · Push-up med tempo');
+  await expect(nextUp(page).locator('.next-title')).toHaveText('Måling · Push-ups');
   await expect(nextUp(page).locator('.get-ready')).toBeVisible();
   // The same clock: closing the card changes nothing in the pause.
   expect(Math.abs((await secondsLeft(page)) - left)).toBeLessThanOrEqual(1);
@@ -328,7 +352,7 @@ test('Styrke A i tidsmaskinen: dagens pas, nu og næste, pausen og introkortet @
   await expect(
     page.getByRole('heading', { name: 'Alle hop/reps lige høje og hurtige?' }),
   ).toBeVisible();
-  await expect(nextUp(page).locator('.next-title')).toHaveText('Pres · Push-up med tempo');
+  await expect(nextUp(page).locator('.next-title')).toHaveText('Måling · Push-ups');
   await page.getByRole('button', { name: 'Ja', exact: true }).click();
 
   // The rest of the session: »Nu« and »Næste« on every screen, the intro cards close themselves.
@@ -363,15 +387,13 @@ test('Styrke B i tidsmaskinen: hold og nakke uden berøring, figuren følger ure
   await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
   await closeIntro(page);
 
-  // To the pause before the wall sit's hold (set 2: the first set is the measurement).
+  // To the pause before the wall sit's hold (set 2: the first set is the measurement), where the
+  // intro card of the wall sit's first working set stands (D44).
   for (let i = 0; i < 300; i++) {
-    const onRest = await page.locator('.session .rest').isVisible();
-    const wallSitNext =
-      onRest &&
-      (await nextUp(page).locator('.next-title').allTextContents())[0] ===
-        'Wall sit · Wall sit, 90°' &&
-      (await nextUp(page).locator('.next-line').allTextContents())[0]?.startsWith('Sæt 2');
-    if (wallSitNext) break;
+    const wallSitIntro =
+      (await intro(page).isVisible()) &&
+      (await intro(page).locator('h1').allTextContents())[0] === 'Wall sit · Wall sit, 90°';
+    if (wallSitIntro) break;
     if (await page.getByTestId('intro-close').isVisible()) {
       await page.getByTestId('intro-close').click();
       continue;
@@ -410,13 +432,15 @@ test('Styrke B i tidsmaskinen: hold og nakke uden berøring, figuren følger ure
     }
     await page.clock.runFor(5_000);
   }
-  await expect(nextUp(page).locator('.next-line')).toHaveText('Sæt 2 af 2 · mål 45 sek');
+  await expect(intro(page).locator('.intro-line')).toHaveText('Sæt 2 af 2 · 45 sek');
+  await expect(intro(page).locator('.countdown-label')).toHaveText('Pause');
   await page.emulateMedia({ reducedMotion: 'no-preference' });
 
-  // From here no touch: the pause runs out, »Klar« counts down, the figure glides into the wall
-  // sit at the end of »Klar« and holds while the hold is counted down, and the hold logs itself.
-  for (let i = 0; i < 40 && (await page.locator('.session .rest').isVisible()); i++)
-    await page.clock.runFor(1_000);
+  // From here no touch (SK3): the card closes itself when the pause runs out, »Klar« counts down,
+  // the figure glides into the wall sit at the end of »Klar« and holds while the hold is counted
+  // down, and the hold logs itself.
+  const waiting = page.locator('.session .rest').or(intro(page)).first();
+  for (let i = 0; i < 120 && (await waiting.isVisible()); i++) await page.clock.runFor(1_000);
   await expect(now(page).locator('.set-name')).toHaveText('Wall sit, 90°');
   await expect(page.locator('.countdown-label')).toHaveText('Klar');
   await page.clock.pauseAt(await page.evaluate(() => Date.now() + 100));
@@ -606,7 +630,7 @@ test('skater-hop er ét sæt, og ét »Som planlagt« logger begge sider (P54)',
   await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
   await expect(intro(page).getByRole('heading', { level: 1 })).toHaveText('Power ben · Skater-hop');
   await expect(intro(page).locator('.intro-line')).toHaveText(
-    'Sæt 1 af 3 · skiftevis · mål 3 pr. side',
+    'Sæt 1 af 3 · skiftevis · 3 pr. side',
   );
   await closeIntro(page);
 
@@ -616,15 +640,15 @@ test('skater-hop er ét sæt, og ét »Som planlagt« logger begge sider (P54)',
   await expect(page.locator('.set-count')).toHaveText('Sæt 1 af 3 · skiftevis');
   await expect(page.getByTestId('target').locator('.unit')).toHaveText('reps pr. side');
   await expect(page.getByTestId('as-planned')).toHaveText('Som planlagt (3 reps pr. side)');
-  await expect(strip(page).locator('.next-line')).toHaveText(
-    'Sæt 2 af 3 · skiftevis · mål 3 pr. side',
-  );
+  await expect(strip(page).locator('.next-line')).toHaveText('Sæt 2 af 3 · skiftevis · 3 pr. side');
   expect(await a11yProblems(page, '.session', SESSION_RULES)).toEqual([]);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.screenshot({
     path: 'screenshots/pas-skiftevis.png',
     scale: 'css',
     animations: 'disabled',
   });
+  await stillFigures(page);
   const before = await storedEventCount(page);
   await page.getByTestId('as-planned').click();
   // Left and right, as the engine counts per-side sets, and straight on to the pause.
@@ -719,7 +743,10 @@ test('reduceret bevægelse: figurerne står stille, og intet glider ind', async 
   for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
   await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
   await closeIntro(page);
-  await expect(now(page).locator('.figure-stills')).toBeVisible();
+  // One still image of the most typical position, as in »Næste«, not every position side by side
+  // next to the target (D54).
+  await expect(now(page).locator('.now-stage .figure-still-only')).toHaveCount(1);
+  await expect(now(page).locator('.figure-stills')).toHaveCount(0);
   await expect(now(page).locator('.figure-stage')).toHaveCount(0);
   const animation = await now(page)
     .locator('.now-stage')

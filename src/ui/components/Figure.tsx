@@ -93,7 +93,8 @@ export function FigureStill({
   );
 }
 
-function useReducedMotion(): boolean {
+/** prefers-reduced-motion: reduce, and it follows a change of the setting. */
+export function useReducedMotion(): boolean {
   const query = useMemo(
     () =>
       typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : null,

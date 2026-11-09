@@ -10,7 +10,7 @@ import { keyPosition, syncFigure } from '../../figure/sync.ts';
 import { HowButton } from '../card.tsx';
 import type { CardContext } from '../components/cardItem.ts';
 import { figureText } from '../components/cardItem.ts';
-import { Figure, FigureStill } from '../components/Figure.tsx';
+import { Figure, FigureStill, useReducedMotion } from '../components/Figure.tsx';
 import { pictoUrl } from '../components/Picto.tsx';
 import { elapsedMs, type Clock } from '../timers/clock.ts';
 import { drawnMovement, useExercise } from './exercise.ts';
@@ -73,6 +73,9 @@ export function ExerciseFigure({
   const exercise = useExercise(cardId, context);
   const drawn = drawnMovement(exercise, movementIndex);
   const movement = drawn?.movement ?? null;
+  // With reduced motion a session's figure is one still image of its most typical position, as in
+  // »Næste«: all positions side by side, as on the card, pushed the target off its place (D54).
+  const asStill = useReducedMotion() || still;
   const parts = follow?.parts;
   const mode = follow?.mode;
   // Compared by their contents: a step draws its clock parts anew four times a second.
@@ -99,7 +102,7 @@ export function ExerciseFigure({
     const label = figureText(name, movement);
     return (
       <div class={`session-figure ${size}`}>
-        {still ? (
+        {asStill ? (
           <FigureStill
             figure={drawn.figure}
             movement={movement}

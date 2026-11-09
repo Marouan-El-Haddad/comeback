@@ -26,6 +26,13 @@ export interface DayItem {
   /** A line under the dose: the pause, the measurement. */
   notes: string[];
   context?: CardContext | null;
+  /** Another card whose equipment the item needs: the measurement in place of the first set. */
+  alsoCardId?: string;
+}
+
+/** The cards an item's equipment comes from: its own and its measurement's (bord-rows: a table). */
+function equipmentCards(item: DayItem): string[] {
+  return [item.cardId, item.alsoCardId].filter((id): id is string => !!id);
 }
 
 export interface DayPart {
@@ -43,8 +50,16 @@ const MEASURE_WHAT: Record<string, string> = {
   depth: 'Så langt ned, du kan styre',
 };
 
-/** Sets × repetitions or time as the session runs them (a measurement set not counted). */
+/**
+ * Sets × repetitions or time as the session runs them, with a measurement in place of the first set
+ * as I dag says it: »1 × 6 + måling«, so »1 × 6« is not read as the sets the measurement is one of.
+ */
 function blockDose(block: BlockPlan): string {
+  const dose = workDose(block);
+  return block.measureId && block.role !== 'measure' ? `${dose} + måling` : dose;
+}
+
+function workDose(block: BlockPlan): string {
   if (block.unit === 'emom' && block.emom) {
     return `${block.emom.minutes} min · ${block.emom.reps} burpees i starten af hvert minut`;
   }
@@ -95,6 +110,7 @@ function blockItem(block: BlockPlan, kind: SessionPlan['kind']): DayItem {
     dose: blockDose(block),
     notes,
     context: block.tempDown?.lighter ? { session: kind, power: null, lighter: true } : null,
+    alsoCardId: block.measureId ? `${MEASURES}.${block.measureId}` : undefined,
   };
 }
 
@@ -205,20 +221,22 @@ function clock(seconds: number): string {
   return rest === 0 ? `${minutes} min` : `${minutes} min ${rest} sek`;
 }
 
-/** The equipment of every exercise in the parts, from the explanations that have come. */
-function equipmentOf(parts: readonly DayPart[]): Equipment[] {
+/** The equipment of an item: its own and its measurement's, from the explanations that have come. */
+function itemEquipment(item: DayItem): Equipment[] {
   const all = new Set<Equipment>();
-  for (const part of parts) {
-    for (const item of part.items) {
-      if (!item.cardId) continue;
-      for (const e of loadedExplanation(item.cardId)?.equipment ?? []) all.add(e);
-    }
+  for (const id of equipmentCards(item)) {
+    for (const e of loadedExplanation(id)?.equipment ?? []) all.add(e);
   }
   return [...all];
 }
 
+/** The equipment of every exercise in the parts. */
+function equipmentOf(parts: readonly DayPart[]): Equipment[] {
+  return [...new Set(parts.flatMap((part) => part.items.flatMap(itemEquipment)))];
+}
+
 function ItemRow({ item, onCard }: { item: DayItem; onCard: (item: DayItem) => void }) {
-  const equipment = item.cardId ? (loadedExplanation(item.cardId)?.equipment ?? []) : [];
+  const equipment = itemEquipment(item);
   const body = (
     <>
       <ExerciseFigure
@@ -305,9 +323,7 @@ export function DayPlan({
   strength?: boolean;
   onCard: (item: DayItem) => void;
 }) {
-  const subjects = parts.flatMap((p) =>
-    p.items.flatMap((i) => (i.cardId ? [subjectOf(i.cardId)] : [])),
-  );
+  const subjects = parts.flatMap((p) => p.items.flatMap((i) => equipmentCards(i).map(subjectOf)));
   useSubjects(subjects);
   // The equipment is told once every explanation has come, never »Kun gulvet« while they load.
   const ready = subjects.every((s) => loadedExplain(s) !== undefined);

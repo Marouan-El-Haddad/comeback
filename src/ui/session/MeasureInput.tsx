@@ -1,12 +1,15 @@
 // Entering a measurement (docs/SPEC.md 4.8): reps and centimetres with −/+, times with a stopwatch,
 // Nordic depth with three buttons, distance in metres. Shows the previous value and the level. A
 // time measured per side (side plank, balance) has a clock for the left side and then one for the
-// right, each started with »Start uret«, and saves the shorter time (P59, D49).
+// right, each started with »Start uret«, and saves the shorter time (P59, D49). In a session it is
+// »Nu« (docs/SPEC.md 3.2): »Sådan gør du« beside the name and the figure beside the programme's
+// text, so the field, the clock or »Start uret« stands on the first screen above the actions (D54).
 import type { ComponentChildren } from 'preact';
 import { useState } from 'preact/hooks';
 import { measureLevel, PROGRAM } from '../../engine/index.ts';
 import type { Level, State } from '../../engine/types.ts';
 import { HowButton } from '../card.tsx';
+import { NowHead } from './NowNext.tsx';
 import { measureSides, shortest } from './sides.ts';
 import { Countdown, Stopwatch } from './timers.tsx';
 
@@ -60,16 +63,28 @@ export function MeasureInput(props: {
     setTimes((all) => all.map((t, i) => (i === side ? time : t)));
   const timedTest = measure.placement.type === 'replace_finisher';
 
+  const kicker = `Måling${props.firstSetOf ? ` · første sæt i ${props.firstSetOf}` : ''}`;
+  const inSession = props.next !== undefined;
+
   return (
-    <div class="stack">
-      <p class="step-kicker">
-        {props.next !== undefined && <span class="now-label">Nu</span>} Måling
-        {props.firstSetOf ? ` · første sæt i ${props.firstSetOf}` : ''}
-      </p>
-      <h1>{measure.name}</h1>
-      {props.figure}
-      <p class="cue">{measure.how}</p>
-      {props.onCard && <HowButton onClick={props.onCard} />}
+    <div class={inSession ? 'stack now' : 'stack'}>
+      {inSession ? (
+        <NowHead kicker={kicker} name={measure.name} onCard={props.onCard} />
+      ) : (
+        <>
+          <p class="step-kicker">{kicker}</p>
+          <h1>{measure.name}</h1>
+        </>
+      )}
+      {props.figure ? (
+        <div class="now-stage measure-stage">
+          <div class="now-figure">{props.figure}</div>
+          <p class="cue">{measure.how}</p>
+        </div>
+      ) : (
+        <p class="cue">{measure.how}</p>
+      )}
+      {props.onCard && !inSession && <HowButton onClick={props.onCard} />}
       {previous && (
         <p class="muted">
           Forrige: {previous.value} {UNIT[measure.unit]}

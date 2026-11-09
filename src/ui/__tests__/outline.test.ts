@@ -136,12 +136,15 @@ describe('»Næste«', () => {
       cardId: 'pull.1',
       pictoId: 'pull.1',
       title: 'Træk · Rygsæk-row med én arm',
-      line: 'Sæt 1 af 2 · Venstre side · mål 8 reps',
+      line: 'Sæt 1 af 2 · Venstre side · 8 reps',
     });
+    // The measurement in place of the first set is its own exercise: a max test is an ordinary
+    // push-up, not the step's tempo push-up (D45).
     expect(upcomingOf(steps[5] as never)).toMatchObject({
       cardId: 'measures.pushups',
       pictoId: 'press.1',
-      line: 'Sæt 1 af 2 · måling: max',
+      title: 'Måling · Push-ups',
+      line: 'Første sæt i Pres · max',
     });
     expect(upcomingOf(steps[12] as never)).toMatchObject({
       cardId: 'burpee_emom.E1',
@@ -163,7 +166,7 @@ describe('»Næste«', () => {
     });
     expect(upcomingOf(set(skater, 1, 'Power', { alternate: true }) as never)).toMatchObject({
       title: 'Power ben · Skater-hop',
-      line: 'Sæt 1 af 2 · skiftevis · mål 3 pr. side',
+      line: 'Sæt 1 af 2 · skiftevis · 3 pr. side',
     });
   });
 });
@@ -207,6 +210,9 @@ describe('urets dele, som figuren følger', () => {
     expect(phases.map((p) => p.seconds)).toEqual(parts.map((p) => p.seconds));
     expect(parts[1]).toEqual({ kind: 'work', seconds: 10 });
     expect(parts[2]).toEqual({ kind: 'rest', seconds: 10 });
+    // The label says where the neck is; no counter over it counts the pauses too (D54).
+    expect(phases[1]?.label).toBe('Sæt 1 af 2 · retning 1 af 4');
+    expect(phases[15]?.label).toBe('Sæt 2 af 2 · retning 4 af 4');
     // The pause before a hold shows that hold's direction.
     expect([1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => direction(i))).toEqual([
       0, 1, 1, 2, 2, 3, 3, 0, 0,
