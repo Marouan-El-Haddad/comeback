@@ -322,35 +322,142 @@ export interface Transition {
 /** The segments drawn in Thai red: the muscles that work; `neck` = between shoulders and head. */
 export type Segment = 'torso' | 'neck' | `${LimbSide}.${'upperArm' | 'forearm' | 'thigh' | 'shin'}`;
 
-interface FigureBase {
-  /** The step, routine item or measurement id, as in content/explain. */
-  id: string;
-  /** The movement's id when the explanation has more than one. */
-  movement?: string;
+// ---------------------------------------------------------------------------------------------
+// Marks, mistakes and a second view (DECISIONS.md D58): all optional, so older files stay valid
+// ---------------------------------------------------------------------------------------------
+
+/**
+ * A point of the body a mark refers to: the hip, the shoulder line, the chest (the front of the upper
+ * torso), the head, or a hand (wrist), elbow, knee, foot (ankle) or toes of one side.
+ */
+export type MarkPoint =
+  | 'hip'
+  | 'shoulder'
+  | 'chest'
+  | 'head'
+  | `${LimbSide}.${'hand' | 'elbow' | 'knee' | 'foot' | 'toes'}`;
+
+/** A joint whose angle a mark shows: between thigh and shin, upper arm and forearm, torso and thigh, torso and upper arm. */
+export type MarkJoint = `${LimbSide}.${'knee' | 'elbow' | 'hip' | 'shoulder'}`;
+
+/** Where a mark's text stands beside its point. */
+export type MarkPlace = 'right' | 'left' | 'above' | 'below';
+
+interface MarkWhen {
+  /** Shown while the figure stands at this position (its hold, and as it arrives and leaves). */
+  at?: string;
+  /** Shown while this phase runs: its number in the explanation's phases, counted from 1. */
+  phase?: number;
+}
+
+/**
+ * What the figure points out at the right moment (docs/SPEC.md 9.1, DECISIONS.md D58): the way a part
+ * moves in a phase (`arrow`), the angle at a joint (`angle`), a short cue of at most three words
+ * (`cue`) or a straight guide line between two points (`line`). Exactly one of the four, and exactly
+ * one of `at` and `phase`; one mark at a time.
+ */
+export type Mark = MarkWhen &
+  (
+    | {
+        /** The part whose path in the phase the arrow follows (a curved path gives a curved arrow). */
+        arrow: MarkPoint;
+        /** The arrow moved off the path, in figure units, so it stands beside the body. */
+        offset?: Point;
+      }
+    | {
+        angle: MarkJoint;
+        /** The degrees to show (the text's »ca. 90°«); the drawn angle is shown without it. */
+        degrees?: number;
+      }
+    | {
+        /** At most three words, without a full stop: »Knæ over tæer«. */
+        cue: string;
+        /** The point the cue stands by: a part of the body or a point in figure units. */
+        point?: MarkPoint | Point;
+        place?: MarkPlace;
+      }
+    | {
+        /** From one point to the other: parts of the body or points in figure units. */
+        line: [MarkPoint | Point, MarkPoint | Point];
+        /** A cue by the middle of the line: »Én planke«. */
+        cue?: string;
+        place?: MarkPlace;
+      }
+  );
+
+/** The pose fields a wrong pose changes; a limb given replaces the right pose's limb. */
+export interface PoseChange {
+  hip?: Point;
+  torso?: number;
+  head?: number;
+  spine?: number;
+  width?: { shoulders: number; hips: number };
+  arms?: Partial<Record<LimbSide, Limb>>;
+  legs?: Partial<Record<LimbSide, Limb>>;
+}
+
+/**
+ * A typical mistake as a figure (DECISIONS.md D58): the right pose of a position beside the wrong
+ * one, shown on the card under »Typiske fejl« with »Rigtigt« and »Forkert«.
+ */
+export interface Fault {
+  /** The mistake in the explanation's `mistakes`, counted from 1. */
+  mistake: number;
+  /** The position the mistake is shown in: the right pose is its keyframe. */
+  at: string;
+  /** How the wrong pose differs from the right one. */
+  wrong: PoseChange;
+  /** The view it is drawn in, the figure's own or its second; the figure's own by default. */
+  view?: View;
+  /** What the wrong pose touches, when the mistake changes it (a heel that lifts); else the position's. */
+  contacts?: Contact[];
+}
+
+interface ViewBase {
   props: Prop[];
-  /** Segments in red, at least one. */
-  highlight: Segment[];
   /** One pose per position id of the movement in content/explain. */
   keyframes: Record<string, Pose>;
   /** Lifted hands and feet, and the figure moving along x, between positions (D56). */
   transitions?: Transition[];
+  /** Arrows, angles, cues and guide lines at the right moment (D58). */
+  marks?: Mark[];
+}
+
+type Viewpoint =
+  | {
+      view: 'side';
+      /**
+       * The way the chest faces when the figure is turned upright without mirroring: 1 = right,
+       * −1 = left. Standing with the chest to the right, a push-up or plank with the head to the
+       * right, and lying on the back with the head to the left are all 1; a handstand with the
+       * chest to the right is −1. It decides which way knees and elbows bend, so it is required.
+       */
+      facing: 1 | -1;
+    }
+  | { view: 'front' | 'top' };
+
+/**
+ * The same movement seen from another side, drawn beside the figure with the same phases and the
+ * same clock (D58): a squat from the side for the hip and the back, and from the front for the
+ * knees over the toes. Its red segments are the figure's unless it names its own.
+ */
+export type SecondView = ViewBase & { highlight?: Segment[] } & Viewpoint;
+
+interface FigureBase extends ViewBase {
+  /** The step, routine item or measurement id, as in content/explain. */
+  id: string;
+  /** The movement's id when the explanation has more than one. */
+  movement?: string;
+  /** Segments in red, at least one. */
+  highlight: Segment[];
+  /** Typical mistakes as right and wrong side by side (D58). */
+  faults?: Fault[];
+  /** A second view beside the first, where one is not enough (D58). */
+  second?: SecondView;
 }
 
 /** The figure of one step, routine item or measurement (one movement of it). */
-export type FigureItem = FigureBase &
-  (
-    | {
-        view: 'side';
-        /**
-         * The way the chest faces when the figure is turned upright without mirroring: 1 = right,
-         * −1 = left. Standing with the chest to the right, a push-up or plank with the head to the
-         * right, and lying on the back with the head to the left are all 1; a handstand with the
-         * chest to the right is −1. It decides which way knees and elbows bend, so it is required.
-         */
-        facing: 1 | -1;
-      }
-    | { view: 'front' | 'top' }
-  );
+export type FigureItem = FigureBase & Viewpoint;
 
 /** A figure drawn exactly like another figure in the same file. */
 export interface FigureLike {

@@ -951,6 +951,30 @@ function checkLimb(
   return true;
 }
 
+/**
+ * The back's curve: from the side + toward the back (a round back) and − toward the chest; from the
+ * front + toward the near side (a side bend, DECISIONS.md D58). Not seen from above.
+ */
+function checkSpine(r: Report, where: string, value: unknown, view: string): void {
+  if (view === 'top') r.add(where, '»spine« bruges kun fra siden og forfra');
+  else if (!finite(value) || Math.abs(value) > 10) {
+    r.add(
+      where,
+      view === 'front'
+        ? 'et tal fra -10 til 10 (forfra: + mod den nære side, − mod den fjerne)'
+        : 'et tal fra -10 til 10 (+ rund ryg, − svajet ryg)',
+    );
+  }
+}
+
+function checkWidth(r: Report, where: string, value: unknown, view: string): void {
+  if (view !== 'front') r.add(where, '»width« bruges kun i frontbilledet');
+  else if (shape(r, where, value, ['shoulders', 'hips'])) {
+    positive(r, at(where, 'shoulders'), value.shoulders, 40);
+    positive(r, at(where, 'hips'), value.hips, 40);
+  }
+}
+
 function checkPose(
   r: Report,
   where: string,
@@ -967,19 +991,8 @@ function checkPose(
   if (value.head !== undefined && (!finite(value.head) || Math.abs(value.head) > 90)) {
     r.add(at(where, 'head'), 'en vinkel mellem -90 og 90 grader');
   }
-  if (value.spine !== undefined) {
-    if (view !== 'side') r.add(at(where, 'spine'), '»spine« bruges kun i sidebilledet');
-    else if (!finite(value.spine) || Math.abs(value.spine) > 10) {
-      r.add(at(where, 'spine'), 'et tal fra -10 til 10 (+ rund ryg, − svajet ryg)');
-    }
-  }
-  if (value.width !== undefined) {
-    if (view !== 'front') r.add(at(where, 'width'), '»width« bruges kun i frontbilledet');
-    else if (shape(r, at(where, 'width'), value.width, ['shoulders', 'hips'])) {
-      positive(r, at(at(where, 'width'), 'shoulders'), value.width.shoulders, 40);
-      positive(r, at(at(where, 'width'), 'hips'), value.width.hips, 40);
-    }
-  }
+  if (value.spine !== undefined) checkSpine(r, at(where, 'spine'), value.spine, view);
+  if (value.width !== undefined) checkWidth(r, at(where, 'width'), value.width, view);
   for (const kind of ['arms', 'legs'] as const) {
     const pair = value[kind];
     if (!shape(r, at(where, kind), pair, ['near', 'far'])) continue;
@@ -1084,93 +1097,416 @@ export function validateFigureFile(
       return;
     }
     const required = ['id', 'view', 'props', 'highlight', 'keyframes'];
-    if (!shape(r, where, entry, required, ['movement', 'facing', 'transitions'])) return;
-    const view = entry.view;
-    if (view !== 'side' && view !== 'front' && view !== 'top') {
-      r.add(at(where, 'view'), 'skal være "side", "front" eller "top"');
-    }
-    if (view === 'side' && entry.facing !== 1 && entry.facing !== -1) {
-      r.add(
-        at(where, 'facing'),
-        'sidebilledet skal have »facing«: 1, når brystet vender mod højre, efter at figuren er drejet op at stå, ellers -1',
-      );
-    } else if (view !== 'side' && entry.facing !== undefined) {
-      r.add(at(where, 'facing'), '»facing« bruges kun i sidebilledet');
-    }
-
-    const equipment: readonly Equipment[] = explained.equipment;
-    const props = new Set<string>();
-    if (list(r, at(where, 'props'), entry.props, 0, 8, 'rekvisitter')) {
-      entry.props.forEach((p, j) => {
-        const type = checkProp(r, at(at(where, 'props'), j), p);
-        if (!type) return;
-        props.add(type);
-        if (!(equipment as readonly string[]).includes(type)) {
-          r.add(at(at(where, 'props'), j), `»${type}« står ikke i forklaringens »equipment«`);
-        }
-      });
-    }
-    for (const pos of movement.positions) {
-      for (const c of pos.contacts) {
-        if (c.on !== 'floor' && !props.has(c.on)) {
-          r.add(
-            at(where, 'props'),
-            `positionen »${pos.id}« rører »${c.on}«, men figuren har ingen ${c.on}`,
-          );
-        }
-      }
-    }
-
-    if (list(r, at(where, 'highlight'), entry.highlight, 1, 8, 'røde segmenter')) {
-      entry.highlight.forEach((h, j) => {
-        if (typeof h !== 'string' || !SEGMENTS.has(h)) {
-          r.add(
-            at(at(where, 'highlight'), j),
-            `ukendt segment »${show(h)}« (tilladt: ${[...SEGMENTS].join(', ')})`,
-          );
-        }
-      });
-    }
-
-    if (!isObject(entry.keyframes)) {
-      r.add(at(where, 'keyframes'), 'skal være et objekt med én pose pr. position');
-      return;
-    }
-    const ids = movement.positions.map((p) => p.id);
-    for (const id of ids)
-      if (!(id in entry.keyframes)) r.add(at(where, 'keyframes'), `mangler positionen »${id}«`);
-    const visibility: Record<string, Set<boolean>> = {};
-    for (const [id, pose] of Object.entries(entry.keyframes)) {
-      if (!ids.includes(id)) {
-        r.add(
-          at(where, 'keyframes'),
-          `»${id}« er ikke en position i forklaringen (der er: ${ids.join(', ')})`,
-        );
-        continue;
-      }
-      const shown = checkPose(r, at(at(where, 'keyframes'), id), pose, show(view));
-      for (const [limb, visible] of Object.entries(shown))
-        (visibility[limb] ??= new Set()).add(visible);
-    }
-    for (const [limb, values] of Object.entries(visibility)) {
-      if (values.size > 1)
-        r.add(
-          at(where, 'keyframes'),
-          `${limb} er skjult (null) i nogle positioner og vist i andre`,
-        );
-    }
-    if (entry.transitions !== undefined) {
-      checkTransitions(
+    const optional = ['movement', 'facing', 'transitions', 'marks', 'faults', 'second'];
+    if (!shape(r, where, entry, required, optional)) return;
+    const main = checkView(r, where, entry, movement, explained.equipment, null);
+    if (!main) return;
+    const views = [main];
+    if (entry.second !== undefined) {
+      const w = at(where, 'second');
+      const ok = shape(
         r,
-        at(where, 'transitions'),
-        entry.transitions,
-        movement,
-        visibility,
-        show(view),
+        w,
+        entry.second,
+        ['view', 'props', 'keyframes'],
+        ['facing', 'highlight', 'transitions', 'marks'],
       );
+      const second = ok
+        ? checkView(r, w, entry.second as Json, movement, explained.equipment, main.view)
+        : null;
+      if (second) views.push(second);
+    }
+    if (entry.faults !== undefined) {
+      checkFaults(r, at(where, 'faults'), entry.faults, movement, explained, views);
     }
   });
   return r.problems;
+}
+
+const VIEWS: readonly string[] = ['side', 'front', 'top'];
+
+/** What the rest of the checks need to know about a view: its name and which limbs it shows. */
+interface ViewInfo {
+  view: string;
+  visibility: Record<string, Set<boolean>>;
+}
+
+/**
+ * A view of a figure – its own, or its `second` beside it (DECISIONS.md D58): the angle, the props,
+ * the red segments, one keyframe per position, the transitions and the marks. `mainView` is the
+ * figure's own view when this is its second, which must be another; null for the figure itself.
+ */
+function checkView(
+  r: Report,
+  where: string,
+  value: Json,
+  movement: OwnMovement,
+  equipment: readonly Equipment[],
+  mainView: string | null,
+): ViewInfo | null {
+  const view = value.view;
+  if (typeof view !== 'string' || !VIEWS.includes(view)) {
+    r.add(at(where, 'view'), 'skal være "side", "front" eller "top"');
+  } else if (mainView !== null && view === mainView) {
+    r.add(
+      at(where, 'view'),
+      `den anden vinkel skal være en anden end figurens (»${mainView}«): "side", "front" eller "top"`,
+    );
+  }
+  if (view === 'side' && value.facing !== 1 && value.facing !== -1) {
+    r.add(
+      at(where, 'facing'),
+      'sidebilledet skal have »facing«: 1, når brystet vender mod højre, efter at figuren er drejet op at stå, ellers -1',
+    );
+  } else if (view !== 'side' && value.facing !== undefined) {
+    r.add(at(where, 'facing'), '»facing« bruges kun i sidebilledet');
+  }
+
+  const props = new Set<string>();
+  if (list(r, at(where, 'props'), value.props, 0, 8, 'rekvisitter')) {
+    value.props.forEach((p, j) => {
+      const type = checkProp(r, at(at(where, 'props'), j), p);
+      if (!type) return;
+      props.add(type);
+      if (!(equipment as readonly string[]).includes(type)) {
+        r.add(at(at(where, 'props'), j), `»${type}« står ikke i forklaringens »equipment«`);
+      }
+    });
+  }
+  for (const pos of movement.positions) {
+    for (const c of pos.contacts) {
+      if (c.on !== 'floor' && !props.has(c.on)) {
+        r.add(
+          at(where, 'props'),
+          `positionen »${pos.id}« rører »${c.on}«, men figuren har ingen ${c.on}`,
+        );
+      }
+    }
+  }
+
+  // A second view may leave out its red segments: they are the figure's.
+  if (
+    (mainView === null || value.highlight !== undefined) &&
+    list(r, at(where, 'highlight'), value.highlight, 1, 8, 'røde segmenter')
+  ) {
+    value.highlight.forEach((h, j) => {
+      if (typeof h !== 'string' || !SEGMENTS.has(h)) {
+        r.add(
+          at(at(where, 'highlight'), j),
+          `ukendt segment »${show(h)}« (tilladt: ${[...SEGMENTS].join(', ')})`,
+        );
+      }
+    });
+  }
+
+  if (!isObject(value.keyframes)) {
+    r.add(at(where, 'keyframes'), 'skal være et objekt med én pose pr. position');
+    return null;
+  }
+  const ids = movement.positions.map((p) => p.id);
+  for (const id of ids)
+    if (!(id in value.keyframes)) r.add(at(where, 'keyframes'), `mangler positionen »${id}«`);
+  const visibility: Record<string, Set<boolean>> = {};
+  for (const [id, pose] of Object.entries(value.keyframes)) {
+    if (!ids.includes(id)) {
+      r.add(
+        at(where, 'keyframes'),
+        `»${id}« er ikke en position i forklaringen (der er: ${ids.join(', ')})`,
+      );
+      continue;
+    }
+    const shown = checkPose(r, at(at(where, 'keyframes'), id), pose, show(view));
+    for (const [limb, visible] of Object.entries(shown))
+      (visibility[limb] ??= new Set()).add(visible);
+  }
+  for (const [limb, values] of Object.entries(visibility)) {
+    if (values.size > 1)
+      r.add(at(where, 'keyframes'), `${limb} er skjult (null) i nogle positioner og vist i andre`);
+  }
+  if (value.transitions !== undefined) {
+    checkTransitions(
+      r,
+      at(where, 'transitions'),
+      value.transitions,
+      movement,
+      visibility,
+      show(view),
+    );
+  }
+  if (value.marks !== undefined) {
+    checkMarks(r, at(where, 'marks'), value.marks, movement, visibility);
+  }
+  return { view: show(view), visibility };
+}
+
+// ---------------------------------------------------------------------------------------------
+// Marks (DECISIONS.md D58): an arrow, an angle, a cue or a guide line at a position or in a phase
+// ---------------------------------------------------------------------------------------------
+
+const MARK_KINDS = ['arrow', 'angle', 'cue', 'line'] as const;
+const SIDES = ['near', 'far'] as const;
+export const MARK_POINTS: readonly string[] = [
+  'hip',
+  'shoulder',
+  'chest',
+  'head',
+  ...SIDES.flatMap((s) => ['hand', 'elbow', 'knee', 'foot', 'toes'].map((p) => `${s}.${p}`)),
+];
+export const MARK_JOINTS: readonly string[] = SIDES.flatMap((s) =>
+  ['knee', 'elbow', 'hip', 'shoulder'].map((j) => `${s}.${j}`),
+);
+const PLACES = ['right', 'left', 'above', 'below'];
+/** A cue on the figure: at most three words, short enough to stand beside the body. */
+export const MARK_CUE = { words: 3, chars: 24 } as const;
+
+/** The limb a body point or a joint belongs to (»near.arms«), or null for the torso and head. */
+function limbOfPoint(name: string): string | null {
+  const [side, part] = name.split('.');
+  if (!part) return null;
+  const arm = part === 'hand' || part === 'elbow' || part === 'shoulder';
+  return `${side}.${arm ? 'arms' : 'legs'}`;
+}
+
+/**
+ * Each phase as the figure moves through it: the position it starts in, and whether it stands
+ * still there (a hold or a pause: the same position as before, no repeat).
+ */
+function phaseSteps(movement: OwnMovement): Array<{ label: string; from: string; holds: boolean }> {
+  let at = movement.positions[0]?.id ?? '';
+  return movement.phases.map((phase) => {
+    const from = at;
+    const holds = phase.repeat === undefined && phase.to === at;
+    if (phase.repeat === undefined) at = phase.to;
+    return { label: phase.label, from, holds };
+  });
+}
+
+function checkMarks(
+  r: Report,
+  where: string,
+  value: unknown,
+  movement: OwnMovement,
+  visibility: Record<string, Set<boolean>>,
+): void {
+  if (!list(r, where, value, 0, 8, 'markeringer')) return;
+  const ids = movement.positions.map((p) => p.id);
+  const steps = phaseSteps(movement);
+  const hidden = (name: string) => {
+    const limb = limbOfPoint(name);
+    return limb !== null && visibility[limb]?.has(false) === true ? limb : null;
+  };
+  /** A point a mark stands by: a part of the body or a point in figure units. */
+  const markPoint = (w: string, p: unknown) => {
+    if (Array.isArray(p)) return void point(r, w, p);
+    if (typeof p !== 'string' || !MARK_POINTS.includes(p)) {
+      r.add(w, `ukendt punkt »${show(p)}« (tilladt: ${MARK_POINTS.join(', ')} eller [x, y])`);
+      return;
+    }
+    const limb = hidden(p);
+    if (limb) r.add(w, `${limb} er skjult (null)`);
+  };
+  value.forEach((mark, i) => {
+    const w = at(where, i);
+    if (!isObject(mark)) {
+      r.add(w, 'skal være et objekt { … }');
+      return;
+    }
+    // A guide line can carry a cue of its own: then it is a line.
+    const kinds = MARK_KINDS.filter((k) => k in mark && !(k === 'cue' && 'line' in mark));
+    const [kind] = kinds;
+    if (kinds.length !== 1 || !kind) {
+      r.add(
+        w,
+        `én af »arrow«, »angle«, »cue« og »line« (har ${kinds.length > 0 ? kinds.join(', ') : 'ingen'})`,
+      );
+      return;
+    }
+    const extra = {
+      arrow: ['offset'],
+      angle: ['degrees'],
+      cue: ['point', 'place'],
+      line: ['cue', 'place'],
+    }[kind];
+    if (!shape(r, w, mark, [kind], ['at', 'phase', ...extra])) return;
+    // When: at a position, or in a phase counted from 1.
+    let step: (typeof steps)[number] | undefined;
+    if (mark.at === undefined && mark.phase === undefined) {
+      r.add(w, 'skal have »at« (en position) eller »phase« (en fase)');
+    } else if (mark.at !== undefined && mark.phase !== undefined) {
+      r.add(w, '»at« eller »phase«, ikke begge');
+    } else if (mark.at !== undefined) {
+      if (typeof mark.at !== 'string' || !ids.includes(mark.at)) {
+        r.add(at(w, 'at'), `positionen »${show(mark.at)}« findes ikke (der er: ${ids.join(', ')})`);
+      }
+    } else if (
+      !Number.isInteger(mark.phase) ||
+      (mark.phase as number) < 1 ||
+      (mark.phase as number) > steps.length
+    ) {
+      r.add(
+        at(w, 'phase'),
+        `fasens nummer fra 1 til ${steps.length} (1 = »${steps[0]?.label ?? ''}«)`,
+      );
+    } else step = steps[(mark.phase as number) - 1];
+    const phaseName = step ? `fase ${show(mark.phase)} (»${step.label}«)` : '';
+
+    if (kind === 'arrow') {
+      markPoint(at(w, 'arrow'), mark.arrow);
+      if (Array.isArray(mark.arrow)) r.add(at(w, 'arrow'), 'en pil følger en del af kroppen');
+      if (mark.at !== undefined && mark.phase === undefined) {
+        r.add(w, 'en pil viser en bevægelse og skal have »phase«');
+      }
+      if (step?.holds) {
+        r.add(
+          at(w, 'phase'),
+          `${phaseName} står stille; en pil skal stå i en fase, hvor figuren bevæger sig`,
+        );
+      }
+      if (mark.offset !== undefined) {
+        const o = mark.offset;
+        if (
+          !Array.isArray(o) ||
+          o.length !== 2 ||
+          !o.every((v) => finite(v) && Math.abs(v) <= 30)
+        ) {
+          r.add(at(w, 'offset'), 'skal være [dx, dy] i figurenheder, højst 30 hver vej');
+        }
+      }
+    } else if (kind === 'angle') {
+      const joint = mark.angle;
+      if (typeof joint !== 'string' || !MARK_JOINTS.includes(joint)) {
+        r.add(at(w, 'angle'), `ukendt led »${show(joint)}« (tilladt: ${MARK_JOINTS.join(', ')})`);
+      } else {
+        const limb = hidden(joint);
+        if (limb) r.add(at(w, 'angle'), `${limb} er skjult (null)`);
+      }
+      if (step && !step.holds) {
+        r.add(
+          at(w, 'phase'),
+          `${phaseName} bevæger sig; en vinkel vises ved en position (»at«) eller i et hold`,
+        );
+      }
+      if (
+        mark.degrees !== undefined &&
+        (!Number.isInteger(mark.degrees) ||
+          (mark.degrees as number) < 0 ||
+          (mark.degrees as number) > 180)
+      ) {
+        r.add(at(w, 'degrees'), 'et helt tal fra 0 til 180');
+      }
+    } else if (kind === 'cue') {
+      text(r, at(w, 'cue'), mark.cue, { kind: 'short', ...MARK_CUE });
+      if (mark.point !== undefined) markPoint(at(w, 'point'), mark.point);
+    } else {
+      const line = mark.line;
+      if (!Array.isArray(line) || line.length !== 2) {
+        r.add(at(w, 'line'), 'to punkter: [punkt, punkt], hvert en del af kroppen eller [x, y]');
+      } else line.forEach((p, j) => markPoint(at(at(w, 'line'), j), p));
+      if (mark.cue !== undefined) {
+        text(r, at(w, 'cue'), mark.cue, { kind: 'short', ...MARK_CUE });
+      }
+    }
+    if (
+      mark.place !== undefined &&
+      (typeof mark.place !== 'string' || !PLACES.includes(mark.place))
+    ) {
+      r.add(at(w, 'place'), `skal være en af: ${PLACES.join(', ')}`);
+    }
+  });
+}
+
+// ---------------------------------------------------------------------------------------------
+// Typical mistakes as figures (DECISIONS.md D58): the right pose beside the wrong one
+// ---------------------------------------------------------------------------------------------
+
+const POSE_KEYS = ['hip', 'torso', 'head', 'spine', 'width', 'arms', 'legs'];
+
+function checkFaults(
+  r: Report,
+  where: string,
+  value: unknown,
+  movement: OwnMovement,
+  explained: ExplainItem,
+  views: readonly ViewInfo[],
+): void {
+  if (!list(r, where, value, 1, LIMITS.mistakes.max, 'fejl')) return;
+  const ids = movement.positions.map((p) => p.id);
+  const count = explained.mistakes.length;
+  const seen = new Set<unknown>();
+  value.forEach((fault, i) => {
+    const w = at(where, i);
+    if (!shape(r, w, fault, ['mistake', 'at', 'wrong'], ['view', 'contacts'])) return;
+    if (!Number.isInteger(fault.mistake) || (fault.mistake as number) < 1) {
+      r.add(at(w, 'mistake'), `nummeret på en typisk fejl i forklaringen fra 1 til ${count}`);
+    } else if ((fault.mistake as number) > count) {
+      r.add(at(w, 'mistake'), `nummeret på en typisk fejl i forklaringen fra 1 til ${count}`);
+    } else if (seen.has(fault.mistake)) {
+      r.add(at(w, 'mistake'), `fejl ${show(fault.mistake)} er allerede tegnet`);
+    }
+    seen.add(fault.mistake);
+    if (typeof fault.at !== 'string' || !ids.includes(fault.at)) {
+      r.add(at(w, 'at'), `positionen »${show(fault.at)}« findes ikke (der er: ${ids.join(', ')})`);
+    }
+    let info = views[0];
+    if (fault.view !== undefined) {
+      info = views.find((v) => v.view === fault.view);
+      if (!info) {
+        r.add(
+          at(w, 'view'),
+          `figuren har ikke »${show(fault.view)}« (den har: ${views.map((v) => v.view).join(', ')})`,
+        );
+      }
+    }
+    const wrong = fault.wrong;
+    if (!isObject(wrong)) {
+      r.add(at(w, 'wrong'), 'skal være et objekt med de felter i posen, der ændres');
+    } else if (Object.keys(wrong).length === 0) {
+      r.add(at(w, 'wrong'), `skal ændre mindst ét felt i posen (${POSE_KEYS.join(', ')})`);
+    } else if (shape(r, at(w, 'wrong'), wrong, [], POSE_KEYS) && info) {
+      checkPoseChange(r, at(w, 'wrong'), wrong, info);
+    }
+    if (
+      fault.contacts !== undefined &&
+      list(r, at(w, 'contacts'), fault.contacts, 0, 8, 'kontakter')
+    ) {
+      fault.contacts.forEach((c, j) =>
+        checkContact(r, at(at(w, 'contacts'), j), c, explained.equipment),
+      );
+    }
+  });
+}
+
+/** The fields a wrong pose changes, by the rules of a keyframe; a limb keeps its shown or hidden. */
+function checkPoseChange(r: Report, where: string, value: Json, info: ViewInfo): void {
+  const view = info.view;
+  if (value.hip !== undefined) point(r, at(where, 'hip'), value.hip);
+  if (value.torso !== undefined && (!finite(value.torso) || Math.abs(value.torso) > 360)) {
+    r.add(at(where, 'torso'), 'en vinkel i grader');
+  }
+  if (value.head !== undefined && (!finite(value.head) || Math.abs(value.head) > 90)) {
+    r.add(at(where, 'head'), 'en vinkel mellem -90 og 90 grader');
+  }
+  if (value.spine !== undefined) checkSpine(r, at(where, 'spine'), value.spine, view);
+  if (value.width !== undefined) checkWidth(r, at(where, 'width'), value.width, view);
+  for (const kind of ['arms', 'legs'] as const) {
+    const pair = value[kind];
+    if (pair === undefined) continue;
+    if (!shape(r, at(where, kind), pair, [], ['near', 'far'])) continue;
+    for (const side of SIDES) {
+      if (!(side in pair)) continue;
+      const visible = checkLimb(r, at(at(where, kind), side), pair[side], view, kind);
+      const limb = `${side}.${kind}`;
+      const keyframes = info.visibility[limb];
+      if (visible !== undefined && keyframes && keyframes.size === 1 && !keyframes.has(visible)) {
+        r.add(
+          at(at(where, kind), side),
+          visible
+            ? `${limb} er skjult (null) i positionerne`
+            : `${limb} er vist i positionerne; den forkerte stilling skjuler det ikke`,
+        );
+      }
+    }
+  }
 }
 
 const LIFTABLE = ['near.hand', 'far.hand', 'near.foot', 'far.foot'];

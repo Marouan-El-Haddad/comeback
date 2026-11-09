@@ -287,12 +287,12 @@ describe('figurer', () => {
       'skal være 1 eller -1 (albuen den anden vej over hovedet)',
     ],
     [
-      'spine forfra',
+      'spine ovenfra',
       pressFigure((f) => {
-        f.view = 'front';
+        f.view = 'top';
         f.keyframes.top!.spine = 3;
       }),
-      '»spine« bruges kun i sidebilledet',
+      '»spine« bruges kun fra siden og forfra',
     ],
     ['spine for meget', pressFigure((f) => (f.keyframes.top!.spine = 12)), 'et tal fra -10 til 10'],
     [
@@ -810,5 +810,204 @@ describe('labels med tid på hold og gentagelser (L7)', () => {
     expect(explainProblems(club, 'club_sequence').join('\n')).toContain(
       '»2 sek pr. pump« siger 2 sek, men én gang frem og tilbage varer 0,8 sek og alle gange 8 sek',
     );
+  });
+});
+
+describe('anden vinkel, markeringer og typiske fejl som figur (D58)', () => {
+  /** press.1 seen from above: the body along x, the arms and legs out to each side. */
+  const above = (hipX: number) => ({
+    hip: [hipX, 30] as [number, number],
+    torso: 0,
+    arms: {
+      near: { to: [70, 18] as [number, number], bend: -1 as const },
+      far: { to: [70, 42] as [number, number], bend: 1 as const },
+    },
+    legs: {
+      near: { to: [0, 27] as [number, number], bend: 1 as const },
+      far: { to: [0, 33] as [number, number], bend: -1 as const },
+    },
+  });
+
+  /** press.1 with a view from above, four marks and the hanging hip as a figure. */
+  const full = (change: (f: FigureItem) => void = () => undefined): FigureFile =>
+    pressFigure((f) => {
+      f.second = { view: 'top', props: [], keyframes: { top: above(44), bottom: above(46) } };
+      f.marks = [
+        { arrow: 'chest', phase: 1, offset: [0, -6] },
+        { angle: 'near.elbow', at: 'bottom', degrees: 90 },
+        { line: ['near.foot', 'shoulder'], cue: 'Én planke', phase: 3 },
+      ];
+      f.second.marks = [{ cue: 'Albuerne 45° ud', at: 'top', point: 'near.elbow', place: 'right' }];
+      f.faults = [{ mistake: 1, at: 'bottom', wrong: { hip: [46.79, 4] } }];
+      change(f);
+    });
+
+  test('gyldige: en anden vinkel, markeringer og et fejlpar; alt er valgfrit', () => {
+    expect(figureProblems(full(), 'press', PRESS)).toEqual([]);
+    // Without them the figure is valid as before.
+    expect(figureProblems(PRESS_FIGURES, 'press', PRESS)).toEqual([]);
+  });
+
+  test('»spine« forfra krummer ryggen til siden og er gyldig; ovenfra ikke', () => {
+    const file = full((f) => {
+      f.second = { view: 'front', props: [], keyframes: structuredClone(f.keyframes) };
+      for (const pose of Object.values(f.second.keyframes)) {
+        pose.spine = 3;
+        pose.arms.near = { to: [69.17, 0], bend: -1 };
+        pose.arms.far = { to: [70.57, 0], bend: 1 };
+        pose.legs.near = { to: [0, 3.6], bend: 1 };
+        pose.legs.far = { to: [-0.6, 3.6], bend: -1 };
+      }
+      f.second.marks = [];
+    });
+    expect(figureProblems(file, 'press', PRESS)).toEqual([]);
+  });
+
+  const cases: Array<[string, FigureFile, string]> = [
+    [
+      'den anden vinkel er den samme som figurens',
+      full((f) => {
+        f.second = { ...structuredClone(f.second!), view: 'side', facing: 1 } as never;
+      }),
+      'second › view: den anden vinkel skal være en anden end figurens (»side«)',
+    ],
+    [
+      'den anden vinkel fra siden uden »facing«',
+      full((f) => {
+        f.view = 'top';
+        delete (f as { facing?: number }).facing;
+        f.second = { view: 'side', props: [], keyframes: structuredClone(f.keyframes) } as never;
+        f.keyframes = { top: above(44), bottom: above(46) };
+        f.marks = [];
+        f.faults = [];
+      }),
+      'second › facing: sidebilledet skal have »facing«',
+    ],
+    [
+      'den anden vinkel mangler en position',
+      full((f) => delete f.second!.keyframes.bottom),
+      'second › keyframes: mangler positionen »bottom«',
+    ],
+    [
+      'et ukendt felt i den anden vinkel',
+      full((f) => ((f.second as unknown as Record<string, unknown>).faults = [])),
+      'second: ukendt felt »faults«',
+    ],
+    [
+      'en markering med to slags',
+      full((f) => (f.marks![0] = { arrow: 'chest', cue: 'Ned', phase: 1 } as never)),
+      'marks[0]: én af »arrow«, »angle«, »cue« og »line« (har arrow, cue)',
+    ],
+    [
+      'en markering uden tidspunkt',
+      full((f) => (f.marks![1] = { angle: 'near.elbow' })),
+      'marks[1]: skal have »at« (en position) eller »phase« (en fase)',
+    ],
+    [
+      'en markering med både position og fase',
+      full((f) => (f.marks![1] = { angle: 'near.elbow', at: 'bottom', phase: 2 })),
+      'marks[1]: »at« eller »phase«, ikke begge',
+    ],
+    [
+      'en ukendt position',
+      full((f) => (f.marks![1] = { angle: 'near.elbow', at: 'bund' })),
+      'marks[1] › at: positionen »bund« findes ikke (der er: top, bottom)',
+    ],
+    [
+      'fase 0 findes ikke: faserne tælles fra 1',
+      full((f) => (f.marks![0] = { arrow: 'chest', phase: 0 })),
+      'marks[0] › phase: fasens nummer fra 1 til 3 (1 = »3 sek ned«)',
+    ],
+    [
+      'en pil står i en fase, hvor figuren bevæger sig',
+      full((f) => (f.marks![0] = { arrow: 'chest', at: 'bottom' })),
+      'marks[0]: en pil viser en bevægelse og skal have »phase«',
+    ],
+    [
+      'en pil i et hold',
+      full((f) => (f.marks![0] = { arrow: 'chest', phase: 2 })),
+      'marks[0] › phase: fase 2 (»1 sek stille«) står stille; en pil skal stå i en fase, hvor figuren bevæger sig',
+    ],
+    [
+      'en vinkel midt i en bevægelse',
+      full((f) => (f.marks![1] = { angle: 'near.elbow', phase: 1 })),
+      'marks[1] › phase: fase 1 (»3 sek ned«) bevæger sig; en vinkel vises ved en position (»at«) eller i et hold',
+    ],
+    [
+      'et ukendt punkt',
+      full((f) => (f.marks![0] = { arrow: 'navle' as never, phase: 1 })),
+      'marks[0] › arrow: ukendt punkt »navle«',
+    ],
+    [
+      'et ukendt led',
+      full((f) => (f.marks![1] = { angle: 'near.wrist' as never, at: 'bottom' })),
+      'marks[1] › angle: ukendt led »near.wrist«',
+    ],
+    [
+      'en cue på mere end tre ord',
+      full((f) => (f.marks![1] = { cue: 'Kroppen er som én planke', at: 'bottom' })),
+      'marks[1] › cue: højst 3 ord (har 5)',
+    ],
+    [
+      'gradtal uden for 0–180',
+      full((f) => (f.marks![1] = { angle: 'near.elbow', at: 'bottom', degrees: 200 })),
+      'marks[1] › degrees: et helt tal fra 0 til 180',
+    ],
+    [
+      'en linje med ét punkt',
+      full((f) => (f.marks![2] = { line: ['shoulder'] as never, phase: 3 })),
+      'marks[2] › line: to punkter',
+    ],
+    [
+      'en ukendt plads til teksten',
+      full((f) => (f.second!.marks![0] = { cue: 'Ud', at: 'top', place: 'under' as never })),
+      'second › marks[0] › place: skal være en af: right, left, above, below',
+    ],
+    [
+      'en markering ved et skjult lem',
+      full((f) => {
+        for (const pose of Object.values(f.keyframes)) pose.arms.near = null;
+      }),
+      'marks[1] › angle: near.arms er skjult (null)',
+    ],
+    [
+      'en fejl, forklaringen ikke har',
+      full((f) => (f.faults![0]!.mistake = 3)),
+      'faults[0] › mistake: nummeret på en typisk fejl i forklaringen fra 1 til 2',
+    ],
+    [
+      'en fejl ved en ukendt position',
+      full((f) => (f.faults![0]!.at = 'midt')),
+      'faults[0] › at: positionen »midt« findes ikke (der er: top, bottom)',
+    ],
+    [
+      'en forkert stilling uden ændring',
+      full((f) => (f.faults![0]!.wrong = {})),
+      'faults[0] › wrong: skal ændre mindst ét felt i posen (hip, torso, head, spine, width, arms, legs)',
+    ],
+    [
+      'en forkert stilling med et ukendt felt',
+      full((f) => (f.faults![0]!.wrong = { knee: 3 } as never)),
+      'faults[0] › wrong: ukendt felt »knee«',
+    ],
+    [
+      'en fejl i en vinkel, figuren ikke har',
+      full((f) => (f.faults![0]!.view = 'front')),
+      'faults[0] › view: figuren har ikke »front« (den har: side, top)',
+    ],
+    [
+      'en fejl med en flade, der ikke er udstyr',
+      full((f) => (f.faults![0]!.contacts = [{ part: 'knee', on: 'chair' }])),
+      'faults[0] › contacts[0] › on: »chair« skal også stå i »equipment«',
+    ],
+    [
+      'samme fejl to gange',
+      full((f) => f.faults!.push({ mistake: 1, at: 'top', wrong: { torso: 30 } })),
+      'faults[1] › mistake: fejl 1 er allerede tegnet',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, file, message) => {
+    expect(figureProblems(file, 'press', PRESS).join('\n')).toContain(message);
   });
 });
