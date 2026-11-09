@@ -1,5 +1,13 @@
 /* Comeback design system (docs/SPEC.md section 5). Colours only as --c-* variables, injected from
-   src/ui/design-tokens.json by vite.config.ts. One explicit light high-contrast theme. */
+   src/ui/design-tokens.json by vite.config.ts. One explicit light high-contrast theme.
+
+   The type scale (SPEC 5, DECISIONS.md D59), and no other sizes:
+     text      Bai Jamjuree 400/600: 16 (outside a session), 18 (body; all text in a session), 20 (cues)
+     headings  Kanit 700: 22 (h2, a row's title) and 28 (h1, the exercise in a session)
+     numbers   Kanit 700: 32 on a card, 64 (a part's number, a clock on one line), 88 (a clock beside
+               a figure, the pause's ring) and 96 (the set's target, a clock on its own)
+   Space comes in steps of 8 px (8, 16, 24, 32); 4 px only inside a group of text lines. The safe
+   zone is 16 px. e2e/a11y.ts checks the scale, the contrast and the tap targets. */
 
 @font-face {
   font-family: 'Kanit';
@@ -49,6 +57,14 @@ html {
   text-size-adjust: 100%;
   color-scheme: light;
   background: var(--c-paper);
+}
+
+/* The app fills the window as a column: a banner on top (the time machine, a storage error) takes
+   its height from the screen under it, so the screen's bottom – its buttons – stays in the window. */
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 body {
@@ -213,6 +229,7 @@ button {
 
 /* /program (milestone 1): the programme data, read-only. */
 .prog {
+  width: 100%;
   max-width: 640px;
   margin: 0 auto;
   padding: 16px 16px 48px;
@@ -233,7 +250,7 @@ button {
 
 .prog-group {
   display: grid;
-  gap: 12px;
+  gap: 16px;
 }
 
 .prog-group-title {
@@ -241,24 +258,24 @@ button {
 }
 
 .prog-track h2 {
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .prog-steps,
 .prog-list {
-  margin: 12px 0 0;
+  margin: 16px 0 0;
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 12px;
+  gap: 16px;
 }
 
 .prog-step {
   display: grid;
   grid-template-columns: 72px 1fr;
-  gap: 12px;
+  gap: 16px;
   align-items: start;
-  padding-top: 12px;
+  padding-top: 16px;
   border-top: 1px solid var(--c-line);
 }
 
@@ -279,16 +296,16 @@ button {
 }
 
 .prog-note {
-  margin-top: 12px;
-  padding: 8px 12px;
+  margin-top: 16px;
+  padding: 8px 16px;
   border-radius: 12px;
   background: var(--c-panel);
 }
 
 .prog-weeks {
   display: grid;
-  gap: 12px;
-  margin-top: 12px;
+  gap: 16px;
+  margin-top: 16px;
 }
 
 .prog-week {
@@ -299,7 +316,7 @@ button {
 .prog-week dl {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 4px 12px;
+  gap: 4px 16px;
   margin: 8px 0 0;
 }
 
@@ -315,7 +332,7 @@ button {
 .prog-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 12px;
+  margin-top: 16px;
 }
 
 .prog-table th,

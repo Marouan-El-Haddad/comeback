@@ -1,12 +1,23 @@
-/* App screens (docs/SPEC.md 3 and 5). Colours only from the --c-* tokens. */
+/* App screens (docs/SPEC.md 3 and 5). Colours only from the --c-* tokens; sizes from the type scale
+   and space in steps of 8 px (src/ui/theme.css, DECISIONS.md D59). */
 
-/* App shell: content above a fixed tab bar; one hand, everything important in the lower half. */
+/* App shell: content above a fixed tab bar; one hand, everything important in the lower half. The
+   shell, its content and a screen that sits low fill what the banners leave of the window. */
 .app {
-  min-height: 100vh;
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
   padding-bottom: 72px;
 }
 
+.tab-content {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
 .screen {
+  width: 100%;
   max-width: 640px;
   margin: 0 auto;
   padding: 16px;
@@ -16,7 +27,13 @@
 
 .stack {
   display: grid;
-  gap: 12px;
+  gap: 16px;
+}
+
+/* »Nu« in a session is the tightest screen (D51): 8 px between its parts keeps the cues above the
+   fixed actions, also under the time machine's banner. */
+.stack.now {
+  gap: 8px;
 }
 
 .row {
@@ -35,7 +52,7 @@
 }
 
 .hint {
-  padding: 8px 12px;
+  padding: 8px 16px;
   border-radius: 12px;
   background: var(--c-blueTint);
   color: var(--c-navy);
@@ -43,7 +60,7 @@
 }
 
 .flag {
-  padding: 8px 12px;
+  padding: 8px 16px;
   border-left: 6px solid var(--c-gold);
   border-radius: 12px;
   background: var(--c-goldTint);
@@ -56,6 +73,14 @@
   font-weight: 600;
 }
 
+/* »Tilbage« at the top of a screen: the size of its text, so the screen's title is seen first. */
+.btn.back {
+  justify-self: start;
+  align-self: flex-start;
+  min-width: 120px;
+}
+
+/* The tab bar: four tabs of 64 px with 8 px between them (SPEC 5, 6). */
 .tabbar {
   position: fixed;
   left: 0;
@@ -64,9 +89,10 @@
   z-index: 20;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 0 8px env(safe-area-inset-bottom);
   border-top: 1px solid var(--c-line);
   background: var(--c-paper);
-  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .tab {
@@ -75,12 +101,13 @@
   background: var(--c-paper);
   color: var(--c-muted);
   font-weight: 600;
-  font-size: 17px;
+  font-size: 18px;
 }
 
+/* The tab you are on: navy text and a red bar on top, not told by colour alone. */
 .tab.active {
   color: var(--c-navy);
-  box-shadow: inset 0 3px 0 var(--c-red);
+  box-shadow: inset 0 4px 0 var(--c-red);
 }
 
 .banner {
@@ -117,7 +144,7 @@
 .btn.small {
   min-height: 56px;
   min-width: 56px;
-  padding: 0 12px;
+  padding: 0 16px;
   font-size: 16px;
 }
 
@@ -134,6 +161,11 @@
 }
 
 /* I dag */
+.today-head {
+  display: grid;
+  gap: 4px;
+}
+
 .today-head .date {
   font-family: 'Kanit', system-ui, sans-serif;
   font-weight: 700;
@@ -145,16 +177,45 @@
   font-weight: 600;
 }
 
+/* The day's card is the poster on I dag: the session's name and time on a navy band, a line per
+   block with the step on the left and the dose in red on the right, and »Se dagens pas« (SPEC 3.1). */
 .main-card {
   display: grid;
-  gap: 12px;
+  padding: 0;
+  overflow: hidden;
 }
 
 .main-card-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 8px;
+  gap: 0 16px;
+  padding: 16px;
+  background: var(--c-navy);
+  color: var(--c-paper);
+}
+
+.main-card-head h1 {
+  color: var(--c-paper);
+}
+
+.main-card-time {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.main-card-time strong {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1;
+}
+
+.main-card-body {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
 }
 
 .block-lines {
@@ -165,27 +226,47 @@
   gap: 4px;
 }
 
-.block-lines li,
+.block-lines li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+.block-dose {
+  flex: none;
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 600;
+  color: var(--c-red);
+}
+
 .block-line {
   font-weight: 600;
 }
 
+/* Logged today: a green edge and the words, not the colour alone. */
 .main-card.done {
   border-color: var(--c-green);
+}
+
+.main-card-done {
+  font-weight: 700;
 }
 
 .missed {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
 }
 
 .os-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
   border-left: 6px solid var(--c-gold);
 }
 
@@ -207,7 +288,7 @@
 
 .rest-of-week ul {
   margin: 0;
-  padding: 0 0 0 4px;
+  padding: 0;
   list-style: none;
   display: grid;
   gap: 8px;
@@ -221,12 +302,12 @@
   color: var(--c-navy);
   font-weight: 600;
   text-align: left;
-  padding: 8px 12px;
+  padding: 8px 16px;
 }
 
 /* Guided session: full screen over the tabs; the primary action sits in the same place. */
 .session {
-  min-height: 100vh;
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
   background: var(--c-paper);
@@ -267,7 +348,7 @@
   width: 100%;
   max-width: 640px;
   margin: 0 auto;
-  padding: 12px 16px 16px;
+  padding: 8px 16px 16px;
   display: grid;
   gap: 8px;
   background: var(--c-paper);
@@ -282,15 +363,9 @@
   letter-spacing: 0.04em;
 }
 
+/* The exercise in hand is the session's heading (SPEC 5: 28 px). */
 .set-name {
-  font-size: 24px;
-}
-
-.set-info {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 16px;
-  align-items: center;
+  font-size: 28px;
 }
 
 .set-count {
@@ -317,8 +392,9 @@
   color: var(--c-muted);
 }
 
+/* The programme's own text in a session (a measurement, a round, the neck): body size, bold. */
 .cue {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--c-ink);
 }
@@ -378,7 +454,7 @@
 
 .yesno-label {
   font-weight: 700;
-  font-size: 19px;
+  font-size: 20px;
 }
 
 .yesno .btn {
@@ -388,7 +464,7 @@
 .check {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   min-height: 56px;
   font-weight: 600;
 }
@@ -471,16 +547,12 @@
 
 .phase-runner {
   display: grid;
-  gap: 12px;
+  gap: 8px;
 }
 
-.phase-count {
-  color: var(--c-muted);
-  font-weight: 600;
-}
-
+/* The part of the clock that runs (»Minut 1 af 4«, »Sæt 3 of 10«): under the exercise's name. */
 .phase-label {
-  font-size: 28px;
+  font-size: 22px;
 }
 
 .notice {
@@ -488,7 +560,7 @@
   width: calc(100% - 32px);
   min-height: 56px;
   margin: 8px 16px 0;
-  padding: 8px 12px;
+  padding: 8px 16px;
   border: 2px solid var(--c-gold);
   border-radius: 12px;
   background: var(--c-goldTint);
@@ -500,7 +572,7 @@
 
 .confirm {
   margin: 8px 16px 0;
-  padding: 12px;
+  padding: 16px;
   border: 2px solid var(--c-navy);
   border-radius: 12px;
   background: var(--c-panel);
@@ -509,16 +581,60 @@
   font-weight: 600;
 }
 
+/* The summary: the date, the session and its traffic light in words with the light's colour as an
+   edge (SPEC 6: never the colour alone). */
+.summary-head {
+  display: grid;
+  gap: 4px;
+}
+
+.light-badge {
+  justify-self: start;
+  padding: 0 8px;
+  border: 2px solid var(--c-navy);
+  border-left-width: 8px;
+  border-radius: 6px;
+  color: var(--c-navy);
+  font-weight: 700;
+}
+
+.light-badge.green {
+  border-color: var(--c-green);
+}
+
+.light-badge.yellow {
+  border-color: var(--c-amber);
+}
+
+.light-badge.red {
+  border-color: var(--c-red);
+}
+
+/* The summary's lists: one row each with a thin line between them, the name first. */
 .decisions,
 .logged {
   margin: 0;
-  padding-left: 20px;
+  padding: 0;
+  list-style: none;
   display: grid;
-  gap: 8px;
+}
+
+.decisions li,
+.logged li {
+  padding: 8px 0;
+  border-top: 1px solid var(--c-line);
 }
 
 .decisions li {
   font-weight: 600;
+}
+
+/* The name first, in Kanit, so a list of changes can be skimmed. */
+.decisions strong,
+.logged strong {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  color: var(--c-navy);
 }
 
 .field {
@@ -531,26 +647,15 @@
   flex: 1 1 140px;
 }
 
-.field input,
-.stepper-field input {
+.field input {
   min-height: 56px;
-  padding: 0 12px;
+  padding: 0 16px;
   border: 2px solid var(--c-navy);
   border-radius: 12px;
   font: inherit;
   font-size: 20px;
   color: var(--c-navy);
   background: var(--c-paper);
-}
-
-.stepper-field {
-  flex: 1 1 0;
-  display: grid;
-}
-
-.stepper-field input {
-  text-align: center;
-  width: 100%;
 }
 
 .sr-label {
@@ -566,9 +671,10 @@
   overflow: hidden;
 }
 
+/* The file input covers the whole button, its edge too, so the tap target is the button's 56 px. */
 .file-button input {
   position: absolute;
-  inset: 0;
+  inset: -2px;
   opacity: 0;
   cursor: pointer;
 }
@@ -578,6 +684,24 @@
   padding-bottom: 104px;
 }
 
+/* The welcome: the programme's name on a navy band, as on the day's card (SPEC 4.1). */
+.welcome-band {
+  display: grid;
+  gap: 4px;
+  padding: 24px 16px;
+  border-radius: 12px;
+  background: var(--c-navy);
+  color: var(--c-paper);
+}
+
+.welcome-band h1 {
+  color: var(--c-paper);
+}
+
+.welcome-band p {
+  font-weight: 600;
+}
+
 .bottom-actions {
   position: fixed;
   left: 0;
@@ -585,9 +709,19 @@
   bottom: 0;
   display: flex;
   gap: 8px;
-  padding: 12px 16px 16px;
+  padding: 8px 16px 16px;
   border-top: 1px solid var(--c-line);
   background: var(--c-paper);
+}
+
+/* The phase-in's choices: a section per ladder (or week) under a navy line, not a stack of equal
+   cards (SPEC 5: no equal cards in a grid). */
+.card.step-choice,
+.card.week-choice {
+  padding: 16px 0 0;
+  border: 0;
+  border-top: 2px solid var(--c-navy);
+  border-radius: 0;
 }
 
 .step-choice {
@@ -598,13 +732,13 @@
 .step-choice-track {
   font-family: 'Kanit', system-ui, sans-serif;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .step-choice-row {
   display: grid;
   grid-template-columns: 72px 1fr;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
 }
 
@@ -617,11 +751,12 @@
   gap: 8px;
 }
 
-/* Uge, Stiger, Mere */
+/* Uge (SPEC 3.4): the week's facts, then seven rows as a table – the day on the left, its chips on
+   the right – with today marked by a red edge and »I dag« in words. */
 .week-facts {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 4px 12px;
+  gap: 4px 16px;
   margin: 0;
 }
 
@@ -639,27 +774,38 @@
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 8px;
+  border-bottom: 1px solid var(--c-line);
 }
 
 .week-day {
-  padding: 12px;
-  border: 1px solid var(--c-line);
-  border-radius: 12px;
   display: grid;
-  gap: 8px;
+  grid-template-columns: 128px 1fr;
+  gap: 8px 16px;
+  align-items: center;
+  min-height: 64px;
+  padding: 8px 0 8px 16px;
+  border-top: 1px solid var(--c-line);
+  border-left: 6px solid transparent;
 }
 
 .week-day.today {
+  border-left-color: var(--c-red);
   background: var(--c-panel);
 }
 
-.week-day.today .week-day-name::after {
-  content: ' · i dag';
+.week-day-name {
+  display: grid;
+  font-weight: 700;
+  color: var(--c-navy);
 }
 
-.week-day-name {
-  font-weight: 700;
+.week-day-date {
+  font-weight: 400;
+  color: var(--c-ink);
+}
+
+.week-day.today .week-day-weekday::after {
+  content: ' · i dag';
 }
 
 .chips {
@@ -669,11 +815,25 @@
 }
 
 .chip {
-  padding: 4px 10px;
+  padding: 4px 8px;
   border: 1px solid var(--c-line);
   border-radius: 8px;
-  background: var(--c-panel);
+  background: var(--c-paper);
   font-weight: 600;
+}
+
+/* The session's colour from the tokens' semantics (strength navy, motor blue, Muay Thai red), with
+   its name in the chip, so the colour is never the only sign. */
+.chip.strength {
+  border-color: var(--c-navy);
+  background: var(--c-navy);
+  color: var(--c-paper);
+}
+
+.chip.motor {
+  border-color: var(--c-blue);
+  background: var(--c-blue);
+  color: var(--c-paper);
 }
 
 .chip.club {
@@ -686,6 +846,8 @@
   border-color: var(--c-navy);
 }
 
+/* Stiger (SPEC 3.5): a row per ladder with its figure, the ladder and the step in Kanit – the step in
+   red – then the step's name and what it takes to move up (D10). */
 .ladder-list {
   margin: 0;
   padding: 0;
@@ -697,12 +859,12 @@
 .ladder-row,
 .other-row {
   width: 100%;
-  min-height: 88px;
+  min-height: 104px;
   display: grid;
-  grid-template-columns: 72px 1fr;
-  gap: 12px;
+  grid-template-columns: 88px 1fr;
+  gap: 16px;
   align-items: center;
-  padding: 8px 12px;
+  padding: 8px 16px 8px 8px;
   border: 1px solid var(--c-line);
   border-radius: 12px;
   background: var(--c-paper);
@@ -710,23 +872,51 @@
   text-align: left;
 }
 
+.ladder-row:active,
+.other-row:active {
+  background: var(--c-panel);
+}
+
+.ladder-row .picto,
+.other-row .picto,
+.step-open .picto {
+  width: 88px;
+  height: 88px;
+}
+
 .ladder-text {
   display: grid;
-  gap: 2px;
+  gap: 4px;
 }
 
 .ladder-name {
-  font-weight: 700;
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.2;
 }
 
+.ladder-step-no {
+  color: var(--c-red);
+}
+
+.ladder-step {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+/* Your step on a ladder: a red line over it and »Dit trin« in a red label (text, not colour). */
 .prog-step.mine {
   border-top: 2px solid var(--c-red);
 }
 
 .mine-label {
-  margin-top: 8px;
+  justify-self: start;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: var(--c-red);
+  color: var(--c-paper);
   font-weight: 700;
-  color: var(--c-red);
 }
 
 .confirm-inline {
@@ -746,14 +936,13 @@
 
 .facts {
   display: grid;
-  gap: 4px;
   margin: 0;
 }
 
 .facts div {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
   padding: 8px 0;
   border-top: 1px solid var(--c-line);
 }
@@ -769,25 +958,78 @@
   overflow-wrap: anywhere;
 }
 
-.os-list {
-  padding-left: 20px;
+/* Mere: a row per page with its name and what is behind it. */
+.menu {
   display: grid;
-  gap: 6px;
+  gap: 8px;
+}
+
+.menu-row {
+  display: grid;
+  gap: 4px;
+  min-height: 72px;
+  padding: 8px 16px;
+  border: 1px solid var(--c-line);
+  border-radius: 12px;
+  background: var(--c-paper);
+  color: var(--c-navy);
+  font-weight: 400;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.menu-row:active {
+  background: var(--c-panel);
+}
+
+.menu-title {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.menu-text {
+  color: var(--c-ink);
+}
+
+/* A screen with nothing in it yet says what will come (SPEC 4.13). */
+.empty {
+  padding: 16px;
+  border-left: 6px solid var(--c-navy);
+  border-radius: 12px;
+  background: var(--c-panel);
+  color: var(--c-ink);
+  font-weight: 600;
+}
+
+.empty strong {
+  display: block;
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--c-navy);
 }
 
 /* In a session all text keeps at least 7:1 contrast (docs/SPEC.md 6): no grey text there. */
 .session .muted,
 .session .step-kicker,
 .session .countdown-label,
-.session .big-number .unit,
-.session .phase-count {
+.session .big-number .unit {
   color: var(--c-ink);
 }
 
 /* The session's actions in one fixed block at the bottom: »Som planlagt« stays in the same place
-   on every set (SPEC 3.2, 6; design review D2). The body leaves room for it. */
+   on every set (SPEC 3.2, 6; design review D2). The body leaves room for it, so its last line can
+   always be rolled up above the block (a set's block is 304 px with »Næste« and the reserve). */
 .session-body {
-  padding-bottom: 260px;
+  padding-bottom: 320px;
+}
+
+/* A body followed by sticky actions (»Dagens pas«, the summary, the last step) needs no such room:
+   no empty space under its last line. */
+.session-body:has(+ .session-actions) {
+  padding-bottom: 16px;
 }
 
 .fixed-actions {
@@ -798,7 +1040,7 @@
   z-index: 15;
   max-width: 640px;
   margin: 0 auto;
-  padding: 12px 16px 16px;
+  padding: 8px 16px 16px;
   display: grid;
   gap: 8px;
   background: var(--c-paper);
@@ -834,7 +1076,7 @@
 
 /* D11: on I dag the cards sit low, near the thumb and the tab bar. */
 .screen.today {
-  min-height: calc(100vh - 72px);
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
 }
@@ -845,7 +1087,7 @@
 
 /* D9: Backup with its actions at the bottom. */
 .screen.backup {
-  min-height: calc(100vh - 72px);
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
 }
@@ -865,6 +1107,12 @@
 .history-row {
   grid-template-columns: 1fr;
   min-height: 72px;
+  padding-left: 16px;
+}
+
+/* A session's summary opened from Historik stands over the tab bar: its button stays above it. */
+.app .session-actions {
+  bottom: 72px;
 }
 
 /* Diagnose: start-up times from the icon, latest and median (docs/SPEC.md 7). */
@@ -875,7 +1123,7 @@
 
 .startup-table th,
 .startup-table td {
-  padding: 8px 0 8px 12px;
+  padding: 8px 0 8px 16px;
   border-top: 1px solid var(--c-line);
   text-align: right;
   font-weight: 600;
@@ -902,8 +1150,8 @@
 
 .step-open {
   display: grid;
-  grid-template-columns: 72px 1fr;
-  gap: 12px;
+  grid-template-columns: 88px 1fr;
+  gap: 16px;
   align-items: start;
   width: 100%;
   min-height: 56px;
@@ -935,16 +1183,17 @@
 }
 
 .step-row-choice {
-  padding-left: 84px;
+  display: grid;
+  padding-left: 104px;
 }
 
 /* The exercise card (docs/SPEC.md 3.8): read in the middle of a session too, so every text is at
    least 18 px with 7:1 contrast as in the session (SPEC 6), and no grey text. */
 .exercise-card {
-  gap: 12px;
+  gap: 16px;
   padding-bottom: 32px;
   font-size: 18px;
-  line-height: 1.35;
+  line-height: 1.3;
   color: var(--c-ink);
 }
 
@@ -957,12 +1206,12 @@
 .card-top {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .card-status {
   flex: 1;
-  padding: 4px 12px;
+  padding: 4px 16px;
   border-left: 6px solid var(--c-gold);
   font-weight: 600;
 }
@@ -980,7 +1229,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0 12px;
+  gap: 0 16px;
   margin-top: 4px;
 }
 
@@ -993,23 +1242,24 @@
 }
 
 .card-dose-value.long {
-  font-size: 24px;
+  font-size: 28px;
 }
 
 .card-dose-legend {
   font-weight: 600;
 }
 
+/* The figure is the card's main character: the whole width of the card. */
 .card-figure {
   margin: 0;
   display: grid;
-  gap: 12px;
+  gap: 8px;
 }
 
 .card-picto {
   display: block;
   width: 100%;
-  height: 140px;
+  height: 160px;
   object-fit: contain;
 }
 
@@ -1032,7 +1282,7 @@ ul.card-phases {
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 6px;
+  gap: 8px;
   font-family: 'Bai Jamjuree', system-ui, sans-serif;
   font-weight: 600;
   font-size: 18px;
@@ -1047,7 +1297,7 @@ ul.card-phases {
 
 /* »Lettere variant i dag«: the variant the session runs after sharp pain on step 1 (D47). */
 .card-lighter {
-  padding: 12px;
+  padding: 16px;
   border: 2px solid var(--c-navy);
   border-radius: 12px;
   background: var(--c-blueTint);
@@ -1070,13 +1320,13 @@ ul.card-phases {
   list-style: none;
   counter-reset: card-step;
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .card-steps li {
   counter-increment: card-step;
   display: grid;
-  grid-template-columns: 28px 1fr;
+  grid-template-columns: 32px 1fr;
   gap: 8px;
   align-items: baseline;
 }
@@ -1085,7 +1335,7 @@ ul.card-phases {
   content: counter(card-step);
   font-family: 'Kanit', system-ui, sans-serif;
   font-weight: 700;
-  font-size: 24px;
+  font-size: 22px;
   line-height: 1;
   color: var(--c-red);
 }
@@ -1103,7 +1353,7 @@ ul.card-phases {
 }
 
 .card-cues li {
-  padding: 4px 12px;
+  padding: 4px 16px;
   border-left: 6px solid var(--c-red);
   font-weight: 600;
   font-size: 20px;
@@ -1119,8 +1369,10 @@ ul.card-phases {
   border-top: 1px solid var(--c-line);
 }
 
+/* A fold's title: 56 px to tap, and 8 px from the next one across the line between them (SPEC 6). */
 .card-fold summary {
   min-height: 56px;
+  margin: 4px 0;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1146,14 +1398,14 @@ ul.card-phases {
 
 .card-fold-body {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   padding: 0 0 16px;
 }
 
 .card-facts {
   margin: 0;
   display: grid;
-  gap: 2px;
+  gap: 4px;
 }
 
 .card-facts dt {
@@ -1170,7 +1422,7 @@ ul.card-phases {
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 14px;
+  gap: 16px;
 }
 
 .card-mistake {
@@ -1195,6 +1447,10 @@ ul.card-phases {
 .other-row.no-picto,
 .step-open.no-picto {
   grid-template-columns: 1fr;
+}
+
+.other-row.no-picto {
+  padding-left: 16px;
 }
 
 .other-heading {

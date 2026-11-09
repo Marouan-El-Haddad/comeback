@@ -1,6 +1,7 @@
 /* The animated figure (docs/SPEC.md 3.8 and 5). Loaded with the card, never with the first screen
    (SPEC 7). The figure's colours are the design tokens, set on the SVG's elements by the figure
-   system (src/figure/draw.ts). */
+   system (src/figure/draw.ts). The figure is the card's main character: large, centred, with air
+   around it (D59); space in steps of 8 px. */
 
 .figure {
   margin: 0;
@@ -18,13 +19,13 @@
 .figure-svg {
   display: block;
   width: 100%;
-  height: 150px;
+  height: 152px;
 }
 
 .figure-caption {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .figure-caption .card-phases {
@@ -46,18 +47,18 @@
 
 .figure-speed {
   flex: none;
-  padding: 0 12px;
+  padding: 0 16px;
 }
 
 /* A tall figure (standing, a wall sit): the figure beside its phases, one phase a line. */
 .figure.tall:not(.stills) {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .figure.tall:not(.stills) .figure-svg {
-  height: 214px;
+  height: 216px;
 }
 
 .figure.tall .figure-caption {
@@ -67,7 +68,7 @@
 
 .figure.tall:not(.stills) .card-phases {
   display: grid;
-  gap: 6px;
+  gap: 8px;
   text-align: left;
 }
 
@@ -92,7 +93,7 @@
 .figure-stills {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 16px;
   justify-content: center;
 }
 
@@ -118,7 +119,7 @@
 /* Several movements: each figure under its name (docs/SPEC.md 3.8). */
 .card-move {
   display: grid;
-  gap: 4px;
+  gap: 8px;
 }
 
 .card-move-title {
@@ -152,7 +153,7 @@
 
 /* On the card; in a session the session sets the height. */
 .figure.two:not(.compact) .figure-svg {
-  height: 190px;
+  height: 192px;
 }
 
 /* A drawing and the text of its mark: the text stands by its point, placed by the figure system
@@ -186,27 +187,27 @@
 /* Reduced motion with two views: each view's stills under its name. */
 .figure-stills-all {
   display: grid;
-  gap: 12px;
+  gap: 16px;
 }
 
 .figure-stills-view {
   display: grid;
-  gap: 6px;
+  gap: 8px;
 }
 
 /* A session's still under reduced motion with two views: side by side. */
 .figure-still-only.two {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
+  gap: 8px;
 }
 
 /* A typical mistake on the card: right and wrong side by side, named in words (SPEC 3.8, D58). */
 .fault-pair {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin: 4px 0 0;
+  gap: 16px;
+  margin: 8px 0 0;
 }
 
 .fault-cell {

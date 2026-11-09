@@ -1,7 +1,7 @@
 /* The guided session's »Nu«, »Næste«, the parts of the session, the intro card and »Dagens pas«
    (docs/SPEC.md 3.2, 5 and 6). Loaded with the session's code, never with the first screen (SPEC 7).
    In a session all text is at least 18 px with 7:1 contrast: navy, ink or Thai red on white, white
-   on navy or red, never grey. */
+   on navy or red, never grey. Sizes from the type scale, space in steps of 8 px (D59). */
 
 /* The header: the part of the session above the title, and the bar under it; both stay on top. */
 .session-top {
@@ -19,7 +19,6 @@
   flex: 1;
   min-width: 0;
   display: grid;
-  gap: 2px;
 }
 
 .session-progress {
@@ -34,9 +33,10 @@
   line-height: 1.2;
 }
 
+/* The parts as a bar: done navy, the one in hand red; »Del 3 af 7« says it in words (SPEC 6). */
 .session-bar {
   display: flex;
-  gap: 3px;
+  gap: 4px;
   padding: 0 16px 8px;
   background: var(--c-paper);
 }
@@ -56,16 +56,57 @@
   background: var(--c-red);
 }
 
-/* »Nu«: the label in a red box, white text (7.5:1). */
-.now-label {
+/* The traffic light and question 3: the title on top, the questions low over the buttons, where the
+   thumb is (SPEC 6: everything important in the lower half). Its buttons stand in the sticky block,
+   so the body needs no room for fixed actions. */
+.session-body.low {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 16px;
+}
+
+.session-body.low .low-group {
+  margin-top: auto;
+  display: grid;
+  gap: 16px;
+}
+
+/* »Nu« and »Næste« as a pair of labels: »Nu« white on red (7.5:1), »Næste« navy in a navy frame. */
+.now-label,
+.next-label {
   display: inline-block;
   padding: 0 8px;
+  border: 2px solid var(--c-red);
   border-radius: 6px;
   background: var(--c-red);
   color: var(--c-paper);
   font-family: 'Kanit', system-ui, sans-serif;
   font-weight: 700;
+  font-size: 18px;
+  line-height: 1.3;
   letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.next-label {
+  justify-self: start;
+  border-color: var(--c-navy);
+  background: var(--c-paper);
+  color: var(--c-navy);
+}
+
+/* »Næste« when the next exercise starts a new part: the part's number and name beside the label. */
+.next-part {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.next-part-name {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  color: var(--c-red);
 }
 
 .now-head {
@@ -77,7 +118,7 @@
 .next-head {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .now-head-row .set-name,
@@ -88,7 +129,7 @@
 
 .now-how {
   flex: none;
-  padding: 0 12px;
+  padding: 0 16px;
 }
 
 /* The running phase on one line of its own height (compact figure). */
@@ -101,7 +142,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .now-figure {
@@ -154,7 +195,7 @@
 }
 
 .session-figure.now .figure-svg {
-  height: 150px;
+  height: 160px;
 }
 
 /* In a session a tall figure stands over its one phase, not beside a list of them. */
@@ -163,7 +204,7 @@
 }
 
 .session-figure.now .figure.tall:not(.stills) .figure-svg {
-  height: 190px;
+  height: 192px;
 }
 
 .session-figure.now .card-phases,
@@ -188,12 +229,13 @@
   height: 80px;
 }
 
+/* The next exercise big in the pause and on the intro card: the figure takes the width. */
 .session-figure.big .figure-svg {
-  height: 130px;
+  height: 160px;
 }
 
 .session-figure.big .figure.tall:not(.stills) .figure-svg {
-  height: 150px;
+  height: 176px;
 }
 
 .session-figure.next {
@@ -206,12 +248,12 @@
 }
 
 .session-figure.plan {
-  width: 88px;
+  width: 96px;
   flex: none;
 }
 
 .session-figure.plan .figure-svg {
-  height: 72px;
+  height: 88px;
 }
 
 .figure-still-only {
@@ -231,54 +273,55 @@
 }
 
 .session-figure.plan .session-picto {
-  width: 80px;
-  height: 80px;
+  width: 88px;
+  height: 88px;
 }
 
 .session-figure.big .session-picto {
-  width: 140px;
-  height: 140px;
+  width: 160px;
+  height: 160px;
 }
 
-/* The cues of »Nu«: large, with a red edge as on the card. */
+/* The cues of »Nu«: large, with a red edge as on the card (SPEC 6: 18–20 px). */
 .now-cues {
   margin: 0;
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 6px;
+  gap: 8px;
 }
 
 .now-cues li {
-  padding: 2px 12px;
+  padding: 0 16px;
   border-left: 6px solid var(--c-red);
   font-weight: 600;
-  font-size: 19px;
+  font-size: 20px;
   color: var(--c-navy);
 }
 
-/* The medium ring beside a figure: still 96 px numbers (SPEC 6). */
+/* The medium ring beside a figure: 88 px numbers (SPEC 6, D51), and no wider than the room the
+   figure leaves it (»0:40« at 88 px is about 170 px wide). */
 .countdown.medium {
-  width: 212px;
-  height: 212px;
+  width: 204px;
+  height: 204px;
 }
 
 .countdown.medium .countdown-number {
   font-size: 88px;
 }
 
-/* One line: the intro card's clock. */
+/* One line: the intro card's clock, still big enough to read from the floor (SPEC 5: 64 px). */
 .countdown.line {
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: baseline;
-  gap: 4px 12px;
+  gap: 4px 16px;
   width: 100%;
   height: auto;
 }
 
 .countdown.line .countdown-number {
-  font-size: 48px;
+  font-size: 64px;
   justify-self: end;
 }
 
@@ -306,8 +349,8 @@
 .next-strip {
   display: flex;
   align-items: center;
-  gap: 12px;
-  height: 76px;
+  gap: 16px;
+  height: 80px;
   padding: 4px 0 8px;
   border-bottom: 1px solid var(--c-line);
   overflow: hidden;
@@ -319,13 +362,8 @@
   gap: 0;
 }
 
-.next-label {
-  font-family: 'Kanit', system-ui, sans-serif;
-  font-weight: 700;
+.next-strip .next-label {
   font-size: 18px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--c-navy);
 }
 
 .next-strip .next-name,
@@ -344,12 +382,19 @@
   font-weight: 700;
 }
 
-/* »Næste« big in the pause, and at the questions. */
-.next-up.next-big,
+/* »Næste« big in the pause, under a navy line as the parts of »Dagens pas«; at the questions in a
+   frame with »Sådan gør du«. */
+.next-up.next-big {
+  display: grid;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 4px solid var(--c-navy);
+}
+
 .next-up.next-box {
   display: grid;
   gap: 8px;
-  padding: 12px 16px 16px;
+  padding: 16px;
   border: 2px solid var(--c-navy);
   border-radius: 12px;
   background: var(--c-paper);
@@ -358,25 +403,25 @@
 .next-up .next-title {
   font-family: 'Kanit', system-ui, sans-serif;
   font-weight: 700;
-  font-size: 24px;
+  font-size: 22px;
   line-height: 1.15;
   color: var(--c-navy);
 }
 
 .next-up .next-line {
   font-weight: 600;
-  font-size: 19px;
+  font-size: 18px;
   color: var(--c-ink);
 }
 
 .next-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .get-ready {
-  padding: 8px 12px;
+  padding: 8px 16px;
   border-left: 6px solid var(--c-gold);
   background: var(--c-goldTint);
   color: var(--c-ink);
@@ -393,16 +438,23 @@
   font-size: 88px;
 }
 
+/* The set just logged, over the pause's ring: what changed, in words (SPEC 5, Bevægelse). */
+.rest-logged {
+  justify-self: center;
+  font-weight: 700;
+  color: var(--c-navy);
+}
+
 /* The intro card (D44): the first time an exercise comes in the session. */
 .intro {
   display: grid;
-  gap: 12px;
+  gap: 16px;
 }
 
 .intro-card {
   display: grid;
-  gap: 10px;
-  padding: 12px 16px 16px;
+  gap: 8px;
+  padding: 16px;
   border: 3px solid var(--c-red);
   border-radius: 12px;
   background: var(--c-paper);
@@ -424,12 +476,12 @@
 }
 
 .intro-card h1 {
-  font-size: 26px;
+  font-size: 28px;
 }
 
 .intro-line {
   font-weight: 600;
-  font-size: 19px;
+  font-size: 18px;
   color: var(--c-ink);
 }
 
@@ -445,7 +497,7 @@
 .intro-steps li {
   counter-increment: intro-step;
   display: grid;
-  grid-template-columns: 28px 1fr;
+  grid-template-columns: 32px 1fr;
   gap: 8px;
   align-items: baseline;
   font-size: 18px;
@@ -456,7 +508,7 @@
   content: counter(intro-step);
   font-family: 'Kanit', system-ui, sans-serif;
   font-weight: 700;
-  font-size: 24px;
+  font-size: 22px;
   line-height: 1;
   color: var(--c-red);
 }
@@ -466,13 +518,13 @@
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .intro-moves li {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   font-size: 18px;
   color: var(--c-ink);
 }
@@ -481,26 +533,48 @@
   color: var(--c-navy);
 }
 
-/* »Dagens pas« (docs/SPEC.md 3.2): the parts with navy dividers and big red numbers. */
+/* »Dagens pas« (docs/SPEC.md 3.2): the parts with navy dividers and big red numbers. The same part
+   head stands over the intro card where a part begins in the session (D59). */
 .day-plan {
   display: grid;
-  gap: 16px;
+  gap: 24px;
   font-size: 18px;
   color: var(--c-ink);
 }
 
 .day-plan-facts {
   display: grid;
-  gap: 4px;
+  gap: 8px;
   font-weight: 600;
 }
 
-.day-plan-time {
+/* The session's time, parts and exercises as big numbers, each with its word (SPEC 5). */
+.day-plan-stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 24px;
+}
+
+.day-plan-stat {
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+.day-plan-time,
+.day-plan-stat strong {
   font-family: 'Kanit', system-ui, sans-serif;
   font-weight: 700;
   font-size: 32px;
   line-height: 1.1;
   color: var(--c-red);
+}
+
+.day-plan-time .stat-word {
+  font-family: 'Bai Jamjuree', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--c-ink);
 }
 
 .day-part {
@@ -511,7 +585,7 @@
 .day-part-head {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   padding-top: 8px;
   border-top: 4px solid var(--c-navy);
 }
@@ -519,7 +593,7 @@
 .day-part-number {
   font-family: 'Kanit', system-ui, sans-serif;
   font-weight: 700;
-  font-size: 48px;
+  font-size: 64px;
   line-height: 1;
   color: var(--c-red);
   min-width: 40px;
@@ -527,11 +601,16 @@
 
 .day-part-title {
   display: grid;
-  gap: 2px;
+  gap: 4px;
 }
 
-.day-part-title h2 {
-  font-size: 24px;
+.day-part-title h2,
+.part-name {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.15;
+  color: var(--c-navy);
 }
 
 .day-part-note {
@@ -539,22 +618,29 @@
   color: var(--c-ink);
 }
 
+/* The exercises of a part: rows of 64 px with 8 px between them and a thin line (SPEC 6). */
 .day-items {
   margin: 0;
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 4px;
+  gap: 8px;
+}
+
+.day-items li + li {
+  padding-top: 8px;
+  border-top: 1px solid var(--c-line);
 }
 
 .day-item {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   width: 100%;
   min-height: 64px;
-  padding: 6px 0;
+  padding: 8px 0;
   border: 0;
+  border-radius: 12px;
   background: var(--c-paper);
   color: var(--c-ink);
   text-align: left;
@@ -587,7 +673,9 @@
   font-weight: 600;
 }
 
-/* What changed – the exercise that is now »Nu« – comes in quickly; never as decoration (SPEC 5). */
+/* What changed – the exercise that is now »Nu«, the next one in the pause, the part in the bar – comes
+   in quickly from below, where »Næste« stood; never as decoration, and never with reduced motion
+   (SPEC 5: at most 200 ms). */
 @media (prefers-reduced-motion: no-preference) {
   .step-enter {
     animation: step-enter 180ms ease-out;
@@ -601,7 +689,7 @@
 @keyframes step-enter {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(16px);
   }
 
   to {
