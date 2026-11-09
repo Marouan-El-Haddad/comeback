@@ -6,13 +6,23 @@ import { join } from 'node:path';
 import { describe, expect, test } from 'vitest';
 import type { Contact, ExplainFile, FigureItem, OwnMovement, Pose } from '../../content/types.ts';
 import { bendProblems, jumpProblems, movementFor, turn } from '../check.ts';
-import { bodyPrims, moving, propPrims, svgBody, track, emptyBox, type Box } from '../draw.ts';
+import {
+  bodyPrims,
+  moving,
+  propPrims,
+  svgBody,
+  track,
+  emptyBox,
+  type Box,
+  type Prim,
+} from '../draw.ts';
 import { deviation, faultPair, wrongPose } from '../faults.ts';
 import {
   directionText,
   jointAngle,
   markAt,
   markPlans,
+  placeLabel,
   stillMarks,
   viewsAndMarksText,
 } from '../marks.ts';
@@ -867,6 +877,8 @@ describe('»via«: en mellempose på en overgang (H2 i P1a-reviewet)', () => {
 });
 
 describe('D58: vinkler, markeringer og fejlpar', () => {
+  /** A mark's own shapes, without the white edge drawn under each (its halo). */
+  const shapes = (prims: readonly Prim[] = []) => prims.filter((p) => !p.key.endsWith('.halo'));
   /** The push-up with an arrow down in »3 sek ned«, the elbow at the bottom and an arrow up. */
   const marked = (): FigureItem => ({
     ...PUSH_UP_FIGURE,
@@ -948,16 +960,26 @@ describe('D58: vinkler, markeringer og fejlpar', () => {
     const model = buildModel(marked(), PUSH_UP);
     const [down, angle, up] = markPlans(model).map((p) => p.shows[0]);
     expect(angle?.label?.text).toBe('90°');
-    expect(angle?.label?.place).toBe('center');
-    expect(angle?.prims[0]?.t).toBe('path');
+    // Inside the angle, beside the arc: the elbow opens down and back toward the floor.
+    expect(['below', 'left']).toContain(angle?.label?.place);
+    expect(shapes(angle?.prims)[0]?.t).toBe('path');
     const s = solve(model.frame, PUSH_UP_FIGURE.keyframes.bottom as Pose);
     const elbow = s.bones.find((b) => b.side === 'near' && b.kind === 'arm')?.joint ?? [0, 0];
     expect(angle?.measured).toBeCloseTo(jointAngle(s, 'near.elbow')?.degrees ?? 0, 5);
-    const arc = angle?.prims[0];
+    const arc = shapes(angle?.prims)[0];
     if (arc?.t !== 'path') throw new Error('ingen bue');
     for (const p of arc.pts) expect(distance(p, elbow)).toBeCloseTo(6, 5);
     // The arrows: down in »3 sek ned« (moved 4 down), up in »Op«; a shaft and a head each.
-    expect(down?.prims.map((p) => p.t)).toEqual(['path', 'poly']);
+    expect(shapes(down?.prims).map((p) => p.t)).toEqual(['path', 'poly']);
+    // Every shape has a white edge under it, so a red arrow stands out on a red upper arm.
+    const halos = (down?.prims ?? []).filter((p) => p.key.endsWith('.halo'));
+    expect(halos.map((p) => p.key)).toEqual(['mark0.shaft.halo', 'mark0.head.halo']);
+    for (const halo of halos) {
+      expect(halo.t === 'path' || halo.t === 'poly' ? halo.s : '').toBe('paper');
+      expect(halo.z).toBeLessThan(30);
+    }
+    // The body the text keeps off: points along every stroke.
+    expect(down?.body.length).toBeGreaterThan(40);
     expect(down?.chord?.[1]).toBeLessThan(-8);
     expect(up?.chord?.[1]).toBeGreaterThan(8);
     expect(directionText(model.frame, down?.chord ?? [0, 0])).toMatch(/ned/);
@@ -971,17 +993,15 @@ describe('D58: vinkler, markeringer og fejlpar', () => {
     };
     const figure: FigureItem = { ...PUSH_UP_FIGURE, marks: [{ arrow: 'hip', phase: 1 }] };
     const [show] = markPlans(buildModel(figure, pumps))[0]?.shows ?? [];
-    expect(show?.prims.map((p) => p.t)).toEqual(['path', 'poly', 'poly']);
+    expect(shapes(show?.prims).map((p) => p.t)).toEqual(['path', 'poly', 'poly']);
     expect(show?.end).toBeCloseTo(8, 9);
   });
 
   test('stillbillederne har positionens markeringer og pilen for den fase, der starter dér', () => {
     const model = buildModel(marked(), PUSH_UP);
-    expect(stillMarks(model, 'top').map((m) => m.prims[0]?.key)).toEqual(['mark0.shaft']);
-    expect(stillMarks(model, 'bottom').map((m) => m.prims[0]?.key)).toEqual([
-      'mark1.arc',
-      'mark2.shaft',
-    ]);
+    const first = (m: { prims: Prim[] }) => shapes(m.prims)[0]?.key;
+    expect(stillMarks(model, 'top').map(first)).toEqual(['mark0.shaft']);
+    expect(stillMarks(model, 'bottom').map(first)).toEqual(['mark1.arc', 'mark2.shaft']);
   });
 
   test('en cue står ved sit punkt på den side, der vender væk fra kroppen, og en linje er stiplet', () => {
@@ -996,11 +1016,50 @@ describe('D58: vinkler, markeringer og fejlpar', () => {
     const model = buildModel(figure, PUSH_UP);
     const [cue, line, corner] = markPlans(model).map((p) => p.shows[0]);
     expect(cue?.label).toMatchObject({ text: 'Én planke', place: 'right' });
-    expect(cue?.prims[0]?.t).toBe('circle');
-    const drawn = line?.prims[0];
+    expect(shapes(cue?.prims)[0]?.t).toBe('circle');
+    const drawn = shapes(line?.prims)[0];
     expect(drawn?.t === 'line' && drawn.dash).toBeTruthy();
     expect(line?.label?.place).toBe('above');
     expect(corner?.label).toMatchObject({ text: 'Ned', at: null, place: 'corner' });
+  });
+
+  test('teksten står ved sit punkt, men flytter sig væk fra kroppen, hvis den ville dække den', () => {
+    const body = [
+      [50, 50, 3],
+      [60, 50, 3],
+      [70, 50, 3],
+    ] as const;
+    // Room on the right of the point: it stands there.
+    expect(
+      placeLabel({ width: 200, height: 100, w: 40, h: 20, at: [80, 50], place: 'right', body }),
+    ).toEqual([86, 40]);
+    // Asked for the left, where the body is: it goes to the first side that is free.
+    const [x, y] = placeLabel({
+      width: 200,
+      height: 100,
+      w: 40,
+      h: 20,
+      at: [80, 50],
+      place: 'left',
+      body,
+    });
+    expect(x >= 86 || y + 20 <= 47 || y >= 53).toBe(true);
+    // Never outside the drawing.
+    const [cx, cy] = placeLabel({
+      width: 100,
+      height: 100,
+      w: 60,
+      h: 20,
+      at: [95, 95],
+      place: 'right',
+      body: [],
+    });
+    expect(cx + 60).toBeLessThanOrEqual(100);
+    expect(cy + 20).toBeLessThanOrEqual(100);
+    // Without a point: the top left corner.
+    expect(
+      placeLabel({ width: 100, height: 100, w: 30, h: 20, at: null, place: 'corner', body: [] }),
+    ).toEqual([0, 0]);
   });
 
   test('tekstalternativet nævner vinklerne og markeringerne på dansk', () => {

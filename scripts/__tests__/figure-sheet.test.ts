@@ -43,6 +43,41 @@ describe('kontaktarkets side', () => {
     expect(html).not.toMatch(/https?:\/\//);
   });
 
+  test('viser den anden vinkel, markeringerne og fejlparret (D58)', () => {
+    const file = structuredClone(PRESS_FIGURES);
+    const figure = file.figures[0] as FigureItem;
+    const above = (x: number): Pose => ({
+      hip: [x, 30],
+      torso: 0,
+      arms: { near: { to: [70, 18], bend: -1 }, far: { to: [70, 42], bend: 1 } },
+      legs: { near: { to: [0, 27], bend: 1 }, far: { to: [0, 33], bend: -1 } },
+    });
+    figure.second = { view: 'top', props: [], keyframes: { top: above(44), bottom: above(47) } };
+    figure.marks = [
+      { arrow: 'chest', phase: 1 },
+      { line: ['near.foot', 'shoulder'], cue: 'Én planke', at: 'bottom' },
+    ];
+    figure.second.marks = [{ cue: 'Albuerne ud', phase: 3, point: 'near.elbow' }];
+    figure.faults = [{ mistake: 1, at: 'top', wrong: { hip: [45.4, 15.8], torso: 30.75 } }];
+    const html = sheetHtml(
+      { file, explain: PRESS, program: PROGRAM, source: 'press.json', problems: [] },
+      { tokens },
+    );
+    // The second view under its name, with cells of its own.
+    expect(html).toContain('<h3>Ovenfra</h3>');
+    // The marks: listed with their time, drawn on the cells, the text in the card's size.
+    expect(html).toContain('Markeringer: 1 pil ved brystet i fase 1 »3 sek ned« (0–3 sek)');
+    expect(html).toContain('2 linje »Én planke« ved Nede (3–4 sek)');
+    expect(html).toContain('ovenfra 1 cue »Albuerne ud« i fase 3 »Op« (4–5 sek)');
+    expect(html).toContain('<span class="mark"');
+    expect(html).toContain('>Én planke</span>');
+    expect(html).toContain('stroke-dasharray');
+    // The typical mistake: right and wrong, how far apart, and the mistake in words.
+    expect(html).toContain('Fejl 1 ved Oppe: Hoften hænger.');
+    expect(html).toContain('<p class="name">Rigtigt</p>');
+    expect(html).toMatch(/<p class="name">Forkert<\/p><p class="angles">afviger [\d,]+<\/p>/);
+  });
+
   test('viser en overgangs via-pose med blå ramme og midten af hver halvdel (H2 i P1a-reviewet)', () => {
     const file = structuredClone(PRESS_FIGURES);
     const figure = file.figures[0] as FigureItem;

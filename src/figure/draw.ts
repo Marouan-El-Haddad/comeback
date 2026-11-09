@@ -13,9 +13,13 @@ import { SOFA_LOW } from './surfaces.ts';
 export { SOFA_LOW } from './surfaces.ts';
 
 /** The colour roles of a figure; PAINT maps them to the design tokens. */
-export type Paint = 'near' | 'far' | 'hi' | 'ghost' | 'prop' | 'fill' | 'fill2' | 'towel' | 'pack';
+export type Paint =
+  'near' | 'far' | 'hi' | 'ghost' | 'prop' | 'fill' | 'fill2' | 'towel' | 'pack' | 'paper' | 'none';
 
 export const PAINT: Record<Paint, string> = {
+  none: 'none',
+  /** The page's white: the edge round a mark, so it stands out on the body (D58). */
+  paper: 'var(--c-paper)',
   near: 'var(--c-picto-near)',
   far: 'var(--c-picto-far)',
   hi: 'var(--c-picto-highlight)',
@@ -41,7 +45,7 @@ export type Prim = Base &
     | { t: 'line'; a: Point; b: Point; w: number; s: Paint; butt?: boolean; dash?: string }
     /** An open line through points: an arrow's way, an angle's arc (DECISIONS.md D58). */
     | { t: 'path'; pts: Point[]; w: number; s: Paint; dash?: string }
-    | { t: 'circle'; c: Point; r: number; f: Paint; s?: Paint; w?: number }
+    | { t: 'circle'; c: Point; r: number; f: Paint; s?: Paint; w?: number; dash?: string }
     | {
         t: 'rect';
         x: number;
@@ -656,7 +660,9 @@ export function primSvg(p: Prim, withKey = false): string {
     case 'path':
       return `<polyline${k} ${attrs} fill="none" stroke="${PAINT[p.s]}" stroke-width="${n(p.w)}" stroke-linecap="round" stroke-linejoin="round"${dash(p.dash)}/>`;
     case 'circle': {
-      const stroke = p.s ? ` stroke="${PAINT[p.s]}" stroke-width="${n(p.w ?? 1)}"` : '';
+      const stroke = p.s
+        ? ` stroke="${PAINT[p.s]}" stroke-width="${n(p.w ?? 1)}"${dash(p.dash)}`
+        : '';
       return `<circle${k} ${attrs} r="${n(p.r)}" fill="${PAINT[p.f]}"${stroke}/>`;
     }
     case 'rect':

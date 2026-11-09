@@ -7,16 +7,21 @@
 // page into a PNG in a browser. Never part of the app.
 import {
   isFigureLike,
+  isLike,
   type Contact,
+  type Fault,
   type ExplainFile,
   type FigureFile,
   type FigureItem,
   type OwnMovement,
+  type Point,
 } from '../content/types.ts';
 import type { Problem } from '../content/validate.ts';
 import type { Program } from '../engine/types.ts';
 import { evaluatePose, jointDegrees, movementFor, placeName } from './check.ts';
-import { bodyPrims, svgBody, viewBox, type Box, type Prim } from './draw.ts';
+import { bodyPrims, emptyBox, svgBody, track, viewBox, type Box, type Prim } from './draw.ts';
+import { faultPair } from './faults.ts';
+import { markPlans, placeLabel, stillMarks, type MarkDraw, type MarkPlan } from './marks.ts';
 import { chestDirection, polar, solve, type Frame, type Skeleton } from './geometry.ts';
 import {
   buildModel,
@@ -28,6 +33,7 @@ import {
   type FigureModel,
   type Move,
 } from './motion.ts';
+import { figureViews, VIEW_NAME } from './views.ts';
 
 export interface SheetInput {
   file: FigureFile;
@@ -98,8 +104,8 @@ function size(box: Box, pad = 3): { width: number; height: number } {
   };
 }
 
-/** A cell's drawing: the positions and the middles of the moves in the still box, without the travel. */
-function svg(model: FigureModel, inner: string, box: Box = model.stillBox): string {
+/** A cell's drawing in its box: the positions and the middles of the moves without the travel. */
+function svg(box: Box, inner: string): string {
   const { width, height } = size(box);
   return `<svg viewBox="${viewBox(box)}" width="${width}" height="${height}">${inner}</svg>`;
 }
@@ -138,7 +144,7 @@ function contactRings(
     .join('');
 }
 
-function phasesLine(movement: OwnMovement): string {
+function phasesLine(movement: OwnMovement, model?: FigureModel): string {
   const names = new Map(movement.positions.map((p) => [p.id, p.name]));
   let at = movement.positions[0]?.id ?? '';
   let total = 0;
@@ -159,7 +165,10 @@ function phasesLine(movement: OwnMovement): string {
     if (phase.repeat === undefined) at = phase.to;
     return `<b>${escape(phase.label)}</b> (${dose}${num(seconds)} sek${times})${escape(target)}`;
   });
-  const back = at !== (movement.positions[0]?.id ?? '') ? ' · tilbage til start (1 sek)' : '';
+  const cut = model?.timeline.moves.at(-1)?.cut
+    ? ` · står, hvor den kom til, og begynder forfra ved start (klip, ${num(model.timeline.moves.at(-1)?.seconds ?? 0)} sek)`
+    : '';
+  const back = at !== (movement.positions[0]?.id ?? '') ? ' · tilbage til start (1 sek)' : cut;
   return `${parts.join(' · ')}${back} — i alt ${num(total)} sek i kortet`;
 }
 
@@ -208,20 +217,77 @@ function transitionText(entry: FigureItem, names: Map<string, string>): string {
   return `<p class="meta">Overgange: ${escape(parts.join(' · '))}</p>`;
 }
 
-function figureSection(input: SheetInput, entry: FigureItem): string {
-  const movement = movementFor(input.explain, entry.id, entry.movement);
-  if (!movement) return '';
-  const model = buildModel(entry, movement);
+/** The card's figure as the app draws it (figure.css): px per figure unit, for the marks' text. */
+const CARD = { width: 382, height: 150, tall: [185, 214], two: [187, 190] } as const;
+
+function cardScale(model: FigureModel, two: boolean): number {
+  const vw = model.box.x1 - model.box.x0 + 6;
+  const vh = model.box.y1 - model.box.y0 + 6;
+  if (two) return Math.min(CARD.two[0] / vw, CARD.two[1] / vh);
+  const still = model.stillBox;
+  const tall = still.y1 - still.y0 > (still.x1 - still.x0) * 0.9;
+  return tall
+    ? Math.min(CARD.tall[0] / vw, CARD.tall[1] / vh)
+    : Math.min(CARD.width / vw, CARD.height / vh);
+}
+
+/**
+ * A cell's drawing with the marks of its position on it: the shapes in the SVG and the text where the
+ * app puts it (placeLabel), in the size it has on the card (18 px there), so a figure agent sees what
+ * it covers. The text's size is estimated from its letters.
+ */
+function drawing(box: Box, inner: string, marks: readonly MarkDraw[], font: number): string {
+  const vx = box.x0 - 3;
+  const top = box.y1 + 3;
+  const { width, height } = size(box);
+  const px = (p: Point): Point => [(p[0] - vx) * SCALE, (top - p[1]) * SCALE];
+  const labels = marks.flatMap((m) => {
+    if (!m.label) return [];
+    const w = m.label.text.length * 0.56 * font + 0.9 * font;
+    const h = 1.3 * font + 2;
+    const [x, y] = placeLabel({
+      width,
+      height,
+      w,
+      h,
+      at: m.label.at ? px(m.label.at) : null,
+      place: m.label.place,
+      ray: m.label.ray
+        ? {
+            from: px(m.label.ray.from),
+            dir: [
+              Math.cos((m.label.ray.angle * Math.PI) / 180),
+              -Math.sin((m.label.ray.angle * Math.PI) / 180),
+            ],
+          }
+        : null,
+      body: m.body.map(([bx, by, r]) => [...px([bx, by]), r * SCALE] as const),
+    });
+    return [
+      `<span class="mark" style="left:${x.toFixed(1)}px;top:${y.toFixed(1)}px;font-size:${font.toFixed(1)}px">${escape(m.label.text)}</span>`,
+    ];
+  });
+  const shapes = svgBody(marks.flatMap((m) => m.prims));
+  return `<div class="draw">${svg(box, inner + shapes)}${labels.join('')}</div>`;
+}
+
+/**
+ * The cells of one view: its positions with their marks, its via poses, the middle of each move and
+ * its onion skin; `places` are the problems' places they show.
+ */
+function viewCells(
+  entry: FigureItem,
+  model: FigureModel,
+  movement: OwnMovement,
+  where: string,
+  mine: readonly Problem[],
+  font: number,
+): { cells: string[]; places: string[] } {
   const frame = model.frame;
-  const where = entry.movement ? `${entry.id} › ${entry.movement}` : entry.id;
-  const mine = input.problems.filter((p) => p.where === where || p.where.startsWith(`${where} ›`));
-  const facing =
-    frame.view === 'side'
-      ? ` · facing ${frame.facing} (brystet mod ${frame.facing === 1 ? 'højre' : 'venstre'}, når figuren står op)`
-      : '';
-  const props = entry.props.length > 0 ? entry.props.map((p) => p.type).join(', ') : 'ingen';
   const names = new Map(movement.positions.map((p) => [p.id, p.name]));
+  const places: string[] = [];
   const cells = movement.positions.map((position) => {
+    places.push(`${where} › ${position.id}`);
     const own = mine.filter(
       (p) =>
         p.where === `${where} › ${position.id}` ||
@@ -235,7 +301,8 @@ function figureSection(input: SheetInput, entry: FigureItem): string {
       position.contacts.length > 0 ? position.contacts.map(contactText).join(', ') : 'i luften';
     const solved = model.solved[position.id];
     const angles = solved ? anglesText(solved) : '';
-    return `<div class="cell">${svg(model, inner)}<p class="name">${escape(position.name)} <span>(${position.id})</span></p><p class="contacts">${escape(contacts)}</p>${angles ? `<p class="angles">${escape(angles)}</p>` : ''}${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div>`;
+    const marks = stillMarks(model, position.id);
+    return `<div class="cell">${drawing(model.stillBox, inner, marks, font)}<p class="name">${escape(position.name)} <span>(${position.id})</span></p><p class="contacts">${escape(contacts)}</p>${angles ? `<p class="angles">${escape(angles)}</p>` : ''}${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div>`;
   });
   // A transition's via: the pose the figure goes through on the way, checked like a keyframe. In
   // the middle of a half the other end names which via it is.
@@ -243,11 +310,12 @@ function figureSection(input: SheetInput, entry: FigureItem): string {
   for (const t of entry.transitions ?? []) {
     if (!t.via) continue;
     const place = `${where} › ${placeName(`${t.from}>${t.to}`)}`;
+    places.push(place);
     const own = mine.filter((p) => p.where === place);
     const solved = solve(frame, t.via);
     const inner = svgBody([...model.still, ...movingPrims(model, t.via)]);
     cells.push(
-      `<div class="cell via">${svg(model, inner)}<p class="name">${escape(`Via: ${names.get(t.from) ?? t.from} → ${names.get(t.to) ?? t.to}`)}</p><p class="contacts">overgang, ingen position</p><p class="angles">${escape(anglesText(solved))}</p>${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div>`,
+      `<div class="cell via">${svg(model.stillBox, inner)}<p class="name">${escape(`Via: ${names.get(t.from) ?? t.from} → ${names.get(t.to) ?? t.to}`)}</p><p class="contacts">overgang, ingen position</p><p class="angles">${escape(anglesText(solved))}</p>${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div>`,
     );
   }
   // The middle of every move (H1): the frame where a kinking knee or a joint through the floor shows.
@@ -256,10 +324,11 @@ function figureSection(input: SheetInput, entry: FigureItem): string {
     const s = solve(frame, pose);
     const moving: Prim[] = movingPrims(model, pose);
     const place = `${where} › ${placeName(move.from)} → ${placeName(move.to)}`;
+    places.push(place);
     const own = mine.filter((p) => p.where === place);
     const label = `Midt i: ${nameOf(move.from)} → ${nameOf(move.to)}`;
     cells.push(
-      `<div class="cell mid">${svg(model, svgBody([...model.still, ...moving]))}<p class="name">${escape(label)}</p><p class="angles">${escape(anglesText(s))}</p>${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div>`,
+      `<div class="cell mid">${svg(model.stillBox, svgBody([...model.still, ...moving]))}<p class="name">${escape(label)}</p><p class="angles">${escape(anglesText(s))}</p>${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div>`,
     );
   }
   // The onion skin: a pale frame every quarter of a second, the first position on top.
@@ -268,19 +337,144 @@ function figureSection(input: SheetInput, entry: FigureItem): string {
     .join('');
   const first = movement.positions[0]?.id ?? '';
   cells.push(
-    `<div class="cell">${svg(model, svgBody(model.still) + ghosts + svgBody(stillPrims(model, first).filter((p) => !model.still.includes(p))), model.box)}<p class="name">Bevægelsen</p><p class="contacts">hver 0,25 sek; mørk = ${escape(movement.positions[0]?.name ?? '')}</p></div>`,
+    `<div class="cell">${svg(model.box, svgBody(model.still) + ghosts + svgBody(stillPrims(model, first).filter((p) => !model.still.includes(p))))}<p class="name">Bevægelsen</p><p class="contacts">hver 0,25 sek; mørk = ${escape(movement.positions[0]?.name ?? '')}</p></div>`,
   );
-  const shown = new Set([
-    ...movement.positions.map((pos) => `${where} › ${pos.id}`),
-    ...distinctMoves(model).map((m) => `${where} › ${placeName(m.from)} → ${placeName(m.to)}`),
-    ...(entry.transitions ?? []).flatMap((t) =>
-      t.via ? [`${where} › ${placeName(`${t.from}>${t.to}`)}`] : [],
+  return { cells, places };
+}
+
+const POINT_NAMES: Record<string, string> = {
+  hip: 'hoften',
+  shoulder: 'skulderen',
+  chest: 'brystet',
+  head: 'hovedet',
+  hand: 'hånden',
+  elbow: 'albuen',
+  knee: 'knæet',
+  foot: 'foden',
+  toes: 'tæerne',
+};
+
+/** A mark in words with when it is shown: »1 pil ved brystet i fase 1 »3 sek ned« (0–3 sek)«. */
+function markLine(model: FigureModel, plan: MarkPlan): string {
+  const mark = plan.mark;
+  const position = model.movement.positions.find((p) => p.id === mark.at);
+  const phase = mark.phase === undefined ? undefined : model.movement.phases[mark.phase - 1];
+  const when = position
+    ? `ved ${position.name}`
+    : phase
+      ? `i fase ${mark.phase ?? ''} »${phase.label}«`
+      : '';
+  const named = (p: string) => POINT_NAMES[p.split('.').pop() ?? p] ?? p;
+  let what: string;
+  if ('arrow' in mark) what = `pil ved ${named(mark.arrow)}`;
+  else if ('angle' in mark) {
+    const measured = plan.shows[0]?.measured;
+    const drawn = measured === undefined ? '' : ` (tegnet ${Math.round(measured)}°)`;
+    const said = mark.degrees === undefined ? '' : ` ${mark.degrees}°`;
+    what = `vinkel ved ${named(mark.angle)}${said}${drawn}`;
+  } else if ('line' in mark) what = `linje${mark.cue ? ` »${mark.cue}«` : ''}`;
+  else what = `cue »${mark.cue}«`;
+  const times = plan.shows.map((s) => `${num(s.start)}–${num(s.end)} sek`).join(', ');
+  return `${plan.index + 1} ${what} ${when} (${times || 'ses ikke'})`;
+}
+
+/** A typical mistake as right and wrong, at the same scale, with how far apart they are (D58). */
+function faultCells(
+  input: SheetInput,
+  entry: FigureItem,
+  movement: OwnMovement,
+  fault: Fault,
+  own: readonly Problem[],
+): string {
+  const names = new Map(movement.positions.map((p) => [p.id, p.name]));
+  const explained = input.explain.items.find((e) => e.id === entry.id);
+  const text =
+    explained && !isLike(explained) ? (explained.mistakes[fault.mistake - 1]?.mistake ?? '') : '';
+  const pair = faultPair(entry, movement, fault);
+  if (!pair) return `<p class="problem">Fejl ${fault.mistake}: kan ikke tegnes</p>`;
+  const model = buildModel(pair.figure, movement);
+  const right = [...model.still, ...movingPrims(model, pair.right)];
+  const ring: Prim = {
+    key: 'ring',
+    z: 40,
+    t: 'circle',
+    c: pair.differs.at,
+    r: 7,
+    f: 'none',
+    s: 'hi',
+    w: 1.4,
+    dash: '2.6 1.8',
+  };
+  const wrong = [...model.still, ...movingPrims(model, pair.wrong), ring];
+  const box = track(track(emptyBox(), right), wrong);
+  const view =
+    pair.figure.view === entry.view
+      ? ''
+      : ` (${VIEW_NAME[pair.figure.view].toLocaleLowerCase('da-DK')})`;
+  return `<p class="meta">Fejl ${fault.mistake} ved ${escape(names.get(fault.at) ?? fault.at)}: ${escape(text)}${escape(view)}</p><div class="cells"><div class="cell">${svg(box, svgBody(right))}<p class="name">Rigtigt</p></div><div class="cell">${svg(box, svgBody(wrong))}<p class="name">Forkert</p><p class="angles">afviger ${num(pair.differs.by)}</p>${own.map((p) => `<p class="problem">${escape(p.message)}</p>`).join('')}</div></div>`;
+}
+
+function figureSection(input: SheetInput, entry: FigureItem): string {
+  const movement = movementFor(input.explain, entry.id, entry.movement);
+  if (!movement) return '';
+  const views = figureViews(entry);
+  const models = views.map((view) => buildModel(view, movement));
+  const two = views.length > 1;
+  const where = entry.movement ? `${entry.id} › ${entry.movement}` : entry.id;
+  const mine = input.problems.filter((p) => p.where === where || p.where.startsWith(`${where} ›`));
+  const names = new Map(movement.positions.map((p) => [p.id, p.name]));
+  const props = (v: FigureItem) =>
+    v.props.length > 0 ? v.props.map((p) => p.type).join(', ') : 'ingen';
+  const facing = (frame: FigureModel['frame']) =>
+    frame.view === 'side'
+      ? ` · facing ${frame.facing} (brystet mod ${frame.facing === 1 ? 'højre' : 'venstre'}, når figuren står op)`
+      : '';
+  const prefixOf = (view: FigureItem, i: number) =>
+    i === 0 ? where : `${where} › ${VIEW_NAME[view.view].toLocaleLowerCase('da-DK')}`;
+  const second = views[1] ? prefixOf(views[1], 1) : null;
+  const places: string[] = [];
+  const parts = views.map((view, i) => {
+    const model = models[i] as FigureModel;
+    const prefix = prefixOf(view, i);
+    // The first view's problems are those that are not the second view's.
+    const own =
+      i === 0 && second
+        ? mine.filter((p) => p.where !== second && !p.where.startsWith(`${second} ›`))
+        : mine;
+    const font = 18 * (SCALE / cardScale(model, two));
+    const result = viewCells(view, model, movement, prefix, own, font);
+    places.push(...result.places);
+    const head =
+      i === 0
+        ? ''
+        : `<h3>${escape(VIEW_NAME[view.view])}</h3><p class="meta">${view.view}${escape(facing(model.frame))} · rødt: ${escape(view.highlight.join(', '))} · rekvisitter: ${escape(props(view))}</p>${transitionText(view, names)}`;
+    return `${head}<div class="cells">${result.cells.join('')}</div>`;
+  });
+  // The marks of both views with when they are shown (D58).
+  const marks = views.flatMap((view, i) =>
+    markPlans(models[i] as FigureModel).map(
+      (plan) =>
+        `${i === 0 ? '' : `${VIEW_NAME[view.view].toLocaleLowerCase('da-DK')} `}${markLine(models[i] as FigureModel, plan)}`,
     ),
-  ]);
-  const general = mine.filter(
-    (p) => ![...shown].some((s) => p.where === s || p.where.startsWith(`${s} ›`)),
   );
-  return `<section><h2>${escape(where)} · ${escape(itemName(input.program, entry.id))}${entry.movement ? ` · ${escape(movement.name ?? '')}` : ''}</h2><p class="meta">${frame.view}${escape(facing)} · rødt: ${escape(entry.highlight.join(', '))} · rekvisitter: ${escape(props)}</p>${transitionText(entry, names)}<div class="cells">${cells.join('')}</div><p class="phases">${phasesLine(movement)}</p>${general.map((p) => `<p class="problem">${escape(p.where)}: ${escape(p.message)}</p>`).join('')}</section>`;
+  const marksText =
+    marks.length > 0 ? `<p class="meta">Markeringer: ${escape(marks.join(' · '))}</p>` : '';
+  const faults = (entry.faults ?? []).map((fault) => {
+    const place = `${where} › fejl ${fault.mistake}`;
+    places.push(place);
+    return faultCells(
+      input,
+      entry,
+      movement,
+      fault,
+      mine.filter((p) => p.where === place),
+    );
+  });
+  const general = mine.filter(
+    (p) => !places.some((s) => p.where === s || p.where.startsWith(`${s} ›`)),
+  );
+  const main = models[0] as FigureModel;
+  return `<section><h2>${escape(where)} · ${escape(itemName(input.program, entry.id))}${entry.movement ? ` · ${escape(movement.name ?? '')}` : ''}</h2><p class="meta">${main.frame.view}${escape(facing(main.frame))} · rødt: ${escape(entry.highlight.join(', '))} · rekvisitter: ${escape(props(entry))}</p>${transitionText(entry, names)}${marksText}${parts.join('')}<p class="phases">${phasesLine(movement, main)}</p>${faults.join('')}${general.map((p) => `<p class="problem">${escape(p.where)}: ${escape(p.message)}</p>`).join('')}</section>`;
 }
 
 /** The whole sheet as an HTML page. */
@@ -317,7 +511,10 @@ section{border-top:2px solid var(--c-navy);padding:12px 0 16px}
 .name{margin:4px 0 0;font-weight:600;color:var(--c-navy)}.name span{font-weight:400}
 .contacts{margin:0;font-size:14px;text-align:center}
 .phases{margin:8px 0 0}
+h3{font:600 18px/1.2 'Kanit',system-ui,sans-serif;color:var(--c-navy);margin:12px 0 2px}
+.draw{position:relative;line-height:0}
+.mark{position:absolute;padding:0 0.45em;border:1px solid var(--c-line);border-left:0.22em solid var(--c-red);border-radius:4px;background:var(--c-paper);color:var(--c-navy);font-weight:600;line-height:1.3;white-space:nowrap}
 .problem{margin:4px 0 0;color:var(--c-redDark);font-weight:600}
 .ok{color:var(--c-green);font-weight:600}
-</style></head><body><h1>Kontaktark · ${escape(input.file.subject)}</h1><p class="meta">${escape(input.source)} · ${drawn.length} ${drawn.length === 1 ? 'figur' : 'figurer'}${figures.length > drawn.length ? ` og ${figures.length - drawn.length} »like«` : ''} · ${count === 0 ? '<span class="ok">ingen problemer</span>' : `<span class="problem">${count} ${count === 1 ? 'problem' : 'problemer'}</span>`}</p><p class="legend">Blå pil: brystets retning. Ringe: kontakterne i forklaringen (blå = passer, rød = passer ikke). Under hver position: knæ- og albuevinklerne (180° = strakt, nær/fjern). Stiplet ramme: billedet midt i en bevægelse. Blå ramme: en overgangs via-pose. Samme skala på alle figurer.</p>${sections.join('')}</body></html>`;
+</style></head><body><h1>Kontaktark · ${escape(input.file.subject)}</h1><p class="meta">${escape(input.source)} · ${drawn.length} ${drawn.length === 1 ? 'figur' : 'figurer'}${figures.length > drawn.length ? ` og ${figures.length - drawn.length} »like«` : ''} · ${count === 0 ? '<span class="ok">ingen problemer</span>' : `<span class="problem">${count} ${count === 1 ? 'problem' : 'problemer'}</span>`}</p><p class="legend">Blå pil: brystets retning. Ringe: kontakterne i forklaringen (blå = passer, rød = passer ikke). Under hver position: knæ- og albuevinklerne (180° = strakt, nær/fjern). Stiplet ramme: billedet midt i en bevægelse. Blå ramme: en overgangs via-pose. Rødt: markeringerne på positionen og pilen for den fase, der starter dér, med teksten i den størrelse, den har på kortet; under »Markeringer« står, hvornår hver vises. »Rigtigt« og »Forkert«: en typisk fejl og hvor meget den afviger (ring). Samme skala på alle figurer.</p>${sections.join('')}</body></html>`;
 }

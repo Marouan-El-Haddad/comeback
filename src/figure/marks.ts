@@ -16,7 +16,8 @@ import type {
   Point,
   Pose,
 } from '../content/types.ts';
-import type { Prim } from './draw.ts';
+import { BODY } from '../content/units.ts';
+import { WIDTH, type Prim } from './draw.ts';
 import {
   angleOf,
   chestDirection,
@@ -32,8 +33,8 @@ import { VIEW_NAME } from './views.ts';
 
 /** Marks are drawn above the body. */
 const Z = 30;
-/** The radius of an angle's arc, and how far its degrees stand outside it. */
-const ARC = { r: 6, text: 4.8 } as const;
+/** The radius of an angle's arc, and how far outside it the point its degrees stand by lies. */
+const ARC = { r: 6, text: 1.5 } as const;
 /** A cue's dot on its point. */
 const DOT = 1.7;
 /** An arrow's shaft and head. */
@@ -50,20 +51,30 @@ export function markKind(mark: Mark): MarkKind {
   return 'cue';
 }
 
-/** Where a mark's text stands: beside its point, centred on it (degrees), or in the corner. */
-export type LabelPlace = MarkPlace | 'center' | 'corner';
+/** Where a mark's text stands: beside its point, or without a point in the drawing's corner. */
+export type LabelPlace = MarkPlace | 'corner';
 
 export interface MarkLabel {
   text: string;
   /** The point it stands by, in figure units; null = the drawing's top left corner. */
   at: Point | null;
   place: LabelPlace;
+  /**
+   * An angle's degrees stand inside the angle first: along this ray from the joint (direction in
+   * degrees), as close to the arc as they fit off the body.
+   */
+  ray?: { from: Point; angle: number };
 }
 
 /** A mark as drawn at one moment: its shapes and its text. */
 export interface MarkDraw {
   prims: Prim[];
   label: MarkLabel | null;
+  /**
+   * The body as drawn at the mark's moment, as points with the half width of their stroke, in figure
+   * units: the text keeps off them (placeLabel).
+   */
+  body: Array<[number, number, number]>;
   /** An arrow's way from start to end (the text alternative names its direction). */
   chord?: Point;
   /** The angle the figure draws at the joint, in degrees. */
@@ -266,6 +277,57 @@ function sideOf(s: Skeleton, p: Point): MarkPlace {
   return p[0] >= (s.hip[0] + s.shoulder[0]) / 2 ? 'right' : 'left';
 }
 
+/** The side a direction points to, the way the text stands beside a point in that direction. */
+function sideToward(degrees: number): MarkPlace {
+  const x = Math.cos((degrees * Math.PI) / 180);
+  const y = Math.sin((degrees * Math.PI) / 180);
+  if (Math.abs(x) >= Math.abs(y)) return x >= 0 ? 'right' : 'left';
+  return y >= 0 ? 'above' : 'below';
+}
+
+/** The body as points along its strokes with their half widths (head, torso, neck, limbs). */
+function bodyPoints(s: Skeleton): Array<[number, number, number]> {
+  const out: Array<[number, number, number]> = [];
+  const along = (a: Point, b: Point, r: number) => {
+    const n = Math.max(1, Math.ceil(distance(a, b) / 2));
+    for (let i = 0; i <= n; i++) {
+      const p = lerpPoint(a, b, i / n);
+      out.push([p[0], p[1], r]);
+    }
+  };
+  along(s.hip, s.shoulder, WIDTH.torso / 2);
+  along(s.shoulder, s.head, WIDTH.limb / 2);
+  out.push([s.head[0], s.head[1], BODY.headRadius]);
+  for (const b of s.bones) {
+    along(b.root, b.joint, WIDTH.limb / 2);
+    along(b.joint, b.end, WIDTH.limb / 2);
+    if (b.tip) along(b.end, b.tip, WIDTH.tip / 2);
+  }
+  return out;
+}
+
+/** Each shape twice: first a wider white edge, so a red mark stands out on a red or navy body. */
+function withHalo(prims: readonly Prim[]): Prim[] {
+  // Under every shape of the mark, so no white edge covers a red part of it.
+  const halos = prims.map((p): Prim => {
+    const z = Z - 0.5;
+    const key = p.key + '.halo';
+    switch (p.t) {
+      case 'line':
+        return { key, z, t: 'line', a: p.a, b: p.b, w: p.w + 2.4, s: 'paper' };
+      case 'path':
+        return { key, z, t: 'path', pts: p.pts, w: p.w + 2.4, s: 'paper' };
+      case 'poly':
+        return { ...p, key, z, s: 'paper', f: 'paper', w: p.w + 2.4 };
+      case 'circle':
+        return { key, z, t: 'circle', c: p.c, r: p.r + 1.2, f: 'paper' };
+      default:
+        return { ...p, key, z };
+    }
+  });
+  return [...halos, ...prims];
+}
+
 const degreesText = (mark: { degrees?: number }, measured: number) =>
   `${mark.degrees ?? Math.round(measured / 5) * 5}°`;
 
@@ -282,8 +344,26 @@ export function markDraw(
   phase: number | null,
   local: boolean,
 ): MarkDraw {
+  const s = solve(model.frame, pose);
+  const draw = markShape(model, mark, index, s, dx, phase, local);
+  // The text keeps off the body and off the mark's own arc or line.
+  const own = draw.prims.flatMap((p): Array<[number, number, number]> =>
+    p.t === 'path' ? p.pts.map((q) => [q[0], q[1], 1]) : [],
+  );
+  return { ...draw, prims: withHalo(draw.prims), body: [...bodyPoints(s), ...own] };
+}
+
+/** A mark's shapes and text, from the skeleton of its moment. */
+function markShape(
+  model: FigureModel,
+  mark: Mark,
+  index: number,
+  s: Skeleton,
+  dx: number,
+  phase: number | null,
+  local: boolean,
+): Omit<MarkDraw, 'body'> {
   const frame = model.frame;
-  const s = solve(frame, pose);
   const key = `mark${index}`;
   if ('arrow' in mark) {
     if (phase === null) return { prims: [], label: null };
@@ -306,10 +386,12 @@ export function markDraw(
     );
     return {
       prims: [{ key: `${key}.arc`, z: Z, t: 'path', pts, w: 1.4, s: 'hi' }],
+      // Inside the angle, just outside the arc, on the side the angle opens to.
       label: {
         text: degreesText(mark, angle.degrees),
         at: polar(angle.at, ARC.r + ARC.text, angle.a + sweep / 2),
-        place: 'center',
+        place: sideToward(angle.a + sweep / 2),
+        ray: { from: angle.at, angle: angle.a + sweep / 2 },
       },
       measured: angle.degrees,
     };
@@ -419,6 +501,84 @@ export function stillMarks(model: FigureModel, positionId: string): MarkDraw[] {
     if (mark.phase === undefined || starts[mark.phase - 1] !== positionId) return [];
     return [markDraw(model, mark, index, pose, 0, mark.phase - 1, true)];
   });
+}
+
+// ---------------------------------------------------------------------------------------------
+// Where a mark's text stands (the app and the contact sheet)
+// ---------------------------------------------------------------------------------------------
+
+/** The gap between a point and the text beside it, in px. */
+const LABEL_GAP = 6;
+
+/**
+ * Where a mark's text of `w` × `h` px stands in a drawing of `width` × `height` px: beside its point
+ * on the side it asks for, else the first other side, then above or below the body, then a corner –
+ * the first that covers none of the body's points (in px, with the half width of their stroke), or
+ * the one that covers fewest; always inside the drawing. Without a point it stands in the top left
+ * corner, or the next corner free of the body. Returns the text's top left corner.
+ */
+export function placeLabel(o: {
+  width: number;
+  height: number;
+  w: number;
+  h: number;
+  /** The point in px, or null for a text without one. */
+  at: Point | null;
+  place: LabelPlace;
+  /** The body's points in px with their radius. */
+  body: ReadonlyArray<readonly [number, number, number]>;
+  /** An angle's ray in px: its text tries the places along it first, centred on the ray. */
+  ray?: { from: Point; dir: Point } | null;
+}): Point {
+  const { width, height, w, h, at, body } = o;
+  const clamp = (x: number, y: number): Point => [
+    Math.max(0, Math.min(x, width - w)),
+    Math.max(0, Math.min(y, height - h)),
+  ];
+  const top = Math.min(...body.map((b) => b[1] - b[2]));
+  const bottom = Math.max(...body.map((b) => b[1] + b[2]));
+  const beside = (place: MarkPlace, p: Point): Point => {
+    const g = LABEL_GAP;
+    if (place === 'right') return clamp(p[0] + g, p[1] - h / 2);
+    if (place === 'left') return clamp(p[0] - g - w, p[1] - h / 2);
+    if (place === 'above') return clamp(p[0] - w / 2, p[1] - g - h);
+    return clamp(p[0] - w / 2, p[1] + g);
+  };
+  const candidates: Point[] = [];
+  if (o.ray) {
+    const { from, dir } = o.ray;
+    for (let t = 0; t <= 120; t += 4) {
+      candidates.push(clamp(from[0] + dir[0] * t - w / 2, from[1] + dir[1] * t - h / 2));
+    }
+  }
+  if (at && o.place !== 'corner') {
+    const sides: MarkPlace[] = ['right', 'left', 'above', 'below'];
+    for (const place of [o.place, ...sides.filter((x) => x !== o.place)]) {
+      candidates.push(beside(place, at));
+    }
+    if (Number.isFinite(top)) candidates.push(clamp(at[0] - w / 2, top - LABEL_GAP - h));
+    if (Number.isFinite(bottom)) candidates.push(clamp(at[0] - w / 2, bottom + LABEL_GAP));
+  }
+  candidates.push(
+    clamp(0, 0),
+    clamp(width - w, 0),
+    clamp(0, height - h),
+    clamp(width - w, height - h),
+  );
+  const covered = ([x, y]: Point) =>
+    body.filter(([bx, by, r]) => bx + r > x && bx - r < x + w && by + r > y && by - r < y + h)
+      .length;
+  let best = candidates[0] ?? [0, 0];
+  let fewest = Infinity;
+  for (const c of candidates) {
+    const n = covered(c);
+    if (n < fewest) {
+      best = c;
+      fewest = n;
+      if (n === 0) break;
+    }
+  }
+  return best;
 }
 
 // ---------------------------------------------------------------------------------------------
