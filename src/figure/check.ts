@@ -22,6 +22,8 @@ import {
   isBorrowed,
   isLike,
   PAIRED_PARTS,
+  SINGLE_PARTS,
+  SURFACES,
   type BodyPart,
   type Contact,
   type ExplainFile,
@@ -51,7 +53,9 @@ import {
   type Frame,
   type Skeleton,
 } from './geometry.ts';
-import { carried, outline, propPrims } from './draw.ts';
+import { carried, drawnPoints, outline, propPrims, torsoSides } from './draw.ts';
+import { FAULT_VISIBLE, faultPair } from './faults.ts';
+import { markPlans, phaseStarts } from './marks.ts';
 import { buildModel, movePose, type FigureModel, type Move } from './motion.ts';
 import {
   inRange,
@@ -64,6 +68,7 @@ import {
   type Solid,
 } from './surfaces.ts';
 import { limbOfLift, type LimbId } from './tween.ts';
+import { figureViews, VIEW_NAME } from './views.ts';
 
 export { solids, TOUCH, type PointKind, type Solid } from './surfaces.ts';
 export { turn } from './geometry.ts';
@@ -149,6 +154,8 @@ const KIND_PLURAL: Record<PointKind, string> = {
 };
 
 const num = (v: number) => (Math.round(v * 10) / 10).toString().replace('.', ',');
+/** A measure that falls short, rounded down, so »højst 1,9 (mindst 2)« never reads »højst 2«. */
+const below = (v: number) => (Math.floor(v * 10) / 10).toString().replace('.', ',');
 
 function nearestOf(solidsOn: readonly Solid[], p: Point): number {
   return nearest(solidsOn, p);
@@ -217,7 +224,11 @@ function missBy(part: BodyPart, bone: Bone, on: readonly Solid[]): number {
 
 /** The torso as the points along the back (hip to shoulder; the curve when the back is round). */
 function torsoPoints(frame: Frame, s: Skeleton): Point[] {
-  return spinePoints(frame, s);
+  // From the front the torso is as wide as the shoulders and the pelvis: lying on the side (a side
+  // plank seen from the front), its long side touches, not its middle (DECISIONS.md D58).
+  return frame.view === 'front'
+    ? [...spinePoints(frame, s), ...torsoSides(s)]
+    : spinePoints(frame, s);
 }
 
 /** Whether a part without a pair touches: the seat, the shoulders, the head, or lying on the torso. */
@@ -366,14 +377,16 @@ function bodyPoints(frame: Frame, s: Skeleton, kind: PointKind): Array<{ limb: s
     case 'toe':
       return legs.flatMap((b) => (b.tip ? [{ limb: `${b.side}.foot`, p: b.tip }] : []));
     case 'hip':
-      // A round back: the points along it count as the hip for what goes into a surface.
+      // A round back: the points along it count as the hip for what goes into a surface; from the
+      // front so do the long sides of the torso (D58).
       return [
         { limb: 'hip', p: s.hip },
         ...(s.spine !== 0
-          ? torsoPoints(frame, s)
+          ? spinePoints(frame, s)
               .slice(1, -1)
               .map((p) => ({ limb: 'ryg', p }))
           : []),
+        ...(frame.view === 'front' ? torsoSides(s).map((p) => ({ limb: 'ryg', p })) : []),
       ];
     case 'shoulder':
       return [{ limb: 'shoulder', p: s.shoulder }];
@@ -1118,8 +1131,30 @@ function slideProblems(
   return problems;
 }
 
-/** Every problem of one figure (one movement of an item). `where` starts each message's place. */
+/**
+ * Every problem of one figure (one movement of an item). `where` starts each message's place. Its
+ * second view is checked as a figure of its own (»press.1 › ovenfra › bottom: …«), and then the
+ * marks of both views, the typical mistakes drawn as figures and whether it moves visibly (D58).
+ */
 export function checkFigure(figure: FigureItem, movement: OwnMovement, where: string): Problem[] {
+  const views = figureViews(figure).map((view, i) => {
+    const prefix =
+      i === 0 ? where : `${where} › ${VIEW_NAME[view.view].toLocaleLowerCase('da-DK')}`;
+    return { prefix, ...checkView(view, movement, prefix) };
+  });
+  return dedupe([
+    ...views.flatMap((v) => v.problems),
+    ...markProblems(views),
+    ...faultProblems(figure, movement, where),
+  ]);
+}
+
+/** The problems of one view of a figure, and its model for the checks that follow. */
+function checkView(
+  figure: FigureItem,
+  movement: OwnMovement,
+  where: string,
+): { problems: Problem[]; model: FigureModel } {
   const frame = frameOf(figure);
   const problems: Problem[] = [];
   const add = (place: string, message: string) =>
@@ -1222,7 +1257,199 @@ export function checkFigure(figure: FigureItem, movement: OwnMovement, where: st
   }
 
   for (const p of slideProblems(figure, movement, model)) add(p.where, p.message);
-  return dedupe(problems);
+  for (const p of stillnessProblems(model)) add(p.where, p.message);
+  return { problems, model };
+}
+
+// ---------------------------------------------------------------------------------------------
+// Moving visibly, marks and typical mistakes (DECISIONS.md D58)
+// ---------------------------------------------------------------------------------------------
+
+/** Some drawn point moves at least this far in the loop, or the figure looks like a still drawing. */
+export const STILL_LOOP = 3;
+/** Each phase between two positions moves some drawn point at least this far. */
+export const STILL_MOVE = 2;
+
+/** The largest distance between the same drawn points of two frames. */
+function farthestDrawn(a: readonly Point[], b: readonly Point[]): number {
+  let d = 0;
+  for (let i = 0; i < Math.min(a.length, b.length); i++) {
+    d = Math.max(d, distance(a[i] as Point, b[i] as Point));
+  }
+  return d;
+}
+
+/**
+ * A figure that does not move visibly (the user saw »etbens bounds« as a still drawing): some drawn
+ * point – the face mark too – must move STILL_LOOP units in the loop, and each phase that goes to
+ * another position STILL_MOVE units (its travel along x counts).
+ */
+function stillnessProblems(model: FigureModel): Array<{ where: string; message: string }> {
+  const problems: Array<{ where: string; message: string }> = [];
+  const frame = model.frame;
+  const keyframes = model.figure.keyframes;
+  const movement = model.movement;
+  const first = keyframes[movement.positions[0]?.id ?? ''];
+  if (!first) return problems;
+  const start = drawnPoints(solve(frame, first));
+  let most = 0;
+  for (const m of model.timeline.moves) {
+    if (m.from === m.to && !m.shift) continue;
+    for (let k = 0; k <= 8; k++) {
+      most = Math.max(
+        most,
+        farthestDrawn(start, drawnPoints(solve(frame, movePose(model, m, k / 8)))),
+      );
+    }
+  }
+  if (most < STILL_LOOP) {
+    problems.push({
+      where: '',
+      message: `figuren står næsten stille: intet punkt flytter sig mere end ${below(most)} enheder i hele bevægelsen (mindst ${STILL_LOOP}), så den ligner en stillestående tegning; gør forskellen mellem positionerne tydeligere`,
+    });
+  }
+  const names = new Map(movement.positions.map((p) => [p.id, p.name]));
+  const seen = new Set<string>();
+  const starts = phaseStarts(movement);
+  movement.phases.forEach((phase, i) => {
+    const from = starts[i] ?? '';
+    if (phase.to === from || seen.has(`${from}>${phase.to}`)) return;
+    seen.add(`${from}>${phase.to}`);
+    const a = keyframes[from];
+    const b = keyframes[phase.to];
+    if (!a || !b) return;
+    const advance =
+      model.figure.transitions?.find((t) => t.from === from && t.to === phase.to)?.advance ?? 0;
+    const moved =
+      farthestDrawn(drawnPoints(solve(frame, a)), drawnPoints(solve(frame, b))) + Math.abs(advance);
+    if (moved < STILL_MOVE) {
+      problems.push({
+        where: `${placeName(from)} → ${placeName(phase.to)}`,
+        message: `»${phase.label}« flytter figuren højst ${below(moved)} enheder fra »${names.get(from) ?? from}« til »${names.get(phase.to) ?? phase.to}« (mindst ${STILL_MOVE}), så fasen ligner en stillestående tegning`,
+      });
+    }
+  });
+  return problems;
+}
+
+/** A mark is shown at least this long in the card's loop, or it only flickers. */
+export const MARK_SHORTEST = 0.4;
+/** An angle's degrees and the angle the figure draws are this close. */
+export const MARK_DEGREES = 10;
+/** An arrow is at least this long, in figure units. */
+export const MARK_ARROW = 4;
+
+/** The length of a line through points. */
+function pathLength(points: readonly Point[]): number {
+  let length = 0;
+  for (let i = 1; i < points.length; i++) {
+    length += distance(points[i - 1] as Point, points[i] as Point);
+  }
+  return length;
+}
+
+/**
+ * The marks of a figure's views (D58): each is seen long enough in the card's animation, one at a
+ * time across both views, an angle's degrees fit the angle drawn, and an arrow is long enough.
+ */
+function markProblems(views: ReadonlyArray<{ prefix: string; model: FigureModel }>): Problem[] {
+  const problems: Problem[] = [];
+  const shown: Array<{ name: string; where: string; start: number; end: number }> = [];
+  for (const { prefix, model } of views) {
+    for (const plan of markPlans(model)) {
+      const mark = plan.mark;
+      const where = `${prefix} › marks[${plan.index}]`;
+      const add = (message: string) => problems.push({ where, message });
+      const seconds = plan.shows.reduce((sum, s) => sum + (s.end - s.start), 0);
+      if (mark.at !== undefined && seconds <= 1e-9) {
+        const name = model.movement.positions.find((p) => p.id === mark.at)?.name ?? mark.at;
+        add(
+          `markeringen ved »${name}« ses ikke i animationen: figuren holder ikke stille dér; knyt den til en fase (»phase«)`,
+        );
+      } else if (seconds < MARK_SHORTEST - 1e-9) {
+        add(
+          `markeringen ses kun ${below(seconds)} sek i kortet (mindst ${num(MARK_SHORTEST)}); knyt den til en længere fase eller en position med et hold`,
+        );
+      }
+      const show = plan.shows[0];
+      if ('angle' in mark && mark.degrees !== undefined && show?.measured !== undefined) {
+        if (Math.abs(show.measured - mark.degrees) > MARK_DEGREES) {
+          add(
+            `vinklen er ${Math.round(show.measured)}° i figuren, men markeringen siger ${mark.degrees}°: ret posen eller »degrees«`,
+          );
+        }
+      }
+      if ('arrow' in mark && show) {
+        const shaft = show.prims.find((p) => p.t === 'path');
+        const length = shaft && shaft.t === 'path' ? pathLength(shaft.pts) : 0;
+        const chord = show.chord ? Math.hypot(show.chord[0], show.chord[1]) : 0;
+        if (Math.max(length, chord) < MARK_ARROW) {
+          add(
+            `pilen er kun ${below(Math.max(length, chord))} enheder lang (mindst ${MARK_ARROW}): vælg en del af kroppen, der flytter sig i fasen`,
+          );
+        }
+      }
+      const name = where.slice(where.indexOf('marks['));
+      const label = prefix === views[0]?.prefix ? name : `${prefix.split(' › ').pop()} › ${name}`;
+      for (const s of plan.shows) shown.push({ name: label, where, start: s.start, end: s.end });
+    }
+  }
+  // One mark at a time, across both views.
+  const told = new Set<string>();
+  shown.forEach((b, j) => {
+    for (const a of shown.slice(0, j)) {
+      if (a.name === b.name) continue;
+      const start = Math.max(a.start, b.start);
+      const end = Math.min(a.end, b.end);
+      if (end - start <= 0.05 || told.has(`${a.name}|${b.name}`)) continue;
+      told.add(`${a.name}|${b.name}`);
+      problems.push({
+        where: b.where,
+        message: `${a.name} og ${b.name} står på samme tid (${num(start)}–${num(end)} sek i kortet); én markering ad gangen`,
+      });
+    }
+  });
+  return problems;
+}
+
+/** Every part on every surface: a wrong pose may come close to anything without naming it. */
+const ANYTHING: Contact[] = [...PAIRED_PARTS, ...SINGLE_PARTS].flatMap((part) =>
+  SURFACES.map((on) => ({ part, on })),
+);
+
+/**
+ * The typical mistakes drawn as figures (D58): the wrong pose bends the right way, reaches its
+ * points, goes into nothing and keeps the contacts (the position's, or the mistake's own), and it
+ * differs visibly from the right pose.
+ */
+function faultProblems(figure: FigureItem, movement: OwnMovement, where: string): Problem[] {
+  const problems: Problem[] = [];
+  for (const fault of figure.faults ?? []) {
+    const pair = faultPair(figure, movement, fault);
+    const position = movement.positions.find((p) => p.id === fault.at);
+    if (!pair || !position) continue; // the format check names the view or the position
+    const place = `${where} › fejl ${fault.mistake}`;
+    const add = (message: string) => problems.push({ where: place, message });
+    const frame = pair.frame;
+    const s = solve(frame, pair.wrong);
+    for (const message of [
+      ...bendProblems(frame, s),
+      ...hipProblems(frame, pair.wrong, s),
+      ...armBendProblems(frame, pair.wrong, s),
+      ...limbProblems(s),
+      ...jointLimbProblems(pair.wrong, s),
+      ...evaluatePose(pair.figure, pair.wrong, fault.contacts ?? position.contacts, frame, ANYTHING)
+        .problems,
+    ]) {
+      add(message);
+    }
+    if (pair.differs.by < FAULT_VISIBLE) {
+      add(
+        `den forkerte stilling ligner den rigtige: intet punkt flytter sig mere end ${below(pair.differs.by)} enheder (mindst ${FAULT_VISIBLE}); gør fejlen tydelig, som forklaringen siger`,
+      );
+    }
+  }
+  return problems;
 }
 
 function dedupe(problems: Problem[]): Problem[] {

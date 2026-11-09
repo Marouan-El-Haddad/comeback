@@ -38,7 +38,9 @@ interface Base {
 }
 export type Prim = Base &
   (
-    | { t: 'line'; a: Point; b: Point; w: number; s: Paint; butt?: boolean }
+    | { t: 'line'; a: Point; b: Point; w: number; s: Paint; butt?: boolean; dash?: string }
+    /** An open line through points: an arrow's way, an angle's arc (DECISIONS.md D58). */
+    | { t: 'path'; pts: Point[]; w: number; s: Paint; dash?: string }
     | { t: 'circle'; c: Point; r: number; f: Paint; s?: Paint; w?: number }
     | {
         t: 'rect';
@@ -76,6 +78,32 @@ export function curvedBack(figure: { keyframes?: FigureItem['keyframes'] }): boo
 
 /** The face mark: a small round nose on the head, the way the face looks (side view). */
 const FACE = { r: 1.9, at: BODY.headRadius - 0.4 } as const;
+
+/** Where the face mark sits, or null without one (front and top view). */
+export function facePoint(s: Skeleton): Point | null {
+  return s.face === null ? null : polar(s.head, FACE.at, s.face);
+}
+
+/**
+ * The points of the body as drawn, always the same ones in the same order: hip, shoulder line, head,
+ * the face mark, the middle of the back, and each limb's joint, end and hand or foot (a missing one
+ * counts its end again). How far the figure moves, and how far a wrong pose lies from the right one,
+ * is measured on them (DECISIONS.md D58).
+ */
+export function drawnPoints(s: Skeleton): Point[] {
+  const back: Point = [
+    (s.hip[0] + 2 * s.back[0] + s.shoulder[0]) / 4,
+    (s.hip[1] + 2 * s.back[1] + s.shoulder[1]) / 4,
+  ];
+  return [
+    s.hip,
+    s.shoulder,
+    s.head,
+    facePoint(s) ?? s.head,
+    back,
+    ...s.bones.flatMap((b) => [b.joint, b.end, b.tip ?? b.end]),
+  ];
+}
 
 /**
  * The body of one frame: limbs, torso, neck (when it is red), head and, in side view, the face mark,
@@ -131,12 +159,15 @@ export function bodyPrims(
   const torsoRed = !ghost && figure.highlight.includes('torso');
   const torso: Paint = ghost ? 'ghost' : torsoRed ? 'hi' : 'near';
   if (figure.view === 'front' && s.pelvis && s.shoulders) {
-    // Front view: the torso as a trapezoid between the pelvis and the shoulder line (skater).
+    // Front view: the torso as a trapezoid between the pelvis and the shoulder line (skater); with
+    // `spine` somewhere in the figure its long sides bend sideways in every frame (D58).
     prims.push({
       key: `${prefix}torso`,
       z: zBase + 1,
       t: 'poly',
-      pts: [s.pelvis[0], s.pelvis[1], s.shoulders[1], s.shoulders[0]],
+      pts: curvedBack(figure)
+        ? frontTorso(s, s.pelvis, s.shoulders)
+        : [s.pelvis[0], s.pelvis[1], s.shoulders[1], s.shoulders[0]],
       s: torso,
       f: torso,
       w: WIDTH.limb,
@@ -193,6 +224,40 @@ export function bodyPrims(
     });
   }
   return prims;
+}
+
+/** Points along a quadratic curve from a through the control point c to b. */
+export function quadratic(a: Point, c: Point, b: Point, n = 6): Point[] {
+  const points: Point[] = [];
+  for (let i = 0; i <= n; i++) {
+    const t = i / n;
+    const u = 1 - t;
+    points.push([
+      u * u * a[0] + 2 * u * t * c[0] + t * t * b[0],
+      u * u * a[1] + 2 * u * t * c[1] + t * t * b[1],
+    ]);
+  }
+  return points;
+}
+
+/**
+ * The long sides of the front view's torso, as points: what touches the floor when the figure lies
+ * on its side seen from the front (a side plank), following the back's curve (DECISIONS.md D58).
+ */
+export function torsoSides(s: Skeleton): Point[] {
+  return s.pelvis && s.shoulders ? frontTorso(s, s.pelvis, s.shoulders) : [];
+}
+
+/**
+ * The front view's torso when the back bends sideways: both long sides follow the back's curve, the
+ * far side from the pelvis up to the shoulder line and the near side back down (14 points always).
+ */
+function frontTorso(s: Skeleton, pelvis: [Point, Point], shoulders: [Point, Point]): Point[] {
+  const mid: Point = [(s.hip[0] + s.shoulder[0]) / 2, (s.hip[1] + s.shoulder[1]) / 2];
+  const off: Point = [s.back[0] - mid[0], s.back[1] - mid[1]];
+  const edge = (a: Point, b: Point) =>
+    quadratic(a, [(a[0] + b[0]) / 2 + off[0], (a[1] + b[1]) / 2 + off[1]], b);
+  return [...edge(pelvis[0], shoulders[0]), ...edge(shoulders[1], pelvis[1])];
 }
 
 /** Where a carried prop sits in this frame: the hand's or foot's end, or the middle of the back. */
@@ -457,6 +522,7 @@ export function outline(p: Prim): Point[] {
         [p.x, p.y + p.height],
       ];
     case 'poly':
+    case 'path':
       return p.pts;
     case 'circle':
       return [0, 90, 180, 270].map((d) => polar(p.c, p.r, d));
@@ -518,6 +584,7 @@ export function track(box: Box, prims: readonly Prim[]): Box {
         grow(box, [p.x + p.width, p.y + p.height], p.w);
         break;
       case 'poly':
+      case 'path':
         for (const q of p.pts) grow(box, q, p.w / 2);
         break;
       case 'curve':
@@ -568,11 +635,14 @@ export function moving(p: Prim): Array<[string, string]> {
         ['y', n(-(p.y + p.height))],
       ];
     case 'poly':
+    case 'path':
       return [['points', p.pts.map(pt).join(' ')]];
     case 'curve':
       return [['d', `M${pt(p.a)} Q${pt(p.c)} ${pt(p.b)}`]];
   }
 }
+
+const dash = (d: string | undefined) => (d ? ` stroke-dasharray="${d}"` : '');
 
 /** One primitive as an SVG element; `data-k` carries its key for the app. */
 export function primSvg(p: Prim, withKey = false): string {
@@ -582,7 +652,9 @@ export function primSvg(p: Prim, withKey = false): string {
     .join(' ');
   switch (p.t) {
     case 'line':
-      return `<line${k} ${attrs} stroke="${PAINT[p.s]}" stroke-width="${n(p.w)}" stroke-linecap="${p.butt ? 'butt' : 'round'}"/>`;
+      return `<line${k} ${attrs} stroke="${PAINT[p.s]}" stroke-width="${n(p.w)}" stroke-linecap="${p.butt ? 'butt' : 'round'}"${dash(p.dash)}/>`;
+    case 'path':
+      return `<polyline${k} ${attrs} fill="none" stroke="${PAINT[p.s]}" stroke-width="${n(p.w)}" stroke-linecap="round" stroke-linejoin="round"${dash(p.dash)}/>`;
     case 'circle': {
       const stroke = p.s ? ` stroke="${PAINT[p.s]}" stroke-width="${n(p.w ?? 1)}"` : '';
       return `<circle${k} ${attrs} r="${n(p.r)}" fill="${PAINT[p.f]}"${stroke}/>`;

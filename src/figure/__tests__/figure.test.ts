@@ -1,14 +1,28 @@
 // The figure system (docs/SPEC.md 5 and 9.1, DECISIONS.md D48 and D56): the port of picto.py's
 // geometry, the anatomical bend from `facing`, the timeline in the dose's tempo, the frames between
 // the keyframes (joint angles from the point that stands still), and the drawing with stable keys.
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, test } from 'vitest';
-import type { Contact, FigureItem, OwnMovement, Pose } from '../../content/types.ts';
-import { bendProblems, turn } from '../check.ts';
-import { bodyPrims, moving, propPrims, svgBody, track, emptyBox } from '../draw.ts';
+import type { Contact, ExplainFile, FigureItem, OwnMovement, Pose } from '../../content/types.ts';
+import { bendProblems, movementFor, turn } from '../check.ts';
+import { bodyPrims, moving, propPrims, svgBody, track, emptyBox, type Box } from '../draw.ts';
+import { deviation, faultPair, wrongPose } from '../faults.ts';
+import {
+  directionText,
+  jointAngle,
+  markAt,
+  markPlans,
+  stillMarks,
+  viewsAndMarksText,
+} from '../marks.ts';
+import { figureViews } from '../views.ts';
 import { bendOf, distance, frameOf, ik, solve, type Frame } from '../geometry.ts';
 import {
   buildModel,
   CARD_TIMING,
+  frameBox,
+  shiftAtTime,
   lerpAngle,
   moveAt,
   movePose,
@@ -837,5 +851,237 @@ describe('»via«: en mellempose på en overgang (H2 i P1a-reviewet)', () => {
       (b) => b.side === 'near' && b.kind === 'arm',
     );
     expect(hand?.end[1]).toBeGreaterThan(90);
+  });
+});
+
+describe('D58: vinkler, markeringer og fejlpar', () => {
+  /** The push-up with an arrow down in »3 sek ned«, the elbow at the bottom and an arrow up. */
+  const marked = (): FigureItem => ({
+    ...PUSH_UP_FIGURE,
+    marks: [
+      { arrow: 'chest', phase: 1, offset: [0, -4] },
+      { angle: 'near.elbow', at: 'bottom', degrees: 90 },
+      { arrow: 'chest', phase: 3 },
+    ],
+  });
+
+  test('forfra krummer »spine« overkroppen til den nære side, og trapezet bøjer med (14 punkter)', () => {
+    const frame: Frame = { view: 'front', facing: null };
+    const pose: Pose = { ...standing(), spine: 4 };
+    const s = solve(frame, pose);
+    const mid = (s.hip[0] + s.shoulder[0]) / 2;
+    // Upright, the near side is to the right (+x): the back's control point lies 8 that way.
+    expect(s.back[0]).toBeCloseTo(mid + 8, 5);
+    const figure = {
+      view: 'front' as const,
+      highlight: ['torso' as const],
+      keyframes: { a: pose },
+    };
+    const torso = bodyPrims(figure, s).find((p) => p.key === 'torso');
+    if (!torso || torso.t !== 'poly') throw new Error('ingen overkrop');
+    expect(torso.pts).toHaveLength(14);
+    // The middle of each long side bulges toward the near side.
+    expect((torso.pts[3] as [number, number])[0]).toBeGreaterThan(
+      ((s.pelvis?.[0][0] ?? 0) + (s.shoulders?.[0][0] ?? 0)) / 2 + 3,
+    );
+    // Seen from above the back stays straight.
+    expect(solve({ view: 'top', facing: null }, pose).spine).toBe(0);
+  });
+
+  test('den anden vinkel er en figur for sig med figurens røde segmenter og samme faser', () => {
+    const figure: FigureItem = {
+      ...PUSH_UP_FIGURE,
+      second: {
+        view: 'front',
+        props: [],
+        keyframes: {
+          top: {
+            ...standing(),
+            arms: { near: { to: [12, 50], bend: 1 }, far: { to: [-12, 50], bend: -1 } },
+            legs: { near: { to: [5, 3.6], bend: 1 }, far: { to: [-5, 3.6], bend: -1 } },
+          },
+          bottom: {
+            ...standing(),
+            hip: [0, 40],
+            arms: { near: { to: [12, 50], bend: 1 }, far: { to: [-12, 50], bend: -1 } },
+            legs: { near: { to: [5, 3.6], bend: 1 }, far: { to: [-5, 3.6], bend: -1 } },
+          },
+        },
+      },
+    };
+    const views = figureViews(figure);
+    expect(views.map((v) => v.view)).toEqual(['side', 'front']);
+    expect(views[1]?.highlight).toEqual(PUSH_UP_FIGURE.highlight);
+    expect(views[1]).not.toHaveProperty('second');
+    const [a, b] = views.map((v) => buildModel(v, PUSH_UP));
+    expect(a?.timeline.phases).toEqual(b?.timeline.phases);
+    expect(a?.timeline.total).toBe(b?.timeline.total);
+  });
+
+  test('en fase-markering står hele fasen, en positions markering i holdet ved positionen', () => {
+    const model = buildModel(marked(), PUSH_UP);
+    const plans = markPlans(model);
+    expect(plans.map((p) => p.shows.map((s) => [s.start, s.end]))).toEqual([
+      [[0, 3]],
+      [[3, 4]],
+      [[4, 5]],
+    ]);
+    const at = (t: number) => markAt(plans, model.timeline.total, t)?.plan.index ?? null;
+    expect([at(0.5), at(2.9), at(3.5), at(4.5), at(5.5)]).toEqual([0, 0, 1, 2, 0]);
+    // Before the clock starts (a session's »Klar«) no mark is shown.
+    expect(markAt(plans, model.timeline.total, null)).toBeNull();
+  });
+
+  test('vinklen tegnes ved albuen med gradtallet, pilen følger brystet ned og op', () => {
+    const model = buildModel(marked(), PUSH_UP);
+    const [down, angle, up] = markPlans(model).map((p) => p.shows[0]);
+    expect(angle?.label?.text).toBe('90°');
+    expect(angle?.label?.place).toBe('center');
+    expect(angle?.prims[0]?.t).toBe('path');
+    const s = solve(model.frame, PUSH_UP_FIGURE.keyframes.bottom as Pose);
+    const elbow = s.bones.find((b) => b.side === 'near' && b.kind === 'arm')?.joint ?? [0, 0];
+    expect(angle?.measured).toBeCloseTo(jointAngle(s, 'near.elbow')?.degrees ?? 0, 5);
+    const arc = angle?.prims[0];
+    if (arc?.t !== 'path') throw new Error('ingen bue');
+    for (const p of arc.pts) expect(distance(p, elbow)).toBeCloseTo(6, 5);
+    // The arrows: down in »3 sek ned« (moved 4 down), up in »Op«; a shaft and a head each.
+    expect(down?.prims.map((p) => p.t)).toEqual(['path', 'poly']);
+    expect(down?.chord?.[1]).toBeLessThan(-8);
+    expect(up?.chord?.[1]).toBeGreaterThan(8);
+    expect(directionText(model.frame, down?.chord ?? [0, 0])).toMatch(/ned/);
+    expect(directionText(model.frame, up?.chord ?? [0, 0])).toMatch(/op/);
+  });
+
+  test('en gentaget fase får en pil med hoved i begge ender', () => {
+    const pumps: OwnMovement = {
+      ...PUSH_UP,
+      phases: [{ to: 'bottom', seconds: 0.8, label: '10 pumps', repeat: 10 }],
+    };
+    const figure: FigureItem = { ...PUSH_UP_FIGURE, marks: [{ arrow: 'hip', phase: 1 }] };
+    const [show] = markPlans(buildModel(figure, pumps))[0]?.shows ?? [];
+    expect(show?.prims.map((p) => p.t)).toEqual(['path', 'poly', 'poly']);
+    expect(show?.end).toBeCloseTo(8, 9);
+  });
+
+  test('stillbillederne har positionens markeringer og pilen for den fase, der starter dér', () => {
+    const model = buildModel(marked(), PUSH_UP);
+    expect(stillMarks(model, 'top').map((m) => m.prims[0]?.key)).toEqual(['mark0.shaft']);
+    expect(stillMarks(model, 'bottom').map((m) => m.prims[0]?.key)).toEqual([
+      'mark1.arc',
+      'mark2.shaft',
+    ]);
+  });
+
+  test('en cue står ved sit punkt på den side, der vender væk fra kroppen, og en linje er stiplet', () => {
+    const figure: FigureItem = {
+      ...PUSH_UP_FIGURE,
+      marks: [
+        { cue: 'Én planke', at: 'bottom', point: 'head' },
+        { line: ['near.foot', 'shoulder'], cue: 'Lige linje', phase: 1 },
+        { cue: 'Ned', phase: 3 },
+      ],
+    };
+    const model = buildModel(figure, PUSH_UP);
+    const [cue, line, corner] = markPlans(model).map((p) => p.shows[0]);
+    expect(cue?.label).toMatchObject({ text: 'Én planke', place: 'right' });
+    expect(cue?.prims[0]?.t).toBe('circle');
+    const drawn = line?.prims[0];
+    expect(drawn?.t === 'line' && drawn.dash).toBeTruthy();
+    expect(line?.label?.place).toBe('above');
+    expect(corner?.label).toMatchObject({ text: 'Ned', at: null, place: 'corner' });
+  });
+
+  test('tekstalternativet nævner vinklerne og markeringerne på dansk', () => {
+    const model = buildModel(marked(), PUSH_UP);
+    const text = viewsAndMarksText([{ model, plans: markPlans(model) }]);
+    expect(text).toBe(
+      'Markeringer: i »3 sek ned« en pil ned ved brystet; ved Nede albuen 90°; i »Op« en pil op ved brystet.',
+    );
+  });
+
+  test('en forkert stilling ændrer det, den siger: hoften hænger, hænder og fødder står', () => {
+    const right = PUSH_UP_FIGURE.keyframes.top as Pose;
+    const wrong = wrongPose(right, { hip: [44.04, 15], torso: 30 });
+    expect(wrong.arms).toEqual(right.arms);
+    expect(wrong.legs).toEqual(right.legs);
+    const frame = frameOf(PUSH_UP_FIGURE);
+    const s = solve(frame, wrong);
+    const hand = s.bones.find((b) => b.side === 'near' && b.kind === 'arm')?.end ?? [0, 0];
+    expect(near(hand, [69.2, 0], 0.05)).toBe(true);
+    const differs = deviation(frame, right, wrong);
+    expect(differs.by).toBeGreaterThan(4.9);
+    // A limb given replaces the right pose's limb only.
+    const knees = wrongPose(right, { legs: { near: { to: [2, 3.6], tip: [5.4, 0.3] } } });
+    expect(knees.legs.far).toEqual(right.legs.far);
+    const pair = faultPair(PUSH_UP_FIGURE, PUSH_UP, {
+      mistake: 1,
+      at: 'top',
+      wrong: { hip: [44.04, 15] },
+    });
+    expect(pair?.figure.view).toBe('side');
+    expect(
+      faultPair(PUSH_UP_FIGURE, PUSH_UP, {
+        mistake: 1,
+        at: 'top',
+        view: 'front',
+        wrong: { torso: 1 },
+      }),
+    ).toBeNull();
+  });
+
+  describe("rammen følger en figur, der rejser langs x (P1a's forslag)", () => {
+    const tried = JSON.parse(
+      readFileSync(
+        join(process.cwd(), 'src', 'figure', '__tests__', 'p2', 'power_legs.6.bounds.json'),
+        'utf8',
+      ),
+    ) as { figure: FigureItem };
+    const explain = JSON.parse(
+      readFileSync(join(process.cwd(), 'content', 'explain', 'power_legs.json'), 'utf8'),
+    ) as ExplainFile;
+    const movement = movementFor(explain, 'power_legs.6', 'bounds') as OwnMovement;
+    const model = buildModel(tried.figure, movement);
+    const tall = 191 / 214;
+
+    test('figuren er næsten lige så stor som stående stille og er altid helt inde i rammen', () => {
+      expect(model.travel?.max).toBeGreaterThan(40);
+      const height = (b: Box) => b.y1 - b.y0 + 6;
+      const width = (b: Box) => b.x1 - b.x0 + 6;
+      const first = frameBox(model, 0, tall);
+      // The frame has the drawing's own shape, a little taller than the figure at most.
+      expect(width(first) / height(first)).toBeCloseTo(tall, 5);
+      expect(height(first)).toBeLessThan(height(model.stillBox) * 1.3);
+      // The whole trip in one frame would make it much smaller.
+      expect(height(first)).toBeLessThan((width(model.box) / tall) * 0.85);
+      for (let t = 0; t < model.timeline.total; t += 1 / 30) {
+        const frame = frameBox(model, t, tall);
+        const s = solve(model.frame, poseAt(model, t));
+        for (const p of [s.hip, s.head, ...s.bones.flatMap((b) => [b.joint, b.end])]) {
+          expect(p[0]).toBeGreaterThanOrEqual(frame.x0 - 3 - 1e-6);
+          expect(p[0]).toBeLessThanOrEqual(frame.x1 + 3 + 1e-6);
+        }
+      }
+    });
+
+    test('figuren krydser rammen synligt, mens rammen panorerer resten', () => {
+      const start = frameBox(model, 0, tall);
+      const t = model.timeline.phases[6]?.start ?? 0;
+      const later = frameBox(model, t, tall);
+      const moved = shiftAtTime(model, t);
+      const panned = later.x0 - start.x0;
+      expect(panned).toBeGreaterThan(0);
+      expect(moved - panned).toBeGreaterThan(10);
+    });
+
+    test('alt passer i en bred tegning, og en figur med møbler viser hele scenen', () => {
+      expect(frameBox(model, 1, 6)).toBe(model.box);
+      const wall = buildModel(
+        { ...tried.figure, props: [{ type: 'wall', x: -30, side: 1 }] },
+        movement,
+      );
+      expect(frameBox(wall, 1, tall)).toBe(wall.box);
+      const still = buildModel(PUSH_UP_FIGURE, PUSH_UP);
+      expect(frameBox(still, 1, tall)).toBe(still.box);
+    });
   });
 });

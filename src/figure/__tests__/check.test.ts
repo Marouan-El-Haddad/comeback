@@ -24,6 +24,8 @@ import {
   movementFor,
   straightInText,
 } from '../check.ts';
+import { bodyPrims } from '../draw.ts';
+import { solve } from '../geometry.ts';
 import { buildModel } from '../motion.ts';
 
 function read<T>(dir: string, subject: string): T {
@@ -597,7 +599,8 @@ describe('grænserne fra figurerne i P3 (D56)', () => {
   test('på ryggen: ryggen rører gulvet, og skuldrene må løftes (hollow hold)', () => {
     // The hip on the floor, the shoulders 14 up: before D56 the shoulders had to stay within 8.
     const { figure, movement } = onBack(lying([0, 5], 162));
-    expect(messages(figure, movement)).toEqual([]);
+    // The contact is the point; the figure has one position and stands still on purpose (D58).
+    expect(messages(figure, movement).filter((m) => !m.includes('står næsten stille'))).toEqual([]);
   });
 
   test('på ryggen: en overkrop, der slet ikke rører gulvet, fanges', () => {
@@ -637,5 +640,155 @@ describe('grænserne fra figurerne i P3 (D56)', () => {
     expect(messages(figure, movement).join('\n')).toContain(
       'press.1 › top: near.arms: »bend« i sidebilledet kun med armen over hovedet',
     );
+  });
+});
+
+describe('D58: stilstand, markeringer, fejlpar og den anden vinkel i tjekket', () => {
+  test('en figur, der næsten står stille, afvises; en fase uden synlig bevægelse også', () => {
+    const { figure, movement } = reference('press', 'press.1');
+    // The bottom drawn like the top: nothing moves.
+    const still = structuredClone(figure);
+    still.keyframes.bottom = structuredClone(still.keyframes.top as Pose);
+    const all = messages(still, movement).join('\n');
+    expect(all).toMatch(
+      /press\.1: figuren står næsten stille: intet punkt flytter sig mere end 0 enheder i hele bevægelsen \(mindst 3\)/,
+    );
+    expect(all).toContain(
+      'press.1 › top → bottom: »3 sek ned« flytter figuren højst 0 enheder fra »Oppe« til »Nede« (mindst 2)',
+    );
+    // The push-up as drawn moves plenty.
+    expect(messages(figure, movement).join('\n')).not.toContain('står næsten stille');
+  });
+
+  test('en markering, der kun ses et øjeblik, eller to på samme tid, afvises', () => {
+    const { figure, movement } = reference('press', 'press.1');
+    // The top has no hold: an angle there is never shown in the animation.
+    figure.marks = [
+      { angle: 'near.elbow', at: 'top' },
+      { arrow: 'chest', phase: 1 },
+      { cue: 'Ned', phase: 1 },
+    ];
+    const all = messages(figure, movement).join('\n');
+    expect(all).toContain(
+      'press.1 › marks[0]: markeringen ved »Oppe« ses ikke i animationen: figuren holder ikke stille dér; knyt den til en fase (»phase«)',
+    );
+    expect(all).toContain(
+      'press.1 › marks[2]: marks[1] og marks[2] står på samme tid (0–3 sek i kortet); én markering ad gangen',
+    );
+  });
+
+  test('gradtallet skal passe med vinklen i figuren, og en pil skal være lang nok', () => {
+    const { figure, movement } = reference('press', 'press.1');
+    figure.marks = [
+      { angle: 'near.elbow', at: 'bottom', degrees: 150 },
+      { arrow: 'near.hand', phase: 3 },
+    ];
+    const all = messages(figure, movement).join('\n');
+    expect(all).toMatch(
+      /press\.1 › marks\[0\]: vinklen er \d+° i figuren, men markeringen siger 150°: ret posen eller »degrees«/,
+    );
+    expect(all).toMatch(
+      /press\.1 › marks\[1\]: pilen er kun [\d,]+ enheder lang \(mindst 4\): vælg en del af kroppen, der flytter sig i fasen/,
+    );
+  });
+
+  test('referencefiguren med pile, vinkel og fejlpar består', () => {
+    const { figure, movement } = reference('press', 'press.1');
+    figure.marks = [
+      { arrow: 'chest', phase: 1, offset: [2, -4] },
+      { angle: 'near.elbow', at: 'bottom' },
+      { arrow: 'chest', phase: 3, offset: [2, -4] },
+    ];
+    figure.faults = [{ mistake: 1, at: 'top', wrong: { hip: [44.4, 14.5], torso: 31.5 } }];
+    expect(messages(figure, movement)).toEqual([]);
+  });
+
+  test('en forkert stilling, der ligner den rigtige, eller som går i gulvet, afvises', () => {
+    const { figure, movement } = reference('press', 'press.1');
+    // The head turned 2°: the face mark moves well under 3.
+    figure.faults = [{ mistake: 1, at: 'top', wrong: { head: -2 } }];
+    expect(messages(figure, movement).join('\n')).toMatch(
+      /press\.1 › fejl 1: den forkerte stilling ligner den rigtige: intet punkt flytter sig mere end [\d,]+ enheder \(mindst 3\)/,
+    );
+    figure.faults = [{ mistake: 1, at: 'top', wrong: { hip: [44, -3], torso: 40 } }];
+    expect(messages(figure, movement).join('\n')).toMatch(
+      /press\.1 › fejl 1: hofte går [\d,]+ ind i gulvet/,
+    );
+    // The hands stay on the floor unless the mistake says otherwise (»contacts«).
+    figure.faults = [{ mistake: 1, at: 'top', wrong: { arms: { near: { to: [69.2, 8] } } } }];
+    expect(messages(figure, movement).join('\n')).toContain(
+      'press.1 › fejl 1: near.hand skal røre gulvet, men er 8 over',
+    );
+  });
+
+  test('den anden vinkel tjekkes som en figur for sig: led, kontakter og bevægelse', () => {
+    const { figure, movement } = reference('press', 'press.1');
+    figure.second = {
+      view: 'front',
+      props: [],
+      keyframes: {
+        top: {
+          hip: [0, 20],
+          torso: 90,
+          arms: { near: { to: [9, 0], bend: 1 }, far: { to: [-9, 0], bend: -1 } },
+          legs: { near: { to: [4, 3.6], bend: 1 }, far: { to: [-4, 3.6], bend: -1 } },
+        },
+        bottom: {
+          hip: [0, 20],
+          torso: 90,
+          arms: { near: { to: [9, 0], bend: 1 }, far: { to: [-9, 0], bend: -1 } },
+          legs: { near: { to: [4, 3.6], bend: 1 }, far: { to: [-4, 3.6], bend: -1 } },
+        },
+      },
+    };
+    const all = messages(figure, movement).join('\n');
+    // Standing upright on its hands is nonsense, but the check finds what it can: the hands do not
+    // reach, and nothing moves in the front view.
+    expect(all).toContain('press.1 › forfra › top: near.arms når ikke sit punkt');
+    expect(all).toContain('press.1 › forfra: figuren står næsten stille');
+  });
+
+  test('en sideplanke forfra: kroppen skråt med albuen under skulderen og en ryg, der hænger', () => {
+    // core_side.S1 seen from the front: the forearm on the floor under the lower shoulder, the feet
+    // on top of each other; in »down« the side rests on the floor, in »up« the body is one line.
+    const explain = read<ExplainFile>('explain', 'core_side');
+    const movement = movementFor(explain, 'core_side.S1', undefined);
+    if (!movement) throw new Error('core_side.S1 mangler');
+    // The elbow at x 70 under the lower shoulder (16 below it), the lower foot at [−4,43; 3,6] in
+    // both positions; the near side is the lower side, the far hand rests on the upper hip.
+    const elbow = { joint: [70, 2.5] as Point, end: [78, 1.2] as Point };
+    const down: Pose = {
+      hip: [39.24, 9.87],
+      torso: 35.81,
+      arms: { near: elbow, far: { to: [43.02, 20], bend: 1 } },
+      legs: { near: { to: [-4.43, 3.6], bend: 1 }, far: { to: [-11.45, 13.33], bend: 1 } },
+    };
+    const up: Pose = {
+      hip: [39.05, 26.44],
+      torso: 5.75,
+      arms: { near: elbow, far: { to: [47.4, 33.31], bend: 1 } },
+      legs: { near: { to: [-4.43, 3.6], bend: 1 }, far: { to: [-5.64, 15.54], bend: 1 } },
+    };
+    const figure: FigureItem = {
+      id: 'core_side.S1',
+      view: 'front',
+      props: [],
+      highlight: ['torso'],
+      keyframes: { down, up },
+    };
+    expect(messages(figure, movement)).toEqual([]);
+    // The elbow stands under the lower shoulder, the forearm along the floor.
+    for (const pose of [down, up]) {
+      const s = solve({ view: 'front', facing: null }, pose);
+      const arm = s.bones.find((b) => b.side === 'near' && b.kind === 'arm');
+      expect(Math.abs((arm?.root[0] ?? 0) - (arm?.joint[0] ?? 9))).toBeLessThan(0.5);
+    }
+    // In »down« the side rests on the floor: the torso's lower long side, not its middle line.
+    expect(solve({ view: 'front', facing: null }, down).hip[1]).toBeGreaterThan(8);
+    // A hanging hip as the back's curve from the front: still on its forearm and feet.
+    const sagging: FigureItem = { ...figure, keyframes: { down, up: { ...up, spine: 3 } } };
+    expect(messages(sagging, movement)).toEqual([]);
+    const torso = bodyPrims(sagging, solve({ view: 'front', facing: null }, { ...up, spine: 3 }));
+    expect(torso.find((p) => p.key === 'torso')?.t).toBe('poly');
   });
 });

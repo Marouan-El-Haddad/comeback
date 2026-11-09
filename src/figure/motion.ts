@@ -258,6 +258,15 @@ export interface FigureModel {
   still: Prim[];
   /** Whether nothing moves: one position and no phase to highlight. */
   frozen: boolean;
+  /** How far along x the figure travels in the loop (`advance`), or null when it stays. */
+  travel: { min: number; max: number } | null;
+  /** Whether it has props that stand still (walls, furniture), so its frame cannot pan. */
+  fixed: boolean;
+  /**
+   * Small marks under the floor line every few units, drawn by the animation when the figure travels:
+   * when its frame pans, they show the way it goes (DECISIONS.md D58).
+   */
+  ticks: Prim[];
 }
 
 /** Whether the figure is drawn on a floor line: side and front view on the floor or furniture. */
@@ -307,6 +316,9 @@ export function movingPrims(model: FigureModel, pose: Pose, mode: Mode = 'solid'
 export function phaseAt(model: FigureModel, t: number): number | null {
   return moveAt(model.timeline, t)?.move.phase ?? null;
 }
+
+/** The floor's marks under a traveling figure stand this far apart. */
+const TICK = 12;
 
 /** Samples per move when the box is measured: limbs swing outside their keyframes in between. */
 const SAMPLES = 8;
@@ -363,7 +375,18 @@ export function buildModel(
     box: emptyBox(),
     still: [],
     frozen: movement.positions.length < 2 && movement.phases.length < 2,
+    travel: null,
+    fixed: figure.props.some((p) => !carried(p)),
+    ticks: [],
   };
+  for (const m of line.moves) {
+    if (!m.shift) continue;
+    const t = model.travel ?? { min: 0, max: 0 };
+    model.travel = {
+      min: Math.min(t.min, m.shift[0], m.shift[1]),
+      max: Math.max(t.max, m.shift[0], m.shift[1]),
+    };
+  }
   // Measure every keyframe and the frames in between, then the props that stand still.
   const box = emptyBox();
   const provisional: Extent = { x0: 0, x1: 0, top: 0 };
@@ -409,6 +432,21 @@ export function buildModel(
     still.unshift(floorPrim({ ...extent, x0: box.x0 - 2, x1: box.x1 + 2 }));
   }
   track(box, still);
+  if (model.travel && !model.fixed && still.some((p) => p.key === 'floor')) {
+    for (let x = Math.ceil(box.x0 / TICK) * TICK, k = 0; x <= box.x1; x += TICK, k++) {
+      model.ticks.push({
+        key: `tick${k}`,
+        z: 0,
+        t: 'line',
+        a: [x, -1.9],
+        b: [x, -4.4],
+        w: 1.2,
+        s: 'prop',
+        butt: true,
+      });
+    }
+    track(box, model.ticks);
+  }
   model.box = box;
   model.still = still;
   if (travels) {
@@ -422,6 +460,48 @@ export function buildModel(
     model.stillBox = stillBox;
   } else model.stillBox = box;
   return model;
+}
+
+/** The figure's offset along x at `t` seconds of the loop (its travel, `advance`). */
+export function shiftAtTime(model: FigureModel, t: number): number {
+  const at = moveAt(model.timeline, t);
+  return at ? shiftAt(at.move, at.u) : 0;
+}
+
+/** The padding around a drawing, as picto.py and viewBox(). */
+const PAD = 3;
+/** A figure that cannot cross all its travel on screen at full size crosses at least this share. */
+const SHOWN_TRAVEL = 0.25;
+
+/**
+ * The part of the scene a drawing shows at `t` seconds, for a drawing `aspect` wide (its width over
+ * its height in px). A figure that travels along x (`advance`) without props that stand still gets a
+ * frame as tall as the figure itself that follows it: it stays as big as when it stands still and
+ * crosses the frame while the frame pans the rest of the way, so nothing is cut off; the floor's
+ * marks (`ticks`) show the way it goes. When it cannot cross at least a quarter of its travel on
+ * screen, the frame grows (the figure gets a little smaller) until it can; when all of it fits, the whole scene is shown. Every other figure shows the whole scene
+ * (`box`), as do figures with walls or furniture, which a panning frame would cut.
+ */
+export function frameBox(model: FigureModel, t: number | null, aspect: number): Box {
+  const travel = model.travel;
+  if (!travel || model.fixed || !(aspect > 0)) return model.box;
+  const still = model.stillBox;
+  const w = still.x1 - still.x0 + 2 * PAD;
+  const h = still.y1 - still.y0 + 2 * PAD;
+  const range = travel.max - travel.min;
+  const whole = model.box.x1 - model.box.x0 + 2 * PAD;
+  let height = h;
+  if (aspect * height - w < SHOWN_TRAVEL * range) height = (w + SHOWN_TRAVEL * range) / aspect;
+  const width = aspect * height;
+  if (width >= whole || range <= 0) return model.box;
+  // The figure's left edge at its leftmost travel stands at the frame's left edge, and at its
+  // rightmost at the right edge; in between the frame pans with the share it cannot cross.
+  const s = t === null ? 0 : shiftAtTime(model, t);
+  const left = still.x0 - PAD + travel.min;
+  const pan = 1 - (width - w) / range;
+  const x = left + (s - travel.min) * pan;
+  const y = still.y0 - PAD - (height - h) / 2;
+  return { x0: x + PAD, x1: x + width - PAD, y0: y + PAD, y1: y + height - PAD };
 }
 
 /** A position's still image: everything in one frame. */

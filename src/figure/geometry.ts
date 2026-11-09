@@ -266,7 +266,9 @@ export function solve(frame: Frame, pose: Pose): Skeleton {
   const hip = pose.hip;
   const { roots, shoulder, pelvis, shoulders } = rootsOf(frame, hip, pose.torso, pose.width);
   const head = polar(shoulder, BODY.neck, pose.torso + (pose.head ?? 0));
-  const spine = frame.view === 'side' ? (pose.spine ?? 0) : 0;
+  // From the side the back curves toward the back or the chest; from the front it bends sideways
+  // (DECISIONS.md D58); seen from above it stays straight.
+  const spine = frame.view === 'top' ? 0 : (pose.spine ?? 0);
   const chest = chestDirection(frame, pose);
   const skeleton: Skeleton = {
     hip,
@@ -300,12 +302,15 @@ export function chestDirection(frame: Frame, pose: Pick<Pose, 'torso'>): number 
 
 /**
  * The back as drawn: a straight line from the hip to the shoulder, or with `spine` a quadratic curve
- * whose middle lies `spine` units off the line, toward the back (+, a round back) or the chest (−).
+ * whose middle lies `spine` units off the line: from the side toward the back (+, a round back) or
+ * the chest (−); from the front toward the near side (+) or the far side (−), a side bend (D58).
  * Returns the control point of the curve (the midpoint of the line when it is straight).
  */
 export function spineControl(frame: Frame, s: Pick<Skeleton, 'hip' | 'shoulder' | 'spine'>): Point {
   const mid: Point = [(s.hip[0] + s.shoulder[0]) / 2, (s.hip[1] + s.shoulder[1]) / 2];
-  if (!s.spine || frame.view !== 'side' || frame.facing === null) return mid;
+  if (!s.spine || frame.view === 'top') return mid;
+  if (frame.view === 'front') return polar(mid, 2 * s.spine, angleOf(s.hip, s.shoulder) - 90);
+  if (frame.facing === null) return mid;
   const back = angleOf(s.hip, s.shoulder) + 90 * frame.facing;
   return polar(mid, 2 * s.spine, back);
 }
