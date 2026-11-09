@@ -66,7 +66,7 @@ Fire faner i bunden: **I dag · Uge · Stiger · Mere**. Et aktivt pas åbner so
 └──────────────────────────────────────┘
 ```
 
-- Hovedkortet viser dagens pas med varighed og en linje pr. blok med dit trin (fx »Pres trin 1 · 2 × 6«): passets navn og tiden står på et navy bånd øverst i kortet, og hver linje har trinnet til venstre og dosis i rødt til højre (`DECISIONS.md` D59). Knappen »Se dagens pas« åbner »Dagens pas« (3.2), hvor »Start passet« står nederst (`DECISIONS.md` D50). Holder et pas pause, viser kortet »Passet holder pause« og »Fortsæt passet«. På en Muay Thai-dag viser kortet klubtiden og, efter sluttid, knappen »Hvordan var det?« (se 4.6). På søndag viser kortet »Søndagstjek · 2 min«.
+- Hovedkortet viser dagens pas med varighed og en linje pr. blok med dit trin (fx »Pres trin 1 · 2 × 6«): passets navn og tiden står på et navy bånd øverst i kortet, og hver linje har trinnet til venstre og dosis i rødt til højre (`DECISIONS.md` D59). Knappen »Se dagens pas« åbner »Dagens pas« (3.2), hvor »Start passet« står nederst (`DECISIONS.md` D50). Holder et pas pause, viser kortet »Passet holder pause« og »Fortsæt passet«. På en Muay Thai-dag viser kortet klubtiden og, efter sluttid, knappen »Hvordan var det?«; dagen efter står »Muay Thai i går« som et kort over hovedkortet (se 4.6). På søndag er hovedkortet »Søndagstjek · 2 min«, og mandag står et glemt søndagstjek som et kort over hovedkortet (se 4.7). Et kort, der venter på et svar, står over hovedkortet; et gemt søndagstjek står mandag under det.
 - Et pas, der ikke blev logget i går, giver i dag ét kort: »Styrke A i går blev ikke logget – Flyt · Spring over«. »Flyt« viser kun de gyldige dage (`ENGINE.md` 5.9), fx »Torsdag (motoren udgår)« eller »Kort version i dag«. Ingen streaks, ingen røde tal.
 - Backup-linjen vises kun, når sidste backup er over 7 dage gammel eller efter en måleuge.
 - Tom tilstand (før onboarding): kun onboarding-flowet (4.1).
@@ -223,9 +223,23 @@ Trafiklys → fase-timer efter programuge → afslut med valgfri distance (base/
 
 Efter klubtidens slutning (eller næste dag) viser I dag-kortet »Hvordan var det?«: indhold som chips (Teknik · Power · Fart · Sparring · Mix), hårdhed (Let · Middel · Hård), overskud (Frisk · OK · Flad). Lørdag også: »Teknikken i sidste runde: 1–10«. Alt valgfrit; »Jeg var der ikke« logger fravær. Standard uden svar: mødt, intet indhold.
 
+- **Hvornår** (`DECISIONS.md` D63): på en klubdag i ugeplanen står knappen på dagens kort fra klubtidens slutning (programmets klubtid, fx »18–19.30«), og hele dagen, hvis dagen ingen klubtid har. Dagen efter står »Muay Thai i går« med knappen som et kort over hovedkortet. Ikke på en dag med status (syg, rejse, ferie, klubben lukket), før programstart eller før indfasningen. Har klubdagen også et pas, står klubloggen som et kort over hovedkortet efter sluttid.
+- **Skærmen** vises i stedet for I dag med »Tilbage« øverst, ingen dialog: overlinjen »Muay Thai · onsdag 11. november · 18–19.30«, titlen »Hvordan var det?«, »Jeg var der ikke«, indholdet (flere kan vælges), hårdheden og overskuddet (ét af hver; et tryk mere fjerner valget), lørdag teknikken 1–10 og »Gem« nederst. En valgt knap er udfyldt navy med `aria-pressed`. »Gem« uden valg logger »mødt«.
+- **Det, der gemmes:** ét `club_logged` med klubdagens dato, også når det logges dagen efter. En klubtræning logges én gang: derefter siger dagens kort »✓ Logget: Hård · Flad · Teknik, Sparring« (lørdag også »karakter 7«, fravær »du var der ikke«). Logges den dagen efter, forsvinder kortet, og I dag siger »✓ Klubtræningen i går er logget.« Lørdagens karakter kan også gives i søndagstjekket (4.7).
+- Knapperne, der gemmer, tager skærmen fra første tryk, til I dag kommer igen, så et dobbelttryk gemmer én gang (D61), og skærmen og I dag tager ingen tryk det første halve sekund efter skiftet (D57).
+
 ### 4.7 Søndagstjek (2 min)
 
 Fire felter: timer søvn i snit (tal), lørdagskarakteren (udfyldt hvis logget), »Gør noget ondt, der ikke gik væk?« (nej/ja + vælg øvelse), og listen »Klar til næste trin« (afledt) med »For tungt?« pr. stige. Svarene påvirker trafiklysets spørgsmål 2 og regel R-PAIN-SUNDAY.
+
+- **Hvornår** (`DECISIONS.md` D63): søndag er hovedkortet »Søndagstjek · 2 min« med »Tag søndagstjekket« (har søndagen et pas, står tjekket som et kort over hovedkortet). Mandag står et glemt tjek som et kort over hovedkortet (»Glemt i går? Du kan tage det i dag.«). Tjekket hører til søndagen og ugen fra mandag til søndag, også når det tages mandag. Gemt siger kortet søndag og mandag »✓ Gemt« med svarene og det, de ændrede (»Ondt: Lyske – lettere variant til 22. november (smerte)«), og »Ret søndagstjekket« åbner tjekket med svarene; det nye tjek afløser det gamle (`ENGINE.md` R-PAIN-SUNDAY).
+- **Skærmen** vises i stedet for I dag med »Tilbage« øverst og »Gem søndagstjekket« nederst:
+  - »Timer søvn i snit«: et tal (»7« eller »6,5«), valgfrit.
+  - »Lørdagskarakter«: lørdagens karakter fra klubloggen, hvis den er logget (»7 · fra klubloggen«); ellers teknikken i sidste runde 1–10 at vælge, som gemmes som lørdagens `club_logged`. Intet felt, når lørdagen ikke var en klubdag, når den havde status, eller når du ikke var der.
+  - »Gør noget ondt, der ikke gik væk?« Nej · Ja (standard nej). Over knapperne står ugens lette smerte (»Let smerte i ugen: Pres tirsdag«, R-PAIN-LIGHT). Ja viser »Hvilken øvelse?« med øvelserne fra Styrke A og B under hver sin dæmpede overskrift; en valgt øvelse går ét trin ned i en uge (på første trin med lettere variant), og spørgsmål 2 står på »nej« før de næste pas. Ja uden en valgt øvelse kan ikke gemmes (»Vælg øvelsen, der gør ondt.«).
+  - »Klar til næste trin«: stigerne og power-sporene, der rykkede op i ugen (»nu trin 2, rykket op fredag«) eller mangler ét pas, og EMOM'en, der rykker op ved næste EMOM-pas, med afstanden som i Stiger; ellers »Ingen endnu«. Under den »For tungt?« med en knap pr. stige og power-spor, der har et trin under (»Ben · trin 3«); den valgte går ét trin ned som dit eget valg, når tjekket gemmes, og det står ved knapperne. Står alle på første trin, siger feltet, at der intet trin er at gå ned til.
+  - I lige kalenderuger fra programstart (hver anden uge) står »Film dig selv« (`DECISIONS.md` P23).
+- »Gem søndagstjekket« skriver tjekket, lørdagens karakter og trinskiftene på én gang med samme dobbelttryk-spærre og halve sekund som klubloggen (4.6). Tidsmaskinen skriver kun i sin kopi.
 
 ### 4.8 Lette uger og målinger
 
