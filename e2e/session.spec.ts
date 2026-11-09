@@ -146,35 +146,41 @@ async function expectNowAndNext(page: Page): Promise<void> {
  */
 async function driveChecking(page: Page): Promise<Record<string, number>> {
   const seen: Record<string, number> = {};
-  const count = (what: string) => (seen[what] = (seen[what] ?? 0) + 1);
+  // SPEC 5 and 6 the first time each kind of screen comes: text, scale, contrast, targets (D59).
+  const count = async (what: string) => {
+    seen[what] = (seen[what] ?? 0) + 1;
+    if (seen[what] === 1)
+      expect(await a11yProblems(page, '.session', SESSION_RULES), what).toEqual([]);
+  };
   for (let i = 0; i < 500; i++) {
     if (await page.getByTestId('done').isVisible()) return seen;
     // The EMOM's intro stands on its own screen until »Start EMOM« (D44); then its minutes run
     // to the questions without a touch (SK3).
     const startEmom = page.getByRole('button', { name: 'Start EMOM' });
     if (await startEmom.isVisible()) {
-      count('emom');
+      await count('emom');
       await startEmom.click();
       await expectNowAndNext(page);
+      await count('emom-running');
       for (let s = 0; s < 60 && !(await page.getByText('Alle minutter rene?').isVisible()); s++)
         await page.clock.runFor(5_000);
       await expect(page.getByText('Alle minutter rene?')).toBeVisible();
       continue;
     }
     if (await intro(page).isVisible()) {
-      count('intro');
+      await count('intro');
       await page.clock.runFor(5_000);
       continue;
     }
     if (await page.locator('.session .rest').isVisible()) {
-      count('rest');
+      await count('rest');
       await expect(nextUp(page).or(strip(page)).first()).toBeVisible();
       await page.clock.runFor(5_000);
       continue;
     }
     const asPlanned = page.getByTestId('as-planned');
     if (await asPlanned.isVisible()) {
-      count('set');
+      await count('set');
       await expectNowAndNext(page);
       await expect(progress(page)).toBeVisible();
       await asPlanned.click();
@@ -182,7 +188,7 @@ async function driveChecking(page: Page): Promise<Record<string, number>> {
     }
     if (await now(page).isVisible()) {
       // A timer: a hold, the EMOM, the club sequence, a round, the neck or a measurement.
-      count('timer');
+      await count('timer');
       await expect(strip(page)).toBeVisible();
     }
     for (const name of ['Start 3 minutter', 'Start uret', 'Stop']) {
@@ -201,7 +207,7 @@ async function driveChecking(page: Page): Promise<Record<string, number>> {
       if ((await input.count()) > 0 && (await input.first().inputValue()) === '')
         await input.first().fill('20');
       if (await save.isEnabled()) {
-        count('measure');
+        await count('measure');
         await save.click();
         continue;
       }
@@ -211,7 +217,7 @@ async function driveChecking(page: Page): Promise<Record<string, number>> {
       await finish.click();
       continue;
     }
-    if (await nextUp(page).isVisible()) count('question');
+    if (await nextUp(page).isVisible()) await count('question');
     // »Gem« first: the EMOM's questions have »Ja« buttons that only choose an answer.
     for (const name of ['Gem', 'Ja', 'Passende', 'Videre']) {
       const button = page.getByRole('button', { name, exact: true });
@@ -970,8 +976,10 @@ test('reduceret bevægelse: figurerne står stille, og intet glider ind', async 
   await expect(now(page).locator('.now-stage .figure-still-only')).toHaveCount(1);
   await expect(now(page).locator('.figure-stills')).toHaveCount(0);
   await expect(now(page).locator('.figure-stage')).toHaveCount(0);
-  const animation = await now(page)
-    .locator('.now-stage')
-    .evaluate((el) => getComputedStyle(el).animationName);
-  expect(animation).toBe('none');
+  for (const part of ['.now-stage', '.now-head', '.next-strip .next-text']) {
+    const animation = await page
+      .locator(`.session ${part}`)
+      .evaluate((el) => getComputedStyle(el).animationName);
+    expect(animation, part).toBe('none');
+  }
 });

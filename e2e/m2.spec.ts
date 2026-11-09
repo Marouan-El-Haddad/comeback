@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { a11yProblems, SESSION_RULES } from './a11y.ts';
 import {
   closeIntro,
   onboard,
@@ -67,6 +68,7 @@ test('onboarding → I dag → Styrke A grøn start til slut med »Som planlagt�
   expect(stats.setsLogged).toBeGreaterThan(20);
   const decisions = page.getByTestId('decisions');
   await expect(decisions).toContainText('Pres: 7 reps pr. sæt næste gang.');
+  expect(await a11yProblems(page, '.session', SESSION_RULES)).toEqual([]);
   await page.screenshot({
     path: 'screenshots/opsummering.png',
     scale: 'css',
