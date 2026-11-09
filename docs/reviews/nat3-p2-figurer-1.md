@@ -379,3 +379,137 @@ Ingen navne, doser, tempi eller regler er ændret. Teksterne til `backpack_row`,
 
 - **»Nu« for trin over 1** er ikke set: onboardingen satte trin 1 overalt. M8 foreslår en test, der dækker dem.
 - **Vinklerne ovenfra og forfra** (M1, M2, M3 og M5) er ikke afprøvet; figuragenterne tegner dem. Ovenfra tjekker motoren kun formatet, så reviewet af rettelsen skal se kontaktarket.
+
+## Opfølgning
+
+Gennemgået igen på 2e0909b (7a300af–2e0909b: motorrunde 2 med D62 og figuragenternes rettelser). Jeg har set:
+
+- `git diff da9abf8 2e0909b -- content/` for de ni spor;
+- de nye kontaktark i `screenshots/figures/` og egne i dobbelt opløsning;
+- kortene i `pixel9a` (Firefox uden JIT, `E2E_PORT=4186`), med vandret overløb målt på alle 42 kort;
+- »Nu« i tidsmaskinen tirsdag 10/11 og fredag 13/11.
+
+`check-explain` er OK for alle ni filer.
+
+**Resultat:** 39 af 43 figurer er godkendt, og 4 er afvist:
+
+- `legs.2` er stadig afvist (N1);
+- `pull.2`, `shoulder.1` og `wallsit.W1` er nyt afvist (N2). Rettelsen er én linje hver og er afprøvet.
+
+Af de oprindelige fund er H1, M1–M4, M6–M9, L1–L4, L7 og L8 rettet. M5 er rettet for `legs.1`, men ikke for `legs.2`. L5 og L6 er åbne.
+
+Der er 4 nye fund: 3 middel og 1 lav.
+
+### De afviste figurer
+
+| Figur | Status | Hvad jeg så |
+|---|---|---|
+| `press.4` | Godkendt | Ovenfra: hænderne i dobbelt skulderbredde, skuldrene flyttet over mod den nære hånd, den nære albue bøjet ca. 45° bagud og den fjerne arm strakt ud til sin hånd. »Armen forbliver strakt« står fri af kroppen (`review-p2-1-opf-press4-kort.png`). Fra siden skrumper den fjerne arm stadig, men vinklen ovenfra viser nu, hvad der sker. |
+| `press.6` | Godkendt | Ovenfra står fødderne i ±22 med linjen »Fødderne bredt«. Arbejdshånden står under brystet og den frie hånd på lænden (`review-p2-1-opf-press6-kort.png`). |
+| `press.7` | Godkendt | Ovenfra står fødderne i ±6 med »Ingen vridning« ved hoften, så trin 6 og 7 kan skelnes. Teksten står over sidebilledet (N4). |
+| `pull.1` | Godkendt | Fejlparret viser »Ryggen bliver rund« med ringen på den øvre ryg (`review-p2-1-opf-pull1-fejlpar.png`). |
+| `backpack_row.1` | Godkendt | Som `pull.1`. |
+| `pull.3` | Godkendt | H1's rettelse er ordret: albuen langs siden i »Oppe« og hovedet fri af bordet (`review-p2-1-opf-pull3-kort.png`). |
+| `pull.5` | Godkendt | Fra siden uden den fjerne arm og med H1's skulder. Ovenfra med bordkanten, det brede greb, den nære albue langs siden og den fjerne arm næsten strakt (`review-p2-1-opf-pull5-kort.png`). |
+| `pull.6` og `pull.7` | Godkendt | H1's rettelse, og den frie arm ligger langs siden. |
+| `legs.1` | Godkendt | Forfra: fødderne på to skinner, knæet over tæerne med »Over tæerne« og fejlparret »knæet falder ind« forfra med ringen om knæet (`review-p2-1-opf-legs1-kort.png`, `-legs1-fejlpar.png`). »Hælen i gulvet« er flyttet til »Kontrolleret op«, hvor den passer til »pres dig op gennem forreste hæl«. Se N3 om »Nu«. |
+| `legs.2` | **Stadig afvist** (N1) | Forfra er knæ over tæer og fejlparret rigtige, men sofaen står ved siden af figuren, og bagerste skinneben går op og ud til den. |
+| `sl_rdl.1` | Godkendt | Rettelsen fra M6 er ordret, og ringen står om den øvre ryg (`review-p2-1-opf-slrdl-fejlpar.png`). |
+| `calf.1` | Godkendt | Pilen i »Op« dækker intet i »Nu«, og begge cues står over »Næste« (`review-p2-1-opf-calf-nu.png`). |
+
+### Fundene
+
+| Fund | Status |
+|---|---|
+| H1 – albuen foran brystet i bord-row | **Rettet** i `pull.3`, `pull.5`, `pull.6` og `pull.7`. |
+| M1 – archer push-up fra siden | **Rettet:** vinkel ovenfra. |
+| M2 – archer bord-row fra siden | **Rettet:** vinkel ovenfra, og den fjerne arm er skjult fra siden. |
+| M3 – `press.6` og `press.7` ens | **Rettet:** vinkler ovenfra med forskellig fodstilling. |
+| M4 – fejlparret i rygsæk-row | **Rettet:** fejl 3, »Ryggen bliver rund«. |
+| M5 – vinkel forfra i split squat | **Delvist:** rettet i `legs.1`. For `legs.2`, se N1. |
+| M6 – ringen i RDL | **Rettet.** |
+| M7 – »Helt op« over foden | **Rettet:** en pil i fase 2. |
+| M8 – tekst over kroppen | **Rettet i motoren** (D62 (2)). På kortene og i »Nu« står teksterne fri af kroppen. W3's »Lårene vandrette«, `legs.7`'s »Driv knæet op« og split squats »Over tæerne« står i striben over tegningen. Se N4. |
+| M9 – fasen ud over kortet | **Rettet** (D61 (5)). W3's fase står på to linjer, og ingen af de 42 kort er bredere end 414 px (`review-p2-1-opf-w3-kort.png`). |
+| L1 – gradtal i positionerne | **Rettet:** »godt forbi en ret vinkel« i pres og i `shoulder.1`. |
+| L2 – »lidt mindre« i `press.3` | **Rettet:** »den på bøgerne er lidt mindre bøjet«. |
+| L3 – »Dybt og roligt« | **Rettet:** »Dybt og kontrolleret«. |
+| L4 – »Hælen i gulvet« i `legs.5` | **Rettet:** cuen står i fase 1 og pilen i fase 3. |
+| L5 – W3's løkke | **Åben:** stadig 67 sek i kortet. |
+| L6 – stolen uden ryglæn | **Åben.** |
+| L7 – »Lige linje« | **Rettet:** en linje fra knæ til hoved. |
+| L8 – cuen under »Næste« | **Rettet** (D61): i tåløftets »Nu« står begge cues over »Næste«. |
+
+### Nye fund
+
+**N1 – Forfra i `legs.2` står sofaen ved siden af, og bagerste ben går ud til den (middel)**
+
+- **Hvor:**
+  - `content/figures/legs.json` › `legs.2` › `second`: sofaen i x = −30, og bagerste fod i (−12; 23,6);
+  - `review-p2-1-opf-legs2-forfra-sofa.png` og `review-p2-1-opf-legs2-kort-nede.png`.
+- **Hvorfor:**
+  - Udgangsstillingen siger »Stå med ryggen til sofaen«, og sidebilledet viser sofaen bag figuren.
+  - Forfra står sofaen til venstre for figuren, og bagerste skinneben går op og ud til den. Midt i bevægelsen peger bagerste knæ ud til siden. Det ligner en fod på en kasse ved siden af.
+  - NAT-3 pakke 2: rekvisitter og kontakter skal være rigtige.
+  - Motoren kan ikke stille en rekvisit bag figuren forfra. Med sofaen midt bag figuren finder `check-explain` 6 fejl, fordi knæ og hofte går ind i den.
+- **Rettelse:**
+  - **Hurtigt:** fjern `second` og fejlparret forfra fra `legs.2` (afprøvet: `check-explain` OK). Hælens fejlpar fra siden står, og `legs.1` viser knæ over tæer.
+  - **Bedre (motoren):** en rekvisit, der står bag figuren i den anden vinkel, fx `"behind": true`. Den tegnes bag kroppen og er kun flade for det lem, der hviler på den. Så kan sofaen stå midt bag figuren med bagerste skinneben lodret op til sædet.
+
+**N2 – Fejlringen står forkert i fejlpar for trin 1 og 2 (middel)**
+
+- **Hvor:** `faults` i:
+  - `pull.2` (ringen ved skulderen);
+  - `shoulder.1` (ved skulderen);
+  - `wallsit.W1` (ved knæet);
+  - lav: `wallsit.W2` (ved skulderen) og `posterior.2` (ved knæet).
+
+  Se `review-p2-1-opf-ring-*.png`.
+- **Hvorfor:**
+  - D62 (3): ringen står om det led, hvis vinkel ændrer sig mest. Når hoften hænger med hænder og fødder plantet, ændrer skulderen sig mest. Når hoften glider op ad væggen, ændrer knæet sig mest. Ringen peger så væk fra fejlen (SPEC 3.8, samme slags som M6).
+  - I W1 ligner en ring om knæet desuden fejl 2, »Knæene står foran tæerne«. W1 er fredagens wall sit.
+  - `pull.2`, W1 og W2 havde ringen rigtigt før D62.
+  - `shoulder.1` (ringen ved hovedet) og `posterior.2` (ved knæet) havde den forkert allerede på da9abf8. Det overså jeg i første runde.
+- **Rettelse** (afprøvet: `check-explain` OK, og ringene står, hvor de skal):
+  - `"ring": "hip"` i `pull.2`, `shoulder.1`, `wallsit.W1` og `posterior.2`;
+  - `"ring": "far.hand"` i `wallsit.W2`.
+  - Overvej at gøre `ring` påkrævet i et fejlpar, så figuragenten altid siger, hvor fejlen er.
+
+**N3 – To vinkler i »Nu« gør split squat mindre end halvt så stor (middel)**
+
+- **Hvor:**
+  - »Nu« for `legs.1` i tirsdagens Par 2: `review-p2-1-opf-nu-split-squat.png` og zoom før og efter (`-zoom.png`, `-zoom-foer.png`);
+  - layoutet for to stående vinkler ved målet (D60 (3), D61 (3) og D62 (2)).
+- **Hvorfor:**
+  - SPEC 5: figuren er hovedpersonen. SPEC 6: telefonen ligger på gulvet ca. 1 m væk.
+  - Med vinklen forfra står de to tegninger side om side ved målet, og striben til »Over tæerne« tager højde over dem.
+  - Sidebilledet er nu ca. 50 × 62 px mod ca. 114 × 148 px med én vinkel på da9abf8. Squat jumpet bliver lidt større, fordi det er smallere.
+  - Split squat er tirsdagens øvelse.
+- **Rettelse** (motoren, SPEC 3.2 og en linje i DECISIONS):
+  - Vis kun den første vinkel i »Nu« og i pausen, når to vinkler side om side ville give en tegning under ca. 100 px. Begge vinkler står stadig på kortet.
+  - Eller giv to stående vinkler hele bredden over målet.
+  - Test tegningens højde i »Nu« for figurer med to vinkler.
+
+**N4 – En tekst kan stå over den anden vinkel på kortet (lav)**
+
+- **Hvor:**
+  - `legs.2` i »Kontrolleret op«: »Over tæerne« står over sidebilledet, mens linjen er i frontbilledet;
+  - `press.7` i »Nede«: »Ingen vridning« står over sidebilledet, mens prikken er på hoften ovenfra;
+  - `review-p2-1-opf-legs2-kort-op.png` og `review-p2-1-opf-press7-kort.png`.
+- **Hvorfor:** teksten dækker intet, men står ved den forkerte tegning og læses som sidebilledets. Det er samme fund som N3 i del 2.
+- **Rettelse (motoren):** lad en tekst i området over eller under kroppene stå over sin egen vinkel.
+
+### Kørt
+
+- `node scripts/check-explain.ts` på de ni figurfiler: OK.
+- Kontaktark i dobbelt opløsning for alle ni spor.
+- Kortene i `pixel9a`:
+  - de 13 figurer, der var afvist;
+  - fejlparrene;
+  - overløb på 42 kort, der alle er 414 px brede.
+- »Nu« i tidsmaskinen tirsdag 10/11 og fredag 13/11.
+- Afprøvet i scratch-kopier:
+  - `ring` i fem fejlpar og `legs.2` uden vinklen forfra: `check-explain` OK;
+  - sofaen midt bag figuren forfra: 6 fejl, derfor er det en sag for motoren.
+
+Skærmbilleder: `screenshots/review-p2-1-opf-*.png` (22 filer).
