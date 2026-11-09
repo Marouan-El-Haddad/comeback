@@ -30,11 +30,15 @@
 
 .figure-caption .card-phases {
   flex: 1;
+  min-width: 0;
 }
 
-/* A phase is never split over two lines; the lines break between the phases. */
+/* A phase stays on one line while it fits there, and the lines break between the phases. A phase
+   wider than the room it stands in – a tall figure's column on the card, »Nu« beside the clock, the
+   stills – breaks inside itself, so no text leaves the card (P2 review M9, D61). */
 .figure-phase {
-  white-space: nowrap;
+  display: inline-block;
+  max-width: 100%;
 }
 
 /* The running phase: Thai red and a line under it, so it is not shown with colour alone (SPEC 6).
