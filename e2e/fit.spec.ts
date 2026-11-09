@@ -163,7 +163,8 @@ async function driveMeasuring(
       const button = page.getByRole('button', { name, exact: true });
       if (await button.isVisible()) {
         await fast();
-        await button.click();
+        // The answer is saved before the screen changes: the same button can be on its way out.
+        await button.click({ timeout: 5_000 }).catch(() => undefined);
         answered = true;
         break;
       }

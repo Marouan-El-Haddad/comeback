@@ -99,7 +99,9 @@ async function driveUntil(page: Page, stop: () => Promise<boolean>): Promise<voi
     for (const name of ['Gem', 'Ja']) {
       const button = page.getByRole('button', { name, exact: true });
       if (await button.isVisible()) {
-        await button.click();
+        // The answer is saved before the screen changes: a second look can find the same button on
+        // its way out, and a click that waited for another would wait for ever.
+        await button.click({ timeout: 5_000 }).catch(() => undefined);
         answered = true;
         break;
       }
