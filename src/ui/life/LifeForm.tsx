@@ -156,10 +156,12 @@ function ClubLogForm(props: LifeFormProps & { date: ISODate }) {
       await model.commit([model.ctx.make(body, date)]);
       props.onSaved();
     });
+  // The content in the chips' order, whatever order they were tapped in.
+  const chosen = (Object.keys(CONTENT) as ClubContent[]).filter((c) => content.includes(c));
   const logged: EventBody = {
     type: 'club_logged',
     attended: true,
-    ...(content.length > 0 ? { content } : {}),
+    ...(chosen.length > 0 ? { content: chosen } : {}),
     ...(hardness[0] ? { hardness: hardness[0] } : {}),
     ...(freshness[0] ? { freshness: freshness[0] } : {}),
     ...(technique[0] !== undefined ? { technique: technique[0] } : {}),
