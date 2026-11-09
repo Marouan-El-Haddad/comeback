@@ -86,7 +86,7 @@ test('PLAN M3 tjekliste 7: tirsdagens Styrke A, der ikke blev logget, tilbydes o
   const short = screen.getByRole('group', { name: 'Kort version på en klubdag' });
   // Only the days the engine allows (S-MOVE-01): never Friday (Styrke B).
   expect(await moveDays(full)).toEqual([
-    'Torsdag 12. november | Motoren udgår denne uge. | B skal efterlade dig frisk.',
+    'Torsdag 12. november | Motoren udgår denne uge – tag en valgfri rolig tur søndag. | B skal efterlade dig frisk.',
     'Søndag 15. november',
   ]);
   expect(await moveDays(short)).toEqual([
@@ -110,6 +110,14 @@ test('PLAN M3 tjekliste 7: tirsdagens Styrke A, der ikke blev logget, tilbydes o
   await expect(savedLine(page, '✓ Styrke A er flyttet til torsdag 12. november.')).toBeVisible();
   await expect(missed).toHaveCount(0);
   await expect(page.locator('.tomorrow')).toHaveText('I morgen: Styrke A');
+  // The motor drops this week: the optional calm run stands on Sunday, the first free day (D66).
+  await page.locator('.rest-of-week summary').click();
+  await expect(page.locator('.rest-of-week li')).toHaveText([
+    'Fredag: Styrke B',
+    'Lørdag: Muay Thai 10–11',
+    'Søndag: Valgfri rolig tur',
+  ]);
+  await expect(page.getByTestId('calm-tour')).toHaveCount(0);
 
   // Uge: Styrke A on Thursday, no motor this week, and Tuesday without a session.
   await tab(page, 'Uge');
@@ -133,9 +141,28 @@ test('PLAN M3 tjekliste 7: tirsdagens Styrke A, der ikke blev logget, tilbydes o
   await expect(card.locator('h1')).toHaveText('Styrke A');
   await expect(page.getByTestId('main-card-notes').locator('li')).toHaveText([
     'Flyttet fra tirsdag.',
-    'Motoren udgår denne uge.',
+    'Motoren udgår denne uge – tag en valgfri rolig tur søndag.',
   ]);
   await expect(page.getByTestId('missed-card')).toHaveCount(0);
+
+  // Thursday's A and Friday's B go by and are skipped; Saturday says tomorrow, Sunday says today.
+  await nextDay(page, 'fredag 13. november');
+  await missed.getByTestId('missed-skip').click();
+  await nextDay(page, 'lørdag 14. november');
+  await missed.getByTestId('missed-skip').click();
+  await expect(missed).toHaveCount(0);
+  await expect(page.locator('.tomorrow')).toHaveText('I morgen: Valgfri rolig tur');
+  await nextDay(page, 'søndag 15. november');
+  await expect(page.getByTestId('calm-tour')).toHaveText(
+    'Valgfri rolig tur i dag: motoren udgår denne uge, så tag en rolig tur i tale-tempo, hvis du kan.',
+  );
+  await expect(card).toContainText('Søndagstjek');
+  await expectClean(page, 'I dag søndag med den valgfri rolige tur');
+  await page.screenshot({
+    path: 'screenshots/i-dag-rolig-tur.png',
+    scale: 'css',
+    animations: 'disabled',
+  });
 
   expect(await storedEventCount(page)).toBe(stored);
   await page.getByTestId('sim-exit').click();
@@ -220,7 +247,9 @@ test('spring over: tirsdagens glemte Styrke A torsdag, torsdagens motor på dage
   await expect(missed.locator('.life-card-title')).toHaveText('Styrke A tirsdag blev ikke logget');
   await missed.getByTestId('missed-skip').click();
   await expect(missed).toHaveCount(0);
-  await expect(savedLine(page, '✓ Styrke A tirsdag er sprunget over.')).toBeVisible();
+  await expect(savedLine(page, '✓ Styrke A tirsdag er sprunget over.')).toHaveText(
+    '✓ Styrke A tirsdag er sprunget over. Du kan stadig flytte passet under Uge.',
+  );
 
   // Today's motor: skipped from »Flyt eller spring over«, it stands with »Se dagens pas«.
   const card = page.getByTestId('main-card');
@@ -266,7 +295,9 @@ test('spring over: tirsdagens glemte Styrke A torsdag, torsdagens motor på dage
   await expect(missed.locator('.life-card-title')).toHaveText('Styrke B i går blev ikke logget');
   await missed.getByTestId('missed-skip').click();
   await expect(missed).toHaveCount(0);
-  await expect(savedLine(page, '✓ Styrke B i går er sprunget over.')).toBeVisible();
+  await expect(savedLine(page, '✓ Styrke B i går er sprunget over.')).toHaveText(
+    '✓ Styrke B i går er sprunget over. Du kan stadig flytte passet under Uge.',
+  );
   await tab(page, 'Uge');
   // Skipped, Friday's B can still be moved from Uge: to Saturday as the short version.
   await expect(weekRow(page, 'Fredag').locator('.chip.status')).toHaveText('– sprunget over');
@@ -293,7 +324,7 @@ test('Uge torsdag: tirsdagens glemte Styrke A står som »– ikke logget« og f
   const screen = page.getByTestId('move');
   await expect(screen).toContainText('Styrke A · tirsdag 10. november · ikke logget');
   expect(await moveDays(screen.getByRole('group', { name: 'Flyt til' }))).toEqual([
-    'I dag, torsdag 12. november | Motoren udgår denne uge. | B skal efterlade dig frisk.',
+    'I dag, torsdag 12. november | Motoren udgår denne uge – tag en valgfri rolig tur søndag. | B skal efterlade dig frisk.',
     'Søndag 15. november',
   ]);
   expect(await moveDays(screen.getByRole('group', { name: 'Kort version på en klubdag' }))).toEqual(
@@ -315,6 +346,35 @@ test('Uge torsdag: tirsdagens glemte Styrke A står som »– ikke logget« og f
   await expect(weekRow(page, 'Torsdag').getByTestId('week-session')).toHaveText(/^Motor/);
   await tab(page, 'I dag');
   await expect(page.getByTestId('missed-card')).toHaveCount(0);
+  expect(await storedEventCount(page)).toBe(stored);
+});
+
+test('Uge torsdag: »– sprunget over« hører til passet – motoren sprunget over og flyttet til søndag, tirsdagens A flyttet til i dag @date', async ({
+  page,
+}) => {
+  await openAt(page, MONDAY_MORNING);
+  await onboard(page);
+  const stored = await storedEventCount(page);
+  await startSimulation(page, '2026-11-12');
+  const card = page.getByTestId('main-card');
+  const screen = page.getByTestId('move');
+  await card.getByTestId('move-open').click();
+  await screen.getByTestId('move-skip').click();
+  await expect(card).toContainText('Sprunget over i dag.');
+  await card.getByTestId('move-open').click();
+  await expect(screen.getByRole('heading', { name: 'Flyt passet' })).toBeVisible();
+  await screen.getByRole('button', { name: /^Søndag 15\. november/ }).click();
+  await expect(savedLine(page, '✓ Motor er flyttet til søndag 15. november.')).toBeVisible();
+
+  await tab(page, 'Uge');
+  await expect(weekRow(page, 'Torsdag').locator('.chip')).toHaveCount(0);
+  await expect(weekRow(page, 'Søndag').getByTestId('week-session')).toHaveText(/^Motor/);
+  await expect(weekRow(page, 'Søndag').locator('.chip.status')).toHaveText('flyttet fra torsdag');
+  await weekRow(page, 'Tirsdag').getByTestId('week-session').click();
+  await screen.getByRole('button', { name: /^I dag, torsdag 12\. november/ }).click();
+  const thursday = weekRow(page, 'Torsdag');
+  await expect(thursday.getByTestId('week-session')).toHaveText(/^Styrke A · \d+ min$/);
+  await expect(thursday.locator('.chip.status')).toHaveText('flyttet fra tirsdag');
   expect(await storedEventCount(page)).toBe(stored);
 });
 
