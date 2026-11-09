@@ -87,15 +87,16 @@
   height: 180px;
 }
 
-/* Reduced motion: the positions side by side, each with its name. */
+/* Reduced motion: the positions side by side, each with its name; at most three to a row (two for a
+   wide figure), the columns set by the component. */
 .figure-stills {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   justify-content: center;
 }
 
 .figure-still {
-  flex: 1 1 0;
   min-width: 0;
   display: grid;
   gap: 4px;

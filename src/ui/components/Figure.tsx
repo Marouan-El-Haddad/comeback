@@ -293,12 +293,32 @@ function phaseOrNull(model: FigureModel, t: number | null): number | null {
   return t === null ? null : phaseAt(model, t);
 }
 
-/** Reduced motion: every position as a still image with its name, side by side. */
+/**
+ * How many still images stand on a row: at most three, two when the figure is wide (a plank) or
+ * there are four, so each stays large enough to read from the floor (L1 in the P3 review).
+ */
+export function stillColumns(count: number, width: number, height: number): number {
+  if (count <= 1) return 1;
+  if (width > height * 1.6 || count === 4) return 2;
+  return Math.min(3, count);
+}
+
+/** Reduced motion: every position as a still image with its name, at most three to a row. */
 function Stills({ model, label }: { model: FigureModel; label: string }) {
   const box = viewBox(model.box);
+  const columns = stillColumns(
+    model.movement.positions.length,
+    model.box.x1 - model.box.x0,
+    model.box.y1 - model.box.y0,
+  );
   return (
     <figure class={isTall(model) ? 'figure stills tall' : 'figure stills'}>
-      <div class="figure-stills" role="img" aria-label={label}>
+      <div
+        class="figure-stills"
+        role="img"
+        aria-label={label}
+        style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
+      >
         {model.movement.positions.map((p) => (
           <div class="figure-still" key={p.id}>
             <svg
