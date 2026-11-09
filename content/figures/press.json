@@ -32,7 +32,13 @@
             "far": { "to": [-0.6, 3.6], "tip": [2.8, 0.3] }
           }
         }
-      }
+      },
+      "marks": [
+        { "arrow": "chest", "phase": 1, "offset": [-7, 0] },
+        { "line": ["near.foot", "shoulder"], "cue": "Én planke", "at": "bottom", "place": "above" },
+        { "arrow": "chest", "phase": 3, "offset": [-7, 0] }
+      ],
+      "faults": [{ "mistake": 1, "at": "top", "wrong": { "hip": [45.4, 15.8], "torso": 30.75 } }]
     },
     {
       "id": "press.2",

@@ -52,6 +52,16 @@ Kør tjekket igen, når positionernes tekst ændres: tjekket af strakte led læs
   - »knæ og ankler strakte«, »benet hænger strakt« og »strakt standben«.
 - **Fødder:** i sidebilledet har hvert synligt ben `tip`.
 
+### Vinkler, markeringer og typiske fejl (P1b, D58)
+
+Se `tools/pictos/README.md` (»Vinkler, markeringer og typiske fejl«) for felterne og et eksempel på hvert. Kort:
+
+- **`second`:** en anden vinkel ved siden af figuren, med samme faser og samme ur (fx forfra for knæ over tæer). Den tjekkes som en figur for sig. Forfra kan kroppen ligge skråt (sideplanken og lysken på albuen), og `spine` bøjer overkroppen til siden.
+- **`marks`:** pil (`arrow`), vinkel (`angle`), cue (`cue`, højst 3 ord) og hjælpelinje (`line`), hver med `at` (vises i holdet ved positionen) eller `phase` (fasens nummer fra 1). Én ad gangen, mindst 0,4 sek i kortet.
+- **`faults`:** rigtigt og forkert under fejlen på kortet: `mistake` (nummeret fra 1), `at`, `wrong` (de felter i posen, der ændres) og evt. `view` og `contacts`. Mindst 3 enheder forskel.
+- **Tjekket afviser en figur, der står næsten stille** (et punkt skal flytte sig 3 i løkken og 2 i hver fase til en ny position).
+- **Eksempler:** `press.1` (pile, hjælpelinjen »Én planke« og fejlparret »hoften hænger«), `power_legs.1` (squat jump fra siden og forfra med »Knæ over tæer« og knæene, der falder ind, set forfra) og `wallsit.W1` (90° ved knæet i holdet). De står i `content/figures/`; behold dem, når I tegner filerne om.
+
 ## Figurer, der fejler nu (ventelisten)
 
 Tallene i midterkolonnen er fra tjekket i dag. Højre kolonne er afprøvet, og den hele figur står i `p2/`.
@@ -91,4 +101,4 @@ Tallene i midterkolonnen er fra tjekket i dag. Højre kolonne er afprøvet, og d
 
 ## Forslag til motoren
 
-- **Kassen ved `advance` under animationen:** stillbillederne står nu i deres egen kasse. Den animerede figur tegnes stadig i hele turens kasse og bliver derfor mindre på kortet; reviewet målte ca. 30 % mindre for bounds med `advance`. Lad tegningen følge figuren, eller mål kassen uden `advance`.
+- **Kassen ved `advance` under animationen:** løst i P1b (D58). Tegningen følger en figur, der rejser uden væg og møbler, i figurens egen højde, og små mærker under gulvlinjen viser vejen; om figuren er høj eller bred, afgøres uden turen. Står den til sidst i sin første stilling, begynder løkken forfra med et klip i stedet for at glide baglæns.

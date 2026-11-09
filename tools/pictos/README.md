@@ -15,14 +15,61 @@ open("push_up.svg", "w").write(poses.push_up(1.0))
 
 ## Figurerne i appen (`content/figures/`)
 
-Appens figursystem (`src/figure/`, `docs/SPEC.md` 9.1, `docs/DECISIONS.md` D48 og D56) er en TypeScript-udgave af `picto.py`. En figurfil er data, ingen kode:
+Appens figursystem (`src/figure/`, `docs/SPEC.md` 9.1, `docs/DECISIONS.md` D48, D56 og D58) er en TypeScript-udgave af `picto.py`. En figurfil er data, ingen kode:
 
 1. Skriv `content/figures/<spor>.json`: `{ "format": 1, "subject": "<spor>", "figures": [...] }` med én figur pr. forklaret punkt (og pr. bevægelse med `"movement": "<id>"`, når der er flere) og én keyframe pr. position i forklaringen.
 2. `node scripts/check-explain.ts content/figures/<spor>.json` tjekker formatet og figuren (led, kontakter, glidning, rækkevidde, strakte led og billederne mellem positionerne). Den skal sige OK.
-3. `node scripts/figure-sheet.ts content/figures/<spor>.json` tegner kontaktarket i `screenshots/figures/<spor>.png`. Se på det: kan en, der aldrig har set øvelsen, lave den ud fra positionerne? Se også på billedet midt i hver bevægelse (stiplet ramme) og på vinklerne under hver position (180° = strakt).
+3. `node scripts/figure-sheet.ts content/figures/<spor>.json` tegner kontaktarket i `screenshots/figures/<spor>.png`. Se på det: kan en, der aldrig har set øvelsen, lave den ud fra positionerne? Se også på billedet midt i hver bevægelse (stiplet ramme), på vinklerne under hver position (180° = strakt), på markeringerne (rødt, med teksten i den størrelse, den får på kortet) og på fejlparrene.
 4. `npx prettier --write content/figures/<spor>.json`.
 
-Eksempler at kopiere fra (referencefigurerne): gulv og strakte arme i `press.json` (`press.1`), væg og en hofte, der glider ned ad den, i `wallsit.json` (`wallsit.W1`), stol, rygsæk i hånden og én støttehånd i `pull.json` (`pull.1`).
+Eksempler at kopiere fra (referencefigurerne): gulv og strakte arme i `press.json` (`press.1`), væg og en hofte, der glider ned ad den, i `wallsit.json` (`wallsit.W1`), stol, rygsæk i hånden og én støttehånd i `pull.json` (`pull.1`). Eksempler på vinkler, markeringer og fejl: `press.1` (pile, hjælpelinje og fejlparret »hoften hænger«), `power_legs.1` (squat jump fra siden og forfra med cue og knæ, der falder ind, set forfra) og `wallsit.W1` (vinklen 90° i holdet).
+
+### Vinkler, markeringer og typiske fejl (D58)
+
+Alt er valgfrit: en figur uden felterne er gyldig som før. Briefene fra trænerne siger, hvad hver figur skal vise; her står, hvordan det skrives.
+
+**En anden vinkel** (`second`): samme bevægelse fra en anden side ved siden af figuren, med samme faser og samme ur. Brug den, hvor én vinkel ikke er nok: fra siden for hofte og ryg, forfra for knæ over tæer og sideværts bevægelser, ovenfra for albuer og fødders placering. Den har sin egen `view` (en anden end figurens), `facing` fra siden, `props` (påkrævet, også `[]`) og én keyframe pr. position; `highlight`, `transitions` og `marks` er valgfrie (de røde segmenter er figurens, hvis den ikke nævner sine egne). Den tjekkes som en figur for sig, og problemerne står som »power_legs.1 › forfra › land: …«. Eksempel fra `power_legs.1` (kort):
+
+```json
+"second": {
+  "view": "front",
+  "props": [],
+  "keyframes": {
+    "land": { "hip": [0, 42.41], "torso": 90,
+      "arms": { "near": { "to": [4, 70], "bend": 1 }, "far": { "to": [-4, 70], "bend": -1 } },
+      "legs": { "near": { "to": [9, 3.6], "bend": 1, "upper": 19, "lower": 21.5, "tip": [11.5, 1] },
+                "far": { "to": [-9, 3.6], "bend": -1, "upper": 19, "lower": 21.5, "tip": [-11.5, 1] } } }
+  },
+  "marks": [{ "cue": "Knæ over tæer", "at": "land", "point": "near.knee", "place": "right" }]
+}
+```
+
+- **Samme højder:** hoften og fødderne står i samme højde i begge vinkler. Forfra peger et lår mod beskueren og forkortes (`upper`, mindst 12), og knæene bøjer ud over tæerne med `bend` 1 på `near` og −1 på `far`. Fødder på gulvet står i samme punkt i alle positioner, ellers glider de.
+- **Liggende eller skrå forfra** (sideplanke og lyske): kroppen skråt fra fødderne til hovedet. Den nære side er den nederste. Albuen står under den nederste skulder: `near` arm som `{ "joint": [x, 2.5], "end": [x + 8, 1.2] }` med x lige under skulderen (overarmen 16 lodret). Ved `side` er det overkroppens lange side, der rører gulvet, og `spine` bøjer forfra overkroppen til siden (+ mod den nære side) – fx en hofte, der hænger. Afprøvet i `src/figure/__tests__/check.test.ts` (»en sideplanke forfra«).
+
+**Markeringer** (`marks`, i figuren og i `second`): det, der skal huskes, på det rigtige tidspunkt. Hver har én slags og enten `at` (en position: vises, mens figuren holder stille dér, i et hold eller en pause) eller `phase` (fasens nummer i forklaringens `phases`, talt fra 1: vises hele fasen). Der er én markering ad gangen i begge vinkler tilsammen, og hver ses mindst 0,4 sek i kortet.
+
+- **Pil:** `{ "arrow": "chest", "phase": 1, "offset": [-7, 0] }` – en pil langs den vej, delen går i fasen (buet, hvis vejen buer; i en `repeat` med hoved i begge ender). Delene: `hip`, `shoulder`, `chest`, `head` og `near.`/`far.` + `hand`, `elbow`, `knee`, `foot`, `toes`. `offset` flytter pilen ved siden af kroppen (højst 30 hver vej). Kun i en fase, hvor figuren bevæger sig, og mindst 4 lang.
+- **Vinkel:** `{ "angle": "near.knee", "at": "sit", "degrees": 90 }` – bue og gradtal ved `knee`, `elbow`, `hip` (overkrop–lår) eller `shoulder` (overkrop–overarm). Ved en position eller i et hold. `degrees` skal passe med vinklen, figuren tegner (højst 10° fra; kontaktarket skriver »tegnet 90°«). Pas på forkortede led: push-uppens albue er tegnet 52°, så den får ingen vinkel.
+- **Cue:** `{ "cue": "Knæ over tæer", "at": "land", "point": "near.knee", "place": "right" }` – højst 3 ord ved et punkt (en del af kroppen eller `[x, y]`), uden punkt i tegningens øverste venstre hjørne.
+- **Hjælpelinje:** `{ "line": ["near.foot", "shoulder"], "cue": "Én planke", "at": "bottom" }` – en stiplet linje mellem to punkter, evt. med en cue ved midten.
+
+Teksten står i HTML i 18 px, så den kan læses fra gulvet; den er stor i forhold til figuren og flytter sig selv væk fra kroppen (først til den side, `place` siger, så de andre sider, over eller under kroppen og et hjørne). Kontaktarket viser den i den størrelse, den får på kortet. En positions markering står på positionens stillbillede, en fases på billedet af den position, fasen starter fra.
+
+**Typiske fejl som figur** (`faults`): rigtigt og forkert side om side under fejlen på kortet. `mistake` er fejlens nummer i forklaringens `mistakes` (talt fra 1, som »typisk fejl nr. 1« i briefen), `at` positionen og `wrong` de felter i posen, der ændres; et lem i `arms` eller `legs` erstatter det rigtige. Et lem med `to` beholder sit punkt, så hænder og fødder står, når hoften flytter sig:
+
+```json
+"faults": [{ "mistake": 1, "at": "top", "wrong": { "hip": [45.4, 15.8], "torso": 30.75 } }]
+```
+
+- `"view": "front"` tegner fejlen i den anden vinkel (knæene, der falder ind i `power_legs.1`: benene med `bend` −1 på `near` og 1 på `far`).
+- `contacts` siger, hvad den forkerte stilling rører, når fejlen ændrer det (en hæl, der letter); ellers positionens.
+- Den forkerte stilling skal være mulig (leddene bøjer rigtigt, punkterne nås, intet går ind i en flade, kontakterne holder) og afvige mindst 3 synligt fra den rigtige. Den må gerne komme tæt på gulvet.
+- **Strakte lemmer og hænder og fødder, der står:** en hofte, der hænger, gør vejen fra fod til skulder længere. Med strakte ben og arme skal skuldrene derfor ind over hænderne: `press.1`'s hofte hænger 5 under linjen med hoften i [45,4; 15,8] og `torso` 30,75 i stedet for [43,94; 20,33] og 20,84.
+
+**Figuren skal bevæge sig synligt:** et tegnet punkt (også ansigtets mærke) flytter sig mindst 3 i hele bevægelsen, og hver fase til en anden position mindst 2 (`advance` tæller med). En lille bevægelse (hage ind, skulderblade) skal overdrives lidt; nakkens N1 og N2 venter derfor på dig (`docs/runs/NAT-3-FIGURES.md`).
+
+**Bounds og spring med `advance`:** tegningen følger figuren, så den er næsten lige så stor som stående stille, og små mærker under gulvlinjen viser vejen. Står den til sidst i sin første stilling, står den et halvt sekund og begynder forfra ved start (et klip); den glider ikke baglæns.
 
 ### Det ser tjekket ikke
 
@@ -31,6 +78,8 @@ Eksempler at kopiere fra (referencefigurerne): gulv og strakte arme i `press.jso
 - holdningen: en hængende hofte, en rund ryg, hvor den skal være lige, hovedets stilling;
 - om figuren viser det, positionens tekst beskriver (ud over strakte led og kontakter);
 - om den blå pil peger ud af brystet;
+- om markeringerne peger det rigtige sted hen, og om deres tekst dækker det, den taler om;
+- om fejlparret viser fejlen, som forklaringen beskriver den;
 - billedet ovenfra (`"view": "top"`), hvor kun formatet tjekkes.
 
 ### Faldgruber

@@ -121,6 +121,190 @@
             }
           }
         }
+      },
+      "marks": [
+        {
+          "arrow": "hip",
+          "phase": 1,
+          "offset": [-6, 0]
+        }
+      ],
+      "faults": [
+        {
+          "mistake": 1,
+          "at": "land",
+          "view": "front",
+          "wrong": {
+            "legs": {
+              "near": {
+                "to": [9, 3.6],
+                "bend": -1,
+                "upper": 19,
+                "lower": 21.5,
+                "tip": [11.5, 1]
+              },
+              "far": {
+                "to": [-9, 3.6],
+                "bend": 1,
+                "upper": 19,
+                "lower": 21.5,
+                "tip": [-11.5, 1]
+              }
+            }
+          }
+        }
+      ],
+      "second": {
+        "view": "front",
+        "props": [],
+        "keyframes": {
+          "stand": {
+            "hip": [0, 50.45],
+            "torso": 90,
+            "arms": {
+              "near": {
+                "to": [12.5, 50.2],
+                "bend": 1
+              },
+              "far": {
+                "to": [-12.5, 50.2],
+                "bend": -1
+              }
+            },
+            "legs": {
+              "near": {
+                "to": [9, 3.6],
+                "bend": 1,
+                "tip": [11.5, 1]
+              },
+              "far": {
+                "to": [-9, 3.6],
+                "bend": -1,
+                "tip": [-11.5, 1]
+              }
+            }
+          },
+          "dip": {
+            "hip": [0, 34.37],
+            "torso": 90,
+            "arms": {
+              "near": {
+                "to": [12.5, 33.41],
+                "bend": 1
+              },
+              "far": {
+                "to": [-12.5, 33.41],
+                "bend": -1
+              }
+            },
+            "legs": {
+              "near": {
+                "to": [9, 3.6],
+                "bend": 1,
+                "tip": [11.5, 1],
+                "upper": 15,
+                "lower": 18
+              },
+              "far": {
+                "to": [-9, 3.6],
+                "bend": -1,
+                "tip": [-11.5, 1],
+                "upper": 15,
+                "lower": 18
+              }
+            }
+          },
+          "takeoff": {
+            "hip": [0, 54.83],
+            "torso": 90,
+            "arms": {
+              "near": {
+                "to": [13, 115.8],
+                "bend": 1
+              },
+              "far": {
+                "to": [-13, 115.8],
+                "bend": -1
+              }
+            },
+            "legs": {
+              "near": {
+                "to": [9, 7.64],
+                "bend": 1,
+                "tip": [11.5, 1]
+              },
+              "far": {
+                "to": [-9, 7.64],
+                "bend": -1,
+                "tip": [-11.5, 1]
+              }
+            }
+          },
+          "air": {
+            "hip": [0, 66.4],
+            "torso": 90,
+            "arms": {
+              "near": {
+                "to": [12.5, 127.36],
+                "bend": 1
+              },
+              "far": {
+                "to": [-12.5, 127.36],
+                "bend": -1
+              }
+            },
+            "legs": {
+              "near": {
+                "to": [9, 19.22],
+                "bend": 1,
+                "tip": [9.6, 12.22]
+              },
+              "far": {
+                "to": [-9, 19.22],
+                "bend": -1,
+                "tip": [-9.6, 12.22]
+              }
+            }
+          },
+          "land": {
+            "hip": [0, 42.41],
+            "torso": 90,
+            "arms": {
+              "near": {
+                "to": [4, 70],
+                "bend": 1
+              },
+              "far": {
+                "to": [-4, 70],
+                "bend": -1
+              }
+            },
+            "legs": {
+              "near": {
+                "to": [9, 3.6],
+                "bend": 1,
+                "tip": [11.5, 1],
+                "upper": 19,
+                "lower": 21.5
+              },
+              "far": {
+                "to": [-9, 3.6],
+                "bend": -1,
+                "tip": [-11.5, 1],
+                "upper": 19,
+                "lower": 21.5
+              }
+            }
+          }
+        },
+        "marks": [
+          {
+            "cue": "Knæ over tæer",
+            "at": "land",
+            "point": "near.knee",
+            "place": "right"
+          }
+        ]
       }
     },
     {

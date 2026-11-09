@@ -69,7 +69,14 @@
             }
           }
         }
-      }
+      },
+      "marks": [
+        {
+          "angle": "near.knee",
+          "at": "sit",
+          "degrees": 90
+        }
+      ]
     },
     {
       "id": "wallsit.W2",
