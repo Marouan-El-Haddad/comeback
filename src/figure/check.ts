@@ -836,6 +836,65 @@ export function jumpProblems(model: FigureModel): Array<{ where: string; message
   return problems;
 }
 
+/**
+ * The two positions on each side of a transition's via, for a half of the way through it: the via
+ * is a pose on the way, so the halves are measured against the real positions (H3 in the follow-up
+ * to the P1a review); null for a move between two positions.
+ */
+export function realEnds(move: Move): [string, string] | null {
+  const id = move.from.includes('>') ? move.from : move.to.includes('>') ? move.to : null;
+  if (!id) return null;
+  const [a, b] = id.split('>');
+  return a && b ? [a, b] : null;
+}
+
+/**
+ * A via against the two positions on each side of it (H3): a limb the transition does not lift bends
+ * at most BEND_SLACK more than in the more bent of the two, and a joint the text of both positions
+ * calls straight, and that is straight in both keyframes, is straight in the via.
+ */
+function viaBendProblems(
+  s: Skeleton,
+  a: Skeleton,
+  b: Skeleton,
+  lift: readonly LiftLimb[],
+  pa: Position | undefined,
+  pb: Position | undefined,
+): string[] {
+  const problems: string[] = [];
+  const lifted = new Set<string>(lift.map(limbOfLift));
+  const bendOf = (x: Pick<Bone, 'root' | 'joint' | 'end'>) =>
+    Math.abs(turn(x.root, x.joint, x.end));
+  const said = (p: Position | undefined) => (p ? straightInText(`${p.name}. ${p.text}`) : []);
+  const sa = said(pa);
+  const sb = said(pb);
+  for (const bone of s.bones) {
+    if (lifted.has(`${bone.side}.${bone.kind}`)) continue;
+    const ka = a.bones.find((x) => x.side === bone.side && x.kind === bone.kind);
+    const kb = b.bones.find((x) => x.side === bone.side && x.kind === bone.kind);
+    if (!ka || !kb) continue;
+    const bend = bendOf(bone);
+    const most = Math.max(bendOf(ka), bendOf(kb));
+    if (bend > most + BEND_SLACK) {
+      problems.push(
+        most <= 10
+          ? `${limbName(bone)}: ${jointName(bone)} bøjer ${num(bend - most)}° mellem to strakte positioner`
+          : `${limbName(bone)}: ${jointName(bone)} bøjer ${num(bend - most)}° mere end i positionerne`,
+      );
+      continue;
+    }
+    const wa = sa.filter((x) => x.kind === bone.kind);
+    const wb = sb.filter((x) => x.kind === bone.kind);
+    if (wa.length === 0 || wb.length === 0) continue;
+    if (bendOf(ka) > STRAIGHT || bendOf(kb) > STRAIGHT || bend <= STRAIGHT) continue;
+    const words = (wa.find((x) => x.both) ?? wa[0])?.words ?? '';
+    problems.push(
+      `teksten siger »${words}« i begge positioner, men ${limbName(bone)} er bøjet ${num(bend)}° i via-posen: læg »to« på fuld længde (${bone.kind === 'arm' ? 'arm 31 fra skulderen' : 'ben 47 fra hoften'}, op til 1 over)`,
+    );
+  }
+  return problems;
+}
+
 /** The frames between two keyframes: bending, length and surfaces (H1). */
 function betweenProblems(figure: FigureItem, model: FigureModel, move: Move): string[] {
   const step = model.steps.get(move);
@@ -843,6 +902,12 @@ function betweenProblems(figure: FigureItem, model: FigureModel, move: Move): st
   const frame = model.frame;
   const a = step.a.skeleton;
   const b = step.b.skeleton;
+  // A half of the way through a via bends no limb it does not lift more than the real positions
+  // on each side of the via do (H3); a lifted limb is shaped by the via itself.
+  const real = move.bridge ? realEnds(move) : null;
+  const ra = real ? model.solved[real[0]] : undefined;
+  const rb = real ? model.solved[real[1]] : undefined;
+  const lifted = new Set<string>((move.lift ?? []).map(limbOfLift));
   const flipped = new Set(
     [...a.bones, ...b.bones].filter((x) => x.flip).map((x) => `${x.side}.${x.kind}`),
   );
@@ -873,10 +938,13 @@ function betweenProblems(figure: FigureItem, model: FigureModel, move: Move): st
       const kb = b.bones.find((x) => x.side === bone.side && x.kind === bone.kind);
       if (!ka || !kb) continue;
       const id = `${bone.side}.${bone.kind}`;
-      // No joint bends more than in the keyframes on either side.
+      // No joint bends more than in the keyframes on either side (through a via: the positions).
+      const sa = ra && rb && !lifted.has(id) ? ra : null;
+      const ja = sa ? sa.bones.find((x) => x.side === bone.side && x.kind === bone.kind) : ka;
+      const jb = sa && rb ? rb.bones.find((x) => x.side === bone.side && x.kind === bone.kind) : kb;
       const bend = Math.abs(turn(bone.root, bone.joint, bone.end));
-      const ba = Math.abs(turn(ka.root, ka.joint, ka.end));
-      const bb = Math.abs(turn(kb.root, kb.joint, kb.end));
+      const ba = ja ? Math.abs(turn(ja.root, ja.joint, ja.end)) : 0;
+      const bb = jb ? Math.abs(turn(jb.root, jb.joint, jb.end)) : 0;
       const most = Math.max(ba, bb);
       if (bend > most + BEND_SLACK) {
         note(`bend:${id}`, bend - most, (v) =>
@@ -1112,11 +1180,15 @@ export function checkFigure(figure: FigureItem, movement: OwnMovement, where: st
   }
 
   // A transition's via is checked like a keyframe: it keeps touching what both its positions touch,
-  // and touches nothing that neither of them does.
+  // and touches nothing that neither of them does. It bends no limb it does not lift more than the
+  // two positions do, and keeps a joint straight that both their texts call straight (H3).
   const positions = new Map(movement.positions.map((p) => [p.id, p]));
   for (const via of vias) {
     const s = solve(frame, via.pose);
     const { still, allowed } = contactsOf(positions, via.id);
+    const [from, to] = via.id.split('>') as [string, string];
+    const pa = figure.keyframes[from];
+    const pb = figure.keyframes[to];
     for (const message of [
       ...bendProblems(frame, s),
       ...hipProblems(frame, via.pose, s),
@@ -1124,6 +1196,16 @@ export function checkFigure(figure: FigureItem, movement: OwnMovement, where: st
       ...limbProblems(s),
       ...jointLimbProblems(via.pose, s),
       ...evaluatePose(figure, via.pose, keptOnTheWay(still, via.lift), frame, allowed).problems,
+      ...(pa && pb
+        ? viaBendProblems(
+            s,
+            solve(frame, pa),
+            solve(frame, pb),
+            via.lift,
+            positions.get(from),
+            positions.get(to),
+          )
+        : []),
     ]) {
       add(placeName(via.id), message);
     }

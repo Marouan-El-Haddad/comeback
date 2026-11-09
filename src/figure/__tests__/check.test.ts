@@ -414,6 +414,109 @@ describe('»via« tjekkes som en position (H2 i P1a-reviewet)', () => {
   });
 });
 
+describe('H3: en via måles mod de to rigtige positioner (opfølgningen på P1a-reviewet)', () => {
+  const explain = read<ExplainFile>('explain', 'warmup');
+  const spiderman = movementFor(explain, 'warmup.2', 'spiderman');
+  /** The spiderman of src/figure/__tests__/p2/ as it was before H3: its via bends both arms 39°. */
+  const before = (
+    JSON.parse(
+      readFileSync(
+        join(process.cwd(), 'src', 'figure', '__tests__', 'fixtures', 'spiderman-before-h3.json'),
+        'utf8',
+      ),
+    ) as { figure: FigureItem }
+  ).figure;
+  const check = (figure: FigureItem) => {
+    if (!spiderman) throw new Error('warmup.2 › spiderman mangler');
+    return checkFigure(figure, spiderman, 'warmup.2 › spiderman').map(
+      (p) => `${p.where}: ${p.message}`,
+    );
+  };
+
+  test('spidermanen fra p2/ før H3: albuerne bøjer i via’en og undervejs, selv om armene er strakte i planke og udfald', () => {
+    const all = check(before).join('\n');
+    expect(all).toMatch(
+      /warmup\.2 › spiderman › via planke–udfald: (near|far)\.arms: albuen bøjer [\d,]+° mellem to strakte positioner/,
+    );
+    expect(all).toMatch(
+      /via planke–udfald → udfald: undervejs: (near|far)\.arms: albuen bøjer [\d,]+° mellem to strakte positioner/,
+    );
+    expect(all).toMatch(/planke → via planke–udfald: undervejs: (near|far)\.arms: albuen bøjer/);
+  });
+
+  test('med via-hoften i [44; 24], »torso« 14 og det bageste ben som i udfald består den', () => {
+    const fixed = structuredClone(before);
+    for (const t of fixed.transitions ?? []) {
+      if (!t.via) continue;
+      t.via.hip = [44, 24];
+      t.via.torso = 14;
+      t.via.legs.far = { to: [0.38, 4.9], tip: [2.78, 0.3] };
+    }
+    expect(check(fixed)).toEqual([]);
+  });
+
+  test('et løftet lem må folde sig i via’en: det løftede ben bøjer mere end i positionerne', () => {
+    // The near leg is lifted on both ways (»lift«) and folds high in the via; that is not a problem.
+    const fixed = structuredClone(before);
+    for (const t of fixed.transitions ?? []) {
+      if (!t.via) continue;
+      t.via.hip = [44, 24];
+      t.via.torso = 14;
+      t.via.legs.far = { to: [0.38, 4.9], tip: [2.78, 0.3] };
+    }
+    expect(check(fixed).join('\n')).not.toContain('near.legs');
+  });
+
+  test('et led, teksten kalder strakt i begge positioner, er strakt i via’en (højst 5°)', () => {
+    // Two plank positions whose texts both say »Strakte arme«, and a via that bends the elbows
+    // 6–7°: within 8° of the positions, but not straight.
+    const { figure } = reference('press', 'press.1');
+    const plank = structuredClone(figure.keyframes.top as Pose);
+    const text = 'Strakte arme med hænderne under skuldrene. Kroppen er lige fra hæl til hoved.';
+    const contacts: Contact[] = [
+      { part: 'hand', on: 'floor' },
+      { part: 'toes', on: 'floor' },
+    ];
+    const movement: OwnMovement = {
+      positions: [
+        { id: 'a', name: 'Planke', text, contacts },
+        { id: 'b', name: 'Planke igen', text, contacts },
+      ],
+      phases: [
+        { to: 'b', seconds: 1, label: 'Frem' },
+        { to: 'a', seconds: 1, label: 'Tilbage' },
+      ],
+    };
+    const via = structuredClone(plank);
+    const shoulder: Point = [
+      plank.hip[0] + 30 * Math.cos((plank.torso * Math.PI) / 180),
+      plank.hip[1] + 30 * Math.sin((plank.torso * Math.PI) / 180),
+    ];
+    for (const side of ['near', 'far'] as const) {
+      const hand = (plank.arms[side] as IkLimb).to;
+      const d = Math.hypot(hand[0] - shoulder[0], hand[1] - shoulder[1]);
+      // 30,95 from the shoulder: the elbow bends about 6,5°.
+      const k = 30.95 / d;
+      (via.arms[side] as IkLimb).to = [
+        shoulder[0] + (hand[0] - shoulder[0]) * k,
+        shoulder[1] + (hand[1] - shoulder[1]) * k,
+      ];
+    }
+    const twoPlanks: FigureItem = {
+      ...figure,
+      keyframes: { a: plank, b: structuredClone(plank) },
+      transitions: [{ from: 'a', to: 'b', via }],
+    };
+    const all = checkFigure(twoPlanks, movement, 'press.1')
+      .map((p) => `${p.where}: ${p.message}`)
+      .join('\n');
+    expect(all).toMatch(
+      /press\.1 › via a–b: teksten siger »strakte arme« i begge positioner, men (near|far)\.arms er bøjet [67],\d° i via-posen/,
+    );
+    expect(all).not.toContain('mellem to strakte positioner');
+  });
+});
+
 describe('M2: et led, teksten kalder strakt, er strakt', () => {
   test('»Strakte arme« med albuer bøjet 20° fanges med et råd', () => {
     const { figure, movement } = reference('press', 'press.1');
