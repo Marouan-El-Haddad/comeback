@@ -239,10 +239,23 @@ test('spring over: tirsdagens glemte Styrke A torsdag, torsdagens motor på dage
   await expect(card).toContainText('Sprunget over i dag.');
   await expect(card.getByRole('button')).toHaveText(['Se dagens pas', 'Flyt']);
   await expectClean(page, 'I dag med et sprunget pas');
+  await page.screenshot({
+    path: 'screenshots/i-dag-sprunget-over.png',
+    scale: 'css',
+    animations: 'disabled',
+  });
 
   await tab(page, 'Uge');
   await expect(weekRow(page, 'Tirsdag').locator('.chip.status')).toHaveText('– sprunget over');
   await expect(weekRow(page, 'Torsdag').locator('.chip.status')).toHaveText('– sprunget over');
+  // Skipped, Tuesday's A can still be moved, without »Spring over«; it leaves Tuesday empty.
+  await weekRow(page, 'Tirsdag').getByTestId('week-session').click();
+  await expect(screen.getByRole('heading', { name: 'Flyt passet' })).toBeVisible();
+  await expect(screen).toContainText('Styrke A · tirsdag 10. november · sprunget over');
+  await expect(screen.getByTestId('move-skip')).toHaveCount(0);
+  await screen.getByRole('button', { name: /^Søndag 15\. november/ }).click();
+  await expect(weekRow(page, 'Tirsdag').locator('.chip')).toHaveCount(0);
+  await expect(weekRow(page, 'Søndag').locator('.chip.status')).toHaveText('flyttet fra tirsdag');
 
   // Friday: nothing about the motor. Friday's Styrke B goes by without the session.
   await tab(page, 'I dag');
@@ -255,7 +268,7 @@ test('spring over: tirsdagens glemte Styrke A torsdag, torsdagens motor på dage
   await expect(missed).toHaveCount(0);
   await expect(savedLine(page, '✓ Styrke B i går er sprunget over.')).toBeVisible();
   await tab(page, 'Uge');
-  // Skipped, Friday's B can still be moved to Saturday or Sunday from Uge.
+  // Skipped, Friday's B can still be moved from Uge: to Saturday as the short version.
   await expect(weekRow(page, 'Fredag').locator('.chip.status')).toHaveText('– sprunget over');
   await expect(weekRow(page, 'Fredag').getByTestId('week-session')).toHaveText(/^Styrke B/);
 
@@ -320,7 +333,7 @@ test('tidsmaskinen: »+1 dag« skriver kun i kopien, og »Afslut« lukker »Flyt
   await expect(screen).toContainText('Styrke A · tirsdag 10. november');
   await nextDay(page, 'onsdag 11. november');
   await expect(screen).toContainText('Styrke A · tirsdag 10. november · ikke logget');
-  await screen.getByRole('button', { name: /^Søndag 15. november/ }).click();
+  await screen.getByRole('button', { name: /^Søndag 15\. november/ }).click();
   await expect(savedLine(page, '✓ Styrke A er flyttet til søndag 15. november.')).toBeVisible();
   expect(await storedEventCount(page)).toBe(stored);
 
