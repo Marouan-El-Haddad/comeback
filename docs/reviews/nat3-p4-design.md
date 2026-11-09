@@ -211,3 +211,119 @@ Metode:
   - Teksterne er korte og ens: »Dine pas med dato, trafiklys og sæt« i Mere og »… med dato, trafiklys og sæt« i Historik.
   - »reps« står kun som enhed ved tal.
   - Ingen tekst henviser til PDF eller kilder (`no-source-refs` er grøn).
+
+## Opfølgning
+
+2026-11-09 · rettelserne 3f2b7af, e43f056, ee0c7ad, 1057099, d2a1745 og d5e9ad7 (D61) og dobbelttryk-spærren a307dab, ec71934 og f4597bf · worktree på f4597bf
+
+Metode:
+
+- **Kørt** i worktreen:
+  - `npm run check`: exit 0 og 712 tests. JavaScript 103,9 kB gz, CSS 4,2 kB. Startfilerne henviser ikke til indholdet.
+  - Hele Playwright-suiten i `pixel9a` og `pixel9a-utc` (`E2E_PORT=4185`): 103/103 uden flaky på 28,1 min, inklusive `e2e/fit.spec.ts` og de fire nye dobbelttryk-tests.
+- **Mine flows fra reviewet** kørte igen på f4597bf (i en kopi bygget fra `git archive`, `pixel9a`, figurerne i bevægelse):
+  - Styrke A tirsdag 10/11 og Styrke B fredag 13/11 uden tidsmaskine;
+  - Styrke A tirsdag i tidsmaskinen.
+- **Egne dobbelttryk** på en frisk profil, så hændelserne kunne tælles i IndexedDB:
+  - knapperne »GRØN – kør passet«, »Som planlagt«, »Spring pausen over« og power-spørgsmålets »Ja«;
+  - 60, 180 og 300 ms mellem trykkene, og skrivninger, der tager 0, 400 og 900 ms ekstra;
+  - desuden et enkelt tryks svartid og Open & Strong's »Videre«.
+
+### Målt
+
+Uden tidsmaskine:
+
+| | Introkort: helt synlige trin | Kort uden et helt trin | »Gør klar« skåret over på kortet | Pauser med »Gør klar« under bundblokken | »Nu« med cue eller mål under |
+|---|---|---|---|---|---|
+| Tirsdag, ece1f42 | 23 af 48 | 0 af 12 | 0 | 4 af 16 | 0 af 26 |
+| Tirsdag, d92a6e2 | 6 af 48 | 7 af 12 | 3 | 12 af 15 | 0 af 24 |
+| Tirsdag, f4597bf | 22 af 48 | 0 af 12 | 0 | 0 af 16 | 0 af 26 |
+| Fredag, ece1f42 | 31 af 60 | 0 af 15 | 0 | 4 af 17 | 0 af 22 |
+| Fredag, d92a6e2 | 6 af 60 | 10 af 15 | 0 | 14 af 17 | 0 af 22 |
+| Fredag, f4597bf | 29 af 60 | 0 af 15 | 0 | 0 af 17 | 0 af 22 |
+
+I tidsmaskinen (tirsdag):
+
+| | Helt synlige trin | Kort uden et helt trin | »Gør klar« skåret over på kortet | Pauser med »Gør klar« under | Andet cue under »Næste« |
+|---|---|---|---|---|---|
+| ece1f42 | 11 af 48 | 3 af 12 | 0 | 15 af 16 | 9 af 26 |
+| d92a6e2 | 1 af 48 | 11 af 12 | 8 | 16 af 16 | 15 af 26 |
+| f4597bf | 10 af 48 | 4 af 12 | 0 | 0 af 16 | 0 af 26 |
+
+Ingen skærm ruller vandret.
+
+### Status for fundene
+
+- **M1 er rettet.** »Gør klar« står over bundblokken i alle 33 pauser tirsdag og fredag, også i tidsmaskinen. Før P4 stod den under i 8 af 33.
+- **M2 er rettet.**
+  - Over introkortet står kun uret, med delens tal og navn i urets linje (»5 · Par 2 · Pause 1:00«, `screenshots/review-p4-opf-introkort.png`). EMOM'ens kort har delen i overlinjen (`review-p4-opf-emom.png`).
+  - Uden tidsmaskine viser hvert introkort »Gør klar« og mindst ét helt trin. I tidsmaskinen er det på niveau med ece1f42 (4 mod 3 kort uden et helt trin).
+  - »✓ Logget« står i pausen, når kortet er lukket. SPEC 3.2 er rettet til det.
+- **L1 er rettet.** Et navn på over 16 tegn står i 22 px. Andet cue står over »Næste« på alle 26 »Nu« i tidsmaskinen.
+- **L2 er rettet.**
+  - `e2e/fit.spec.ts` måler det, jeg målte, i begge pas: introkortets »Gør klar« og første trin, pausens »Gør klar«, målingens felt og det sidste cue. Med banneret måler den cues.
+  - `session.spec.ts` læser »✓ Logget«, delens tal i urets linje, »Del 4 · Par 1« og »Del 4 af 8« på skærmen.
+
+### Dobbelttryk-spærren (D61)
+
+- **Den virker.** Alle mine kombinationer gemte én gang og sprang intet over:
+  - »GRØN« gav ét `session_started`, og introkortet kom.
+  - »Som planlagt« gav ét `set_logged`, og pausen kom, ikke næste sæt.
+  - »Spring pausen over« gav intet `set_logged` og stod på »Sæt 2 af 3«.
+  - »Ja« gav ét `block_result` og stod på »Push-up med tempo · Sæt 1 af 3«.
+- **Suiten:** de nye tests med 400 ms langsommere skrivninger består (spørgsmål 3, »Rød«, svarene, væg-testen, nakkens »Stop« og »Afslut passet«). Det gør de gamle dobbelttryk på introkortets »Luk« også (D57).
+- **Et almindeligt tryk virker med det samme:**
+  - »Som planlagt« viste pausen efter 51 ms.
+  - Et tryk 600 ms efter skiftet virkede efter 74 ms.
+  - Spærren efter et skift er stadig et halvt sekund (D33) og ikke længere.
+- **SK3:** hold, nakke, klubsekvens og introkort kører stadig uden berøring (suiten).
+- **Koden:** `once` (`src/ui/session/Runner.tsx:241–266`) sætter en ref og `settling` ved første tryk.
+  - Ref'en nulstilles, når skærmen skifter, og en fejlet skrivning frigiver skærmen igen.
+  - Alle de spærrede handlinger skifter skærm, når de lykkes (`begin`, `finish`, `advance`, `nextPre`), så spærren kan ikke blive hængende.
+
+### Nye fund
+
+0 høj, 0 middel og 4 lav.
+
+#### N1 (lav): I Open & Strong springer et dobbelttryk på »Videre« næste øvelse over
+
+- **Hvor:**
+  - `src/ui/session/OpenStrong.tsx:57–67` (`next`) og `:251` (»Videre« står samme sted på hvert punkt).
+  - Open & Strong har ikke passets halve sekunds spærre (D33). D61 spærrer kun, at dagen gemmes to gange.
+- **Hvorfor:**
+  - SPEC 6: knapper tåler et klodset tryk, og der er ingen hurtigt skiftende knapper på samme sted.
+  - Opfølgningens krav: et dobbelttryk springer aldrig over.
+  - **Målt:** et dobbelttryk på punkt 1's »Videre« med 180, 300 og 450 ms imellem gav alle tre gange »Øvelse 3 af 6«. Punkt 2 blev sprunget over, og der er ingen vej tilbage.
+  - Ingen data går tabt.
+- **Rettelse:**
+  1. Giv Open & Strong passets spærre: `settling` i en `useLayoutEffect` på `index`, og klassen `settling` på `.session`. Reglen `.session.settling button` findes allerede i `src/ui/app.css:1066`.
+  2. Lav en Playwright-test med et dobbelttryk på »Videre«.
+
+#### N2 (lav): Figuren i pausen kan miste op til halvdelen af sig selv under bundblokken
+
+- **Hvor:**
+  - `src/ui/session/NowNext.tsx:255–262`: »Gør klar« står før figuren.
+  - `src/ui/session/session.css:234–240`: pausens figur er 144 px, stående 160 px.
+- **Hvorfor:**
+  - **Kilderne:** SPEC 3.2 (Pausen) beskriver »figuren i øvelsens tempo«, og SPEC 5 gør figuren til hovedpersonen. D61 vælger bevidst, at figurens fødder går under, og det var også mit andet forslag.
+  - **Målt uden tidsmaskine:** figuren med sin fase ender under bundblokken i 10 af 16 pauser tirsdag og 7 af 17 fredag. De værste:
+    - Ved rygsæk-row er det 80 px. Kun overkroppen ses, og stol, ben og gulv er væk (`screenshots/review-p4-opf-pause-rygsaek.png`).
+    - Ved »Læg · Etbens tåløft på et trappetrin« er det 65 px, netop trinnet og hælen, som øvelsen handler om (`review-p4-opf-pause-laeg.png`).
+  - **Samme valg i »Nu«:** en stående figur er 152 px (før P4: 190), også uden tidsmaskine, hvor der er plads.
+- **Rettelse:**
+  1. Lad figuren i pausen tage den højde, der er tilbage over bundblokken. Den skal være det, der krymper i `.rest`, med en mindste højde på ca. 96 px, så hele figuren ses, bare mindre.
+  2. Mål figurens bund i `fit.spec.ts`'s pausetjek.
+
+#### N3 (lav): Det nye »efter«-billede af velkomsten er hvidt
+
+- **Hvor:**
+  - `screenshots/nat3-efter/onboarding.png` og `screenshots/onboarding.png` er 3 kB i d5e9ad7.
+  - De tages af `e2e/tabs.spec.ts:9` lige efter `openApp`, før appen har tegnet noget.
+- **Hvorfor:** P4 og NAT-3's slutrapport skal have før- og efterbilleder af de vigtigste skærme. Velkomstens »efter« er nu en tom hvid skærm.
+- **Rettelse:** vent på `getByTestId('onboarding')` før skærmbilledet, og tag `nat3-efter/onboarding.png` igen.
+
+#### N4 (lav): SPEC 5 siger stadig, at delens tal står under en navy streg over introkortet
+
+- **Hvor:** `docs/SPEC.md:268` (Plakatstil).
+- **Hvorfor:** D61 og SPEC 3.2 (En ny del) har flyttet tallet ind i urets linje, så SPEC 5 modsiger nu SPEC 3.2.
+- **Rettelse:** Skriv i SPEC 5, at delens store røde nummer og navn står i urets linje over introkortet, hvor en ny del begynder. På EMOM'ens kort står de i overlinjen.
