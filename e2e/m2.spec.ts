@@ -18,8 +18,9 @@ import {
 
 const TUESDAY_WEEK2 = '2026-11-17';
 
-// Whole sessions with Firefox' JIT off take a while.
-test.describe.configure({ timeout: 300_000 });
+// Whole sessions with Firefox' JIT off take a while: as long as in session.spec.ts, so a full suite
+// under load does not run out of time on the last step.
+test.describe.configure({ timeout: 600_000 });
 
 test('onboarding → I dag → Styrke A grøn start til slut med »Som planlagt« → opsummering', async ({
   page,
