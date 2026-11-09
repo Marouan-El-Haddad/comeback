@@ -300,7 +300,9 @@ export function Runner({
   // Resumed from the log alone (stepIndex -1): the first set, result or measurement not logged.
   useEffect(() => {
     if (run.phase !== 'run' || run.stepIndex >= 0 || !session) return;
-    const index = firstNotLogged(steps, session);
+    const measured = (measureId: string) =>
+      state.measurements.some((m) => m.measureId === measureId && m.date === run.date);
+    const index = firstNotLogged(steps, session, measured);
     setRun((r) => ({ ...r, stepIndex: index }));
   }, [run.phase, run.stepIndex, session, steps]);
 
@@ -853,16 +855,18 @@ export function Runner({
             onCard={(id) => openCard(id, contextOf(step, run.kind))}
             onLog={async (value, rir, pain) => {
               const measureId = step.measure ? step.block.measureId : undefined;
-              // One set, or both sides of a set done alternately (P54).
-              const events = setEvents(ctx, {
-                sessionId,
-                date,
-                step,
-                value,
-                rir,
-                pain,
-                measureId,
-              });
+              // One set, or both sides of a set done alternately (P54); a side the previous version
+              // logged already is not logged again (D57).
+              const logged = step.alternate
+                ? session.sets
+                    .filter((s) => s.blockId === step.block.blockId && s.setIndex === step.setIndex)
+                    .map((s) => s.side)
+                : [];
+              const events = setEvents(
+                ctx,
+                { sessionId, date, step, value, rir, pain, measureId },
+                logged,
+              );
               if (measureId && value !== undefined) {
                 events.push(
                   ctx.make(

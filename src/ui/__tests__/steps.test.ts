@@ -14,8 +14,10 @@ import {
 } from '../../engine/index.ts';
 import type { BlockPlan } from '../../engine/plan.ts';
 import { alternates } from '../session/sides.ts';
+import { sessionSections } from '../session/outline.ts';
 import {
   buildSteps,
+  firstNotLogged,
   nextExercise,
   resumeIndex,
   setEvents,
@@ -250,5 +252,127 @@ describe('et gemt pas genoptages samme sted (D54)', () => {
     expect(resumeIndex(steps, { stepIndex: steps.length + 2 })).toBe(-1);
     // The earlier version had two steps per alternating set: the log decides where it was.
     expect(resumeIndex(skater, { stepIndex: 7 })).toBe(-1);
+  });
+});
+
+// Friday of programme week 1: Styrke B with its measurements (pike, hollow, side plank, wall sit,
+// balance), started the way the app starts it.
+const FRIDAY = '2026-11-13';
+
+function fridaySession(): { log: Log; sessionId: string; steps: Step[] } {
+  const log = new Log().onboard();
+  log.catchUp(FRIDAY);
+  const sessionId = 's-friday';
+  log.add(
+    startSession(log.ctx, log.events, {
+      sessionId,
+      date: FRIDAY,
+      kind: 'B',
+      answers: [true, true, true],
+    }),
+  );
+  const plan = resolvePlan(PROGRAM, log.state(FRIDAY), { date: FRIDAY, kind: 'B', light: 'green' });
+  return { log, sessionId, steps: buildSteps(plan) };
+}
+
+/** The blocks of a part's sets in order, each run of the same block once: how the pair alternates. */
+function alternation(steps: readonly Step[], group: string): string[] {
+  const runs: string[] = [];
+  for (const s of steps) {
+    if (s.type !== 'set' || s.group !== group) continue;
+    if (runs.at(-1) !== s.block.trackId) runs.push(s.block.trackId);
+  }
+  return runs;
+}
+
+describe('en selvstændig måling inde i et par (D57)', () => {
+  test('Styrke B uge 1: hollow før Par 2, og Par 2 skifter mellem RDL og Mave 2 som ét par', () => {
+    const { steps } = fridaySession();
+    const parts = sessionSections(steps, { wallTest: false, warmup: true }).map((p) => p.label);
+    expect(parts.filter((label) => label === 'Par 2')).toHaveLength(1);
+    expect(parts.slice(parts.indexOf('Par 2') - 1, parts.indexOf('Par 2') + 1)).toEqual([
+      'Måling',
+      'Par 2',
+    ]);
+    const hollow = steps.findIndex((s) => s.type === 'measure' && s.block.measureId === 'hollow');
+    const pair2 = steps.findIndex((s) => s.group === 'Par 2');
+    expect(hollow).toBeGreaterThanOrEqual(0);
+    expect(hollow).toBeLessThan(pair2);
+    // RDL, side plank (its first set is the measurement) and rotation after each other, round by
+    // round, as the programme runs a pair: hollow still comes before Mave 2 (ENGINE 5.6).
+    expect(alternation(steps, 'Par 2')).toEqual([
+      'sl_rdl',
+      'core_side',
+      'core_rot',
+      'sl_rdl',
+      'core_side',
+      'core_rot',
+    ]);
+  });
+
+  test('et pas gemt af den forrige version med målingen inde i parret genoptages fra loggen', () => {
+    const { steps } = fridaySession();
+    expect(resumeIndex(steps, { stepIndex: 12 })).toBe(-1);
+  });
+});
+
+describe('genoptaget fra loggen: det første, der ikke er logget (D54, D57)', () => {
+  const at = (steps: readonly Step[], find: (s: Step) => boolean) => steps.findIndex(find);
+
+  test('en logget selvstændig måling tæller som udført', () => {
+    const { log, sessionId, steps } = fridaySession();
+    const hollow = at(steps, (s) => s.type === 'measure' && s.block.measureId === 'hollow');
+    // Everything before hollow is logged, and hollow itself.
+    for (const step of steps.slice(0, hollow)) {
+      if (step.type === 'set') log.add(setEvents(log.ctx, { sessionId, date: FRIDAY, step }));
+      if ('block' in step && step.type !== 'set' && step.type !== 'measure')
+        log.add([
+          logBlockResult(log.ctx, {
+            sessionId,
+            date: FRIDAY,
+            block: step.block,
+            result: { quality: true },
+          }),
+        ]);
+    }
+    log.push(
+      { type: 'measurement_logged', measureId: 'hollow', value: 30, programWeek: 1, round: 1 },
+      FRIDAY,
+    );
+    const state = log.state(FRIDAY);
+    const session = state.sessions.find((s) => s.sessionId === sessionId);
+    if (!session) throw new Error('intet pas');
+    const measured = (id: string) =>
+      state.measurements.some((m) => m.measureId === id && m.date === FRIDAY);
+    expect(firstNotLogged(steps, session, measured)).toBe(hollow + 1);
+  });
+
+  test('sæt i en blok, der er stoppet af smerte, springes over', () => {
+    const { log, sessionId, steps } = skaterSession({});
+    const first = steps.find(isSet) as SetStep;
+    log.add(setEvents(log.ctx, { sessionId, date: TUESDAY, step: first, pain: 'sharp' }));
+    const session = log.state(TUESDAY).sessions.find((s) => s.sessionId === sessionId);
+    if (!session) throw new Error('intet pas');
+    const next = firstNotLogged(steps, session, () => false);
+    const step = steps[next];
+    expect(step?.type === 'set' && step.block.blockId === first.block.blockId).toBe(false);
+  });
+
+  test('et skiftevist sæt med kun venstre side logget: kun højre side logges', () => {
+    const { log, sessionId, steps } = skaterSession();
+    const first = steps.find(isSet) as SetStep;
+    // The previous version logged a side per tap: the left side of set 1 is in the log.
+    log.add(
+      setEvents(log.ctx, {
+        sessionId,
+        date: TUESDAY,
+        step: { ...first, alternate: false, side: 'L' },
+      }),
+    );
+    const session = log.state(TUESDAY).sessions.find((s) => s.sessionId === sessionId);
+    if (!session) throw new Error('intet pas');
+    expect(firstNotLogged(steps, session, () => false)).toBe(steps.indexOf(first));
+    const events = setEvents(log.ctx, { sessionId, date: TUESDAY, step: first }, ['L']);
+    expect(events.map((e) => (e.type === 'set_logged' ? e.side : null))).toEqual(['R']);
   });
 });

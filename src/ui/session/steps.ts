@@ -23,7 +23,13 @@ export type Step =
       alternate?: boolean;
     }
   | { type: 'rest'; seconds: number; group: string; blockId: string }
-  | { type: 'measure'; block: BlockPlan; group: string }
+  | {
+      type: 'measure';
+      block: BlockPlan;
+      group: string;
+      /** A standalone measurement the plan places inside a pair, taken before the pair (D57). */
+      hoisted?: boolean;
+    }
   | { type: 'power-q'; block: BlockPlan; group: string }
   | { type: 'emom'; block: BlockPlan; group: string }
   | { type: 'emom-q'; block: BlockPlan; group: string }
@@ -150,10 +156,21 @@ export function buildSteps(plan: SessionPlan): Step[] {
       i++;
       continue;
     }
-    // A pair, a tri-set or a single block (power): alternate the blocks set by set.
+    // A pair, a tri-set or a single block (power): alternate the blocks set by set. A standalone
+    // measurement the plan places between two blocks of the group (hollow before Mave 2 in Styrke
+    // B) is taken before the group, so the pair stays one part that alternates, and the measurement
+    // still comes before the block it must precede (ENGINE 5.6, D57).
     const group: BlockPlan[] = [block];
-    while (block.group && blocks[i + group.length]?.group === block.group) {
-      group.push(blocks[i + group.length] as BlockPlan);
+    let end = i + 1;
+    while (block.group) {
+      const next = blocks[end];
+      if (next?.group === block.group) {
+        group.push(next);
+        end++;
+      } else if (next?.role === 'measure' && blocks[end + 1]?.group === block.group) {
+        steps.push({ type: 'measure', block: next, group: groupLabel(next), hoisted: true });
+        end++;
+      } else break;
     }
     const rounds = Math.max(...group.map(setCount));
     const sequence: Step[] = [];
@@ -191,7 +208,7 @@ export function buildSteps(plan: SessionPlan): Step[] {
       if (b.unit === 'rounds' && (b.rounds ?? 0) > 0)
         steps.push({ type: 'rounds-q', block: b, group: label });
     }
-    i += group.length;
+    i = end;
   }
   // No rest straight before the finish.
   while (steps[steps.length - 1]?.type === 'rest') steps.pop();
@@ -217,11 +234,18 @@ export interface SetLog {
 /**
  * The set_logged events of a set: its own side, or – for a set done alternately – the left and the
  * right side with the same numbers, as the per-side sets the engine counts (P54, D54). The events
- * and their fields are the same as for two sets taken side by side.
+ * and their fields are the same as for two sets taken side by side. A side already in the log (the
+ * previous version logged a side per tap) is not logged again (D57).
  */
-export function setEvents(ctx: Ctx, input: SetLog): AppEvent[] {
+export function setEvents(
+  ctx: Ctx,
+  input: SetLog,
+  logged: ReadonlyArray<Side | undefined> = [],
+): AppEvent[] {
   const { step } = input;
-  const sides: Array<Side | undefined> = step.alternate ? ['L', 'R'] : [step.side];
+  const sides: Array<Side | undefined> = step.alternate
+    ? (['L', 'R'] as const).filter((side) => !logged.includes(side))
+    : [step.side];
   return sides.map((side) =>
     logSet(ctx, {
       sessionId: input.sessionId,
@@ -286,7 +310,11 @@ export function resumeIndex(
 ): number {
   if (saved.stepIndex < 0) return -1;
   if (saved.stepKey === undefined) {
-    const changed = steps.some((s) => s.type === 'set' && s.alternate);
+    // What the version before the keys built differently: a set done alternately (two steps then)
+    // and a measurement inside a pair (taken between its blocks then, D57).
+    const changed = steps.some(
+      (s) => (s.type === 'set' && s.alternate) || (s.type === 'measure' && s.hoisted),
+    );
     return changed || saved.stepIndex >= steps.length ? -1 : saved.stepIndex;
   }
   if (stepKey(steps, saved.stepIndex) === saved.stepKey) return saved.stepIndex;
@@ -295,12 +323,22 @@ export function resumeIndex(
 
 /**
  * The step a session resumed from the log goes on with: the first set, result or measurement
- * not logged (a set done alternately is logged when both its sides are).
+ * not logged. A set done alternately is logged when both its sides are; the sets of a block that
+ * sharp pain or »Stop« ended are passed, as the session passes them; a standalone measurement is
+ * done when `measured` finds it in the log for the session's day (D57).
  */
-export function firstNotLogged(steps: readonly Step[], session: SessionSummary): number {
+export function firstNotLogged(
+  steps: readonly Step[],
+  session: SessionSummary,
+  measured: (measureId: string) => boolean,
+): number {
+  const ended = new Set(
+    session.sets.filter((s) => s.pain === 'sharp' || s.pain === 'stop').map((s) => s.blockId),
+  );
   const done = (step: Step): boolean => {
     switch (step.type) {
       case 'set':
+        if (ended.has(step.block.blockId)) return true;
         return session.sets.some(
           (s) =>
             s.blockId === step.block.blockId &&
@@ -317,6 +355,8 @@ export function firstNotLogged(steps: readonly Step[], session: SessionSummary):
       case 'neck':
       case 'round':
         return session.results.some((r) => r.blockId === step.block.blockId);
+      case 'measure':
+        return measured(step.block.measureId ?? '');
       default:
         return false;
     }

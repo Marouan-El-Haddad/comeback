@@ -437,6 +437,17 @@ test('Styrke B i tidsmaskinen: hold og nakke uden berøring, figuren følger ure
   await expect(plan.locator('.day-part h2').first()).toHaveText('Opvarmning');
   await expect(plan.locator('.day-part h2', { hasText: 'Klubsekvensen' })).toHaveCount(1);
   await expect(dayItem(page, 'Klubsekvensen')).toContainText('2 × 1 runde');
+  // Hollow (a measurement of its own) before Par 2, and Par 2 is one part: RDL, side plank and
+  // rotation after each other, as the programme runs a pair (D57).
+  const parts = await plan.locator('.day-part h2').allTextContents();
+  expect(parts.filter((label) => label === 'Par 2')).toHaveLength(1);
+  expect(parts[parts.indexOf('Par 2') - 1]).toBe('Måling');
+  const pair2 = plan.locator('.day-part').filter({ has: page.locator('h2', { hasText: 'Par 2' }) });
+  await expect(pair2.locator('.day-item-name')).toHaveText([
+    'Etbens RDL',
+    'Sideplanke på albuen',
+    'Planke med skulder-tap',
+  ]);
   await page.getByTestId('day-start').click();
   await stillFigures(page);
   await page.getByRole('button', { name: 'Start opvarmningen' }).click();
