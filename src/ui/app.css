@@ -295,6 +295,116 @@
   gap: 8px;
 }
 
+/* The club log and the Sunday check (SPEC 3.1, 4.6, 4.7, D63): a card that waits for an answer over
+   the day's card – the club's red edge, the Sunday check's navy – and the screens in place of I dag.
+   Half a second after one of them opens or closes, taps are ignored (D57). */
+.life-host {
+  display: contents;
+}
+
+.life-host.settling button,
+.today.settling button {
+  pointer-events: none;
+}
+
+.life-card {
+  display: grid;
+  gap: 8px;
+  border-left: 6px solid var(--c-navy);
+}
+
+.life-card.club {
+  border-left-color: var(--c-red);
+}
+
+.life-card-title,
+.life-saved {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.life-lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+.life-head {
+  display: grid;
+  gap: 4px;
+}
+
+.life-kicker {
+  font-weight: 600;
+  color: var(--c-muted);
+}
+
+.life-section {
+  display: grid;
+  gap: 8px;
+}
+
+.life-label {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.life-label.sub {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--c-muted);
+}
+
+/* Toggle buttons in a grid: three or two in a row, the grade 1–10 in two rows of five. */
+.toggles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.toggles.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.toggles.cols-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.toggles .btn {
+  padding: 0 8px;
+}
+
+.life-input {
+  min-height: 56px;
+  padding: 0 16px;
+  border: 2px solid var(--c-navy);
+  border-radius: 12px;
+  font: inherit;
+  font-size: 20px;
+  color: var(--c-navy);
+  background: var(--c-paper);
+}
+
+.life-value strong {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--c-red);
+}
+
+.life-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
 .backup-line {
   min-height: 56px;
   border: 1px solid var(--c-line);
