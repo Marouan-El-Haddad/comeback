@@ -79,7 +79,7 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 - Mål: hvert kort læst med brugerens blik: præcis hvordan øvelsen laves derhjemme med gulv, stol, væg og rygsæk; hvad han skal mærke (»Mærk«); hvornår det er for let eller for svært (i »Lettere« og »Sværere«, i tråd med motorens regler for reserve og trin). Teksten skæres ned, hvor det kan lade sig gøre, og gøres mere konkret, hvor det er nødvendigt. Navne, doser og regler ændres ikke; bevægelsernes positioner, faser og ID'er ændres kun i ordlyden. Hver træner skriver desuden et figurbrief pr. punkt til P2 (vinkel, markeringer og tidspunkt, fejl til rigtigt/forkert, hvordan bevægelsen ser ud).
 - Grønt: `node scripts/check-explain.ts` (alle filer); `npm run check`; `no-source-refs`; review `docs/reviews/nat3-p3-forklaringer.md`.
 
-### [ ] P4 – Designløft (opgavens pakke 4)
+### [~] P4 – Designløft (opgavens pakke 4)
 
 - Agent: `comeback-builder`.
 - Mål: alle skærme gennemgået mod SPEC 5 og 6 og listen over forbudte mønstre: hierarki, den typografiske skala, luft, PDF'ens plakatidentitet, figuren som hovedperson og overgange, der viser, hvad der ændrede sig. Før- og efterbilleder af de vigtigste skærme (før = `main` ved NAT-3's start, 2894827).
