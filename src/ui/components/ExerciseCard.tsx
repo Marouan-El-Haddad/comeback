@@ -4,8 +4,8 @@
 // until then its pictogram from program/pictos.json with the phases as text under it. Without an
 // explanation the card shows the programme's execution and cues without sources (DECISIONS.md D43).
 // The order lets it be skimmed in a pause: figure, cues, »Sådan gør du« with the start position
-// first, then »Træner« (D47). Loaded with lazy() from src/ui/card.tsx: it fetches content and holds
-// the figure system, so never in the start files (SPEC 7).
+// first, then »Træner« (D47) and »Mærk« (D55). Loaded with lazy() from src/ui/card.tsx: it fetches
+// content and holds the figure system, so never in the start files (SPEC 7).
 import type { ComponentChildren } from 'preact';
 import { useEffect, useMemo, useRef } from 'preact/hooks';
 import { loadExplain, loadFigures } from '../../content/load.ts';
@@ -238,7 +238,7 @@ function Section({ title, children }: { title: string; children: ComponentChildr
  * »Sådan gør du« with the start position first and the numbered steps, the movements when there are
  * several (the warm-up's »Mobilisér«, the session's power step in »Potensér«, docs/SPEC.md 9.1:
  * each with its figure under its name when it is drawn, otherwise its name and phases on one line),
- * then »Træner«.
+ * then »Træner« and »Mærk«: where the step should be felt, when the explanation has it (D55).
  */
 function Explained({
   x,
@@ -297,6 +297,11 @@ function Explained({
       <Section title="Træner">
         <p>{x.trains}</p>
       </Section>
+      {x.feel && (
+        <Section title="Mærk">
+          <p>{x.feel}</p>
+        </Section>
+      )}
     </>
   );
 }

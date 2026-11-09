@@ -13,11 +13,11 @@ import {
   storedEventCount,
 } from './helpers.ts';
 
-// The exercise card (docs/SPEC.md 3.5, 3.8; DECISIONS.md D43, D47): from Stiger (a step, also under
-// »Øvrige«), from a session started in the time machine (the warm-up, the set, the next exercise in
-// the pause), from Open & Strong and without a network. The card can be skimmed in the middle of a
-// session: figure, cues, »Sådan gør du« and »Træner«, the rest folded; cues and the first step on
-// the first screen. While it is open the session stands still, so nothing starts or is logged
+// The exercise card (docs/SPEC.md 3.5, 3.8; DECISIONS.md D43, D47, D55): from Stiger (a step, also
+// under »Øvrige«), from a session started in the time machine (the warm-up, the set, the next
+// exercise in the pause), from Open & Strong and without a network. The card can be skimmed in the
+// middle of a session: figure, cues, »Sådan gør du«, »Træner« and »Mærk«, the rest folded; cues and
+// the first step on the first screen. While it is open the session stands still, so nothing starts or is logged
 // behind it, and Android's back gesture closes it. Screenshots in screenshots/.
 
 test.describe.configure({ timeout: 300_000 });
@@ -31,6 +31,19 @@ interface Track {
 
 function track(id: string): Track {
   return JSON.parse(readFileSync(join('program', 'tracks', `${id}.json`), 'utf8')) as Track;
+}
+
+/** An item's »Mærk« in content/explain (DECISIONS.md D55), or undefined when it has none. */
+function feelOf(subject: string, id: string): string | undefined {
+  const file = JSON.parse(readFileSync(join('content', 'explain', `${subject}.json`), 'utf8')) as {
+    items: Array<{ id: string; feel?: string }>;
+  };
+  return file.items.find((item) => item.id === id)?.feel;
+}
+
+/** The headings visible without unfolding: »Mærk« comes after »Træner« when the item has it. */
+function skimmed(subject: string, id: string, headings: string[]): string[] {
+  return feelOf(subject, id) === undefined ? headings : [...headings, 'Mærk'];
 }
 
 const card = (page: Page) => page.locator('.exercise-card');
@@ -134,8 +147,9 @@ test('øvelseskortet fra Stiger: kan skimmes, foldes ud og lukkes med »Tilbage�
   );
   await expect(c.locator('.card-phases')).toHaveText('3 sek ned · 1 sek stille · Op');
   await expect(c.locator('.card-similar')).toHaveCount(0);
-  // Visible without unfolding, in this order: cues, »Sådan gør du« (start position first), Træner.
-  await expect(c.locator('h2')).toHaveText(['Cues', 'Sådan gør du', 'Træner']);
+  // Visible without unfolding, in this order: cues, »Sådan gør du« (start position first), Træner
+  // and Mærk (D55).
+  await expect(c.locator('h2')).toHaveText(['Cues', 'Sådan gør du', 'Træner', 'Mærk']);
   await expect(c.locator('.card-cues li')).toHaveText([
     '3 sek ned, 1 sek stille',
     'Albuerne 45° ud',
@@ -155,6 +169,17 @@ test('øvelseskortet fra Stiger: kan skimmes, foldes ud og lukkes med »Tilbage�
   await expect(c.getByText('Hoften hænger, eller den stikker op.')).toBeHidden();
   await page.screenshot({ path: 'screenshots/kort-skimmet.png', scale: 'css' });
   await expectCardIsClean(page);
+
+  // »Mærk« right after »Træner«, not folded: where the exercise should be felt (D55).
+  const feel = feelOf('press', 'press.1');
+  expect(feel, 'press.1 har »Mærk« i content/explain/press.json').toBeTruthy();
+  const feelSection = c.locator('.card-section').filter({
+    has: page.getByRole('heading', { name: 'Mærk', exact: true }),
+  });
+  await expect(feelSection.locator('p')).toHaveText(feel ?? '');
+  await expect(feelSection.locator('p')).toBeVisible();
+  await feelSection.evaluate((section) => section.scrollIntoView({ block: 'center' }));
+  await page.screenshot({ path: 'screenshots/kort-maerk.png', scale: 'css' });
 
   for (const summary of await c.locator('summary').all()) await summary.click();
   await expect(c.getByText('Hoften hænger, eller den stikker op.')).toBeVisible();
@@ -244,7 +269,9 @@ test('»Øvrige« i Stiger: rotation, klubsekvens, nakke, burpee-varianter, læg
   await expect(page.locator('.other-detail .mine-label')).toHaveText(['Dit trin']);
   await page.locator('.step-open', { hasText: 'Isometri, halv kraft' }).click();
   await expect(c.locator('.step-kicker')).toHaveText('Nakke · trin N3');
-  await expect(c.locator('h2')).toHaveText(['Cues', 'Sådan gør du', 'Bevægelserne', 'Træner']);
+  await expect(c.locator('h2')).toHaveText(
+    skimmed('neck', 'neck.N3', ['Cues', 'Sådan gør du', 'Bevægelserne', 'Træner']),
+  );
   await expect(c.locator('.card-phases li')).toHaveCount(3);
   await expect(c.locator('.card-phases li').first()).toContainText('Retning 1: pande');
   await expectCuesAndStepsOnFirstScreen(page, PHONE_HEIGHT - TAB_BAR);
@@ -305,6 +332,35 @@ test.describe('uden forklaringsfil', () => {
     await expect(c.locator('summary')).toHaveCount(0);
     await expectCardIsClean(page);
     await page.screenshot({ path: 'screenshots/kort-uden-forklaring.png', scale: 'css' });
+  });
+});
+
+test.describe('en forklaring uden »Mærk«', () => {
+  // Without the service worker, so the route below sees the request for the explanation file.
+  test.use({ serviceWorkers: 'block' });
+
+  test('kortet viser ingen tom »Mærk«, når forklaringen ikke har feltet (D55)', async ({
+    page,
+  }) => {
+    // press.json as it is, but without »Mærk«: an explanation written before the field. The figure
+    // file has the same name and passes unchanged.
+    await page.route(/\/content\/explain\/press|\/assets\/press-[^/]+\.json$/, async (route) => {
+      const response = await route.fetch();
+      const data = (await response.json()) as { items?: Array<Record<string, unknown>> };
+      for (const item of data.items ?? []) delete item.feel;
+      await route.fulfill({ response, json: data });
+    });
+    await openApp(page, '2026-11-17');
+    await onboard(page);
+    await page.getByRole('button', { name: 'Stiger', exact: true }).click();
+    await page.locator('.ladder-row', { hasText: 'Pres · trin 1' }).click();
+    await page.locator('.step-open', { hasText: 'Push-up med tempo' }).click();
+
+    const c = card(page);
+    await expect(c.getByRole('heading', { level: 1 })).toHaveText('Push-up med tempo');
+    await expect(c.locator('h2')).toHaveText(['Cues', 'Sådan gør du', 'Træner']);
+    await expect(c.getByText('Mærk', { exact: true })).toHaveCount(0);
+    await expectCardIsClean(page);
   });
 });
 
