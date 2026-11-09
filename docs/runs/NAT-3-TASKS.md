@@ -39,6 +39,7 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 
 ### [~] P1a – Figurmotoren rettet (opgavens pakke 1)
 
+- Status: bygget 06:25 (a2b48c7–ac78155; D56, R20). Review `docs/reviews/nat3-p1a-figurmotor.md`: 2 høje, 2 middel, 2 lave, alle rettet (279d015–9d009de; D56, R22) og tjekket i »Opfølgning«; nyt H3 (`via` målt mod sig selv) rettet i P1b (8b0de82) og tjekket i P1b's opfølgning. Venter på udgivelse.
 - Agent: `comeback-builder`. Brief: `docs/runs/NAT-2-P3-FIX.md` (H1, M1–M3, L1–L4 og motorens grænser 1–6), reviewet i `docs/reviews/nat2-p3-figurer.md`.
 - Accept:
   1. H1: leddenes vinkler interpoleres med forlæns kinematik fra det punkt, der står fast; segmenterne holder længden, strakte led forbliver strakte, intet går gennem gulvet, og hælen drejer om tåen. Tests for alle figurer: intet led bøjer mere end i nabopositionerne, intet går gennem en flade midt i en fase, segmenterne holder længden.
@@ -49,6 +50,7 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 
 ### [~] P1b – Figurmotoren: vinkler, markeringer, fejl og bevægelse (opgavens pakke 2, motordelen)
 
+- Status: bygget 10:55 (8b0de82–ece1f42; D58, R23, R24). Review `docs/reviews/nat3-p1b-figurmotor.md`: 2 høje, 3 middel, 3 lave, alle rettet (41e813e–3d04bba; D60, R25) og tjekket i »Opfølgning«; 2 nye lave (L4, L5) er åbne. Venter på udgivelse.
 - Agent: `comeback-builder`.
 - Mål: det, figurerne i P2 skal kunne vise, findes i formatet, motoren, tjekket, kontaktarket, øvelseskortet og »Nu« i passet:
   1. Vinkel: en figur kan tegnes fra siden eller forfra, og med to vinkler side om side, hvor én ikke er nok.
