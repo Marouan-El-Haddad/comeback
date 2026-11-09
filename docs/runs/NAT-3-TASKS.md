@@ -87,7 +87,7 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 - Mål: alle skærme gennemgået mod SPEC 5 og 6 og listen over forbudte mønstre: hierarki, den typografiske skala, luft, PDF'ens plakatidentitet, figuren som hovedperson og overgange, der viser, hvad der ændrede sig. Før- og efterbilleder af de vigtigste skærme (før = `main` ved NAT-3's start, 2894827).
 - Grønt: hele Playwright-suiten; skærmbilleder af alle skærme; kontrast, trykflader og tekststørrelser tjekket.
 
-### [ ] P5a – Livet: søndagstjek og klublog med lørdagskarakter (opgavens pakke 5)
+### [~] P5a – Livet: søndagstjek og klublog med lørdagskarakter (opgavens pakke 5)
 
 - Agent: `comeback-builder`. Frist: søndagstjekket virker søndag 15/11.
 - Kilder: SPEC 4.6 og 4.7, ENGINE (R-PAIN-SUNDAY, klubtræning), DECISIONS P25, PLAN M3.
