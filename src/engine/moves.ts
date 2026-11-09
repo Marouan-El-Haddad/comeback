@@ -1,7 +1,7 @@
 // R-MOVE and R-REST: where a session may be moved within its calendar week (docs/ENGINE.md 5.9).
 import { addDays, calendarWeek, mondayOf, weekday } from './dates.ts';
 import { getStep, getWeek, hasTag } from './lookup.ts';
-import { eventTomorrow, scheduleForWeek, weekInfoAt } from './plan.ts';
+import { eventTomorrow, scheduleForWeek, statusOn, weekInfoAt } from './plan.ts';
 import type { AppEvent, EventFactory, ISODate, Program, SessionKind, State } from './types.ts';
 
 export interface MoveOption {
@@ -43,6 +43,9 @@ export function validMoveDays(
 
   for (let date = first; date <= sunday; date = addDays(date, 1)) {
     if (date === fromDate) continue;
+    // Rule 6: a sick or holiday day is red or rest, and a session moved there would vanish.
+    const status = statusOn(state, date);
+    if (status === 'ill' || status === 'holiday') continue;
     const club = isClubDay(state, date);
     if (club && kind === 'motor') continue; // the motor only moves to a free day
     const there = others.filter((a) => a.date === date);
@@ -75,11 +78,18 @@ export function validMoveDays(
       }
     }
     if (!restDay) continue;
+    // Rule 5: A and B on two days in a row – a partner on a day that is over only when it was taken.
     const partner = kind === 'A' ? 'B' : kind === 'B' ? 'A' : null;
     const nextTo =
       partner !== null &&
       others.some(
-        (a) => a.kind === partner && (a.date === addDays(date, 1) || a.date === addDays(date, -1)),
+        (a) =>
+          a.kind === partner &&
+          (a.date === addDays(date, 1) || a.date === addDays(date, -1)) &&
+          (a.date >= today ||
+            state.sessions.some(
+              (s) => s.date === a.date && (s.kind === partner || s.kind === 'travel'),
+            )),
       );
     options.push({
       date,
@@ -113,4 +123,25 @@ export function moveSession(
     },
     input.today,
   );
+}
+
+/**
+ * The optional calm run when moves took the week's motor (5.9 rule 1: »Behold én rolig tur, hvis
+ * du kan«): the first day from `today` until Sunday that the motor itself could move to – a free
+ * day without club or session, not sick or on holiday, with a whole rest day left (R-REST). Null
+ * when the week keeps its motor, when the week plan has none (5.10), or when no day is free.
+ */
+export function calmTourDay(
+  program: Program,
+  state: State,
+  date: ISODate,
+  today: ISODate,
+): ISODate | null {
+  const monday = mondayOf(date);
+  const planned = scheduleForWeek(program, { ...state, moves: [] }, monday).find(
+    (a) => a.kind === 'motor',
+  );
+  if (!planned) return null;
+  if (scheduleForWeek(program, state, monday).some((a) => a.kind === 'motor')) return null;
+  return validMoveDays(program, state, 'motor', planned.date, today)[0]?.date ?? null;
 }

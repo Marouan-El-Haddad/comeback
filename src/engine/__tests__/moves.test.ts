@@ -1,7 +1,8 @@
 // docs/ENGINE.md 8: moving sessions (R-MOVE, R-REST) and the week plan with extra club days.
 import { describe, expect, test } from 'vitest';
-import { layoutFor, moveSession, planFor, validMoveDays } from '../index.ts';
-import { dayOf, Log } from './helpers/log.ts';
+import { calmTourDay, layoutFor, moveSession, planFor, validMoveDays } from '../index.ts';
+import type { SessionKind } from '../types.ts';
+import { dayOf, Log, mondays } from './helpers/log.ts';
 
 describe('Flytning og ugeplan', () => {
   test('S-MOVE-01: A ikke logget tirsdag: torsdag og søndag fuldt, onsdag og lørdag kort, fredag aldrig', () => {
@@ -148,6 +149,155 @@ describe('Flytning og ugeplan', () => {
       today: dayOf(0, 1),
     });
     expect(moved).toMatchObject({ type: 'session_moved', toDate: dayOf(0, 7), short: false });
+  });
+
+  test('S-MOVE-05: syge- og feriedage tilbydes ikke; en rejsedag kan tage A som rejsepasset', () => {
+    const log = new Log().onboard();
+    log.push(
+      { type: 'status_set', status: 'ill', from: dayOf(0, 4), to: dayOf(0, 4) },
+      dayOf(0, 1),
+    );
+    log.push(
+      { type: 'status_set', status: 'holiday', from: dayOf(0, 6), to: dayOf(0, 7) },
+      dayOf(0, 1),
+    );
+    const wednesday = dayOf(0, 3);
+    log.catchUp(wednesday);
+    const state = log.state(wednesday);
+    const options = validMoveDays(log.program, state, 'A', dayOf(0, 2), wednesday);
+    expect(options.map((o) => [o.date, o.mode])).toEqual([[wednesday, 'short']]);
+    for (const day of [dayOf(0, 4), dayOf(0, 6), dayOf(0, 7)]) {
+      expect(
+        moveSession(log.program, state, log.make, {
+          kind: 'A',
+          fromDate: dayOf(0, 2),
+          toDate: day,
+          today: wednesday,
+        }),
+      ).toBeNull();
+    }
+
+    const travel = new Log().onboard();
+    travel.push(
+      { type: 'status_set', status: 'travel', from: dayOf(0, 4), to: dayOf(0, 4) },
+      dayOf(0, 1),
+    );
+    travel.catchUp(wednesday);
+    const moved = moveSession(travel.program, travel.state(wednesday), travel.make, {
+      kind: 'A',
+      fromDate: dayOf(0, 2),
+      toDate: dayOf(0, 4),
+      today: wednesday,
+    });
+    expect(moved).toMatchObject({ type: 'session_moved', toDate: dayOf(0, 4), short: false });
+    if (moved) travel.add([moved]);
+    expect(planFor(travel.program, travel.state(wednesday), dayOf(0, 4)).kind).toBe('travel');
+  });
+
+  test('S-MOVE-06: når en flytning tager motorens dag, er den valgfri rolige tur på den første dag, motoren selv kunne flyttes til', () => {
+    const log = new Log().onboard();
+    const wednesday = dayOf(0, 3);
+    log.catchUp(wednesday);
+    expect(calmTourDay(log.program, log.state(wednesday), wednesday, wednesday)).toBeNull();
+    const moved = moveSession(log.program, log.state(wednesday), log.make, {
+      kind: 'A',
+      fromDate: dayOf(0, 2),
+      toDate: dayOf(0, 4),
+      today: wednesday,
+    });
+    if (moved) log.add([moved]);
+    // Wednesday and Saturday are club days, Thursday has A and Friday B: Sunday.
+    expect(calmTourDay(log.program, log.state(wednesday), wednesday, wednesday)).toBe(dayOf(0, 7));
+    expect(calmTourDay(log.program, log.state(dayOf(0, 6)), dayOf(0, 6), dayOf(0, 6))).toBe(
+      dayOf(0, 7),
+    );
+
+    // Moved on Tuesday itself, the free Tuesday is the first such day.
+    const early = new Log().onboard();
+    const tuesday = dayOf(0, 2);
+    const first = moveSession(early.program, early.state(tuesday), early.make, {
+      kind: 'A',
+      fromDate: tuesday,
+      toDate: dayOf(0, 4),
+      today: tuesday,
+    });
+    if (first) early.add([first]);
+    expect(calmTourDay(early.program, early.state(tuesday), tuesday, tuesday)).toBe(tuesday);
+
+    // A week plan without a motor (5.10) has none here.
+    const extra = new Log().onboard();
+    extra.push({ type: 'schedule_changed', clubDays: [1, 3, 5, 6], clinch: false }, dayOf(0, 1));
+    expect(
+      calmTourDay(extra.program, extra.state(dayOf(0, 1)), dayOf(0, 1), dayOf(0, 1)),
+    ).toBeNull();
+  });
+
+  test('S-MOVE-07: advarslen om A og B to dage i træk kun ved et partnerpas, der blev taget', () => {
+    const saturday = dayOf(0, 6);
+    const shortToday = (log: Log) =>
+      validMoveDays(log.program, log.state(saturday), 'A', dayOf(0, 2), saturday).find(
+        (o) => o.date === saturday,
+      );
+    const missed = new Log().onboard();
+    missed.catchUp(saturday);
+    expect(shortToday(missed)).toMatchObject({ mode: 'short' });
+    expect(shortToday(missed)?.warning).toBeUndefined();
+
+    const taken = new Log().onboard();
+    taken.session({ date: dayOf(0, 5), kind: 'B' });
+    taken.catchUp(saturday);
+    expect(shortToday(taken)).toMatchObject({
+      mode: 'short',
+      warning: 'B skal efterlade dig frisk',
+    });
+  });
+
+  test('S-MOVE-08: dagen før en begivenhed tager hverken A eller en motor med intervaller, men B og en rolig motor', () => {
+    const days = (log: Log, kind: SessionKind, from: string, today: string) =>
+      validMoveDays(log.program, log.state(today), kind, from, today).map((o) => o.date);
+    // Week 1: the motor is a calm base. The event is on Monday, so Sunday is the day before.
+    const base = new Log().onboard();
+    base.push({ type: 'calendar_event_added', label: 'Kamp', eventDate: dayOf(1, 1) }, dayOf(0, 1));
+    expect(days(base, 'A', dayOf(0, 2), dayOf(0, 1))).not.toContain(dayOf(0, 7));
+    expect(days(base, 'B', dayOf(0, 5), dayOf(0, 1))).toContain(dayOf(0, 7));
+    expect(days(base, 'motor', dayOf(0, 4), dayOf(0, 1))).toContain(dayOf(0, 7));
+    // Programme week 5: the motor runs 30/15 intervals.
+    const intervals = new Log().onboard({ completedWeeks: mondays(4) });
+    intervals.push(
+      { type: 'calendar_event_added', label: 'Kamp', eventDate: dayOf(5, 1) },
+      dayOf(4, 1),
+    );
+    expect(days(intervals, 'motor', dayOf(4, 4), dayOf(4, 1))).not.toContain(dayOf(4, 7));
+    expect(days(intervals, 'B', dayOf(4, 5), dayOf(4, 1))).toContain(dayOf(4, 7));
+  });
+
+  test('S-MOVE-09: en dag, der er gået uden pas, tæller som hviledag (R-REST)', () => {
+    const friday = dayOf(0, 5);
+    const sunday = dayOf(0, 7);
+    // Club Monday to Wednesday, Friday and Saturday: A and B as short versions, Sunday the rest
+    // day. A goes to Thursday, the only other free day.
+    const week = () => {
+      const log = new Log().onboard();
+      log.push({ type: 'schedule_changed', clubDays: [1, 2, 3, 5, 6], clinch: false }, dayOf(0, 1));
+      const moved = moveSession(log.program, log.state(dayOf(0, 1)), log.make, {
+        kind: 'A',
+        fromDate: dayOf(0, 2),
+        toDate: dayOf(0, 4),
+        today: dayOf(0, 1),
+      });
+      expect(moved).toMatchObject({ toDate: dayOf(0, 4), short: false });
+      if (moved) log.add([moved]);
+      return log;
+    };
+    const bDays = (log: Log) =>
+      validMoveDays(log.program, log.state(friday), 'B', friday, friday).map((o) => o.date);
+    const free = week();
+    free.catchUp(friday);
+    expect(bDays(free)).toContain(sunday);
+    const taken = week();
+    taken.session({ date: dayOf(0, 4), kind: 'A' });
+    taken.catchUp(friday);
+    expect(bDays(taken)).not.toContain(sunday);
   });
 
   test('S-EXTRA-01: klub man, ons, fre, lør: hviledag søn, A tir, B tor, motor udgår med valgfri rolig tur', () => {
