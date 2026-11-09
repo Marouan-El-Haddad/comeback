@@ -242,3 +242,73 @@ Målingerne er taget på ece1f42. P4 (42401d1–68c7888) har siden ændret højd
 - `review-p1b-nu-pushup-1-vinkel.png` og `review-p1b-nu-pushup-2-vinkel.png`: en push-up i »Nu« i én og to vinkler (M1).
 - `review-p1b-forfra-armsving.png`: squat jumpet forfra midt i »Spring op« (M3).
 - `review-p1b-nu-reduceret.png`: »Nu« ved reduceret bevægelse.
+
+## Opfølgning
+
+2026-11-09 · rettelserne 41e813e, b785424, 6ed66f9, cfe197b, 8d4f6c4, 79137a6, 55cbefd, 8861f84 og 3d04bba (D60, R25) · worktree på da9abf8, hvor P2's figurer er flettet ind (dem reviewer andre). (Revieweren kunne ikke skrive i filen; orkestratoren har tilføjet afsnittet ordret fra reviewerens svar.)
+
+Metode:
+
+- **Kørt** i worktreen:
+  - Vitest: 712/712. Det er fire færre end før, fordi testene af anvisningerne til P2 faldt bort ved fletningen. H3-testen er omdøbt, ikke fjernet.
+  - `node scripts/check-explain.ts`: alle 46 filer i orden, ingen figurer på ventelisten.
+  - `npm run build`: JavaScript 103,7 kB gz.
+  - Startfilerne er bygget fra 48322d4 (lige før rettelserne) og fra da9abf8. `engine` er byte for byte ens, og `index.js` er ens bortset fra versionsteksten.
+  - Playwright i `pixel9a`: `figure.spec.ts`, `card.spec.ts` og `session.spec.ts` 39/39.
+- **Mine flows fra reviewet igen** i `pixel9a`:
+  - lange cues i kortet, i »Nu« med reps, i wall sit-holdet ved uret og på stillbillederne;
+  - en cue ved hoften i en fase, hvor hoften bevæger sig;
+  - en push-up i to vinkler i »Nu« og i pausen;
+  - desuden indholdets egne lange cues på stillbillederne.
+- **Forkerte kopier:**
+  - bounds fra før P2, bounds med en fjerdedel af `advance` og bounds med `advance` baglæns;
+  - en fejl og en via med `spine` i press.1;
+  - en underarm på 5 og på 7 i sidebilledet (`legs.4`).
+
+**Resultat:** Alle fund er rettet. Der er to nye lave fund (L4 og L5), og L5 er det eneste sted, tjekket er slækket.
+
+| Fund | Status |
+|---|---|
+| H1 | Rettet. Teksten brydes inde i sin tegning, og kan den ikke det, står den på sin egen linje. Siden ruller ikke vandret (`scrollWidth` 414). **Kortet:** en cue på 22 tegn forfra står på to linjer i højre vinkel (x 234–398 inden for 211–398); fra siden står den i venstre vinkel (27–191 inden for 16–203). **»Nu«:** en cue på 23 tegn står over vinklerne (x 16–170), og målet (x 278–398) er frit. **Wall sit-holdet:** en cue på 21 tegn står i figurens tegning (x 61–180), og ringen (x 194–398) er fri. **Stillbillederne** forfra står to pr. række, og teksten er inde i billedet. Se dog L4 |
+| H2 | Rettet. Prikken følger hoften fra (0,41; −49,9) til (−10,67; −35,01), og teksten står stille. I det flettede indhold markerer alle 15 fase-cues med en kropsdel en del, der står stille (0–0,6 enheder); de 19 fra reviewet er skrevet om |
+| M1 | Rettet. En push-up i to vinkler står over hinanden i »Nu«: hver tegning er 254 × 76 px, og figuren 155 × 35 px (før 113 × 26 px; med én vinkel 233 × 63 px). I pausen står vinklerne side om side med 174 × 72 px hver. Høje figurer står stadig side om side |
+| M2 | Rettet. Bounds fra før P2 fejler med »lander 0 enheder foran afsættet … (mindst 30)«. Den fejler også med en fjerdedel af `advance` (16) og med `advance` baglæns (−64). Den flettede bounds lander 64 foran og består |
+| M3 | Rettet. Squat jumpets arme er udeladt forfra (`null`), og README:48 og SPEC 9.1 forklarer hvorfor. Tjekket håndhæver det ikke, men kun `power_legs.1` havde problemet |
+| L1 | Rettet. Begge vinkler har en løkke på 5,1 sek (før 5,1 og 4,6), også i tjekket |
+| L2 | Rettet. Stillbilledet har ingen pil i en fase med `advance` |
+| L3 | Rettet i `src/content/types.ts:347`, README:103 og `NAT-3-FIGURES.md:94` |
+| `spine` | Virker. En fejl med `spine` −6 og en via med `spine` 5 i press.1 tegnes med krum ryg |
+| En fjerdedel | `upper` og `lower` kan nu forkorte et led til en fjerdedel. Se dog L5 |
+| Slækket? | Kun L5. Grænserne 8°, 5°, 70°, 3 og 2 enheder, 0,4 sek, 10°, 4 og 3 er uændrede. To tests har fået nye tal, fordi fletningen ændrede `pull.1` og E1, ikke tjekket |
+| Ydelse | Uændret: 22,7 tegninger i sekundet med én vinkel og 16,7 med to, og ingen, når appen er i baggrunden. Kortet åbner på 41–46 ms (press.1) og 53–76 ms (squat jump) |
+
+### L4 (lav, ny): På et lavt stillbillede kan en tekst på to linjer dække hovedet
+
+- **Hvor:**
+  - `src/ui/components/Figure.tsx`, `Stills`: der sættes kun færre billeder pr. række, når teksten ikke kan stå på to linjer.
+  - `src/figure/marks.ts`, `placeLabel`: er intet sted frit, vælges det sted, der dækker færrest punkter af kroppen.
+- **Hvorfor:**
+  - SPEC 9.1, Markeringer: teksten skal holde sig fra kroppen, hvor der er plads.
+  - En cue på 22 tegn forfra på squat jumpets »Landing« står på to linjer hen over hovedet og overkroppen; stillbilledet er 183 × 120 px (`review-p1b-opf-stillbilleder-lang-cue.png`).
+  - Indholdets egne lange cues dækker højst 2 af 160 målepunkter, så ingen figur har problemet i dag.
+- **Rettelse:** sæt færre billeder pr. række, eller stil teksten på sin egen linje, også når den dækker kroppen.
+
+### L5 (lav, ny): Forkortningen til en fjerdedel slækker tjekket af led givet ved `joint`/`end` i sidebilledet
+
+- **Hvor:** `src/figure/check.ts`, `jointLimbProblems` (`length < want / 4`).
+- **Hvorfor:**
+  - D60 (8) begrunder ændringen med et lår, der peger frem, set forfra. Men grænsen gælder i alle vinkler.
+  - I `legs.4` set fra siden består nu en underarm på 5 og en på 7 (normalt 15). Før blev alt under 7,5 fanget.
+- **Rettelse:** tillad en fjerdedel kun forfra og ovenfra, og behold det halve i sidebilledet.
+
+Pausen er målt på da9abf8. P4 retter pausens og introkortets layout i hovedmappen, så testen »M1: to liggende vinkler … i »Nu« og i pausen, hver mindst 60 px høj« skal være grøn på den endelige `main`.
+
+Skærmbilleder fra opfølgningen:
+
+- `review-p1b-opf-kort-lang-cue-front.png` og `review-p1b-opf-kort-lang-cue-side.png`: kortet med en cue på 22 tegn inde i sin vinkel.
+- `review-p1b-opf-nu-lang-cue.png`: »Nu« med en cue på 23 tegn over vinklerne og frit mål.
+- `review-p1b-opf-nu-hold-lang-cue.png`: wall sit-holdet med en cue på 21 tegn i figurens tegning og fri ring.
+- `review-p1b-opf-stillbilleder-lang-cue.png`: stillbillederne forfra, to pr. række; teksten dækker hovedet (L4).
+- `review-p1b-opf-still-shoulder2.png`, `review-p1b-opf-still-shoulder5.png`, `review-p1b-opf-still-press4.png` og `review-p1b-opf-still-pull6.png`: indholdets lange cues på stillbillederne.
+- `review-p1b-opf-fasecue-slut.png`: cuen ved hoften følger hoften.
+- `review-p1b-opf-nu-pushup-2-vinkler.png` og `review-p1b-opf-pause-pushup-2-vinkler.png`: push-uppen over hinanden i »Nu« og side om side i pausen.
