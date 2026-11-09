@@ -3,7 +3,15 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { findSourceRef } from '../src/content/refs.ts';
 import { a11yProblems, SESSION_RULES } from './a11y.ts';
-import { onboard, openApp, startSimulation, storedEventCount } from './helpers.ts';
+import {
+  closeIntro,
+  onboard,
+  openApp,
+  startSession,
+  startSimulation,
+  stillFigures,
+  storedEventCount,
+} from './helpers.ts';
 
 // The exercise card (docs/SPEC.md 3.5, 3.8; DECISIONS.md D43, D47): from Stiger (a step, also under
 // »Øvrige«), from a session started in the time machine (the warm-up, the set, the next exercise in
@@ -59,6 +67,12 @@ async function expectSameTimeLeft(page: Page, before: number): Promise<void> {
 async function driveUntil(page: Page, done: () => Promise<boolean>, what: string): Promise<void> {
   for (let i = 0; i < 300; i++) {
     if (await done()) return;
+    // An intro card in the pause (D44): closed, so the pause shows »Næste«.
+    const intro = page.getByTestId('intro-close');
+    if (await intro.isVisible()) {
+      await intro.click();
+      continue;
+    }
     const asPlanned = page.getByTestId('as-planned');
     if (await asPlanned.isVisible()) {
       await asPlanned.click();
@@ -79,12 +93,13 @@ async function driveUntil(page: Page, done: () => Promise<boolean>, what: string
   throw new Error(`Passet nåede ikke ${what}`);
 }
 
-/** »Start passet«, a green traffic light and the warm-up's four timers. */
+/** »Dagens pas«, »Start passet«, a green traffic light and the warm-up's four timers. */
 async function startGreen(page: Page): Promise<void> {
-  await page.getByTestId('start-session').click();
+  await startSession(page);
   await page.getByRole('button', { name: 'Start opvarmningen' }).click();
   for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
   await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+  await closeIntro(page);
 }
 
 test('øvelseskortet fra Stiger: kan skimmes, foldes ud og lukkes med »Tilbage« og tilbage-gestussen', async ({
@@ -171,10 +186,12 @@ test('øvelseskortet fra Stiger: kan skimmes, foldes ud og lukkes med »Tilbage�
   await expect(page.locator('.ladder-detail')).toBeVisible();
   await expect(page.locator('.step-open', { hasText: 'Push-up med tempo' })).toBeInViewport();
 
-  // A step explained, with a pictogram borrowed from the ladder: the card says so. »Tilbage«
-  // closes it and leaves no step behind in the history.
+  // A step with its own figure (every step has one now): no word about a similar drawing, which
+  // only a borrowed pictogram gets (the test without the files below). »Tilbage« closes the card
+  // and leaves no step behind in the history.
   await page.locator('.step-open', { hasText: 'Fødderne på en stol' }).click();
-  await expect(c.locator('.card-similar')).toHaveText('Tegningen viser en lignende øvelse.');
+  await expect(c.locator('.figure-stage')).toBeVisible();
+  await expect(c.locator('.card-similar')).toHaveCount(0);
   await expect(c.locator('summary', { hasText: 'Udstyr' })).toHaveText('Udstyr: Stol og væg');
   await c.getByRole('button', { name: 'Tilbage', exact: true }).first().click();
   await expect(page.locator('.ladder-detail')).toBeVisible();
@@ -281,6 +298,8 @@ test.describe('uden forklaringsfil', () => {
       );
     }
     await expect(c.locator('img.card-picto')).toBeVisible();
+    // Its pictogram is borrowed from the ladder's nearest step, and the card says so (SPEC 3.8).
+    await expect(c.locator('.card-similar')).toHaveText('Tegningen viser en lignende øvelse.');
     // Without the file there is no explanation and no »Hvorfor« from content/; the programme's own
     // »Hvorfor« is shown, and pres has none, so there is nothing to fold.
     await expect(c.locator('summary')).toHaveCount(0);
@@ -297,7 +316,7 @@ test('øvelseskortet fra et pas i tidsmaskinen: passet står stille, mens kortet
   const stored = await storedEventCount(page);
   // The first Tuesday of the programme: wall test, warm-up, then power legs.
   await startSimulation(page, '2026-11-10');
-  await page.getByTestId('start-session').click();
+  await startSession(page);
   await page.getByRole('button', { name: 'Start opvarmningen' }).click();
   await expect(page.getByRole('heading', { name: 'Væg-testen' })).toBeVisible();
   await page.locator('.session-body input[type="number"]').fill('3');
@@ -305,6 +324,7 @@ test('øvelseskortet fra et pas i tidsmaskinen: passet står stille, mens kortet
 
   // The warm-up's first item has its card, and its timer stands still while the card is open.
   await expect(page.locator('.session-title')).toHaveText('Opvarmning · 1/4');
+  await closeIntro(page);
   await page.clock.runFor(10_000);
   const warmupLeft = await secondsLeft(page);
   await page.getByRole('button', { name: 'Sådan gør du' }).click();
@@ -323,6 +343,7 @@ test('øvelseskortet fra et pas i tidsmaskinen: passet står stille, mens kortet
   await expectSameTimeLeft(page, warmupLeft);
   for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
   await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+  await closeIntro(page);
 
   // The first set: the card of the exercise in hand.
   const count = page.locator('.set-count');
@@ -360,6 +381,7 @@ test('øvelseskortet fra et pas i tidsmaskinen: passet står stille, mens kortet
 });
 
 test("»Næste« viser EMOM'en i pausen og nakken ved EMOM-spørgsmålene", async ({ page }) => {
+  await stillFigures(page);
   await openApp(page, '2026-11-17');
   await onboard(page);
   await startGreen(page);
@@ -385,6 +407,7 @@ test("»Næste« viser EMOM'en i pausen og nakken ved EMOM-spørgsmålene", asyn
 test('et hold starter og logges ikke bag kortet: det venter, til kortet er lukket', async ({
   page,
 }) => {
+  await stillFigures(page);
   // Styrke B, programme week 2: the side plank (a hold) after a pause, as in the review (K1).
   await openApp(page, '2026-11-20');
   await onboard(page);
@@ -467,12 +490,12 @@ test('øvelseskortet virker uden net: koden og forklaringen kommer fra service w
   // The figure: the card's code with the figure system and content/figures/pull.json.
   await expect(c.locator('.figure-stage [data-k="torso"]')).toHaveCount(1);
   await expect(c.locator('.figure-phase')).toHaveText(['Træk op', '1 sek stop', '3 sek ned']);
-  // A step without a figure still has its pictogram from the cache.
+  // The next step's figure comes from the cache too, and so do the ladder's pictograms.
   await c.getByRole('button', { name: 'Tilbage', exact: true }).first().click();
+  const picto = page.locator('.step-open img').first();
+  await expect(picto).toBeVisible();
+  expect(await picto.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
   await page.locator('.step-open').nth(1).click();
-  await expect(c.locator('.figure-stage')).toHaveCount(0);
-  expect(
-    await c.locator('img.card-picto').evaluate((img: HTMLImageElement) => img.naturalWidth),
-  ).toBeGreaterThan(0);
+  await expect(c.locator('.figure-stage [data-k="torso"]')).toHaveCount(1);
   await context.setOffline(false);
 });

@@ -2,6 +2,7 @@
 // Nordic depth with three buttons, distance in metres. Shows the previous value and the level. A
 // time measured per side (side plank, balance) has a clock for the left side and then one for the
 // right, each started with »Start uret«, and saves the shorter time (P59, D49).
+import type { ComponentChildren } from 'preact';
 import { useState } from 'preact/hooks';
 import { measureLevel, PROGRAM } from '../../engine/index.ts';
 import type { Level, State } from '../../engine/types.ts';
@@ -29,6 +30,10 @@ export function MeasureInput(props: {
   onCard?: () => void;
   /** The session stands still (»Hold pause«, or the exercise card is open: D47). */
   paused: boolean;
+  /** In a session: the measurement's figure under its text (»Nu«, docs/SPEC.md 3.2). */
+  figure?: ComponentChildren;
+  /** In a session: »Næste« above the actions. */
+  next?: ComponentChildren;
 }) {
   const measure = PROGRAM.measures.find((m) => m.id === props.measureId);
   // A time has one clock, or one per side: null is a side without a name (D49).
@@ -58,9 +63,11 @@ export function MeasureInput(props: {
   return (
     <div class="stack">
       <p class="step-kicker">
-        Måling{props.firstSetOf ? ` · første sæt i ${props.firstSetOf}` : ''}
+        {props.next !== undefined && <span class="now-label">Nu</span>} Måling
+        {props.firstSetOf ? ` · første sæt i ${props.firstSetOf}` : ''}
       </p>
       <h1>{measure.name}</h1>
+      {props.figure}
       <p class="cue">{measure.how}</p>
       {props.onCard && <HowButton onClick={props.onCard} />}
       {previous && (
@@ -171,6 +178,7 @@ export function MeasureInput(props: {
 
       {level && <p class="hint">Målbrættet: {LEVEL[level]}</p>}
       <div class="fixed-actions">
+        {props.next}
         <button type="button" class="btn block" onClick={props.onSkip}>
           Spring målingen over
         </button>

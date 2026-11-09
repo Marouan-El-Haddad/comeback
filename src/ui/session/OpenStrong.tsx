@@ -1,17 +1,41 @@
 // Open & Strong (docs/SPEC.md 4.4): six exercises as one clock, no traffic light, no touch needed
 // from start to end (SK3). Logged as os_done; only »denne uge: n af 7« is shown, never a streak.
-import { useEffect, useState } from 'preact/hooks';
+// Before it starts, its six exercises on one screen as »Dagens pas« (SPEC 3.2); while it runs, »Nu«
+// with the figure following the item's clock, and »Næste« with the next item. No intro card (D44).
+import { useEffect, useMemo, useState } from 'preact/hooks';
 import { mondayOf, osCue, osThisWeek, PROGRAM } from '../../engine/index.ts';
 import { enableAudio, play } from '../audio.ts';
-import { ExerciseCard, HowButton, useCard } from '../card.tsx';
-import { pictoUrl } from '../components/Picto.tsx';
+import { ExerciseCard, useCard } from '../card.tsx';
 import type { Model } from '../model.ts';
 import { keepAwake, releaseAwake } from '../wakelock.ts';
+import { DayParts, type DayItem } from './DayPlan.tsx';
+import { useSubjects } from './exercise.ts';
+import {
+  ExerciseFigure,
+  NextStrip,
+  NowCues,
+  NowHead,
+  SessionProgress,
+  useCues,
+  useSessionStyle,
+} from './NowNext.tsx';
+import { SUMMARY_NEXT, type Upcoming } from './outline.ts';
 import { Countdown } from './timers.tsx';
+import type { Clock } from '../timers/clock.ts';
+import type { ClockPart } from '../../figure/sync.ts';
 
 const OS = PROGRAM.routines.find((r) => r.id === 'os');
 
+/** »45 sek«, »1 min 20 sek«. */
+function timeText(seconds: number): string {
+  const minutes = Math.floor(seconds / 60);
+  const rest = seconds % 60;
+  if (minutes === 0) return `${rest} sek`;
+  return rest === 0 ? `${minutes} min` : `${minutes} min ${rest} sek`;
+}
+
 export function OpenStrong({ model, onClose }: { model: Model; onClose: () => void }) {
+  useSessionStyle();
   const [index, setIndex] = useState(-1);
   const [paused, setPaused] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -21,6 +45,8 @@ export function OpenStrong({ model, onClose }: { model: Model; onClose: () => vo
   // item keeps its time (docs/SPEC.md 3.8, DECISIONS.md D47).
   const card = useCard();
   const held = paused || card.id !== null;
+  const routine = OS?.id ?? 'os';
+  useSubjects([routine]);
 
   useEffect(() => {
     void keepAwake();
@@ -40,64 +66,88 @@ export function OpenStrong({ model, onClose }: { model: Model; onClose: () => vo
     setIndex(items.length);
   };
 
+  const listed: DayItem[] = items.map((i) => ({
+    key: i.key,
+    cardId: `${routine}.${i.key}`,
+    pictoId: `${routine}.${i.key}`,
+    kicker: timeText(i.seconds),
+    name: i.name,
+    dose: i.dose,
+    notes: [],
+  }));
+  const upcoming = (at: number): Upcoming => {
+    const following = items[at];
+    if (!following) return { ...SUMMARY_NEXT, title: 'Færdig', line: 'Denne uge tæller med' };
+    return {
+      cardId: `${routine}.${following.key}`,
+      pictoId: `${routine}.${following.key}`,
+      title: following.name,
+      line: `${following.dose} · ${timeText(following.seconds)}`,
+    };
+  };
+  const total = Math.round(items.reduce((sum, i) => sum + i.seconds, 0) / 60);
+
   return (
     <>
       <div class="session" data-testid="open-strong" hidden={card.id !== null}>
-        <header class="session-header">
-          <p class="session-title">
-            Open &amp; Strong{item ? ` · ${index + 1}/${items.length}` : ''}
-          </p>
-          {item && (
-            <button
-              type="button"
-              class="btn small"
-              onClick={() => setPaused(!paused)}
-              aria-pressed={paused}
-            >
-              {paused ? 'Fortsæt' : 'Pause'}
+        <div class="session-top">
+          <header class="session-header">
+            <div class="session-heading">
+              {item && (
+                <p class="session-progress">
+                  Øvelse {index + 1} af {items.length}
+                </p>
+              )}
+              <p class="session-title">
+                Open &amp; Strong{item ? ` · ${index + 1}/${items.length}` : ''}
+              </p>
+            </div>
+            {item && (
+              <button
+                type="button"
+                class="btn small"
+                onClick={() => setPaused(!paused)}
+                aria-pressed={paused}
+              >
+                {paused ? 'Fortsæt' : 'Pause'}
+              </button>
+            )}
+            <button type="button" class="btn small" onClick={onClose}>
+              Luk
             </button>
-          )}
-          <button type="button" class="btn small" onClick={onClose}>
-            Luk
-          </button>
-        </header>
+          </header>
+          {item && <SessionProgress at={index + 1} of={items.length} label={item.name} />}
+        </div>
         <div class="session-body">
           {index < 0 && (
-            <div class="stack">
-              <h1>Open &amp; Strong · 6 min</h1>
-              <p class="cue">Seks øvelser som ét ur. Læg telefonen, så den kan ses og høres.</p>
-              <ol class="os-list">
-                {items.map((i) => (
-                  <li key={i.key}>
-                    {i.name} · {i.dose}
-                  </li>
-                ))}
-              </ol>
+            <div class="day-plan" data-testid="day-plan">
+              <header class="day-plan-facts">
+                <p class="step-kicker">Dagens pas</p>
+                <h1>Open &amp; Strong</h1>
+                <p class="day-plan-time">ca. {total} min</p>
+                <p>Seks øvelser som ét ur. Læg telefonen, så den kan ses og høres.</p>
+              </header>
+              <DayParts
+                parts={[{ label: 'Seks øvelser', note: 'Uret skifter selv', items: listed }]}
+                onCard={(i) => i.cardId && card.open(i.cardId)}
+                numbered={false}
+              />
             </div>
           )}
           {item && (
-            <div class="stack">
-              <p class="step-kicker">{item.dose}</p>
-              <h1>{item.name}</h1>
-              {item.picto && (
-                <img
-                  class="picto"
-                  src={pictoUrl(`os.${item.key}`) ?? ''}
-                  alt=""
-                  width={120}
-                  height={120}
-                />
-              )}
-              <p class="cue">{osCue(PROGRAM, model.state, item.key)}</p>
-              <HowButton onClick={() => card.open(`${OS?.id ?? 'os'}.${item.key}`)} />
-              <Countdown
-                key={index}
-                seconds={item.seconds}
-                paused={held}
-                onDone={() => void next()}
-                end="go"
-              />
-            </div>
+            <OsItem
+              key={index}
+              id={`${routine}.${item.key}`}
+              name={item.name}
+              dose={item.dose}
+              seconds={item.seconds}
+              cue={osCue(PROGRAM, model.state, item.key)}
+              paused={held}
+              onDone={() => void next()}
+              onCard={() => card.open(`${routine}.${item.key}`)}
+              next={upcoming(index + 1)}
+              onNext={() => void next()}
+            />
           )}
           {index >= items.length && (
             <div class="stack">
@@ -106,36 +156,33 @@ export function OpenStrong({ model, onClose }: { model: Model; onClose: () => vo
             </div>
           )}
         </div>
-        <div class="session-actions">
-          {index < 0 && (
-            <button
-              type="button"
-              class="btn primary block"
-              data-testid="os-go"
-              onClick={() => {
-                void enableAudio();
-                void next();
-              }}
-            >
-              Start
-            </button>
-          )}
-          {item && (
-            <button type="button" class="btn block" onClick={() => void next()}>
-              Videre
-            </button>
-          )}
-          {index >= items.length && (
-            <button
-              type="button"
-              class="btn primary block"
-              onClick={onClose}
-              data-testid="os-close"
-            >
-              Færdig
-            </button>
-          )}
-        </div>
+        {!item && (
+          <div class="session-actions">
+            {index < 0 && (
+              <button
+                type="button"
+                class="btn primary block"
+                data-testid="os-go"
+                onClick={() => {
+                  void enableAudio();
+                  void next();
+                }}
+              >
+                Start
+              </button>
+            )}
+            {index >= items.length && (
+              <button
+                type="button"
+                class="btn primary block"
+                onClick={onClose}
+                data-testid="os-close"
+              >
+                Færdig
+              </button>
+            )}
+          </div>
+        )}
       </div>
       {card.id !== null && (
         <ExerciseCard
@@ -146,5 +193,62 @@ export function OpenStrong({ model, onClose }: { model: Model; onClose: () => vo
         />
       )}
     </>
+  );
+}
+
+/** One item: »Nu« with the figure following the item's clock, its cue, »Næste« and »Videre«. */
+function OsItem(props: {
+  id: string;
+  name: string;
+  dose: string;
+  seconds: number;
+  cue: string;
+  paused: boolean;
+  onDone: () => void;
+  onCard: () => void;
+  next: Upcoming;
+  onNext: () => void;
+}) {
+  const cues = useCues(props.id);
+  const parts = useMemo<ClockPart[]>(
+    () => [{ kind: 'work', seconds: props.seconds }],
+    [props.seconds],
+  );
+  const [clock, setClock] = useState<Clock | null>(null);
+  return (
+    <div class="stack now">
+      <NowHead kicker={props.dose} name={props.name} onCard={props.onCard} />
+      <div class="now-stage step-enter">
+        <div class="now-figure">
+          <ExerciseFigure
+            cardId={props.id}
+            pictoId={props.id}
+            name={props.name}
+            size="now"
+            follow={{
+              parts,
+              mode: { kind: 'routine' },
+              part: () => (clock ? { index: 0, clock } : null),
+            }}
+          />
+        </div>
+        <Countdown
+          seconds={props.seconds}
+          paused={props.paused}
+          onDone={props.onDone}
+          end="go"
+          size="medium"
+          onClock={setClock}
+        />
+      </div>
+      <p class="cue">{props.cue}</p>
+      <NowCues cues={cues} />
+      <div class="fixed-actions">
+        <NextStrip next={props.next} />
+        <button type="button" class="btn block" onClick={props.onNext}>
+          Videre
+        </button>
+      </div>
+    </div>
   );
 }

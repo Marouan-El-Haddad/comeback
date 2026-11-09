@@ -1,5 +1,5 @@
-// I dag (docs/SPEC.md 3.1): today's session with one button, Open & Strong, tomorrow, the rest of
-// the week, the »blev ikke logget« card and the backup line. Visible without a tap (SK1).
+// I dag (docs/SPEC.md 3.1): today's session with one button to »Dagens pas«, Open & Strong, tomorrow,
+// the rest of the week, the »blev ikke logget« card and the backup line. Visible without a tap (SK1).
 import { useEffect } from 'preact/hooks';
 import {
   addDays,
@@ -81,6 +81,8 @@ function dayLine(day: DayPlan): string {
 
 export function Today(props: {
   model: Model;
+  /** A session is paused with »Hold pause« (docs/SPEC.md 3): the card goes back to it. */
+  paused?: boolean;
   onStart: (kind: SessionKind, short: boolean, calmBase: boolean) => void;
   onOpenAndStrong: () => void;
   onBackup: () => void;
@@ -178,7 +180,12 @@ export function Today(props: {
         </div>
       ))}
 
-      <MainCard plan={plan} startDate={state.startDate} onStart={props.onStart} />
+      <MainCard
+        plan={plan}
+        startDate={state.startDate}
+        paused={props.paused ?? false}
+        onStart={props.onStart}
+      />
 
       <div class="card os-row">
         <div>
@@ -218,12 +225,30 @@ export function Today(props: {
 function MainCard({
   plan,
   startDate,
+  paused,
   onStart,
 }: {
   plan: DayPlan;
   startDate: string;
+  paused: boolean;
   onStart: (kind: SessionKind, short: boolean, calmBase: boolean) => void;
 }) {
+  if (paused) {
+    const kind = plan.open?.kind ?? plan.kind ?? 'A';
+    return (
+      <div class="card main-card" data-testid="main-card">
+        <h1>{SESSION_NAME[kind]}</h1>
+        <p>Passet holder pause. Uret står stille, og det, du har logget, er gemt.</p>
+        <button
+          type="button"
+          class="btn primary block"
+          onClick={() => onStart(kind, plan.short, plan.session?.calmBase ?? false)}
+        >
+          Fortsæt passet
+        </button>
+      </div>
+    );
+  }
   if (plan.beforeStart) {
     return (
       <div class="card main-card">
@@ -327,7 +352,7 @@ function MainCard({
         data-testid="start-session"
         onClick={() => onStart(plan.kind ?? 'A', plan.short, session.calmBase)}
       >
-        Start passet
+        Se dagens pas
       </button>
     </div>
   );

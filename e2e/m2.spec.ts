@@ -1,9 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import {
+  closeIntro,
   onboard,
   openApp,
   runSessionToSummary,
+  startSession,
+  stillFigures,
   storedEventCount,
   throughWarmup,
 } from './helpers.ts';
@@ -26,31 +29,50 @@ test('onboarding → I dag → Styrke A grøn start til slut med »Som planlagt�
   await expect(page.locator('.today-head .week')).toHaveText('Uge 2 · Fundament');
   await expect(page.getByTestId('main-card')).toContainText('Styrke A');
   await expect(page.getByTestId('main-card')).toContainText('Pres trin 1 · 3 × 6');
-  await page.screenshot({ path: 'screenshots/i-dag.png', scale: 'css' });
+  await page.screenshot({ path: 'screenshots/i-dag.png', scale: 'css', animations: 'disabled' });
 
-  await page.getByTestId('start-session').click();
+  await startSession(page);
   await expect(page.getByRole('heading', { name: 'Før du starter – 10 sekunder' })).toBeVisible();
-  await page.screenshot({ path: 'screenshots/trafiklys.png', scale: 'css' });
+  await page.screenshot({
+    path: 'screenshots/trafiklys.png',
+    scale: 'css',
+    animations: 'disabled',
+  });
   await page.getByRole('button', { name: 'Start opvarmningen' }).click();
   for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
   await expect(page.getByRole('heading', { name: 'Spørgsmål 3' })).toBeVisible();
   await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
 
-  // First set: power legs, one tap logs it (SK2).
+  // First set: power legs, one tap logs it (SK2). Its intro card comes first (D44).
+  await closeIntro(page);
   await expect(page.getByTestId('as-planned')).toBeVisible();
-  await page.screenshot({ path: 'screenshots/pas-skridt.png', scale: 'css' });
+  await page.screenshot({
+    path: 'screenshots/pas-skridt.png',
+    scale: 'css',
+    animations: 'disabled',
+  });
   const before = await storedEventCount(page);
   await page.getByTestId('as-planned').click();
   await expect.poll(() => storedEventCount(page)).toBe(before + 1);
   await expect(page.getByText('Spring pausen over')).toBeVisible();
   await page.clock.runFor(30_000);
-  await page.screenshot({ path: 'screenshots/pausetimer.png', scale: 'css' });
+  await page.screenshot({
+    path: 'screenshots/pausetimer.png',
+    scale: 'css',
+    animations: 'disabled',
+  });
+  await stillFigures(page);
 
   const stats = await runSessionToSummary(page, { quality: true, clean: true, feel: 'Passende' });
   expect(stats.setsLogged).toBeGreaterThan(20);
   const decisions = page.getByTestId('decisions');
   await expect(decisions).toContainText('Pres: 7 reps pr. sæt næste gang.');
-  await page.screenshot({ path: 'screenshots/opsummering.png', scale: 'css', fullPage: true });
+  await page.screenshot({
+    path: 'screenshots/opsummering.png',
+    scale: 'css',
+    animations: 'disabled',
+    fullPage: true,
+  });
   await page.getByTestId('done').click();
   await expect(page.getByTestId('main-card').or(page.locator('.main-card.done'))).toContainText(
     'Logget i dag (grønt)',
@@ -60,9 +82,10 @@ test('onboarding → I dag → Styrke A grøn start til slut med »Som planlagt�
 test('Styrke A gul: kun par 1 og 2 med 2 sæt, opsummeringen siger, at det tæller', async ({
   page,
 }) => {
+  await stillFigures(page);
   await openApp(page, TUESDAY_WEEK2);
   await onboard(page);
-  await page.getByTestId('start-session').click();
+  await startSession(page);
   await page.getByRole('button', { name: 'Nej' }).first().click();
   await page.getByRole('button', { name: 'GUL – start opvarmningen' }).click();
   for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
@@ -74,12 +97,14 @@ test('Styrke A gul: kun par 1 og 2 med 2 sæt, opsummeringen siger, at det tæll
 });
 
 test('»Som planlagt« er ét tryk; en afvigelse er to tryk (SK2)', async ({ page }) => {
+  await stillFigures(page);
   await openApp(page, TUESDAY_WEEK2);
   await onboard(page);
-  await page.getByTestId('start-session').click();
+  await startSession(page);
   await page.getByRole('button', { name: 'Start opvarmningen' }).click();
   for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
   await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+  await closeIntro(page);
   const start = await storedEventCount(page);
   await page.getByTestId('as-planned').click();
   await expect.poll(() => storedEventCount(page)).toBe(start + 1);
@@ -133,6 +158,7 @@ test('eksport og import genskaber dataene', async ({ page }, info) => {
 test('tidsmaskinen: et pas i simuleringen ændrer ikke lagerets antal hændelser', async ({
   page,
 }) => {
+  await stillFigures(page);
   await openApp(page, '2026-11-06');
   await onboard(page);
   const count = await storedEventCount(page);
@@ -149,7 +175,7 @@ test('tidsmaskinen: et pas i simuleringen ændrer ikke lagerets antal hændelser
   await expect(page.locator('.banner.sim')).toContainText('SIMULERET · tirsdag 10. november');
   await page.getByRole('button', { name: 'I dag' }).click();
   await expect(page.getByTestId('main-card')).toContainText('Styrke A');
-  await page.getByTestId('start-session').click();
+  await startSession(page);
   await page.getByRole('button', { name: 'Start opvarmningen' }).click();
   await throughWarmup(page);
   await runSessionToSummary(page);
@@ -174,11 +200,13 @@ test('I dag viser datoen i dansk tid uanset browserens tidszone @date', async ({
 });
 
 test('luk appen midt i et pas og åbn igen: passet fortsætter samme sted', async ({ page }) => {
+  await stillFigures(page);
   await openApp(page, TUESDAY_WEEK2);
   await onboard(page);
-  await page.getByTestId('start-session').click();
+  await startSession(page);
   await page.getByRole('button', { name: 'Start opvarmningen' }).click();
   await throughWarmup(page);
+  await closeIntro(page);
   await page.getByTestId('as-planned').click(); // power, set 1
   await page.getByText('Spring pausen over').click();
   await page.getByTestId('as-planned').click(); // power, set 2

@@ -1,0 +1,590 @@
+/* The guided session's »Nu«, »Næste«, the parts of the session, the intro card and »Dagens pas«
+   (docs/SPEC.md 3.2, 5 and 6). Loaded with the session's code, never with the first screen (SPEC 7).
+   In a session all text is at least 18 px with 7:1 contrast: navy, ink or Thai red on white, white
+   on navy or red, never grey. */
+
+/* The header: the part of the session above the title, and the bar under it; both stay on top. */
+.session-top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--c-paper);
+}
+
+.session-top .session-header {
+  position: static;
+}
+
+.session-heading {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.session-progress {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--c-red);
+}
+
+.session-heading .session-title {
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.session-bar {
+  display: flex;
+  gap: 3px;
+  padding: 0 16px 8px;
+  background: var(--c-paper);
+}
+
+.session-bar span {
+  flex: 1 1 0;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--c-line);
+}
+
+.session-bar span.done {
+  background: var(--c-navy);
+}
+
+.session-bar span.now {
+  background: var(--c-red);
+}
+
+/* »Nu«: the label in a red box, white text (7.5:1). */
+.now-label {
+  display: inline-block;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: var(--c-red);
+  color: var(--c-paper);
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.now-head {
+  display: grid;
+  gap: 4px;
+}
+
+.now-head-row,
+.next-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.now-head-row .set-name,
+.next-head .next-text {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.now-how {
+  flex: none;
+  padding: 0 12px;
+}
+
+/* The running phase on one line of its own height (compact figure). */
+.figure-current {
+  min-height: 1.3em;
+}
+
+/* The figure beside the target or the clock; without a figure the clock stands alone. */
+.now-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.now-figure {
+  flex: 1 1 0;
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.now-figure:empty {
+  display: none;
+}
+
+.now-target {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  text-align: center;
+  min-width: 120px;
+}
+
+.now-target .set-count {
+  font-size: 20px;
+}
+
+/* A figure in a session: no frame, the size of the place it stands in. */
+.session-figure {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+}
+
+.session-figure .figure {
+  width: 100%;
+}
+
+.session-figure.now .figure-svg {
+  height: 150px;
+}
+
+/* In a session a tall figure stands over its one phase, not beside a list of them. */
+.session-figure .figure.tall:not(.stills) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.session-figure.now .figure.tall:not(.stills) .figure-svg {
+  height: 190px;
+}
+
+.session-figure.now .card-phases,
+.session-figure.big .card-phases {
+  font-size: 18px;
+}
+
+.session-figure .figure.tall .figure-caption {
+  flex-direction: row;
+}
+
+.session-figure .figure.tall:not(.stills) .card-phases {
+  display: block;
+  text-align: center;
+}
+
+.session-figure .figure.tall:not(.stills) .figure-sep {
+  display: inline;
+}
+
+.session-figure.now .figure-still .figure-svg {
+  height: 80px;
+}
+
+.session-figure.big .figure-svg {
+  height: 130px;
+}
+
+.session-figure.big .figure.tall:not(.stills) .figure-svg {
+  height: 150px;
+}
+
+.session-figure.next {
+  width: 72px;
+  flex: none;
+}
+
+.session-figure.next .figure-svg {
+  height: 64px;
+}
+
+.session-figure.plan {
+  width: 88px;
+  flex: none;
+}
+
+.session-figure.plan .figure-svg {
+  height: 72px;
+}
+
+.figure-still-only {
+  width: 100%;
+}
+
+.session-picto {
+  display: block;
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+}
+
+.session-figure.next .session-picto {
+  width: 64px;
+  height: 64px;
+}
+
+.session-figure.plan .session-picto {
+  width: 80px;
+  height: 80px;
+}
+
+.session-figure.big .session-picto {
+  width: 140px;
+  height: 140px;
+}
+
+/* The cues of »Nu«: large, with a red edge as on the card. */
+.now-cues {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.now-cues li {
+  padding: 2px 12px;
+  border-left: 6px solid var(--c-red);
+  font-weight: 600;
+  font-size: 19px;
+  color: var(--c-navy);
+}
+
+/* The medium ring beside a figure: still 96 px numbers (SPEC 6). */
+.countdown.medium {
+  width: 212px;
+  height: 212px;
+}
+
+.countdown.medium .countdown-number {
+  font-size: 88px;
+}
+
+/* One line: the intro card's clock. */
+.countdown.line {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: 4px 12px;
+  width: 100%;
+  height: auto;
+}
+
+.countdown.line .countdown-number {
+  font-size: 48px;
+  justify-self: end;
+}
+
+.countdown.line .countdown-label {
+  font-size: 20px;
+  color: var(--c-ink);
+}
+
+.countdown-bar {
+  grid-column: 1 / -1;
+  display: block;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--c-line);
+  overflow: hidden;
+}
+
+.countdown-bar span {
+  display: block;
+  height: 100%;
+  background: var(--c-red);
+}
+
+/* »Næste« as a strip above the actions: one fixed height, so the actions stay in place (D33). */
+.next-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 76px;
+  padding: 4px 0 8px;
+  border-bottom: 1px solid var(--c-line);
+  overflow: hidden;
+}
+
+.next-text {
+  min-width: 0;
+  display: grid;
+  gap: 0;
+}
+
+.next-label {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-navy);
+}
+
+.next-strip .next-name,
+.next-strip .next-line {
+  font-size: 18px;
+  line-height: 1.25;
+  font-weight: 600;
+  color: var(--c-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.next-strip .next-name {
+  color: var(--c-navy);
+  font-weight: 700;
+}
+
+/* »Næste« big in the pause, and at the questions. */
+.next-up.next-big,
+.next-up.next-box {
+  display: grid;
+  gap: 8px;
+  padding: 12px 16px 16px;
+  border: 2px solid var(--c-navy);
+  border-radius: 12px;
+  background: var(--c-paper);
+}
+
+.next-up .next-title {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.15;
+  color: var(--c-navy);
+}
+
+.next-up .next-line {
+  font-weight: 600;
+  font-size: 19px;
+  color: var(--c-ink);
+}
+
+.next-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.get-ready {
+  padding: 8px 12px;
+  border-left: 6px solid var(--c-gold);
+  background: var(--c-goldTint);
+  color: var(--c-ink);
+  font-size: 18px;
+}
+
+/* The pause: its ring, and the next exercise under it. */
+.rest .countdown.big {
+  width: 204px;
+  height: 204px;
+}
+
+.rest .countdown.big .countdown-number {
+  font-size: 88px;
+}
+
+/* The intro card (D44): the first time an exercise comes in the session. */
+.intro {
+  display: grid;
+  gap: 12px;
+}
+
+.intro-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px 16px 16px;
+  border: 3px solid var(--c-red);
+  border-radius: 12px;
+  background: var(--c-paper);
+}
+
+.intro-label {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-red);
+}
+
+.intro-card h1 {
+  font-size: 26px;
+}
+
+.intro-line {
+  font-weight: 600;
+  font-size: 19px;
+  color: var(--c-ink);
+}
+
+.intro-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: intro-step;
+  display: grid;
+  gap: 8px;
+}
+
+.intro-steps li {
+  counter-increment: intro-step;
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 18px;
+  color: var(--c-ink);
+}
+
+.intro-steps li::before {
+  content: counter(intro-step);
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--c-red);
+}
+
+.intro-moves {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.intro-moves li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  color: var(--c-ink);
+}
+
+.intro-moves strong {
+  color: var(--c-navy);
+}
+
+/* »Dagens pas« (docs/SPEC.md 3.2): the parts with navy dividers and big red numbers. */
+.day-plan {
+  display: grid;
+  gap: 16px;
+  font-size: 18px;
+  color: var(--c-ink);
+}
+
+.day-plan-facts {
+  display: grid;
+  gap: 4px;
+  font-weight: 600;
+}
+
+.day-plan-time {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.1;
+  color: var(--c-red);
+}
+
+.day-part {
+  display: grid;
+  gap: 8px;
+}
+
+.day-part-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 4px solid var(--c-navy);
+}
+
+.day-part-number {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 1;
+  color: var(--c-red);
+  min-width: 40px;
+}
+
+.day-part-title {
+  display: grid;
+  gap: 2px;
+}
+
+.day-part-title h2 {
+  font-size: 24px;
+}
+
+.day-part-note {
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+.day-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+}
+
+.day-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  padding: 6px 0;
+  border: 0;
+  background: var(--c-paper);
+  color: var(--c-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.day-item:active {
+  background: var(--c-panel);
+}
+
+.day-item-text {
+  min-width: 0;
+  display: grid;
+  gap: 0;
+}
+
+.day-item-name {
+  font-weight: 700;
+  color: var(--c-navy);
+}
+
+.day-item-dose {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 600;
+  color: var(--c-red);
+}
+
+.day-item-how {
+  color: var(--c-blue);
+  font-weight: 600;
+}
+
+/* What changed – the exercise that is now »Nu« – comes in quickly; never as decoration (SPEC 5). */
+@media (prefers-reduced-motion: no-preference) {
+  .step-enter {
+    animation: step-enter 180ms ease-out;
+  }
+
+  .session-bar span {
+    transition: background-color 200ms ease-out;
+  }
+}
+
+@keyframes step-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { existsSync, readdirSync } from 'node:fs';
-import { onboard, openApp } from './helpers.ts';
+import { closeIntro, onboard, openApp, startSession, stillFigures } from './helpers.ts';
 
 // The explanations and figures (content/, docs/SPEC.md 7 and 9.1) are JSON files fetched after the
 // first screen, not JavaScript. The service worker precaches them, so the cards also work without a
@@ -46,7 +46,9 @@ const card = (page: Page) => page.locator('.exercise-card');
 
 /** From »Start passet« to the warm-up's fourth item, »Potensér«; a wall test is saved first. */
 async function toPotenser(page: Page): Promise<void> {
-  await page.getByTestId('start-session').click();
+  // The warm-up is fast-forwarded: its figures as stills (helpers.ts).
+  await stillFigures(page);
+  await startSession(page);
   await page.getByRole('button', { name: 'Start opvarmningen' }).click();
   const title = page.locator('.session-title');
   await expect(title).toContainText(/Opvarmning · 1\/4|Måling før opvarmning/);
@@ -54,6 +56,8 @@ async function toPotenser(page: Page): Promise<void> {
     await page.locator('.session-body input[type="number"]').fill('3');
     await page.getByRole('button', { name: 'Gem målingen' }).click();
   }
+  // The warm-up's intro card (D44) stands 10 sek before the first timer; a tap closes it.
+  await closeIntro(page);
   for (const seconds of [121, 181, 121]) await page.clock.runFor(seconds * 1000);
   await expect(title).toHaveText('Opvarmning · 4/4');
 }
@@ -61,7 +65,7 @@ async function toPotenser(page: Page): Promise<void> {
 test('Væg-testen før opvarmningen har sit eget kort (en måling)', async ({ page }) => {
   await openApp(page, '2026-11-10');
   await onboard(page);
-  await page.getByTestId('start-session').click();
+  await startSession(page);
   await page.getByRole('button', { name: 'Start opvarmningen' }).click();
   await expect(page.getByRole('heading', { name: 'Væg-testen' })).toBeVisible();
   await page.getByRole('button', { name: 'Sådan gør du' }).click();
@@ -84,7 +88,11 @@ test('»Potensér« i Styrke A: dagens første power-øvelse og pogo-hop', async
   await page.getByRole('button', { name: 'Sådan gør du' }).click();
   const c = card(page);
   await expect(c.getByRole('heading', { level: 1 })).toHaveText('Potensér');
-  await expect(c.locator('.card-move-name')).toHaveText(['Squat jump', 'Pogo-hop']);
+  // Each movement under its name: with its figure (a title over it) or on one line without one.
+  await expect(c.locator('.card-move-name, .card-move-title')).toHaveText([
+    'Squat jump',
+    'Pogo-hop',
+  ]);
   await page.screenshot({ path: 'screenshots/kort-potenser.png', scale: 'css', fullPage: true });
 });
 
@@ -96,5 +104,5 @@ test('»Potensér« i Styrke B: dagens første power-øvelse, ingen pogo-hop', a
   await page.getByRole('button', { name: 'Sådan gør du' }).click();
   const c = card(page);
   await expect(c.getByRole('heading', { level: 1 })).toHaveText('Potensér');
-  await expect(c.locator('.card-move-name')).toHaveText(['Hurtig push-up']);
+  await expect(c.locator('.card-move-name, .card-move-title')).toHaveText(['Hurtig push-up']);
 });

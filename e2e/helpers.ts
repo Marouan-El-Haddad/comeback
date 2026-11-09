@@ -40,6 +40,31 @@ export async function startSimulation(page: Page, date: string): Promise<void> {
   await page.getByRole('button', { name: 'I dag', exact: true }).click();
 }
 
+/**
+ * Draws the figures as still images from here on (prefers-reduced-motion), for a flow that
+ * fast-forwards a whole session: the fake clock would otherwise run every animation frame of every
+ * minute it skips, and the phone's JIT-less engine makes that slow. The animation itself is tested
+ * in figure.spec.ts and session.spec.ts.
+ */
+export async function stillFigures(page: Page): Promise<void> {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+}
+
+/** I dag → »Dagens pas« → »Start passet«: the traffic light comes next (docs/SPEC.md 3.2, 4.2). */
+export async function startSession(page: Page): Promise<void> {
+  await page.getByTestId('start-session').click();
+  await expect(page.getByTestId('day-plan')).toBeVisible();
+  await page.getByTestId('day-start').click();
+}
+
+/**
+ * Closes the intro card that is on its way (DECISIONS.md D44): the first exercise after the warm-up
+ * has one with its own »Gør klar«, and so does the warm-up. It would close by itself.
+ */
+export async function closeIntro(page: Page): Promise<void> {
+  await page.getByTestId('intro-close').click();
+}
+
 /** Number of events stored in IndexedDB (database 'comeback', store 'events'). */
 export async function storedEventCount(page: Page): Promise<number> {
   return page.evaluate(

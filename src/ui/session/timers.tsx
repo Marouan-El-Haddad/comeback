@@ -1,6 +1,7 @@
 // Timer views used in a session: countdown with sounds at 3-2-1 and the end, a hold timer with a
 // 5-second »klar« countdown, and a sequence of timed phases (warm-up, motor, club sequence, Open &
 // Strong). None of them needs a touch to run to the end (SK3).
+import type { ComponentChildren } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { play, type Sound } from '../audio.ts';
 import {
@@ -40,6 +41,82 @@ export interface TimerControl {
   paused: boolean;
 }
 
+/** How big a countdown is drawn: the pause's ring, a ring beside a figure, or one line. */
+export type CountdownSize = 'big' | 'medium' | 'line';
+
+export interface CountdownState {
+  remaining: number;
+  /** 0 at the start, 1 at zero. */
+  progress: number;
+}
+
+/**
+ * A countdown of `seconds` that calls `onDone` once at zero, with the sounds; the view is separate
+ * (CountdownView), so a pause can show the same clock in two layouts (the intro card, D51).
+ * `onClock` gets the clock whenever it starts, stands still or goes on (the figure follows it).
+ */
+export function useCountdown(
+  seconds: number,
+  paused: boolean,
+  opts: { onDone: () => void; end?: Sound; half?: boolean; onClock?: (clock: Clock) => void },
+): CountdownState {
+  const [clock, setClock] = useState<Clock>(() => startClock());
+  const done = useRef(false);
+  useEffect(() => {
+    setClock((c) => (paused ? pauseClock(c) : resumeClock(c)));
+  }, [paused]);
+  const onClock = useRef(opts.onClock);
+  onClock.current = opts.onClock;
+  useEffect(() => {
+    onClock.current?.(clock);
+  }, [clock]);
+  const now = useTick(!paused && !done.current);
+  const remaining = Math.max(0, seconds - elapsedMs(clock, now) / 1000);
+  useCountdownSounds(remaining, seconds, { end: opts.end, half: opts.half, active: !paused });
+  useEffect(() => {
+    if (remaining <= 0 && !done.current) {
+      done.current = true;
+      opts.onDone();
+    }
+  });
+  return { remaining, progress: seconds > 0 ? 1 - remaining / seconds : 1 };
+}
+
+export function CountdownView({
+  state,
+  label,
+  size = 'big',
+}: {
+  state: CountdownState;
+  label?: string;
+  size?: CountdownSize;
+}) {
+  if (size === 'line') {
+    return (
+      <div class="countdown line" role="timer" aria-live="off">
+        {label && <span class="countdown-label">{label}</span>}
+        <span class="countdown-number" data-testid="countdown">
+          {formatClock(state.remaining)}
+        </span>
+        <span class="countdown-bar" aria-hidden="true">
+          <span style={{ width: `${Math.round(Math.min(1, state.progress) * 100)}%` }} />
+        </span>
+      </div>
+    );
+  }
+  return (
+    <div class={`countdown ${size}`} role="timer" aria-live="off">
+      <Ring progress={state.progress} />
+      <div class="countdown-text">
+        <span class="countdown-number" data-testid="countdown">
+          {formatClock(state.remaining)}
+        </span>
+        {label && <span class="countdown-label">{label}</span>}
+      </div>
+    </div>
+  );
+}
+
 /** A countdown of `seconds`; calls `onDone` once at zero. */
 export function Countdown(props: {
   seconds: number;
@@ -48,38 +125,16 @@ export function Countdown(props: {
   label?: string;
   end?: Sound;
   half?: boolean;
-  big?: boolean;
+  size?: CountdownSize;
+  onClock?: (clock: Clock) => void;
 }) {
-  const [clock, setClock] = useState<Clock>(() => startClock());
-  const done = useRef(false);
-  useEffect(() => {
-    setClock((c) => (props.paused ? pauseClock(c) : resumeClock(c)));
-  }, [props.paused]);
-  const now = useTick(!props.paused && !done.current);
-  const remaining = Math.max(0, props.seconds - elapsedMs(clock, now) / 1000);
-  useCountdownSounds(remaining, props.seconds, {
+  const state = useCountdown(props.seconds, props.paused, {
+    onDone: props.onDone,
     end: props.end,
     half: props.half,
-    active: !props.paused,
+    onClock: props.onClock,
   });
-  useEffect(() => {
-    if (remaining <= 0 && !done.current) {
-      done.current = true;
-      props.onDone();
-    }
-  });
-  const progress = props.seconds > 0 ? 1 - remaining / props.seconds : 1;
-  return (
-    <div class={props.big === false ? 'countdown' : 'countdown big'} role="timer" aria-live="off">
-      <Ring progress={progress} />
-      <div class="countdown-text">
-        <span class="countdown-number" data-testid="countdown">
-          {formatClock(remaining)}
-        </span>
-        {props.label && <span class="countdown-label">{props.label}</span>}
-      </div>
-    </div>
-  );
+  return <CountdownView state={state} label={props.label} size={props.size} />;
 }
 
 function Ring({ progress }: { progress: number }) {
@@ -109,7 +164,12 @@ export interface Phase {
   sound?: Sound;
 }
 
-/** Runs timed phases one after another without touching the screen. */
+/**
+ * Runs timed phases one after another without touching the screen. `onPart` gets the phase that
+ * runs and its clock, so a figure can follow it (src/figure/sync.ts); a phase without a time (it
+ * waits for »Videre«) gets a clock that starts with it. `beside` stands next to the ring (the
+ * figure in »Nu«), and the ring is then the smaller one.
+ */
 export function PhaseRunner(props: {
   phases: Phase[];
   paused: boolean;
@@ -117,11 +177,18 @@ export function PhaseRunner(props: {
   /** Sound when a new phase starts (default: go). */
   startSound?: Sound;
   title?: string;
+  onPart?: (index: number, clock: Clock) => void;
+  beside?: ComponentChildren;
+  /** »Derefter: …« under the clock; off where »Næste« already says it (the motor). */
+  showNext?: boolean;
 }) {
   const [index, setIndex] = useState(0);
   const phase = props.phases[index];
+  const onPart = useRef(props.onPart);
+  onPart.current = props.onPart;
   useEffect(() => {
     if (index > 0 && phase) play(phase.sound ?? props.startSound ?? 'go');
+    if (phase && phase.seconds <= 0) onPart.current?.(index, startClock());
   }, [index]);
   if (!phase) return null;
   const next = () => {
@@ -129,6 +196,18 @@ export function PhaseRunner(props: {
     else setIndex(index + 1);
   };
   const upcoming = props.phases[index + 1];
+  const timer =
+    phase.seconds > 0 ? (
+      <Countdown
+        key={index}
+        seconds={phase.seconds}
+        paused={props.paused}
+        onDone={next}
+        end="go"
+        size={props.beside ? 'medium' : 'big'}
+        onClock={(clock) => onPart.current?.(index, clock)}
+      />
+    ) : null;
   return (
     <div class="phase-runner">
       {props.title && <p class="step-kicker">{props.title}</p>}
@@ -137,20 +216,22 @@ export function PhaseRunner(props: {
       </p>
       <h2 class="phase-label">{phase.label}</h2>
       {phase.detail && <p class="cue">{phase.detail}</p>}
-      {phase.seconds > 0 ? (
-        <Countdown
-          key={index}
-          seconds={phase.seconds}
-          paused={props.paused}
-          onDone={next}
-          end="go"
-        />
+      {props.beside ? (
+        <div class="now-stage">
+          <div class="now-figure">{props.beside}</div>
+          {timer}
+        </div>
       ) : (
+        timer
+      )}
+      {!timer && (
         <button type="button" class="btn primary block" onClick={next}>
           Videre
         </button>
       )}
-      {upcoming && <p class="muted next-up">Derefter: {upcoming.label}</p>}
+      {upcoming && props.showNext !== false && (
+        <p class="muted phase-next">Derefter: {upcoming.label}</p>
+      )}
     </div>
   );
 }

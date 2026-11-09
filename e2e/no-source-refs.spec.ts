@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { findSourceRef } from '../src/content/refs.ts';
-import { onboard, openApp } from './helpers.ts';
+import { closeIntro, onboard, openApp, startSession, stillFigures } from './helpers.ts';
 
 // SK10 (docs/SPEC.md 1, docs/DECISIONS.md A2): no screen refers to the PDF, a page number or a
 // source outside the app – I dag, Uge, every ladder, Mere, Om, Diagnose, the data page /program/
@@ -67,11 +67,19 @@ test('ingen skærm henviser til PDF, sidetal eller kilder (SK10)', async ({ page
   // the programme's evidence box and its citation (SPEC 3.2).
   await page.getByRole('button', { name: 'I dag', exact: true }).click();
   await page.getByTestId('start-session').click();
+  await expect(page.getByTestId('day-plan')).toBeVisible();
+  await expectNoRefs(page, 'Dagens pas');
+  await page.getByTestId('day-start').click();
   await expectNoRefs(page, 'Trafiklyset');
+  // The warm-up is fast-forwarded: its figures as stills (helpers.ts).
+  await stillFigures(page);
   await page.getByRole('button', { name: 'Start opvarmningen' }).click();
   await expectNoRefs(page, 'Opvarmningen');
   for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
   await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+  await expect(page.getByTestId('intro')).toBeVisible();
+  await expectNoRefs(page, 'Introkortet');
+  await closeIntro(page);
   await expect(page.getByTestId('as-planned')).toBeVisible();
   await page.locator('details.why summary').click();
   const why = page.locator('details.why');
@@ -100,10 +108,12 @@ test.describe('uden forklaringsfilen', () => {
     await page.route(/\/assets\/power_legs-[\w-]+\.json$/, (route) => route.abort());
     await openApp(page, '2026-11-17');
     await onboard(page);
-    await page.getByTestId('start-session').click();
+    await startSession(page);
+    await stillFigures(page);
     await page.getByRole('button', { name: 'Start opvarmningen' }).click();
     for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
     await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
+    await closeIntro(page);
     await expect(page.getByTestId('as-planned')).toBeVisible();
     await page.locator('details.why summary').click();
     const why = page.locator('details.why');

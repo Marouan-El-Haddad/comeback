@@ -1,14 +1,22 @@
 import { expect, test, type Page } from '@playwright/test';
-import { onboard, openApp, runSessionToSummary, storedEventCount } from './helpers.ts';
+import {
+  onboard,
+  openApp,
+  runSessionToSummary,
+  startSession,
+  stillFigures,
+  storedEventCount,
+} from './helpers.ts';
 
-// Whole sessions with Firefox' JIT off take a while.
+// Whole sessions with Firefox' JIT off take a while; the figures are drawn as stills.
 test.describe.configure({ timeout: 300_000 });
+test.beforeEach(async ({ page }) => stillFigures(page));
 
 // Programme week 1 (from Monday 9 November): Styrke A with the zero-point measurements, the motor
 // with base-check and Styrke B with its measurements, as the program will run from 10/11.
 
 async function startStrength(page: Page): Promise<void> {
-  await page.getByTestId('start-session').click();
+  await startSession(page);
   await page.getByRole('button', { name: 'Start opvarmningen' }).click();
 }
 
@@ -63,7 +71,7 @@ test('uge 1 torsdag: motor med base-check og distance', async ({ page }) => {
   await onboard(page);
   await expect(page.getByTestId('main-card')).toContainText('Motor');
   await expect(page.getByTestId('main-card')).toContainText('Rolig base, 30 min');
-  await page.getByTestId('start-session').click();
+  await startSession(page);
   await page.getByRole('button', { name: 'GRØN – kør passet' }).click();
   await page.getByRole('button', { name: 'Start uret' }).click();
   await page.clock.runFor(30 * 60_000 + 5_000);

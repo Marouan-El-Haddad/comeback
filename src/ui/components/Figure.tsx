@@ -253,7 +253,11 @@ function Animated({
         />
       </div>
       <figcaption class="figure-caption">
-        <Phases movement={model.movement} current={phase} />
+        {compact ? (
+          <CurrentPhase movement={model.movement} current={phase} />
+        ) : (
+          <Phases movement={model.movement} current={phase} />
+        )}
         {!model.frozen && toggle && (
           <button type="button" class="btn figure-speed" onClick={toggle}>
             {slow ? 'Normal fart' : 'Slowmotion'}
@@ -261,6 +265,25 @@ function Animated({
         )}
       </figcaption>
     </figure>
+  );
+}
+
+/**
+ * In a session (compact): only the phase that runs, on one line of fixed height, so the figure
+ * leaves room for the set; the card shows them all.
+ */
+function CurrentPhase({ movement, current }: { movement: OwnMovement; current: number | null }) {
+  const label = current === null ? null : (movement.phases[current]?.label ?? null);
+  return (
+    <p class="card-phases figure-phases figure-current">
+      {label ? (
+        <span class="figure-phase now" aria-current="step">
+          {label}
+        </span>
+      ) : (
+        ' '
+      )}
+    </p>
   );
 }
 

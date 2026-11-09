@@ -1,5 +1,12 @@
 import { expect, test, type Page } from '@playwright/test';
-import { onboard, openApp, startSimulation, storedEventCount } from './helpers.ts';
+import {
+  onboard,
+  openApp,
+  startSession,
+  startSimulation,
+  stillFigures,
+  storedEventCount,
+} from './helpers.ts';
 
 // Side plank and balance are measured on both sides (docs/SPEC.md 4.8, DECISIONS.md P59, D49): a
 // clock for the left side, then one for the right, each started with »Start uret«; both times are
@@ -7,6 +14,8 @@ import { onboard, openApp, startSimulation, storedEventCount } from './helpers.t
 // both measurements in Styrke B.
 
 test.describe.configure({ timeout: 600_000 });
+// Whole sessions fast-forwarded: the figures are drawn as stills (helpers.ts).
+test.beforeEach(async ({ page }) => stillFigures(page));
 
 /** Taps through a session as planned, with every other measurement, until `done` holds. */
 async function driveUntil(page: Page, done: () => Promise<boolean>, what: string): Promise<void> {
@@ -61,7 +70,7 @@ const heading = (page: Page, name: string) =>
 
 /** »Start passet«, a green traffic light and the warm-up's four timers (no wall test on Friday). */
 async function startGreen(page: Page): Promise<void> {
-  await page.getByTestId('start-session').click();
+  await startSession(page);
   await page.getByRole('button', { name: 'Start opvarmningen' }).click();
   for (let i = 0; i < 4; i++) await page.clock.runFor(181_000);
   await page.getByRole('button', { name: 'GRØN – kør passet' }).click();

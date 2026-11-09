@@ -13,7 +13,8 @@ export interface RunRequest {
 }
 
 export interface RunState extends RunRequest {
-  phase: 'light' | 'pre' | 'run' | 'summary';
+  /** »Dagens pas«, the traffic light, the warm-up, the session's steps, the summary. */
+  phase: 'overview' | 'light' | 'pre' | 'run' | 'summary';
   answers: [boolean, boolean, boolean];
   red: boolean;
   preIndex: number;
@@ -29,7 +30,8 @@ export const RUN_KEY = 'comeback.run';
 export function resumableRun(model: Model): RunRequest | null {
   const saved = readLocal<RunState>(RUN_KEY);
   if (!saved || saved.date !== model.today || saved.sim !== (model.sim !== null)) return null;
-  if (saved.phase === 'summary') return null;
+  // »Dagens pas« and the summary are not a session in hand: the app opens on I dag (SPEC 7).
+  if (saved.phase === 'summary' || saved.phase === 'overview') return null;
   if (saved.sessionId) {
     const session = model.state.sessions.find((s) => s.sessionId === saved.sessionId);
     if (!session || session.completed) return null;
