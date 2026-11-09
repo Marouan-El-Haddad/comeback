@@ -2,15 +2,17 @@
 
 Figurmotoren er rettet efter `docs/runs/NAT-2-P3-FIX.md` og efter reviewet af P1a (`docs/reviews/nat3-p1a-figurmotor.md`): `docs/DECISIONS.md` D56 og R22, `docs/SPEC.md` 9.1 og vejledningen i `tools/pictos/README.md`. Kroppen bevæger sig nu mellem positionerne ud fra det, der står stille, og tjekket ser også billederne imellem. Denne fil siger, hvilke figurer der fejler tjekkene, hvad der skal til, og hvilke der kan tegnes bedre med de nye muligheder.
 
-Status efter reviewets rettelser, P1b og rettelserne efter reviewet af P1b: `node scripts/check-explain.ts` uden fil er grøn med 16 figurer på ventelisten i `src/figure/waiting.ts`. Nakkens N1 og N2 står næsten stille (P1b's tjek af, at figuren bevæger sig synligt, D58), og etbens bounds hopper på stedet, selv om landingen siger »Ca. 1–1,5 m foran afsættet« (tjekket af landingen, D60). En fil, der tjekkes for sig, fejler på dem. `burpee_emom.E1` er tegnet som eksempel og består, og dermed også E2–E9, der er `like`.
+**Status efter fletningen af P2:** figuragenternes tegninger og trænernes rettede positionstekster er flettet ind i `content/`. Ventelisten i `src/figure/waiting.ts` er tom, og `node scripts/check-explain.ts` er grøn uden venteliste, også med tjekket af landingen fra rettelserne efter reviewet af P1b (D60). De afprøvede anvisninger i `src/figure/__tests__/p2/` er slettet sammen med deres test; tabellerne herunder viser, hvad der skulle til, og hvad der kan tegnes bedre.
 
-**Hver anvisning herunder er afprøvet.** Figuren, som anvisningen giver, står som en hel figur i `src/figure/__tests__/p2/<punkt>.json`. Vitest (`src/figure/__tests__/p2-instructions.test.ts`) tjekker, at den består formatet og alle tjek mod forklaringen, som den er i dag. Sådan bruger du den:
+Status før fletningen (efter reviewets rettelser, P1b og rettelserne efter reviewet af P1b): `check-explain` uden fil var grøn med 16 figurer på ventelisten. Nakkens N1 og N2 stod næsten stille (P1b's tjek af, at figuren bevæger sig synligt, D58), og etbens bounds hoppede på stedet, selv om landingen siger »Ca. 1–1,5 m foran afsættet« (tjekket af landingen, D60). `burpee_emom.E1` var tegnet som eksempel og bestod, og dermed også E2–E9.
+
+**Hver anvisning herunder var afprøvet** som en hel figur i `src/figure/__tests__/p2/<punkt>.json` (nu slettet). Sådan blev de brugt:
 
 1. Kopiér `keyframes`, `transitions` og `props` derfra til `content/figures/<spor>.json`. Du må gerne tegne figuren bedre, så længe den består.
 2. Fjern figuren fra `src/figure/waiting.ts` (Vitest siger, hvilke der består).
 3. Slet filen i `p2/`.
 
-Kør tjekket igen, når positionernes tekst ændres: tjekket af strakte led læser den.
+Kør tjekket igen, når positionernes tekst ændres: tjekket af strakte led og af landingen læser den.
 
 ## Nye muligheder i formatet
 
@@ -70,9 +72,9 @@ Se `tools/pictos/README.md` (»Vinkler, markeringer og typiske fejl«) for felte
   - `upper` og `lower` kan forkorte et led til en fjerdedel.
 - **Eksempler:** `press.1` (pile, hjælpelinjen »Én planke« og fejlparret »hoften hænger«), `power_legs.1` (squat jump fra siden og forfra med »Knæ over tæer« og knæene, der falder ind, set forfra) og `wallsit.W1` (90° ved knæet i holdet). De står i `content/figures/`; behold dem, når I tegner filerne om.
 
-## Figurer, der fejler nu (ventelisten)
+## Figurer, der fejlede før fletningen (ventelisten, nu tom)
 
-Tallene i midterkolonnen er fra tjekket i dag. Højre kolonne er afprøvet, og den hele figur står i `p2/`.
+Tallene i midterkolonnen er fra tjekket før fletningen. Højre kolonne var afprøvet som en hel figur i `p2/`.
 
 | Fil › punkt | Hvad tjekket siger | Hvad der skal til (afprøvet) |
 |---|---|---|

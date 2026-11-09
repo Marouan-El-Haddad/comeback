@@ -22,7 +22,7 @@ Appens figursystem (`src/figure/`, `docs/SPEC.md` 9.1, `docs/DECISIONS.md` D48, 
 3. `node scripts/figure-sheet.ts content/figures/<spor>.json` tegner kontaktarket i `screenshots/figures/<spor>.png`. Se på det: kan en, der aldrig har set øvelsen, lave den ud fra positionerne? Se også på billedet midt i hver bevægelse (stiplet ramme), på vinklerne under hver position (180° = strakt), på markeringerne (rødt, med teksten i den størrelse, den får på kortet) og på fejlparrene.
 4. `npx prettier --write content/figures/<spor>.json`.
 
-Eksempler at kopiere fra (referencefigurerne): gulv og strakte arme i `press.json` (`press.1`), væg og en hofte, der glider ned ad den, i `wallsit.json` (`wallsit.W1`), stol, rygsæk i hånden og én støttehånd i `pull.json` (`pull.1`). Eksempler på vinkler, markeringer og fejl: `press.1` (pile, hjælpelinje og fejlparret »hoften hænger«), `power_legs.1` (squat jump fra siden og forfra med cue og knæ, der falder ind, set forfra) og `wallsit.W1` (vinklen 90° i holdet).
+Eksempler at kopiere fra (referencefigurerne): gulv og strakte arme i `press.json` (`press.1`), væg og en hofte, der glider ned ad den, i `wallsit.json` (`wallsit.W1`), stol, rygsæk i hånden og én støttehånd i `pull.json` (`pull.1`). Eksempler på vinkler, markeringer og fejl: `press.1` (pile, hjælpelinje og fejlparret »hoften hænger«), `power_legs.1` (squat jump fra siden og forfra med hjælpelinjen »Over tæerne« og knæ, der falder ind, set forfra) og `wallsit.W1` (vinklen 90° i holdet).
 
 ### Vinkler, markeringer og typiske fejl (D58)
 
@@ -35,12 +35,12 @@ Alt er valgfrit: en figur uden felterne er gyldig som før. Briefene fra træner
   "view": "front",
   "props": [],
   "keyframes": {
-    "land": { "hip": [0, 42.41], "torso": 90,
-      "arms": { "near": { "to": [4, 70], "bend": 1 }, "far": { "to": [-4, 70], "bend": -1 } },
+    "land": { "hip": [0, 42.54], "torso": 90,
+      "arms": { "near": null, "far": null },
       "legs": { "near": { "to": [9, 3.6], "bend": 1, "upper": 19, "lower": 21.5, "tip": [11.5, 1] },
                 "far": { "to": [-9, 3.6], "bend": -1, "upper": 19, "lower": 21.5, "tip": [-11.5, 1] } } }
   },
-  "marks": [{ "cue": "Knæ over tæer", "at": "land", "point": "near.knee", "place": "right" }]
+  "marks": [{ "line": ["near.knee", "near.toes"], "cue": "Over tæerne", "at": "land", "place": "right" }]
 }
 ```
 
@@ -71,7 +71,7 @@ Teksten står i HTML i 18 px, så den kan læses fra gulvet; den er stor i forho
 - Den forkerte stilling skal være mulig (leddene bøjer rigtigt, punkterne nås, intet går ind i en flade, kontakterne holder) og afvige mindst 3 synligt fra den rigtige. Den må gerne komme tæt på gulvet.
 - **Strakte lemmer og hænder og fødder, der står:** en hofte, der hænger, gør vejen fra fod til skulder længere. Med strakte ben og arme skal skuldrene derfor ind over hænderne: `press.1`'s hofte hænger 5 under linjen med hoften i [45,4; 15,8] og `torso` 30,75 i stedet for [43,94; 20,33] og 20,84.
 
-**Figuren skal bevæge sig synligt:** et tegnet punkt (også ansigtets mærke) flytter sig mindst 3 i hele bevægelsen, og hver fase til en anden position mindst 2 (`advance` tæller med). En lille bevægelse (hage ind, skulderblade) skal overdrives lidt; nakkens N1 og N2 venter derfor på dig (`docs/runs/NAT-3-FIGURES.md`).
+**Figuren skal bevæge sig synligt:** et tegnet punkt (også ansigtets mærke) flytter sig mindst 3 i hele bevægelsen, og hver fase til en anden position mindst 2 (`advance` tæller med). En lille bevægelse (hage ind, skulderblade) skal overdrives lidt, som i nakkens N1 og N2.
 
 **Bounds og spring med `advance`:** tegningen følger figuren, så den er næsten lige så stor som stående stille, og små mærker under gulvlinjen viser vejen. Står den til sidst i sin første stilling, står den et halvt sekund og begynder forfra ved start (et klip); den glider ikke baglæns. Har figuren en anden vinkel, holder den også det halve sekund, så de to vinkler følges ad.
 
@@ -104,4 +104,4 @@ Teksten står i HTML i 18 px, så den kan læses fra gulvet; den er stor i forho
 - **Ryggens form:** `"spine": 4` krummer ryggen 4 enheder mod ryggen (katten, rund øvre ryg), `-4` mod brystet (koen). Forfra bøjer `spine` overkroppen til siden (+ mod den nære side), fx en hofte, der hænger i en sideplanke; ovenfra bruges den ikke. En via-pose eller en typisk fejl med `spine` tegnes også krum, når ingen position har `spine`. Mærket på hovedet viser, hvor ansigtet vender: drej hovedet med `head` (hagen mod brystet er en negativ vinkel ved `facing` 1).
 - Rører knæ, hofte eller hoved en flade, som positionen ikke nævner, er det en fejl: flyt figuren. Ret ikke forklaringen selv.
 - `tip` står i alle positioner af et lem eller i ingen. Det arbejdende lem er `near` (mørkt); `far` er lyst.
-- Figurer, der venter på at blive tegnet om, står i `src/figure/waiting.ts`; fjern din figur derfra, når den består. `docs/runs/NAT-3-FIGURES.md` siger, hvad hver skal have, og en afprøvet udgave står i `src/figure/__tests__/p2/`.
+- Figurer, der venter på at blive tegnet om, står i `src/figure/waiting.ts`; fjern din figur derfra, når den består. Listen er tom, siden figurerne fra NAT-3 P2 blev flettet ind (`docs/runs/NAT-3-FIGURES.md`).
