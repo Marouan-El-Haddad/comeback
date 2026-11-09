@@ -410,7 +410,7 @@
           "phases": [
             { "to": "squat", "seconds": 0.6, "label": "Hænderne ned" },
             { "to": "chest", "seconds": 0.8, "label": "Brystet til gulvet" },
-            { "to": "clap", "seconds": 0.3, "label": "Pres fri og klap" },
+            { "to": "clap", "seconds": 0.4, "label": "Pres fri og klap" },
             { "to": "catch", "seconds": 0.3, "label": "Land med bløde albuer" },
             { "to": "squat", "seconds": 0.5, "label": "Fødderne ind" },
             { "to": "jump", "seconds": 0.5, "label": "Hop" },

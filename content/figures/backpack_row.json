@@ -38,13 +38,7 @@
         { "arrow": "near.elbow", "phase": 1, "offset": [0, 0] },
         { "cue": "Albuen mod hoften", "at": "top", "point": "near.elbow", "place": "above" }
       ],
-      "faults": [
-        {
-          "mistake": 2,
-          "at": "top",
-          "wrong": { "arms": { "near": { "joint": [57, 59.82], "end": [56.5, 44.97] } } }
-        }
-      ]
+      "faults": [{ "mistake": 3, "at": "bottom", "wrong": { "spine": 6, "head": -25 } }]
     }
   ]
 }

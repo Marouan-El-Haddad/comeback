@@ -10,37 +10,37 @@
       "highlight": ["torso"],
       "keyframes": {
         "low": {
-          "hip": [-18.9, 5],
-          "torso": 13.8,
-          "head": -32.66,
-          "arms": { "near": null, "far": { "to": [19.14, 1.6], "upper": 15, "lower": 15 } },
+          "hip": [-17.44, 5],
+          "torso": 6.5,
+          "head": -6,
+          "arms": { "near": null, "far": { "to": [21.87, 1.6], "upper": 15, "lower": 15 } },
           "legs": {
             "near": { "to": [-56, 3.6], "tip": [-63.2, 0.3] },
             "far": { "to": [-57.2, 3.6], "tip": [-64.4, 0.3] }
           },
-          "spine": -1.5
+          "spine": -4.05
         },
         "mid": {
-          "hip": [-23.3, 5],
-          "torso": 12,
-          "head": -25.87,
-          "arms": { "near": null, "far": { "to": [15.22, 1.6], "upper": 15, "lower": 15 } },
+          "hip": [-22.3, 5],
+          "torso": 10.35,
+          "head": -6,
+          "arms": { "near": null, "far": { "to": [16.68, 2.42], "upper": 15, "lower": 15 } },
           "legs": {
             "near": { "to": [-56, 3.6], "tip": [-63.2, 0.3] },
             "far": { "to": [-57.2, 3.6], "tip": [-64.4, 0.3] }
           },
-          "spine": -1.5
+          "spine": -2.5
         },
         "high": {
-          "hip": [-27.35, 5],
-          "torso": 11.4,
-          "head": -23.63,
-          "arms": { "near": null, "far": { "to": [11.31, 1.6], "upper": 15, "lower": 15 } },
+          "hip": [-26.86, 5],
+          "torso": 11.25,
+          "head": -6,
+          "arms": { "near": null, "far": { "to": [12.02, 3.06], "upper": 15, "lower": 15 } },
           "legs": {
             "near": { "to": [-56, 3.6], "tip": [-63.2, 0.3] },
             "far": { "to": [-57.2, 3.6], "tip": [-64.4, 0.3] }
           },
-          "spine": -1.5
+          "spine": -1.8
         }
       },
       "transitions": [
@@ -95,7 +95,7 @@
             "torso": 0,
             "head": 0,
             "arms": {
-              "near": { "joint": [38.4, 25], "end": [46.3, 25] },
+              "near": { "joint": [30.5, 29.2], "end": [30.8, 33.1] },
               "far": { "joint": [29.58, 40.99], "end": [29.19, 55.99] }
             },
             "legs": {
@@ -112,7 +112,7 @@
             "torso": 0,
             "head": 0,
             "arms": {
-              "near": { "joint": [38.4, 25], "end": [46.3, 25] },
+              "near": { "joint": [30.5, 29.2], "end": [30.8, 33.1] },
               "far": { "joint": [29.58, 40.99], "end": [29.19, 55.99] }
             },
             "legs": {
@@ -164,7 +164,39 @@
       "marks": [
         { "arrow": "near.hand", "phase": 1, "offset": [0, 4] },
         { "cue": "Panden i gulvet", "at": "up", "point": "head", "place": "above" }
-      ]
+      ],
+      "second": {
+        "view": "top",
+        "props": [],
+        "keyframes": {
+          "down": {
+            "hip": [0, 25],
+            "torso": 0,
+            "head": 0,
+            "arms": {
+              "near": { "joint": [41.31, 36.31], "end": [52.06, 47.06] },
+              "far": { "joint": [41.31, 13.69], "end": [52.06, 2.94] }
+            },
+            "legs": {
+              "near": { "to": [-47.2, 28], "bend": 1 },
+              "far": { "to": [-47.2, 22], "bend": -1 }
+            }
+          },
+          "up": {
+            "hip": [0, 25],
+            "torso": 0,
+            "head": 0,
+            "arms": {
+              "near": { "joint": [39.9, 34.9], "end": [49.09, 44.09] },
+              "far": { "joint": [39.9, 15.1], "end": [49.09, 5.91] }
+            },
+            "legs": {
+              "near": { "to": [-47.2, 28], "bend": 1 },
+              "far": { "to": [-47.2, 22], "bend": -1 }
+            }
+          }
+        }
+      }
     },
     {
       "id": "os.4",
@@ -204,10 +236,7 @@
           }
         }
       },
-      "marks": [
-        { "arrow": "near.hand", "phase": 1, "offset": [-8, 0] },
-        { "cue": "Skuldrene nede", "phase": 2, "point": "shoulder", "place": "left" }
-      ]
+      "marks": [{ "arrow": "near.hand", "phase": 1, "offset": [-8, 0] }]
     },
     {
       "id": "os.5",
@@ -219,7 +248,8 @@
         "neutral": {
           "hip": [0, 50.61],
           "torso": 90,
-          "head": -7.2,
+          "head": -10,
+          "nod": 10,
           "arms": { "near": { "to": [3.24, 49.76] }, "far": { "to": [2.16, 49.67] } },
           "legs": {
             "near": { "to": [1.2, 3.6], "tip": [8.4, 0.3] },
@@ -229,7 +259,8 @@
         "tucked": {
           "hip": [0, 50.61],
           "torso": 90,
-          "head": 7.2,
+          "head": 30,
+          "nod": -30,
           "arms": { "near": { "to": [3.24, 49.76] }, "far": { "to": [2.16, 49.67] } },
           "legs": {
             "near": { "to": [1.2, 3.6], "tip": [8.4, 0.3] },
@@ -237,8 +268,7 @@
           }
         }
       },
-      "marks": [{ "cue": "Blikket vandret", "at": "tucked", "point": "head", "place": "right" }],
-      "faults": [{ "mistake": 1, "at": "tucked", "wrong": { "head": -20 } }]
+      "faults": [{ "mistake": 1, "at": "tucked", "wrong": { "head": -10, "nod": -15 } }]
     },
     {
       "id": "os.6",

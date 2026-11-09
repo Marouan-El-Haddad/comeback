@@ -54,7 +54,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Brystet et par cm over gulvet. Albuerne er bøjet til ca. 50° og peger ca. 45° ud fra kroppen. Kroppen er stadig én lige linje fra hæl til hoved, og hænder og fødder står samme sted.",
+              "text": "Brystet et par cm over gulvet. Albuerne er bøjet godt forbi en ret vinkel og peger ca. 45° ud fra kroppen. Kroppen er stadig én lige linje fra hæl til hoved, og hænder og fødder står samme sted.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "toes", "on": "floor" }
@@ -116,7 +116,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Brystet et par cm over gulvet. Albuerne er bøjet til ca. 50° og peger ca. 45° ud fra kroppen. Kroppen er stadig lige og skråner nu ned fra fødderne på stolen til hovedet.",
+              "text": "Brystet et par cm over gulvet. Albuerne er bøjet godt forbi en ret vinkel og peger ca. 45° ud fra kroppen. Kroppen er stadig lige og skråner nu ned fra fødderne på stolen til hovedet.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "toes", "on": "chair" }
@@ -179,7 +179,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Brystet lige over gulvet. Albuen på hånden i gulvet er bøjet til ca. 50°, den på bøgerne lidt mindre, begge ca. 45° ud fra kroppen. Kroppen er stadig lige, og hænder og fødder står samme sted.",
+              "text": "Brystet lige over gulvet. Albuen på hånden i gulvet er bøjet godt forbi en ret vinkel, og den på bøgerne er lidt mindre bøjet, begge ca. 45° ud fra kroppen. Kroppen er stadig lige, og hænder og fødder står samme sted.",
               "contacts": [
                 { "part": "hand", "on": "books", "count": 1 },
                 { "part": "hand", "on": "floor", "count": 1 },
@@ -242,7 +242,7 @@
             {
               "id": "bottom",
               "name": "Nede til siden",
-              "text": "Skuldrene er flyttet over mod den arbejdende hånd, og den albue er bøjet til ca. 50°. Den anden arm er strakt skråt ud til siden. Brystet er lige over gulvet, og hænder og fødder står samme sted.",
+              "text": "Skuldrene er flyttet over mod den arbejdende hånd, og den albue er bøjet godt forbi en ret vinkel. Den anden arm er strakt skråt ud til siden. Brystet er lige over gulvet, og hænder og fødder står samme sted.",
               "contacts": [
                 { "part": "hand", "on": "floor" },
                 { "part": "toes", "on": "floor" }
@@ -304,7 +304,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Brystet lige over bordkanten ved hånden. Albuen er bøjet til ca. 50° og tæt ind til kroppen. Kroppen er stadig lige med hoften i niveau, og hånd og fødder står samme sted.",
+              "text": "Brystet lige over bordkanten ved hånden. Albuen er bøjet godt forbi en ret vinkel og tæt ind til kroppen. Kroppen er stadig lige med hoften i niveau, og hånd og fødder står samme sted.",
               "contacts": [
                 { "part": "hand", "on": "table", "count": 1 },
                 { "part": "toes", "on": "floor" }
@@ -366,7 +366,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Brystet lige over gulvet ved hånden. Albuen er bøjet til ca. 50° og tæt ind til kroppen. Kroppen er stadig lige med hoften i niveau, og hånd og fødder står samme sted.",
+              "text": "Brystet lige over gulvet ved hånden. Albuen er bøjet godt forbi en ret vinkel og tæt ind til kroppen. Kroppen er stadig lige med hoften i niveau, og hånd og fødder står samme sted.",
               "contacts": [
                 { "part": "hand", "on": "floor", "count": 1 },
                 { "part": "toes", "on": "floor" }
@@ -428,7 +428,7 @@
             {
               "id": "bottom",
               "name": "Nede",
-              "text": "Brystet lige over gulvet ved hånden. Albuen er bøjet til ca. 50° og tæt ind til kroppen. Skuldre og hofte er stadig parallelle med gulvet, og hånd og fødder står samme sted.",
+              "text": "Brystet lige over gulvet ved hånden. Albuen er bøjet godt forbi en ret vinkel og tæt ind til kroppen. Skuldre og hofte er stadig parallelle med gulvet, og hånd og fødder står samme sted.",
               "contacts": [
                 { "part": "hand", "on": "floor", "count": 1 },
                 { "part": "toes", "on": "floor" }

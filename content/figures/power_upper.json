@@ -212,7 +212,8 @@
       },
       "transitions": [{ "from": "bottom", "to": "clap", "lift": ["near.hand", "far.hand"] }],
       "marks": [
-        { "arrow": "chest", "phase": 2, "offset": [-7, 0] },
+        { "arrow": "chest", "phase": 1, "offset": [-7, 0] },
+        { "cue": "Klap under brystet", "phase": 2, "point": "near.hand", "place": "below" },
         { "cue": "Bløde albuer", "phase": 4 }
       ]
     },

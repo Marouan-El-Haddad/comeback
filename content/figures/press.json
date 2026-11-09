@@ -153,10 +153,48 @@
           }
         }
       },
-      "marks": [
-        { "arrow": "chest", "phase": 1, "offset": [-7, 0] },
-        { "cue": "Armen forbliver strakt", "at": "bottom", "point": "far.elbow", "place": "above" }
-      ]
+      "marks": [],
+      "second": {
+        "view": "top",
+        "props": [],
+        "keyframes": {
+          "top": {
+            "hip": [44.42, 30],
+            "torso": 0,
+            "head": 0,
+            "arms": {
+              "near": { "to": [69.76, 8], "bend": 1, "upper": 11.58, "lower": 10.86 },
+              "far": { "to": [69.76, 52], "bend": -1, "upper": 11.58, "lower": 10.86 }
+            },
+            "legs": {
+              "near": { "to": [-0.7, 25], "bend": 1, "upper": 23.16, "lower": 22.19 },
+              "far": { "to": [-0.7, 35], "bend": -1, "upper": 23.16, "lower": 22.19 }
+            }
+          },
+          "bottom": {
+            "hip": [46.86, 30],
+            "torso": -17.46,
+            "head": 0,
+            "arms": {
+              "near": { "joint": [63.5, 14.5], "end": [69.76, 8] },
+              "far": { "to": [69.76, 52], "bend": -1 }
+            },
+            "legs": {
+              "near": { "to": [-0.7, 25], "bend": 1 },
+              "far": { "to": [-0.7, 35], "bend": -1 }
+            }
+          }
+        },
+        "marks": [
+          { "arrow": "shoulder", "phase": 1, "offset": [0, 0] },
+          {
+            "cue": "Armen forbliver strakt",
+            "at": "bottom",
+            "point": "far.elbow",
+            "place": "above"
+          }
+        ]
+      }
     },
     {
       "id": "press.5",
@@ -219,10 +257,44 @@
           }
         }
       },
-      "marks": [
-        { "arrow": "chest", "phase": 1, "offset": [-7, 0] },
-        { "cue": "Fødderne bredt", "at": "bottom", "point": "near.foot", "place": "above" }
-      ]
+      "marks": [{ "arrow": "chest", "phase": 1, "offset": [-7, 0] }],
+      "second": {
+        "view": "top",
+        "props": [],
+        "keyframes": {
+          "top": {
+            "hip": [43.97, 30],
+            "torso": 0,
+            "head": 0,
+            "arms": {
+              "near": { "to": [69.02, 23], "bend": 1, "upper": 4.4, "lower": 4.12 },
+              "far": { "to": [51.97, 32], "bend": -1, "upper": 13, "lower": 12 }
+            },
+            "legs": {
+              "near": { "to": [5, 8], "bend": 1, "upper": 22.83, "lower": 21.88 },
+              "far": { "to": [5, 52], "bend": -1, "upper": 22.83, "lower": 21.88 }
+            }
+          },
+          "bottom": {
+            "hip": [46.86, 30],
+            "torso": 0,
+            "head": 0,
+            "arms": {
+              "near": { "joint": [63.5, 26], "end": [69.02, 23] },
+              "far": { "to": [54.86, 32], "bend": -1, "upper": 13, "lower": 12 }
+            },
+            "legs": { "near": { "to": [5, 8], "bend": 1 }, "far": { "to": [5, 52], "bend": -1 } }
+          }
+        },
+        "marks": [
+          {
+            "line": ["near.foot", "far.foot"],
+            "cue": "Fødderne bredt",
+            "at": "bottom",
+            "place": "right"
+          }
+        ]
+      }
     },
     {
       "id": "press.7",
@@ -252,10 +324,40 @@
           }
         }
       },
-      "marks": [
-        { "arrow": "chest", "phase": 1, "offset": [-7, 0] },
-        { "cue": "Ingen vridning", "at": "bottom", "point": "hip", "place": "above" }
-      ]
+      "marks": [{ "arrow": "chest", "phase": 1, "offset": [-7, 0] }],
+      "second": {
+        "view": "top",
+        "props": [],
+        "keyframes": {
+          "top": {
+            "hip": [43.97, 30],
+            "torso": 0,
+            "head": 0,
+            "arms": {
+              "near": { "to": [69.02, 23], "bend": 1, "upper": 4.4, "lower": 4.12 },
+              "far": { "to": [51.97, 32], "bend": -1, "upper": 13, "lower": 12 }
+            },
+            "legs": {
+              "near": { "to": [-0.4, 24], "bend": 1, "upper": 22.84, "lower": 21.89 },
+              "far": { "to": [-0.4, 36], "bend": -1, "upper": 22.84, "lower": 21.89 }
+            }
+          },
+          "bottom": {
+            "hip": [46.86, 30],
+            "torso": 0,
+            "head": 0,
+            "arms": {
+              "near": { "joint": [63.5, 26], "end": [69.02, 23] },
+              "far": { "to": [54.86, 32], "bend": -1, "upper": 13, "lower": 12 }
+            },
+            "legs": {
+              "near": { "to": [-0.4, 24], "bend": 1 },
+              "far": { "to": [-0.4, 36], "bend": -1 }
+            }
+          }
+        },
+        "marks": [{ "cue": "Ingen vridning", "at": "bottom", "point": "hip", "place": "below" }]
+      }
     }
   ]
 }

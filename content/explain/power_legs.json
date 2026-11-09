@@ -155,7 +155,8 @@
             { "to": "takeoff", "seconds": 0.25, "label": "Spring frem" },
             { "to": "air", "seconds": 0.35, "label": "I luften" },
             { "to": "land", "seconds": 0.3, "label": "Land blødt" },
-            { "to": "land", "seconds": 1, "label": "Stå stille" }
+            { "to": "land", "seconds": 1, "label": "Stå stille" },
+            { "to": "start", "seconds": 1, "label": "Rejs dig" }
           ]
         }
       ]

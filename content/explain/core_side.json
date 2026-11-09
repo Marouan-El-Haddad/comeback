@@ -211,7 +211,7 @@
     {
       "id": "core_side.S4",
       "trains": "Siden af kroppen og skulderen, der bærer dig på én strakt arm, så du står stabilt, når du sparker og bliver presset i clinchen.",
-      "start": "Lig på siden med overkroppen løftet på strakt arm og hånden fladt i gulvet en håndsbredde længere fra fødderne end skulderen. Benene strakte og fødderne oven på hinanden.",
+      "start": "Lig på siden med overkroppen løftet på strakt arm og hånden fladt i gulvet en håndsbredde længere fra fødderne end skulderen, så den står under skulderen, når hoften løftes. Benene strakte og fødderne oven på hinanden.",
       "steps": [
         "Skub gulvet væk med hånden, og løft hoften, til hoved, hofte og fødder er på én linje.",
         "Stræk den øverste arm lodret op, og løft det øverste ben strakt op i en stjerne.",
@@ -239,7 +239,7 @@
       "easier": "Trin S3: stjerne-sideplanke på albuen. Vælg det selv under Stiger, hvis du ikke kan holde 15 sek med skulderen lige over hånden.",
       "harder": "Trin S5: stjerne-teep. Appen rykker dig op, når begge sider holder 45 sek med 2 i reserve to pas i træk.",
       "equipment": [],
-      "getReady": "Find en fri plads, og læg dig med hånden under skulderen: på venstre side i sæt 1 og på højre side i sæt 2.",
+      "getReady": "Læg dig på venstre side med hånden en håndsbredde længere fra fødderne end skulderen; sæt 2 tager du på højre side.",
       "movements": [
         {
           "positions": [

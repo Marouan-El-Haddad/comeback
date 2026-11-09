@@ -44,10 +44,10 @@
           "mistake": 1,
           "at": "up",
           "wrong": {
-            "hip": [-45.43, 15.64],
-            "torso": 153.84,
-            "spine": -3,
-            "arms": { "near": { "to": [-49.08, 26.35], "bend": 1 } },
+            "hip": [-46.2, 12.6],
+            "torso": 150.5,
+            "spine": -5,
+            "arms": { "near": { "to": [-48.6, 23.4], "bend": 1 } },
             "legs": {
               "near": { "to": [3.06, 10.59], "bend": 1 },
               "far": { "to": [-1.52, 3.81], "bend": -1 }
@@ -209,7 +209,7 @@
       },
       "marks": [
         { "arrow": "hip", "phase": 1, "offset": [9, 0] },
-        { "cue": "Under skulder", "at": "star", "point": "far.hand", "place": "left" }
+        { "line": ["far.hand", [-72.13, 31]], "cue": "Under skulder", "at": "star" }
       ]
     },
     {

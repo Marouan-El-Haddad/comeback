@@ -27,8 +27,7 @@
           "legs": {
             "near": { "to": [49.32, 3.6], "tip": [56.52, 0.3] },
             "far": { "joint": [49.32, 26.6], "end": [70.32, 35.97], "tip": [67.87, 43.06] }
-          },
-          "spine": -0.2
+          }
         }
       },
       "marks": [
@@ -195,7 +194,7 @@
       ],
       "marks": [
         { "arrow": "shoulder", "phase": 1, "offset": [5, 5] },
-        { "cue": "Lige linje", "phase": 2, "point": "near.knee" }
+        { "line": ["near.knee", "head"], "cue": "Lige linje", "phase": 2 }
       ]
     },
     {
@@ -250,7 +249,7 @@
       ],
       "marks": [
         { "arrow": "shoulder", "phase": 1, "offset": [5, 5] },
-        { "cue": "Lige linje", "phase": 2, "point": "near.knee" }
+        { "line": ["near.knee", "head"], "cue": "Lige linje", "phase": 2 }
       ]
     },
     {

@@ -35,7 +35,7 @@
       },
       "marks": [
         { "arrow": "near.foot", "phase": 1, "offset": [-8, 0] },
-        { "cue": "Helt op", "phase": 2 }
+        { "arrow": "near.foot", "phase": 2, "offset": [-8, 0] }
       ],
       "faults": [
         {

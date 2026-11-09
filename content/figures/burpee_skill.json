@@ -392,6 +392,20 @@
           }
         },
         {
+          "from": "squat",
+          "to": "tuck",
+          "via": {
+            "hip": [52.04, 57.59],
+            "torso": 90,
+            "head": 0,
+            "arms": { "near": { "to": [54.54, 118.69] }, "far": { "to": [55.64, 118.59] } },
+            "legs": {
+              "near": { "to": [52.74, 10.4], "tip": -80 },
+              "far": { "to": [51.34, 10.4], "tip": -80 }
+            }
+          }
+        },
+        {
           "from": "tuck",
           "to": "stand",
           "via": {
@@ -508,8 +522,7 @@
             }
           }
         }
-      ],
-      "marks": [{ "cue": "Bløde albuer", "phase": 5 }]
+      ]
     },
     {
       "id": "burpee_skill.V5",

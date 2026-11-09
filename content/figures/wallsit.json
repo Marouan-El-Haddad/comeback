@@ -163,7 +163,7 @@
       },
       "marks": [
         { "arrow": "head", "phase": 3, "offset": [-6, 6] },
-        { "cue": "Lår vandrette", "phase": 4 }
+        { "cue": "Lårene vandrette", "phase": 4, "point": "near.knee" }
       ]
     },
     {
