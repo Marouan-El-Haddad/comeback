@@ -836,20 +836,106 @@ describe('D60: tjekket læser landingen, og et led kan forkortes mere (reviewet 
     expect(messages(figure, movement).join('\n')).not.toContain('› air: »I luften« lander');
   });
 
-  test('et led givet som punkter må forkortes til en fjerdedel (et lår, der peger mod beskueren)', () => {
+  test('et led givet som punkter forkortes til en fjerdedel forfra og ovenfra, til det halve fra siden (L5)', () => {
     const { figure, movement } = reference('press', 'press.1');
     const top = figure.keyframes.top as Pose;
     const shoulder = solve({ view: 'side', facing: 1 }, top).shoulder;
-    // An upper arm of 5 (a third of 16) toward the viewer passes; one of 3 (under a quarter) does not.
     const arm = (length: number) => ({
       joint: [shoulder[0], shoulder[1] - length] as Point,
       end: [shoulder[0] + 2, shoulder[1] - length - 14.8] as Point,
     });
+    // From the side an upper arm of 5,5 (a third of 16) is too short: the limb lies in the plane.
     figure.keyframes.top = { ...top, arms: { ...top.arms, far: arm(5.5) } };
-    expect(messages(figure, movement).join('\n')).not.toContain('overarm/lår er');
-    figure.keyframes.top = { ...top, arms: { ...top.arms, far: arm(3) } };
     expect(messages(figure, movement).join('\n')).toContain(
-      'press.1 › top: far.arms: overarm/lår er 3 lang (normalt 16); flyt »joint« eller »end«',
+      'press.1 › top: far.arms: overarm/lår er 5,5 lang (normalt 16); flyt »joint« eller »end«',
     );
+    // From the front a third passes and under a quarter does not: a segment toward the viewer.
+    const front = (length: number): FigureItem => ({
+      id: 'press.1',
+      view: 'front',
+      props: [],
+      highlight: ['torso'],
+      keyframes: {
+        top: {
+          hip: [0, 49],
+          torso: 90,
+          arms: {
+            near: { joint: [11, 79 - length], end: [11, 64 - length] },
+            far: { to: [-11, 50], bend: -1 },
+          },
+          legs: { near: { to: [5, 3.6], bend: 1 }, far: { to: [-5, 3.6], bend: -1 } },
+        },
+      },
+    });
+    const still: OwnMovement = {
+      positions: [{ id: 'top', name: 'Oppe', text: 'Oppe.', contacts: [] }],
+      phases: [{ to: 'top', seconds: 1, label: 'Hold' }],
+    };
+    const said = (length: number) =>
+      checkFigure(front(length), still, 'press.1')
+        .map((p) => p.message)
+        .join('\n');
+    expect(said(5.5)).not.toContain('overarm/lår er');
+    expect(said(3)).toContain('near.arms: overarm/lår er 3 lang (normalt 16)');
   });
 });
+
+describe('D62: bredden ovenfra og et nik i tjekket (figur-reviewene af P2)', () => {
+  test('ovenfra har alle positioner »width« eller ingen', () => {
+    const above = (width?: { shoulders: number; hips: number }): Pose => ({
+      hip: [0, 0],
+      torso: 0,
+      ...(width ? { width } : {}),
+      arms: { near: { to: [30, -20], bend: 1 }, far: { to: [30, 20], bend: -1 } },
+      legs: { near: { to: [-45, -6], bend: 1 }, far: { to: [-45, 6], bend: -1 } },
+    });
+    const movement: OwnMovement = {
+      positions: [
+        { id: 'a', name: 'A', text: 'A.', contacts: [] },
+        { id: 'b', name: 'B', text: 'B.', contacts: [] },
+      ],
+      phases: [{ to: 'b', seconds: 1, label: 'Drej' }],
+    };
+    const figure = (a: Pose, b: Pose): FigureItem => ({
+      id: 'club_sequence.C6',
+      view: 'top',
+      props: [],
+      highlight: ['torso'],
+      keyframes: { a, b },
+    });
+    const wide = { shoulders: 22, hips: 12 };
+    const turned = { shoulders: 8, hips: 12 };
+    expect(messages(figure(above(wide), above(turned)), movement).join('\n')).not.toContain(
+      '»width«',
+    );
+    expect(messages(figure(above(wide), above()), movement).join('\n')).toContain(
+      'ovenfra har alle positioner og via-poser »width«, eller ingen af dem har',
+    );
+  });
+
+  test('et nik med baghovedet i gulvet holder hovedets kontakt, og skuldrene ligger stille', () => {
+    // On the back with the head to the left (facing 1): the back of the head on the floor. The
+    // chin to the chest is the face turned 20° toward the feet: the neck tips down about the
+    // shoulders (`head`) and the head turns the other way about the top of the neck (`nod`).
+    const lying = (head: number, nod: number): Pose => ({
+      hip: [40, 5.2],
+      torso: 181.3,
+      head,
+      nod,
+      arms: { near: { to: [26, 0.6], tip: [20, 0.3] }, far: { to: [27, 0.6], tip: [21, 0.3] } },
+      legs: {
+        near: { to: [86.8, 3.6], tip: [87, 10.8] },
+        far: { to: [86, 3.6], tip: [86.2, 10.8] },
+      },
+    });
+    const rest = solve({ view: 'side', facing: 1 }, lying(0, 0));
+    const tuck = solve({ view: 'side', facing: 1 }, lying(28.7, -48.7));
+    expect(tuck.shoulder).toEqual(rest.shoulder);
+    expect(tuck.face).toBeCloseTo((rest.face ?? 0) - 20, 6);
+    // The head stays on the floor within a unit: it rolls on the top of the neck.
+    const lowest = (s: typeof rest) => s.head[1] - BODY_HEAD;
+    expect(Math.abs(lowest(tuck) - lowest(rest))).toBeLessThan(1);
+  });
+});
+
+const BODY_HEAD = 6.4;

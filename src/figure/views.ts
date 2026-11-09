@@ -19,6 +19,7 @@ export function secondFigure(figure: FigureItem): FigureItem | null {
     keyframes: second.keyframes,
     ...(second.transitions ? { transitions: second.transitions } : {}),
     ...(second.marks ? { marks: second.marks } : {}),
+    ...(second.inFront ? { inFront: second.inFront } : {}),
   };
   return second.view === 'side'
     ? { ...base, view: 'side', facing: second.facing }

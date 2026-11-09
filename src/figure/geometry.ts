@@ -49,6 +49,8 @@ export interface Skeleton {
   back: Point;
   /** Side view: the way the face looks in degrees (the chest's direction turned with the head). */
   face: number | null;
+  /** The top of the neck, where the head turns with `nod` (D62). */
+  neck: Point;
 }
 
 /** What the solver needs to know about a figure: its view and, in side view, where the chest faces. */
@@ -211,8 +213,9 @@ export function shoulderOf(hip: Point, torso: number): Point {
 }
 
 /**
- * Where each limb starts: the hip and the shoulder in side and top view; in front view the ends of
- * the pelvis and of the shoulder line, the near side to the right of the torso's direction.
+ * Where each limb starts: the hip and the shoulder in side view; in front view the ends of the
+ * pelvis and of the shoulder line, the near side to the right of the torso's direction; from above
+ * the same when the pose gives a width, else the hip and the shoulder (D62).
  */
 export function rootsOf(
   frame: Frame,
@@ -226,7 +229,7 @@ export function rootsOf(
   shoulders?: [Point, Point];
 } {
   const shoulder = shoulderOf(hip, torso);
-  if (frame.view !== 'front') {
+  if (frame.view === 'side' || (frame.view === 'top' && !width)) {
     return {
       shoulder,
       roots: { arm: { near: shoulder, far: shoulder }, leg: { near: hip, far: hip } },
@@ -265,7 +268,12 @@ export const ORDER: ReadonlyArray<readonly [LimbSide, Kind]> = [
 export function solve(frame: Frame, pose: Pose): Skeleton {
   const hip = pose.hip;
   const { roots, shoulder, pelvis, shoulders } = rootsOf(frame, hip, pose.torso, pose.width);
-  const head = polar(shoulder, BODY.neck, pose.torso + (pose.head ?? 0));
+  // The neck turns about the shoulders (`head`), and the head about the top of the neck (`nod`):
+  // a nod with the back of the head on the floor, a chin tuck with the face upright (D62).
+  const neck = pose.torso + (pose.head ?? 0);
+  const nod = pose.nod ?? 0;
+  const neckTop = polar(shoulder, BODY.neck - BODY.headRadius, neck);
+  const head = nod ? polar(neckTop, BODY.headRadius, neck + nod) : polar(shoulder, BODY.neck, neck);
   // From the side the back curves toward the back or the chest; from the front it bends sideways
   // (DECISIONS.md D58); seen from above it stays straight.
   const spine = frame.view === 'top' ? 0 : (pose.spine ?? 0);
@@ -277,7 +285,8 @@ export function solve(frame: Frame, pose: Pose): Skeleton {
     bones: [],
     spine,
     back: spineControl(frame, { hip, shoulder, spine }),
-    face: chest === null ? null : chest + (pose.head ?? 0),
+    face: chest === null ? null : chest + (pose.head ?? 0) + nod,
+    neck: neckTop,
   };
   if (pelvis && shoulders) {
     skeleton.pelvis = pelvis;

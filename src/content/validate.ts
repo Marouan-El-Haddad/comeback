@@ -908,6 +908,11 @@ const NOMINAL = {
   legs: { upper: BODY.thigh, lower: BODY.shin },
 } as const;
 
+/** The shortest a segment may be drawn, as a share of its length: a quarter toward the viewer. */
+export function shortest(view: string): number {
+  return view === 'side' ? 1 / 2 : 1 / 4;
+}
+
 /** Checks a limb; returns whether it is shown (not null). */
 function checkLimb(
   r: Report,
@@ -941,13 +946,15 @@ function checkLimb(
     );
   }
   if (value.tip !== undefined && !finite(value.tip)) point(r, at(where, 'tip'), value.tip);
-  // A segment toward the viewer is drawn shorter, down to a quarter: a thigh straight forward in a
-  // squat seen from the front (DECISIONS.md D60).
+  // A segment toward the viewer is drawn shorter: from the front and above down to a quarter (a
+  // thigh straight forward in a squat seen from the front), from the side, where the limb lies in
+  // the plane, to half (DECISIONS.md D60, L5 in the follow-up to the P1b review).
+  const least = shortest(view);
   for (const seg of ['upper', 'lower'] as const) {
     const length = value[seg];
     const nominal = NOMINAL[kind][seg];
-    if (length !== undefined && (!finite(length) || length < nominal / 4 || length > nominal)) {
-      r.add(at(where, seg), `skal være mellem ${nominal / 4} og ${nominal} (forkortet led)`);
+    if (length !== undefined && (!finite(length) || length < nominal * least || length > nominal)) {
+      r.add(at(where, seg), `skal være mellem ${nominal * least} og ${nominal} (forkortet led)`);
     }
   }
   return true;
@@ -970,10 +977,17 @@ function checkSpine(r: Report, where: string, value: unknown, view: string): voi
 }
 
 function checkWidth(r: Report, where: string, value: unknown, view: string): void {
-  if (view !== 'front') r.add(where, '»width« bruges kun i frontbilledet');
+  if (view === 'side') r.add(where, '»width« bruges forfra og ovenfra, ikke i sidebilledet');
   else if (shape(r, where, value, ['shoulders', 'hips'])) {
     positive(r, at(where, 'shoulders'), value.shoulders, 40);
     positive(r, at(where, 'hips'), value.hips, 40);
+  }
+}
+
+/** The head turned about the top of the neck: a nod (DECISIONS.md D62). */
+function checkNod(r: Report, where: string, value: unknown): void {
+  if (value !== undefined && (!finite(value) || Math.abs(value) > 60)) {
+    r.add(at(where, 'nod'), 'en vinkel mellem -60 og 60 grader');
   }
 }
 
@@ -984,7 +998,9 @@ function checkPose(
   view: string,
 ): Record<string, boolean> {
   const shown: Record<string, boolean> = {};
-  if (!shape(r, where, value, ['hip', 'torso', 'arms', 'legs'], ['head', 'width', 'spine'])) {
+  if (
+    !shape(r, where, value, ['hip', 'torso', 'arms', 'legs'], ['head', 'nod', 'width', 'spine'])
+  ) {
     return shown;
   }
   point(r, at(where, 'hip'), value.hip);
@@ -993,6 +1009,7 @@ function checkPose(
   if (value.head !== undefined && (!finite(value.head) || Math.abs(value.head) > 90)) {
     r.add(at(where, 'head'), 'en vinkel mellem -90 og 90 grader');
   }
+  checkNod(r, where, value.nod);
   if (value.spine !== undefined) checkSpine(r, at(where, 'spine'), value.spine, view);
   if (value.width !== undefined) checkWidth(r, at(where, 'width'), value.width, view);
   for (const kind of ['arms', 'legs'] as const) {
@@ -1099,7 +1116,7 @@ export function validateFigureFile(
       return;
     }
     const required = ['id', 'view', 'props', 'highlight', 'keyframes'];
-    const optional = ['movement', 'facing', 'transitions', 'marks', 'faults', 'second'];
+    const optional = ['movement', 'facing', 'transitions', 'marks', 'faults', 'second', 'inFront'];
     if (!shape(r, where, entry, required, optional)) return;
     const main = checkView(r, where, entry, movement, explained.equipment, null);
     if (!main) return;
@@ -1111,7 +1128,7 @@ export function validateFigureFile(
         w,
         entry.second,
         ['view', 'props', 'keyframes'],
-        ['facing', 'highlight', 'transitions', 'marks'],
+        ['facing', 'highlight', 'transitions', 'marks', 'inFront'],
       );
       const second = ok
         ? checkView(r, w, entry.second as Json, movement, explained.equipment, main.view)
@@ -1199,6 +1216,14 @@ function checkView(
           at(at(where, 'highlight'), j),
           `ukendt segment »${show(h)}« (tilladt: ${[...SEGMENTS].join(', ')})`,
         );
+      }
+    });
+  }
+  // Far limbs drawn in front of the torso (D62); the near limbs are in front already.
+  if (value.inFront !== undefined && list(r, at(where, 'inFront'), value.inFront, 1, 2, 'lemmer')) {
+    value.inFront.forEach((limb, j) => {
+      if (limb !== 'far.arm' && limb !== 'far.leg') {
+        r.add(at(at(where, 'inFront'), j), 'skal være en af: far.arm, far.leg');
       }
     });
   }
@@ -1423,7 +1448,7 @@ function checkMarks(
 // Typical mistakes as figures (DECISIONS.md D58): the right pose beside the wrong one
 // ---------------------------------------------------------------------------------------------
 
-const POSE_KEYS = ['hip', 'torso', 'head', 'spine', 'width', 'arms', 'legs'];
+const POSE_KEYS = ['hip', 'torso', 'head', 'nod', 'spine', 'width', 'arms', 'legs'];
 
 function checkFaults(
   r: Report,
@@ -1439,7 +1464,16 @@ function checkFaults(
   const seen = new Set<unknown>();
   value.forEach((fault, i) => {
     const w = at(where, i);
-    if (!shape(r, w, fault, ['mistake', 'at', 'wrong'], ['view', 'contacts'])) return;
+    if (!shape(r, w, fault, ['mistake', 'at', 'wrong'], ['view', 'contacts', 'ring'])) return;
+    if (
+      fault.ring !== undefined &&
+      (typeof fault.ring !== 'string' || !MARK_POINTS.includes(fault.ring))
+    ) {
+      r.add(
+        at(w, 'ring'),
+        `ukendt punkt »${show(fault.ring)}« (tilladt: ${MARK_POINTS.join(', ')})`,
+      );
+    }
     if (!Number.isInteger(fault.mistake) || (fault.mistake as number) < 1) {
       r.add(at(w, 'mistake'), `nummeret på en typisk fejl i forklaringen fra 1 til ${count}`);
     } else if ((fault.mistake as number) > count) {
@@ -1501,6 +1535,7 @@ function checkPoseChange(r: Report, where: string, value: Json, info: ViewInfo):
   if (value.head !== undefined && (!finite(value.head) || Math.abs(value.head) > 90)) {
     r.add(at(where, 'head'), 'en vinkel mellem -90 og 90 grader');
   }
+  checkNod(r, where, value.nod);
   if (value.spine !== undefined) checkSpine(r, at(where, 'spine'), value.spine, view);
   if (value.width !== undefined) checkWidth(r, at(where, 'width'), value.width, view);
   for (const kind of ['arms', 'legs'] as const) {

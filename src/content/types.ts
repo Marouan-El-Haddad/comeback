@@ -253,9 +253,22 @@ export interface Pose {
   hip: Point;
   /** Direction from the hip to the shoulders in degrees: 0 = +x, 90 = straight up. */
   torso: number;
-  /** The head's angle to the torso line in degrees (+ = counterclockwise); default 0. */
+  /**
+   * The head's angle to the torso line in degrees (+ = counterclockwise); default 0. It turns the
+   * neck and the head together about the shoulders.
+   */
   head?: number;
-  /** Front view only: shoulder and pelvis width (default FRONT_WIDTH). */
+  /**
+   * The head turned about the top of the neck in degrees (+ = counterclockwise), the neck staying:
+   * a nod, or with `head` the other way a chin tuck with the face still upright; default 0
+   * (DECISIONS.md D62).
+   */
+  nod?: number;
+  /**
+   * Shoulder and pelvis width: in front view (default FRONT_WIDTH), and from above when given, in
+   * every keyframe or in none (without it the limbs start in one point). A width that shrinks from
+   * one position to the next shows the chest or the pelvis turning (D62).
+   */
   width?: { shoulders: number; hips: number };
   /**
    * Side view only: the back as a curve whose middle lies this many units off the straight line
@@ -391,6 +404,7 @@ export interface PoseChange {
   hip?: Point;
   torso?: number;
   head?: number;
+  nod?: number;
   spine?: number;
   width?: { shoulders: number; hips: number };
   arms?: Partial<Record<LimbSide, Limb>>;
@@ -412,6 +426,12 @@ export interface Fault {
   view?: View;
   /** What the wrong pose touches, when the mistake changes it (a heel that lifts); else the position's. */
   contacts?: Contact[];
+  /**
+   * The part of the body the ring goes round: where the mistake is (the hip that sags), when the
+   * place that moves most is elsewhere (a foot carried along); by default the joint that moves most
+   * (D62).
+   */
+  ring?: MarkPoint;
 }
 
 interface ViewBase {
@@ -422,7 +442,15 @@ interface ViewBase {
   transitions?: Transition[];
   /** Arrows, angles, cues and guide lines at the right moment (D58). */
   marks?: Mark[];
+  /**
+   * Limbs drawn in front of the torso although they are on the far side: the upper hand in front of
+   * the chest when lying on the side, seen from the front (D62).
+   */
+  inFront?: LimbName[];
 }
+
+/** An arm or a leg of one side. */
+export type LimbName = `${LimbSide}.${'arm' | 'leg'}`;
 
 type Viewpoint =
   | {

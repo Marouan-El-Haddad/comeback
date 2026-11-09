@@ -79,6 +79,7 @@ export interface Rig {
   shoulder: Point;
   torso: number;
   head: number;
+  nod: number;
   spine: number;
   width: { shoulders: number; hips: number } | undefined;
   limbs: Partial<Record<LimbId, LimbRig>>;
@@ -112,6 +113,7 @@ export function rigOf(pose: Pose, s: Skeleton): Rig {
     shoulder: s.shoulder,
     torso: pose.torso,
     head: pose.head ?? 0,
+    nod: pose.nod ?? 0,
     spine: s.spine,
     width: pose.width,
     limbs,
@@ -147,6 +149,7 @@ export function shiftRig(rig: Rig, dx: number): Rig {
       hip: shift(s.hip, dx),
       shoulder: shift(s.shoulder, dx),
       head: shift(s.head, dx),
+      neck: shift(s.neck, dx),
       back: shift(s.back, dx),
       bones: s.bones.map((b) => ({
         ...b,
@@ -946,5 +949,7 @@ export function tween(frame: Frame, a: Rig, b: Rig, plan: Plan, u: number, raw =
   if (width) pose.width = width;
   const spine = lerp(a.spine, b.spine, u);
   if (spine !== 0) pose.spine = spine;
+  const nod = lerp(a.nod, b.nod, u);
+  if (nod !== 0) pose.nod = nod;
   return pose;
 }

@@ -20,7 +20,7 @@ import type { Problem } from '../content/validate.ts';
 import type { Program } from '../engine/types.ts';
 import { evaluatePose, jointDegrees, movementFor, placeName } from './check.ts';
 import { bodyPrims, emptyBox, svgBody, track, viewBox, type Box, type Prim } from './draw.ts';
-import { faultPair } from './faults.ts';
+import { faultPair, ringPrims } from './faults.ts';
 import { markPlans, placeLabel, stillMarks, type MarkDraw, type MarkPlan } from './marks.ts';
 import { chestDirection, polar, solve, type Frame, type Skeleton } from './geometry.ts';
 import {
@@ -237,6 +237,8 @@ function cardDrawing(models: readonly FigureModel[], i: number): { width: number
       ? { width: CARD.width, height: Math.floor((CARD.two - VIEW_GAP) / 2) }
       : { width: (CARD.width - VIEW_GAP) / 2, height: CARD.two };
   }
+  // A figure that travels along the floor: the whole width at a standing figure's height (D62).
+  if (model.travel && !model.fixed) return { width: CARD.width, height: CARD.tall[1] };
   const still = model.stillBox;
   const tall = still.y1 - still.y0 > (still.x1 - still.x0) * 0.9;
   return tall
@@ -426,18 +428,7 @@ function faultCells(
   if (!pair) return `<p class="problem">Fejl ${fault.mistake}: kan ikke tegnes</p>`;
   const model = buildModel(pair.figure, movement);
   const right = [...model.still, ...movingPrims(model, pair.right)];
-  const ring: Prim = {
-    key: 'ring',
-    z: 40,
-    t: 'circle',
-    c: pair.differs.at,
-    r: 7,
-    f: 'none',
-    s: 'hi',
-    w: 1.4,
-    dash: '2.6 1.8',
-  };
-  const wrong = [...model.still, ...movingPrims(model, pair.wrong), ring];
+  const wrong = [...model.still, ...movingPrims(model, pair.wrong), ...ringPrims(pair)];
   const box = track(track(emptyBox(), right), wrong);
   const view =
     pair.figure.view === entry.view

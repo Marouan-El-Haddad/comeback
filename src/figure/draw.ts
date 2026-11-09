@@ -129,6 +129,7 @@ export function bodyPrims(
   figure: Pick<FigureItem, 'view' | 'highlight'> & {
     keyframes?: FigureItem['keyframes'];
     transitions?: FigureItem['transitions'];
+    inFront?: FigureItem['inFront'];
   },
   s: Skeleton,
   mode: Mode = 'solid',
@@ -144,7 +145,10 @@ export function bodyPrims(
   };
   const prims: Prim[] = [];
   for (const b of s.bones) {
-    const z = zBase + (b.side === 'near' ? 3 : 0) + (b.kind === 'arm' ? 0.5 : 0);
+    // A far limb lies behind the torso, unless the figure draws it in front (the upper hand in front
+    // of the chest when lying on the side, seen from the front, D62); the near limbs lie in front.
+    const ahead = b.side === 'far' && figure.inFront?.includes(`far.${b.kind}`) === true;
+    const z = zBase + (b.side === 'near' ? 3 : ahead ? 1.5 : 0) + (b.kind === 'arm' ? 0.5 : 0);
     const id = `${prefix}${b.side}.${b.kind}`;
     prims.push({
       key: `${id}.1`,
@@ -178,9 +182,11 @@ export function bodyPrims(
   }
   const torsoRed = !ghost && figure.highlight.includes('torso');
   const torso: Paint = ghost ? 'ghost' : torsoRed ? 'hi' : 'near';
-  if (figure.view === 'front' && s.pelvis && s.shoulders) {
+  if (s.pelvis && s.shoulders) {
     // Front view: the torso as a trapezoid between the pelvis and the shoulder line (skater); with
-    // `spine` somewhere in the figure its long sides bend sideways in every frame (D58).
+    // `spine` somewhere in the figure its long sides bend sideways in every frame (D58). From above
+    // (with `width`) only its outline, so the hands under the chest and the elbows along the body
+    // show through it (D62).
     prims.push({
       key: `${prefix}torso`,
       z: zBase + 1,
@@ -189,7 +195,7 @@ export function bodyPrims(
         ? frontTorso(s, s.pelvis, s.shoulders)
         : [s.pelvis[0], s.pelvis[1], s.shoulders[1], s.shoulders[0]],
       s: torso,
-      f: torso,
+      f: figure.view === 'top' ? 'none' : torso,
       w: WIDTH.limb,
     });
   } else if (curved) {
@@ -220,7 +226,7 @@ export function bodyPrims(
       z: zBase + 1.1,
       t: 'line',
       a: s.shoulder,
-      b: s.head,
+      b: s.neck,
       w: WIDTH.limb,
       s: 'hi',
     });

@@ -348,7 +348,7 @@ describe('figurer', () => {
     [
       'for kort overarm',
       pressFigure((f) => (f.keyframes.bottom!.arms.near = { to: [69, 0], upper: 3 })),
-      'skal være mellem 4 og 16',
+      'skal være mellem 8 og 16',
     ],
     [
       'ukendt segment',
@@ -369,7 +369,7 @@ describe('figurer', () => {
     [
       'width i sidebilledet',
       pressFigure((f) => (f.keyframes.top!.width = { shoulders: 22, hips: 12 })),
-      '»width« bruges kun i frontbilledet',
+      '»width« bruges forfra og ovenfra, ikke i sidebilledet',
     ],
     [
       'samme figur to gange',
@@ -425,13 +425,24 @@ describe('figurer', () => {
     expect(figureProblems(file, 'press', PRESS)).toEqual([]);
   });
 
-  test('et led, der peger mod beskueren, kan forkortes til en fjerdedel (D60)', () => {
+  test('et led, der peger mod beskueren, kan forkortes til en fjerdedel forfra og ovenfra, til det halve fra siden (D60, L5)', () => {
     // A thigh straight toward the viewer in a squat from the front: 6 of 24.
-    const file = pressFigure((f) => {
-      f.keyframes.bottom!.arms.near = { to: [69, 0], upper: 4, lower: 3.75 };
-      f.keyframes.bottom!.legs.near = { to: [0, 3.6], upper: 6, lower: 5.75 };
+    const front = pressFigure((f) => {
+      Object.assign(f, { view: 'front' });
+      delete (f as { facing?: number }).facing;
+      for (const pose of Object.values(f.keyframes)) {
+        pose.arms = { near: { to: [12, 20], bend: 1 }, far: { to: [-12, 20], bend: -1 } };
+        pose.legs = { near: { to: [5, 3.6], bend: 1 }, far: { to: [-5, 3.6], bend: -1 } };
+      }
+      f.keyframes.bottom!.arms.near = { to: [12, 20], bend: 1, upper: 4, lower: 3.75 };
+      f.keyframes.bottom!.legs.near = { to: [5, 3.6], bend: 1, upper: 6, lower: 5.75 };
     });
-    expect(figureProblems(file, 'press', PRESS)).toEqual([]);
+    expect(figureProblems(front, 'press', PRESS)).toEqual([]);
+    // From the side a segment shortens to half at most: a limb seen from the side lies in the plane.
+    const side = pressFigure((f) => {
+      f.keyframes.bottom!.legs.near = { to: [0, 3.6], upper: 6, tip: [3.4, 0.3] };
+    });
+    expect(figureProblems(side, 'press', PRESS).join(' ')).toContain('skal være mellem 12 og 24');
   });
 
   test('kontakt med en flade kræver rekvisitten', () => {
@@ -857,6 +868,27 @@ describe('anden vinkel, markeringer og typiske fejl som figur (D58)', () => {
     expect(figureProblems(PRESS_FIGURES, 'press', PRESS)).toEqual([]);
   });
 
+  test('D62: et nik, en bredde ovenfra, en arm foran kroppen og fejlringens del er gyldige', () => {
+    const file = full((f) => {
+      f.keyframes.bottom!.nod = -20;
+      for (const pose of Object.values(f.second!.keyframes))
+        pose.width = { shoulders: 22, hips: 12 };
+      f.second!.inFront = ['far.arm'];
+      f.inFront = ['far.leg'];
+      f.faults = [{ mistake: 1, at: 'bottom', wrong: { hip: [46.79, 4], nod: 10 }, ring: 'hip' }];
+    });
+    expect(figureProblems(file, 'press', PRESS)).toEqual([]);
+    const bad = full((f) => {
+      f.keyframes.bottom!.nod = 75;
+      f.inFront = ['near.arm'];
+      f.faults = [{ mistake: 1, at: 'bottom', wrong: { hip: [46.79, 4] }, ring: 'navle' as never }];
+    });
+    const all = figureProblems(bad, 'press', PRESS).join('\n');
+    expect(all).toContain('keyframes › bottom › nod: en vinkel mellem -60 og 60 grader');
+    expect(all).toContain('inFront[0]: skal være en af: far.arm, far.leg');
+    expect(all).toContain('faults[0] › ring: ukendt punkt »navle«');
+  });
+
   test('»spine« forfra krummer ryggen til siden og er gyldig; ovenfra ikke', () => {
     const file = full((f) => {
       f.second = { view: 'front', props: [], keyframes: structuredClone(f.keyframes) };
@@ -992,7 +1024,7 @@ describe('anden vinkel, markeringer og typiske fejl som figur (D58)', () => {
     [
       'en forkert stilling uden ændring',
       full((f) => (f.faults![0]!.wrong = {})),
-      'faults[0] › wrong: skal ændre mindst ét felt i posen (hip, torso, head, spine, width, arms, legs)',
+      'faults[0] › wrong: skal ændre mindst ét felt i posen (hip, torso, head, nod, spine, width, arms, legs)',
     ],
     [
       'en forkert stilling med et ukendt felt',

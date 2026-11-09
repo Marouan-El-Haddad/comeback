@@ -37,7 +37,7 @@ import {
   type Prop,
   type Surface,
 } from '../content/types.ts';
-import type { Problem } from '../content/validate.ts';
+import { shortest, type Problem } from '../content/validate.ts';
 import {
   angleOf,
   chestDirection,
@@ -641,7 +641,8 @@ function limbProblems(s: Skeleton): string[] {
   return problems;
 }
 
-function jointLimbProblems(pose: Pose, s: Skeleton): string[] {
+function jointLimbProblems(frame: Frame, pose: Pose, s: Skeleton): string[] {
+  const least = shortest(frame.view);
   const problems: string[] = [];
   for (const kind of ['arms', 'legs'] as const) {
     for (const side of ['near', 'far'] as const) {
@@ -656,8 +657,9 @@ function jointLimbProblems(pose: Pose, s: Skeleton): string[] {
         ['overarm/lår', distance(b.root, b.joint), nominal.upper],
         ['underarm/skinneben', distance(b.joint, b.end), nominal.lower],
       ] as const) {
-        // Toward the viewer a segment is drawn shorter, down to a quarter (D60).
-        if (length < want / 4 || length > want * 1.15) {
+        // Toward the viewer a segment is drawn shorter: a quarter from the front and above, half
+        // from the side (D60, L5 in the follow-up to the P1b review).
+        if (length < want * least || length > want * 1.15) {
           problems.push(
             `${side}.${kind}: ${segment} er ${num(length)} lang (normalt ${want}); flyt »joint« eller »end«`,
           );
@@ -1191,6 +1193,18 @@ function checkView(
       }
     }
   }
+  // From above a width is given in every keyframe and via or in none: without it the limbs start
+  // in one point, so a width in only some poses would make the shoulders jump (D62).
+  if (frame.view === 'top') {
+    const poses = [
+      ...movement.positions.map((p) => figure.keyframes[p.id]),
+      ...vias.map((v) => v.pose),
+    ].filter((p): p is Pose => p !== undefined);
+    const wide = poses.filter((p) => p.width !== undefined).length;
+    if (wide > 0 && wide < poses.length) {
+      add('', 'ovenfra har alle positioner og via-poser »width«, eller ingen af dem har');
+    }
+  }
   // A red segment is one the figure shows.
   const first = figure.keyframes[movement.positions[0]?.id ?? ''];
   if (first) {
@@ -1212,7 +1226,7 @@ function checkView(
       ...hipProblems(frame, pose, s),
       ...armBendProblems(frame, pose, s),
       ...limbProblems(s),
-      ...jointLimbProblems(pose, s),
+      ...jointLimbProblems(frame, pose, s),
       ...straightProblems(position, s),
       ...evaluatePose(figure, pose, position.contacts, frame).problems,
     ]) {
@@ -1235,7 +1249,7 @@ function checkView(
       ...hipProblems(frame, via.pose, s),
       ...armBendProblems(frame, via.pose, s),
       ...limbProblems(s),
-      ...jointLimbProblems(via.pose, s),
+      ...jointLimbProblems(frame, via.pose, s),
       ...evaluatePose(figure, via.pose, keptOnTheWay(still, via.lift), frame, allowed).problems,
       ...(pa && pb
         ? viaBendProblems(
@@ -1519,7 +1533,7 @@ function faultProblems(figure: FigureItem, movement: OwnMovement, where: string)
       ...hipProblems(frame, pair.wrong, s),
       ...armBendProblems(frame, pair.wrong, s),
       ...limbProblems(s),
-      ...jointLimbProblems(pair.wrong, s),
+      ...jointLimbProblems(frame, pair.wrong, s),
       ...evaluatePose(pair.figure, pair.wrong, fault.contacts ?? position.contacts, frame, ANYTHING)
         .problems,
     ]) {

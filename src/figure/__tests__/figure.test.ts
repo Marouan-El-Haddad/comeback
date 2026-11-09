@@ -4,6 +4,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, test } from 'vitest';
+import { BODY } from '../../content/units.ts';
 import type {
   Contact,
   ExplainFile,
@@ -16,6 +17,7 @@ import { bendProblems, jumpProblems, movementFor, turn } from '../check.ts';
 import {
   bodyPrims,
   curvedBack,
+  facePoint,
   moving,
   propPrims,
   svgBody,
@@ -24,7 +26,7 @@ import {
   type Box,
   type Prim,
 } from '../draw.ts';
-import { deviation, faultPair, wrongPose } from '../faults.ts';
+import { deviation, faultPair, ringPrims, wrongPose } from '../faults.ts';
 import {
   directionText,
   followPrims,
@@ -36,7 +38,7 @@ import {
   viewsAndMarksText,
 } from '../marks.ts';
 import { drawnHeights, figureViews, stackViews, viewModels } from '../views.ts';
-import { bendOf, distance, frameOf, ik, solve, type Frame } from '../geometry.ts';
+import { angleOf, bendOf, distance, frameOf, ik, polar, solve, type Frame } from '../geometry.ts';
 import {
   buildModel,
   CARD_TIMING,
@@ -1562,5 +1564,156 @@ describe('D60: rettelser efter reviewet af P1b', () => {
       ],
     };
     expect(curvedBack(via)).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+// D62: the figure reviews of P2 (docs/reviews/nat3-p2-figurer-1.md, -2.md and -3.md)
+// ---------------------------------------------------------------------------------------------
+
+describe('D62: hovedet, bredden ovenfra, en arm foran kroppen og fejlringen', () => {
+  const TOP: Frame = { view: 'top', facing: null };
+  const FRONT: Frame = { view: 'front', facing: null };
+
+  test('M10: et nik drejer hovedet om halsens top, mens skuldrene og halsen står stille', () => {
+    const pose = standing();
+    const s0 = solve(SIDE_RIGHT, pose);
+    const s1 = solve(SIDE_RIGHT, { ...pose, nod: -20 });
+    expect(s1.shoulder).toEqual(s0.shoulder);
+    // The top of the neck stays; the head's centre turns 20° about it at the head's radius.
+    const top = polar(s0.shoulder, BODY.neck - BODY.headRadius, pose.torso);
+    expect(distance(top, s1.head)).toBeCloseTo(BODY.headRadius, 6);
+    expect(angleOf(top, s1.head)).toBeCloseTo(pose.torso - 20, 6);
+    // The face turns with the head, so its mark moves visibly; without »nod« nothing changes.
+    expect(s1.face).toBeCloseTo((s0.face ?? 0) - 20, 6);
+    expect(distance(facePoint(s0) ?? [0, 0], facePoint(s1) ?? [0, 0])).toBeGreaterThan(2);
+    expect(solve(SIDE_RIGHT, { ...pose, nod: 0 }).head).toEqual(s0.head);
+    // A chin tuck standing: the neck back about the shoulders, the head forward the same about the
+    // top of the neck: the face stays upright, and the head goes back.
+    const tuck = solve(SIDE_RIGHT, { ...pose, head: 20, nod: -20 });
+    expect(tuck.face).toBeCloseTo(s0.face ?? 0, 6);
+    expect(tuck.head[0]).toBeLessThan(s0.head[0] - 1);
+  });
+
+  test('M10: nikket glider jævnt mellem to positioner', () => {
+    const movement: OwnMovement = {
+      positions: [
+        { id: 'rest', name: 'Hvile', text: 'Hvile.', contacts: [] },
+        { id: 'tuck', name: 'Hagen ind', text: 'Hagen ind.', contacts: [] },
+      ],
+      phases: [{ to: 'tuck', seconds: 2, label: 'Hagen ind' }],
+    };
+    const figure: FigureItem = {
+      id: 'neck.N1',
+      view: 'side',
+      facing: 1,
+      props: [],
+      highlight: ['neck'],
+      keyframes: { rest: standing(), tuck: { ...standing(), nod: -20 } },
+    };
+    const model = buildModel(figure, movement);
+    expect(poseAt(model, 1).nod).toBeCloseTo(-10, 6);
+  });
+
+  test('M11: ovenfra kan skuldre og hofte have en bredde, der skrumper, når brystet drejer', () => {
+    const lying: Pose = {
+      hip: [0, 0],
+      torso: 0,
+      width: { shoulders: 22, hips: 12 },
+      arms: { near: { to: [30, -25], bend: 1 }, far: { to: [30, 25], bend: -1 } },
+      legs: { near: { to: [-45, -8], bend: 1 }, far: { to: [-45, 8], bend: -1 } },
+    };
+    const s = solve(TOP, lying);
+    // The arms start at the ends of the shoulder line, the near side to the right of the torso.
+    const arm = (side: 'near' | 'far') =>
+      s.bones.find((b) => b.side === side && b.kind === 'arm')?.root ?? [0, 0];
+    expect(near(arm('near'), polar(s.shoulder, 11, -90), 1e-9)).toBe(true);
+    expect(near(arm('far'), polar(s.shoulder, 11, 90), 1e-9)).toBe(true);
+    // The torso is drawn as the trapezoid between them, as from the front, but only its outline:
+    // the hands under the chest show through it (club_sequence.C6).
+    const torso = bodyPrims({ view: 'top', highlight: ['torso'] }, s).find(
+      (p) => p.key === 'torso',
+    );
+    expect(torso?.t).toBe('poly');
+    expect(torso?.t === 'poly' && torso.f).toBe('none');
+    const front = bodyPrims({ view: 'front', highlight: [] }, solve(FRONT, lying)).find(
+      (p) => p.key === 'torso',
+    );
+    expect(front?.t === 'poly' && front.f).toBe('near');
+    // A chest turned up: the shoulder line seen from above is shorter.
+    const turned = solve(TOP, { ...lying, width: { shoulders: 6, hips: 12 } });
+    const root = turned.bones.find((b) => b.side === 'near' && b.kind === 'arm')?.root ?? [0, 0];
+    expect(distance(root, turned.shoulder)).toBeCloseTo(3, 9);
+    // Without a width the limbs start in one point, as before.
+    const one = solve(TOP, { ...lying, width: undefined });
+    expect(one.shoulders).toBeUndefined();
+    expect(
+      one.bones.every((b) => near(b.root, b.kind === 'arm' ? one.shoulder : one.hip, 1e-9)),
+    ).toBe(true);
+  });
+
+  test('L4: en arm på den fjerne side kan tegnes foran overkroppen', () => {
+    const side: Pose = {
+      hip: [0, 10],
+      torso: 20,
+      arms: { near: { to: [25, 0], bend: 1 }, far: { to: [20, 18], bend: 1 } },
+      legs: { near: { to: [-45, 4], bend: 1 }, far: { to: [-45, 10], bend: 1 } },
+    };
+    const s = solve(FRONT, side);
+    const z = (prims: Prim[], key: string) => prims.find((p) => p.key === key)?.z ?? 0;
+    const behind = bodyPrims({ view: 'front', highlight: ['torso'] }, s);
+    expect(z(behind, 'far.arm.1')).toBeLessThan(z(behind, 'torso'));
+    const inFront = bodyPrims({ view: 'front', highlight: ['torso'], inFront: ['far.arm'] }, s);
+    expect(z(inFront, 'far.arm.1')).toBeGreaterThan(z(inFront, 'torso'));
+    expect(z(inFront, 'far.arm.2')).toBeGreaterThan(z(inFront, 'head'));
+    expect(z(inFront, 'far.arm.1')).toBeLessThan(z(inFront, 'near.arm.1'));
+  });
+
+  test('M6/L6: ringen står om leddet, der flytter sig mest, eller om den del, fejlen nævner', () => {
+    // The hip sags 5 with the legs and arms straight (press.1 as drawn): the head moves too, but
+    // the ring goes round the hip, where the body bends differently.
+    const press = (
+      JSON.parse(readFileSync(join(process.cwd(), 'content', 'figures', 'press.json'), 'utf8')) as {
+        figures: FigureItem[];
+      }
+    ).figures.find((f) => f.id === 'press.1') as FigureItem;
+    const sag = faultPair(press, PUSH_UP, {
+      mistake: 1,
+      at: 'top',
+      wrong: { hip: [45.4, 15.8], torso: 30.75 },
+    });
+    if (!sag) throw new Error('intet par');
+    const wrong = solve(sag.frame, sag.wrong);
+    expect(distance(sag.ring.at, wrong.hip)).toBeLessThan(1e-9);
+    // A named part: the ring goes round it.
+    const knee = faultPair(PUSH_UP_FIGURE, PUSH_UP, {
+      mistake: 1,
+      at: 'top',
+      wrong: { hip: [45.4, 15.8], torso: 30.75 },
+      ring: 'near.knee',
+    });
+    const kneeAt = wrong.bones.find((b) => b.side === 'near' && b.kind === 'leg')?.joint ?? [0, 0];
+    expect(knee && near(knee.ring.at, kneeAt, 1e-9)).toBe(true);
+    // A rounded back: the ring goes round the middle of the back, not the head carried along.
+    const round = faultPair(press, PUSH_UP, { mistake: 1, at: 'top', wrong: { spine: 4 } });
+    const back = round ? solve(round.frame, round.wrong) : null;
+    const middle: Point = back
+      ? [
+          (back.hip[0] + 2 * back.back[0] + back.shoulder[0]) / 4,
+          (back.hip[1] + 2 * back.back[1] + back.shoulder[1]) / 4,
+        ]
+      : [0, 0];
+    expect(round && near(round.ring.at, middle, 1e-9)).toBe(true);
+    // A white edge under the dashed ring, so it shows on a red part; round the head it is wider.
+    const prims = ringPrims(sag);
+    expect(prims.map((p) => (p.t === 'circle' ? (p.s ?? p.f) : ''))).toEqual(['paper', 'hi']);
+    const atHead = faultPair(PUSH_UP_FIGURE, PUSH_UP, {
+      mistake: 1,
+      at: 'top',
+      wrong: { head: 30 },
+      ring: 'head',
+    });
+    const ring = atHead ? ringPrims(atHead).find((p) => p.key === 'ring') : undefined;
+    expect(ring?.t === 'circle' && ring.r).toBeGreaterThan(BODY.headRadius + 2);
   });
 });
