@@ -38,7 +38,7 @@
           "fix": "Skub gulvet væk med albuen, og hold albuen lige under skulderen."
         }
       ],
-      "easier": "Bøj knæene, så det nederste knæ og underarmen bærer dig, med hoved, hofte og knæ på én linje. Tag den, hvis hoften synker før 20 sek.",
+      "easier": "Bøj knæene, så det nederste knæ og underarmen bærer dig, med hoved, hofte og knæ på én linje. Brug den også, hvis hoften synker før 20 sek.",
       "harder": "Trin S2: med benløft. Appen rykker dig op, når begge sider holder 45 sek med 2 i reserve to pas i træk.",
       "equipment": [],
       "getReady": "Læg dig på venstre side på et tæppe eller en måtte med albuen under skulderen; sæt 2 tager du på højre side.",
@@ -221,7 +221,7 @@
       "tempo": "Løft dig roligt op i stjernen, og hold stillingen stille hele tiden.",
       "breathing": "Træk vejret roligt og jævnt gennem hele holdet.",
       "cues": ["Hånden lige under skulderen", "Skub gulvet væk", "Øverste arm og ben strakt op"],
-      "feel": "Siden af kroppen og skulderen, der bærer dig; smerte i håndled eller skulder betyder stop.",
+      "feel": "Siden af kroppen og skulderen, der bærer dig; skarp smerte i håndled eller skulder betyder stop.",
       "mistakes": [
         {
           "mistake": "Hånden står foran eller bag skulderen.",

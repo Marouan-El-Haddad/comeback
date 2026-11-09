@@ -10,7 +10,7 @@
     {
       "id": "pull.1",
       "trains": "De brede rygmuskler og musklerne mellem skulderbladene, som trækker i clinchen og holder skuldrene tilbage.",
-      "start": "Stå foran stolen, og støt den ene hånd midt på sædet med strakt arm. Foden på samme side frem, den anden et stort skridt bagud. Ryggen lige og næsten vandret, rygsækken i den frie hånd.",
+      "start": "Stå foran stolen, og støt den ene hånd midt på sædet med strakt arm. Foden på samme side frem og den anden et stort skridt bagud, ryggen lige og næsten vandret og rygsækken i den frie hånd.",
       "steps": [
         "Bøj let i knæene, og spænd maven, så ryggen er lige og ikke drejer.",
         "Træk albuen op tæt langs kroppen, til hånden med rygsækken er ved hoften.",
@@ -35,10 +35,10 @@
           "fix": "Skub hoften bagud, og løft brystet lidt, så ryggen er lige fra hoften til nakken."
         }
       ],
-      "easier": "En lettere rygsæk med samme tempo. Tag den, hvis du ikke kan lave 8 rene gentagelser pr. side med 1 sek stop i toppen.",
+      "easier": "En lettere rygsæk med samme tempo, også når du ikke kan lave 8 rene gentagelser pr. side med 1 sek stop i toppen.",
       "harder": "Trin 2: bord-row under et tungt spisebord. Først når alle sæt rammer 15 pr. side med 2 i reserve to pas i træk, rykker appen dig op.",
       "equipment": ["backpack", "chair", "wall"],
-      "getReady": "Stil en solid stol uden hjul med ryglænet mod væggen. Pak rygsækken som sidst, første gang så 8 gentagelser går rent med 2–3 i reserve.",
+      "getReady": "Stil en stol uden hjul med ryglænet mod væggen, og pak rygsækken som sidst på dette trin (første gang: 8 rene med 2–3 i reserve).",
       "movements": [
         {
           "positions": [
@@ -100,7 +100,7 @@
       "easier": "Trin 1: rygsæk-row med én arm. Tag den, hvis du ikke kan lave 8 rene gentagelser i alle sæt, eller bordet vipper. Vælg den under Stiger.",
       "harder": "Trin 3: bord-row med strakte ben. Først når alle sæt rammer 12 med 2 i reserve to pas i træk, rykker appen dig op.",
       "equipment": ["table"],
-      "getReady": "Find et tungt spisebord, ikke et klapbord, og ryd gulvet under langsiden. Bordpladen skal stikke ud, så du kan gribe om kanten.",
+      "getReady": "Find et tungt spisebord, ikke et klapbord, med en kant, du kan gribe om, og ryd gulvet under langsiden.",
       "movements": [
         {
           "positions": [

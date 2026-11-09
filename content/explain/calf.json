@@ -37,7 +37,7 @@
       "easier": "Tåløft på begge ben i samme tempo, og sænk kun hælene, til fødderne er vandrette, ikke under kanten.",
       "harder": "Når alle sæt rammer toppen af intervallet med 2 i reserve to pas i træk, beder appen dig lægge 2 kg i rygsækken. Bær den på ryggen.",
       "equipment": ["step", "wall", "backpack"],
-      "getReady": "Stil dig ved et trappetrin, eller læg en stabel tykke bøger mod væggen, og tag rygsækken på, hvis passet viser »Rygsæk«.",
+      "getReady": "Stil dig ved et trappetrin med rygsækken på, pakket som sidste gang til tåløft (første gang uden) og med 2 kg mere, hvis appen bad om det.",
       "movements": [
         {
           "positions": [

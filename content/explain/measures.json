@@ -105,7 +105,7 @@
           "fix": "Spænd maven, og klem ballerne. Knækker kroppen, tæller gentagelsen ikke, og sættet er slut."
         }
       ],
-      "easier": "Ingen lettere udgave. Gentagelser på knæ, med hænderne på sofaen eller uden dybde tæller ikke. Ondt i håndleddet: tag den på knoer hver gang.",
+      "easier": "Ingen lettere udgave. Push-ups på knæ, på sofaen eller uden dybde tæller ikke. Ondt i håndleddet: tag den på knyttede hænder hver gang.",
       "harder": "Ingen sværere udgave: du går til grænsen. Stop, når du ikke kan lave en ren gentagelse mere, og skriv kun de rene.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, hvor du kan ligge i hele din længde.",
@@ -143,7 +143,7 @@
       "trains": "Måler, hvor mange rene bord-rows du kan i ét sæt: trækket i ryg og arme, som du bruger i clinchen.",
       "start": "Lig på ryggen under langsiden af et tungt bord med brystet lige under kanten. Grib kanten i skulderbredde med fingrene over den, og stræk benene med hælene i gulvet.",
       "steps": [
-        "Træk først let, og mærk efter. Vipper bordet det mindste, så stop, og tryk »Spring målingen over«.",
+        "Træk først let. Vipper bordet det mindste, så stop, tryk »Spring målingen over«, og tag træk-sættene som rygsæk-row.",
         "Træk brystet op til kanten med albuerne tæt langs siden, og sænk dig til helt strakte arme.",
         "Tæl kun rene gentagelser med kroppen lige. Sættet er slut, når brystet ikke når kanten, eller hoften hænger.",
         "Skriv antallet, og tryk »Gem målingen«. Resten af træk-sættene tager du på dit trin."

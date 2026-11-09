@@ -101,7 +101,7 @@
           "fix": "Pres underarmen i gulvet, og hold afstand mellem skulder og øre."
         }
       ],
-      "easier": "Lad den nederste fod hvile let i gulvet, hvis hoften synker, før tiden er gået. Hjælper det ikke, så vælg trin 1 under Stiger.",
+      "easier": "Trin 1: liggende adduktorløft. Synker hoften før tiden, så stop, og tryk »Stoppede før tid«. Sker det pas efter pas, så vælg trin 1 under Stiger.",
       "harder": "Trin 3: kort Copenhagen med hoften op og ned. Appen rykker dig op, når alle sæt holder 30 sek med 2 i reserve to pas i træk.",
       "equipment": ["sofa"],
       "getReady": "Læg dig på venstre side med fødderne mod sofaen, så tæt på, at det øverste knæ kan hvile på sofakanten.",
@@ -235,7 +235,7 @@
           "fix": "Hold skuldre og hofter lige over hinanden, som om du ligger mellem to vægge."
         }
       ],
-      "easier": "Lad den nederste fod hvile let i gulvet, hvis hoften synker, før tiden er gået. Hjælper det ikke, så vælg trin 3 under Stiger.",
+      "easier": "Trin 3: kort Copenhagen, hoften op og ned. Synker hoften før tiden, så stop, og tryk »Stoppede før tid«. Sker det pas efter pas, så vælg trin 3 under Stiger.",
       "harder": "Trin 5: lang Copenhagen med benet op og ned. Appen rykker dig op, når alle sæt holder 45 sek med 2 i reserve to pas i træk.",
       "equipment": ["sofa"],
       "getReady": "Tjek, at sofaen står fast, og læg dig på venstre side foran den, så den øverste fod kan nå sofakanten.",

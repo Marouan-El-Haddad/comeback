@@ -101,7 +101,7 @@
           "fix": "Læg hovedet ned, og stop holdet dér. Formen er vigtigere end tiden."
         }
       ],
-      "easier": "Trin N1: hage-ind liggende. Vælg den under Stiger, hvis hagen glider frem, før holdet er slut.",
+      "easier": "Trin N1: hage-ind liggende. Glider hagen frem, før holdet er slut, så læg hovedet ned, og svar »Hårdt« efter nakken. Du bliver på trinnet.",
       "harder": "Trin N3: isometri med halv kraft mod din hånd. Appen rykker dig op, når du har svaret »Let« efter nakken to pas i træk.",
       "equipment": [],
       "getReady": "Læg dig på ryggen på gulvet med bøjede knæ, og lad pulsen falde lidt.",
@@ -178,7 +178,7 @@
           "fix": "Sænk skuldrene, og lad den frie arm hænge løst."
         }
       ],
-      "easier": "Trin N2: hage-ind og løft, liggende. Vælg den under Stiger, hvis hovedet ikke kan stå stille, selv når du presser mindre.",
+      "easier": "Trin N2: hage-ind og løft, liggende. Kan hovedet ikke stå stille, så pres mindre, og svar »Hårdt« efter nakken. Du bliver på trinnet.",
       "harder": "Trin N4: samme fire retninger med 80 % kraft. Appen rykker dig op, når du har svaret »Let« efter nakken to pas i træk.",
       "equipment": [],
       "getReady": "Stil dig oprejst med fødderne i hoftebredde og armene fri.",
@@ -282,7 +282,7 @@
           "fix": "Træk vejret kort og roligt, og lad tænderne være let adskilt."
         }
       ],
-      "easier": "Trin N3: samme fire retninger med halv kraft. Vælg den under Stiger, hvis hovedet giver efter, før holdet er slut.",
+      "easier": "Trin N3: samme fire retninger med halv kraft. Giver hovedet efter, så pres mindre, og svar »Hårdt« efter nakken. Du bliver på trinnet.",
       "harder": "Trin N5: over sengekanten med hovedets egen vægt. Appen rykker dig op, når du har svaret »Let« efter nakken to pas i træk.",
       "equipment": [],
       "getReady": "Stil dig oprejst med fødderne i hoftebredde og armene fri.",
@@ -386,7 +386,7 @@
           "fix": "Støt altid hovedet med hånden, når du går ind i og ud af stillingen."
         }
       ],
-      "easier": "Trin N4: isometri med 80 % kraft, stående. Vælg den under Stiger, hvis hovedet synker under kanten, før holdet er slut.",
+      "easier": "Trin N4: isometri med 80 % kraft, stående. Synker hovedet under kanten, så støt det med hånden, og svar »Hårdt« efter nakken. Du bliver på trinnet.",
       "harder": "Trin N6: langsomme bevægelser mod din egen hånd. Appen rykker dig op, når du har svaret »Let« efter nakken to pas i træk.",
       "equipment": ["bed"],
       "getReady": "Gå hen til sengen, og læg dig på ryggen, på tværs eller ved fodenden, med skuldrene lige ved kanten og en hånd klar under hovedet.",
@@ -512,7 +512,7 @@
           "fix": "Stå stille med overkroppen og skuldrene, og lad kun hovedet bevæge sig."
         }
       ],
-      "easier": "Trin N5: over sengekanten, hvor hovedet holdes stille. Vælg den under Stiger, hvis bevægelsen hakker, selv med mindre modstand.",
+      "easier": "Trin N5: over sengekanten, hvor hovedet holdes stille. Hakker bevægelsen, så giv mindre modstand, og svar »Hårdt« efter nakken. Du bliver på trinnet.",
       "harder": "Det er stigens sidste trin. Nakkebroer laver du kun sammen med en træner.",
       "equipment": [],
       "getReady": "Stil dig oprejst med fødderne i hoftebredde og armene fri.",

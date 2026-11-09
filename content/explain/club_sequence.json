@@ -121,7 +121,7 @@
           "fix": "Klem ballerne, og træk navlen ind. Formen skal holde i begge runder."
         }
       ],
-      "easier": "Trin C1: én runde i hvert sæt. Knækker formen i anden runde pas efter pas, så vælg C1 under Stiger.",
+      "easier": "Trin C1: én runde i hvert sæt. Knækker formen i anden runde, så svar nej til »Ren runde?«. Du bliver på trinnet.",
       "harder": "Trin C3: tre runder i træk i ét sæt. Appen rykker dig op efter to pas i træk med ja til »Ren runde?«.",
       "equipment": [],
       "getReady": "Læg dig i planke på strakte arme med flade hænder, og gør dig klar til to runder i træk.",
@@ -207,7 +207,7 @@
           "fix": "Klem ballerne, og træk navlen ind. Formen skal holde i alle tre runder."
         }
       ],
-      "easier": "Trin C2: to runder i træk i hvert sæt. Knækker formen i tredje runde pas efter pas, så vælg C2 under Stiger.",
+      "easier": "Trin C2: to runder i træk i hvert sæt. Knækker formen i tredje runde, så svar nej til »Ren runde?«. Du bliver på trinnet.",
       "harder": "Trin C4: fem runder i træk. Appen rykker dig op efter to pas i træk med ja til »Ren runde?«.",
       "equipment": [],
       "getReady": "Læg dig i planke på strakte arme med flade hænder, og gør dig klar til tre runder i træk.",
@@ -293,7 +293,7 @@
           "fix": "Klem ballerne, og træk navlen ind. Formen skal holde i alle fem runder."
         }
       ],
-      "easier": "Trin C3: tre runder i træk. Knækker formen i de sidste runder pas efter pas, så vælg C3 under Stiger.",
+      "easier": "Trin C3: tre runder i træk. Knækker formen i de sidste runder, så svar nej til »Ren runde?«. Du bliver på trinnet.",
       "harder": "Trin C5: fem runder i træk på knoer. Appen rykker dig op efter to pas i træk med ja til »Ren runde?«.",
       "equipment": [],
       "getReady": "Læg dig i planke på strakte arme med flade hænder, og gør dig klar til fem runder i træk.",
@@ -379,7 +379,7 @@
           "fix": "Hold albuerne bøjet ca. 90° i holdene i midten og under mikro-pumpene."
         }
       ],
-      "easier": "Trin C4: fem runder i træk med flade hænder. Knækker håndleddet i de sidste runder pas efter pas, så vælg C4 under Stiger.",
+      "easier": "Trin C4: fem runder i træk med flade hænder. Knækker håndleddet i de sidste runder, så svar nej til »Ren runde?«. Du bliver på trinnet.",
       "harder": "Trin C6: fem runder i træk som diamond. Appen rykker dig op efter to pas i træk med ja til »Ren runde?«.",
       "equipment": [],
       "getReady": "Find en plads, gerne på et tæppe, og læg dig i planke på knyttede næver med lige håndled.",
@@ -439,7 +439,7 @@
     },
     {
       "id": "club_sequence.C6",
-      "trains": "Stærke triceps til lige slag: med hænderne samlet under brystbenet arbejder armene mere i alle positioner.",
+      "trains": "Stærk bagside af armene til lige slag: med hænderne samlet under brystbenet arbejder armene mere i alle positioner.",
       "start": "Planke på strakte arme med hænderne samlet under brystbenet, så tommel- og pegefingre danner en diamant. Kroppen er lige fra hæl til hoved.",
       "steps": [
         "Saml hænderne under brystbenet, så tommel- og pegefingre danner en diamant.",
@@ -458,7 +458,7 @@
       "mistakes": [
         {
           "mistake": "Albuerne flyver ud til siden.",
-          "fix": "Hold albuerne tæt langs kroppen og skråt bagud, så triceps gør arbejdet."
+          "fix": "Hold albuerne tæt langs kroppen og skråt bagud, så armenes bagside gør arbejdet."
         },
         {
           "mistake": "Hoften hænger, når armene bliver trætte.",
@@ -469,7 +469,7 @@
           "fix": "Hold albuerne bøjet ca. 90° i holdene i midten og under mikro-pumpene."
         }
       ],
-      "easier": "Trin C5: fem runder i træk på knoer. Flyver albuerne ud i de sidste runder pas efter pas, så vælg C5 under Stiger.",
+      "easier": "Trin C5: fem runder i træk på knoer. Flyver albuerne ud i de sidste runder, så svar nej til »Ren runde?«. Du bliver på trinnet.",
       "harder": "Det er stigens sidste trin. Hold formen lige god i alle fem runder.",
       "equipment": [],
       "getReady": "Læg dig i planke på strakte arme med hænderne samlet under brystbenet.",

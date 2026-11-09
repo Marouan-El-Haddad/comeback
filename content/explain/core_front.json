@@ -34,7 +34,7 @@
           "fix": "Stræk altid modsat arm og ben: venstre arm med højre ben, højre arm med venstre ben."
         }
       ],
-      "easier": "Lad armene pege lodret op, og sænk kun benet med bøjet knæ, til hælen rører gulvet let. Tag den, hvis lænden slipper gulvet.",
+      "easier": "Lad armene pege lodret op, og sænk kun benet med bøjet knæ, til hælen rører gulvet let. Brug den også, hvis lænden slipper gulvet.",
       "harder": "Trin 2: hollow hold. Appen rykker dig op, når alle sæt rammer 10 rene gentagelser pr. side med 2 i reserve to pas i træk.",
       "equipment": [],
       "getReady": "Læg dig på ryggen på et tæppe eller en måtte med plads til strakte arme og ben.",
@@ -364,10 +364,10 @@
       "trains": "Hele forsiden af kroppen holder dig lige fra stående og ud i en lang, skrå planke, så lænden er beskyttet, når kroppen strækkes mest.",
       "start": "Stå med ansigtet mod en væg på et glat gulv med fødderne i hoftebredde. Bøj i hoften med let bøjede knæ, og sæt hænderne på et håndklæde lige foran fødderne.",
       "steps": [
-        "Stil dig så langt fra væggen, at du kan rulle ud til den og tilbage uden svaj.",
+        "Stil dig så tæt på væggen, at du kan lave 3 rene gentagelser med 2–3 i reserve.",
         "Spænd maven, og lad håndklædet glide frem på 3 sek, til væggen stopper det.",
         "Hold 1 sek stille, og træk dig tilbage i ét roligt stræk, til hænderne er ved fødderne.",
-        "Flyt dig en fodlængde længere fra væggen, når alle sæt rammer 8 rene gentagelser med 2 i reserve."
+        "Rammer alle sæt 8 rene gentagelser med 2 i reserve, så flyt dig en fodlængde længere væk næste pas; tager du færre, så ret tallet med −."
       ],
       "tempo": "3 sek ud, 1 sek stille, og træk dig tilbage i ét roligt stræk.",
       "breathing": "Træk vejret ind, før du ruller ud, og pust ud, når du trækker dig tilbage.",

@@ -41,7 +41,7 @@
       "easier": "Lad tæerne på det frie ben røre gulvet let bag dig, og hold let i en stoleryg. Gå kun ned, til du mærker et let stræk i baglåret.",
       "harder": "Når alle sæt rammer toppen af intervallet med 2 i reserve to pas i træk, beder appen dig lægge 2 kg i rygsækken. Hold den i hånden på det frie bens side.",
       "equipment": ["backpack"],
-      "getReady": "Find en fri plads; viser passet »Rygsæk«, så pak den med den vægt (1 liter vand vejer 1 kg).",
+      "getReady": "Pak rygsækken som sidste gang til etbens RDL (første gang uden), og læg 2 kg mere i (2 liter vand), hvis appen bad om det.",
       "movements": [
         {
           "positions": [

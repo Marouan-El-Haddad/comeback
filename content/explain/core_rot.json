@@ -95,7 +95,7 @@
           "fix": "Løft dem kun til vandret. Højere giver svaj i lænden."
         }
       ],
-      "easier": "Trin R1: planke med skulder-tap. Logger du skarp smerte, rykker appen dig derned i en uge. Er holdet for langt, så stop uret, når flasken vipper.",
+      "easier": "Trin R1: planke med skulder-tap. Logger du skarp smerte, rykker appen dig derned i en uge. Er holdet for langt, så tryk »Stoppede før tid«, når flasken vipper.",
       "harder": "Trin R3: 2-punkts på hænderne. Appen rykker dig op, når alle sæt holder 30 sek pr. side med 2 i reserve to pas i træk.",
       "equipment": ["bottles"],
       "getReady": "Læg en lukket vandflaske klar ved siden af dig, hvor du kan nå den fra planken.",
@@ -169,7 +169,7 @@
           "fix": "Løft dem kun til vandret. Højere giver svaj i lænden."
         }
       ],
-      "easier": "Trin R2: 2-punkts planke på albuerne. Logger du skarp smerte, rykker appen dig derned i en uge. Er holdet for langt, så stop uret, når flasken vipper.",
+      "easier": "Trin R2: 2-punkts planke. Logger du skarp smerte, rykker appen dig derned i en uge. Er holdet for langt, så tryk »Stoppede før tid«, når flasken vipper.",
       "harder": "Trin R4: 2-punkts med bevægelse. Appen rykker dig op, når alle sæt holder 30 sek pr. side med 2 i reserve to pas i træk.",
       "equipment": ["bottles"],
       "getReady": "Læg en lukket vandflaske klar ved siden af dig, hvor du kan nå den fra planken.",

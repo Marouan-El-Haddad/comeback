@@ -102,7 +102,7 @@
           "fix": "Hold knæet over midten af foden, så det peger samme vej som tæerne."
         }
       ],
-      "easier": "Trin 1: split squat med begge fødder i gulvet. Vælg trinnet under Stiger, hvis du ikke kan lave bunden af intervallet rent med 2 i reserve.",
+      "easier": "Trin 1: split squat med begge fødder i gulvet. Vælg trinnet under Stiger, hvis du ikke kan lave bunden af intervallet rent i alle sæt.",
       "harder": "Trin 3: bulgarsk med rygsæk eller 3 sek pause i bunden. Appen rykker dig op, når alle sæt rammer toppen af intervallet med 2 i reserve to pas i træk.",
       "equipment": ["sofa"],
       "getReady": "Sæt dig på sofakanten, stræk det ene ben frem, og stil forreste fod der, hvor hælen rammer gulvet.",
@@ -164,7 +164,7 @@
           "fix": "Tæl 3 sek ned, og stå helt stille i bunden, før du presser dig op."
         }
       ],
-      "easier": "Trin 2: bulgarsk uden rygsæk. Vælg trinnet under Stiger, hvis du ikke kan lave bunden af intervallet rent med 2 i reserve, heller ikke med en lettere rygsæk.",
+      "easier": "Trin 2: bulgarsk uden rygsæk. Vælg trinnet under Stiger, hvis du ikke kan lave bunden af intervallet rent i alle sæt, heller ikke med en lettere rygsæk.",
       "harder": "Trin 4: etbens rejs-dig fra stol. Appen rykker dig op, når alle sæt rammer toppen af intervallet med 2 i reserve to pas i træk.",
       "equipment": ["sofa", "backpack"],
       "getReady": "Pak rygsækken med vandflasker (1 liter vejer 1 kg) eller bøger, så du kan lave alle sæt rent med den planlagte reserve.",
@@ -236,7 +236,7 @@
       "steps": [
         "Læn dig frem, til næsen er over tæerne, og rejs dig på ét ben med armene frem som modvægt.",
         "Sæt dig igen på 3 sek, til bagdelen rører stolen let, og hold 1 sek stille uden at slappe af.",
-        "Kan du ikke rejse dig fra stolen, så læg puder på sædet, og fjern én, når du rammer toppen af intervallet i alle sæt.",
+        "Læg puder på sædet, hvis du ikke kan rejse dig. Fjern én, når alle sæt rammer toppen med 2 i reserve; tager du færre, så ret tallet med −.",
         "I »Venstre ben« står du på venstre ben; i »Højre ben« på højre."
       ],
       "tempo": "3 sek ned, 1 sek stille i bunden, kontrolleret op.",
@@ -385,7 +385,7 @@
           "fix": "Pres knæet ud over midten af foden, så det peger samme vej som tæerne."
         }
       ],
-      "easier": "Trin 5: pistol-negativer, hvor du rejser dig på to ben. Vælg trinnet under Stiger, hvis du ikke kan lave bunden af intervallet rent med 2 i reserve.",
+      "easier": "Trin 5: pistol-negativer, hvor du rejser dig på to ben. Vælg trinnet under Stiger, hvis du ikke kan lave bunden af intervallet rent i alle sæt.",
       "harder": "Trin 7: pistol med pause og knæspark. Appen rykker dig op, når alle sæt rammer toppen af intervallet med 2 i reserve to pas i træk.",
       "equipment": [],
       "getReady": "Find en fri plads på gulvet, og stå på bare fødder eller i sko, så foden ikke glider.",

@@ -9,7 +9,7 @@
     {
       "id": "backpack_row.1",
       "trains": "Den øvre ryg og de brede rygmuskler, som trækker i clinchen og holder igen mod alt presset fra push-ups og slag.",
-      "start": "Stå foran stolen, og støt den ene hånd midt på sædet med strakt arm. Foden på samme side frem, den anden et stort skridt bagud. Ryggen lige og næsten vandret, rygsækken i den frie hånd.",
+      "start": "Stå foran stolen, og støt den ene hånd midt på sædet med strakt arm. Foden på samme side frem og den anden et stort skridt bagud, ryggen lige og næsten vandret og rygsækken i den frie hånd.",
       "steps": [
         "Bøj let i knæene, og spænd maven, så ryggen er lige og ikke drejer.",
         "Træk albuen op tæt langs kroppen, til hånden med rygsækken er ved hoften.",
@@ -34,10 +34,10 @@
           "fix": "Skub hoften bagud, og løft brystet lidt, så ryggen er lige fra hoften til nakken."
         }
       ],
-      "easier": "En lettere rygsæk med samme tempo. Tag den, hvis du ikke kan lave 8 rene gentagelser pr. side med 1 sek stop i toppen.",
+      "easier": "En lettere rygsæk med samme tempo, også når du ikke kan lave 8 rene gentagelser pr. side med 1 sek stop i toppen.",
       "harder": "Først når alle sæt rammer 15 pr. side med 2 i reserve to pas i træk, beder appen dig lægge 2 kg mere i rygsækken.",
       "equipment": ["backpack", "chair", "wall"],
-      "getReady": "Stil en solid stol uden hjul med ryglænet mod væggen. Pak rygsækken som sidst, og læg 2 liter vand mere i, hvis appen har sagt til.",
+      "getReady": "Stil en stol uden hjul med ryglænet mod væggen, og pak rygsækken som sidst, plus 2 liter vand, hvis appen sagde det efter sidste rygsæk-row.",
       "movements": [
         {
           "positions": [
