@@ -128,3 +128,76 @@ Metode:
 - **Hvor:** `e2e/status.spec.ts`, `src/ui/__tests__/status.test.ts`.
 - **Hvorfor:** D67 (6) og SPEC 3.1 og 3.4: ferie er hvile, også på en klubdag, og I dag og Uge viser »Ferie« og ingen Muay Thai. Testene ser kun »Lørdag: Ferie: hvile« i »Resten af ugen«; hovedkortet »Ferie« med »Ret status«, Uges chip og søndagstjekket under en ferie er ikke prøvet. Egne flows viser, at det virker (`review-p5c-pixel9a-ferie-soendag.png`).
 - **Rettelse:** et flow i `e2e/status.spec.ts`: ferie lørdag–mandag → lørdag og mandag er »Ferie« med »Ret status« og uden Muay Thai i Uge, søndag er hovedkortet søndagstjekket med ferien i kortet over.
+
+## Opfølgning
+
+2026-11-10 · 6fcbc0a, 2379344, 85bb19c og 25280da (D70, R33, ENGINE 3.1, 8 og 9 med S-WEEK-14, SPEC 3.1, 3.6, 4.6, 4.7 og 4.11) · worktree på 25280da. Slutrunden i P5a og P5b (75c4323–91cd51a) ligger imellem; andre har tjekket den.
+
+Metode:
+
+- **Kørt** i worktreen:
+  - `npm test`: 822/822. `npm run typecheck` og `npm run lint`: rene.
+  - `e2e/status.spec.ts` i `pixel9a` og `pixel9a-utc` (`E2E_PORT=4187`): 22/22.
+  - `life`, `moves`, `tabs`, `no-source-refs` og `design` i begge projekter: 47/47.
+- **Egne flows** i begge projekter (10/10, scratch):
+  - M1's rejse og sygdom fra reviewet;
+  - ferie foran en kommende ferie, og hullet mellem to syge perioder (N1);
+  - syg på en rejse, og så rejsen gjort kortere (N2);
+  - klubloggen på en rejsedag og dagen efter.
+- **Skærmbilleder** i `screenshots/` (`pixel9a`; `-utc`-udgaverne er ens):
+  - `review-p5c-opf-pixel9a-ferie-foran.png`
+  - `review-p5c-opf-pixel9a-syg-paa-rejse.png`
+  - `review-p5c-opf-pixel9a-syg-paa-rejse-i-dag.png`
+
+### Status på fundene
+
+- **M1 rettet:**
+  - Rejsen 9.–20., der onsdag gøres kortere til fredag 13., gælder kun til den 13. Skærmen siger »Retter Rejse til og med fredag 20. november: nu til og med fredag 13. november.«. Tirsdag 17/11 er Styrke A uden statuskort, og fredag 20/11 er Styrke B.
+  - En sygdom, der forlænges onsdag, står som én periode med ét »Afslut«. »✓ Syg er afsluttet. Fra i dag gælder den almindelige plan.« passer nu: hovedkortet er Muay Thai, og tirsdag står stadig som syg i Uge.
+  - »Afslut« siger før og efter trykket, hvad der stadig gælder (»Afslut, så gælder Rejse stadig til og med …«).
+- **M2 rettet:** programmets »Feber eller ondt i kroppen: hvil. Kun forkølet over halsen: Open & Strong og en gåtur.« står på Status, på kortet »Syg« og i statuskortet, og »I morgen« siger »Syg: hvil eller Open & Strong og en gåtur«.
+- **L1 rettet:** på en rejsedag kommer »Hvordan var det?« efter klubtiden, og »Muay Thai i går« står dagen efter. Søndagstjekket har lørdagskarakteren på en rejselørdag (SPEC 4.6 og 4.7 er rettet med).
+- **L2 rettet:** når dagens pas er logget eller i gang, står kun »I morgen: Kamp.« (`eventLine`). Begivenhed siger »Dagens pas er logget, så det ændres ikke.«.
+- **L3 rettet:** SPEC 4.11.
+- **L4 rettet:** »Syge- og feriedage gennemfører ikke ugen: den tæller kun med Styrke A, B eller rejsepasset på en anden dag.«.
+- **L5 rettet:** e2e-flowet ferie lørdag–mandag.
+
+**S-WEEK-14 og data:**
+
+- Scenariet i ENGINE 8, rækken i 3.1 og testen siger det samme, og programmet har ingen regel, det går imod.
+- `statusChange` skriver kun `status_set`: ingen ny hændelse, intet nyt felt og ingen migration. P5c er ikke udgivet, så ingen rigtig log har en status.
+- De dage, der er gået, står som før:
+  - En periode, der gælder, afsluttes i går på sin plads.
+  - En kommende periode fjernes.
+  - Den rettede periode skrives fra i dag.
+- De to hændelser skrives i én transaktion og i rækkefølge (fjernelsen før den nye), og »Flet« sorterer stabilt efter `at`. Rettelsen kan derfor ikke miste eller forvanske de dage, der er gået, heller ikke efter en import.
+- Dobbelttryk-spærren og tidsmaskinen holder stadig (testene består).
+
+### Nye fund
+
+#### N1 (lav): En periode foran en kommende af samme slags skærer den kommende af
+
+- **Hvor:** `src/engine/status.ts:40–43`: den rettede periode slutter altid på den nye sidste dag.
+- **Hvorfor:**
+  - D70 og SPEC 3.6: en ny status, der overlapper eller støder op til en af samme slags, retter den, »fra den gamles første dag til den nye sidste dag«. Det er rigtigt, når den nye ligger i eller efter den gamle. Ligger den foran, forsvinder den gamles dage.
+  - **Ferie:** ferie 21.–27. november står allerede. Vælger brugeren ferie 18.–20. (tre dage mere foran), er resultatet kun 18.–20., og 21.–27. er væk. Skærmen siger »Retter Ferie fra lørdag 21. november til og med fredag 27. november: nu fra onsdag 18. november til og med fredag 20. november.« (`review-p5c-opf-pixel9a-ferie-foran.png`), men ikke, at 21.–27. forsvinder.
+  - **Hullet:** syg 12.–13. og 16.–17., og så syg 14.–15. Resultatet er 12.–15., og 16.–17. er væk.
+  - **Julen:** samme sker med »Klubben lukket« 24/12–3/1, hvis 21.–23/12 lægges til bagefter.
+  - Dage, der er gået, rammes aldrig, og skærmen viser resultatet. Derfor lav.
+- **Rettelse:**
+  - En rettet periode, der begynder efter den nye sidste dag, beholder sin egen slutdag (`to` = det seneste af den nye `to` og dens `to`). Så føjer en periode foran eller i et hul sig til i stedet for at skære af.
+  - Tilføj ferien og hullet til S-WEEK-14.
+
+#### N2 (lav): En rejse, der gøres kortere, tager de syge dage, der blev sat under rejsen
+
+- **Hvor:** `src/engine/status.ts:42`: den rettede periode skrives altid som den nyeste.
+- **Hvorfor:**
+  - Eksemplet: rejse 9.–20. november. Torsdag 12/11 sættes syg til og med fredag 13. Samme dag rettes rejsen til fredag 13., fordi han tager hjem.
+  - Bagefter er torsdag og fredag rejsedage. Hovedkortet torsdag er »Motor« og fredag »Rejsepas« i stedet for »Syg« (`review-p5c-opf-pixel9a-syg-paa-rejse-i-dag.png`).
+  - Skærmen siger det kun som tredje af fem linjer: »Gælder i stedet for Syg de dage, de overlapper.« (`review-p5c-opf-pixel9a-syg-paa-rejse.png`).
+  - D70's egen forsigtigste læsning er, at »det, brugeren lige har valgt, gælder«. Han valgte en ny slutdag for rejsen, ikke at sygdommen hører op. At den nyeste gælder (ENGINE 5.1, trin 3), handler om, hvad han sidst sagde om dagene.
+  - Når dagene igen sættes som syge, er det rettet, og intet går tabt. Derfor lav.
+- **Rettelse:**
+  - En rettelse, der kun flytter slutdagen tidligere, beholder sin plads: `status_set` med den gamle `from` og den nye `to`, som S-WEEK-13 afløser på stedet.
+  - Kun en rettelse, der lægger dage til (som syg igen fra i dag over en rejse, S-WEEK-14), skrives som den nyeste.
+  - Tilføj eksemplet til S-WEEK-14: torsdag og fredag er stadig syge dage.
