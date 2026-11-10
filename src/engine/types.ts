@@ -574,6 +574,8 @@ export interface State {
     sleepAvg?: number;
     /** Every track a check of the week named under pain or »for tungt«: not taken down again. */
     taken: string[];
+    /** The tracks a check of the week named under »for tungt« (S-PAIN-11). */
+    takenHeavy: string[];
   }>;
   moves: Array<{ kind: SessionKind; fromDate: ISODate; toDate: ISODate; short: boolean }>;
   skipped: Array<{ kind: SessionKind; forDate: ISODate; reason: 'user' | 'missed' }>;

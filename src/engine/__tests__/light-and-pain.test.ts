@@ -336,6 +336,37 @@ describe('Smerte', () => {
     expect(defaultAnswers(state, TUE(2)).answers[1]).toBe(false);
   });
 
+  test('S-PAIN-11: et søndagstjek gemt igen efter et pas med skarp smerte gør ikke smertens trin permanent', () => {
+    const log = from(1, { legs: { stepId: 'legs.3', target: 8 } });
+    const sunday = dayOf(1, 7);
+    const answers = { date: sunday, painTracks: [], tooHeavy: ['legs'] };
+    log.add(submitSundayCheck(log.ctx, log.events, answers));
+    expect(log.state(sunday).tracks.legs?.stepId).toBe('legs.2');
+    // A Styrke A moved to the same Sunday, with sharp pain in legs: legs.1 for a week.
+    log.session({
+      date: sunday,
+      kind: 'A',
+      sets: { legs: { values: [6, 6, 6], rir: 2, pain: 'sharp' } },
+    });
+    expect(log.state(sunday).tracks.legs).toMatchObject({
+      stepId: 'legs.1',
+      tempDown: { originalStepId: 'legs.2' },
+    });
+    // The same answers again, as with »Ret søndagstjekket« on Monday: nothing happens.
+    const again = log.add(submitSundayCheck(log.ctx, log.events, { ...answers, sleepAvg: 7 }));
+    expect(again.filter((e) => e.type === 'step_changed')).toEqual([]);
+    expect(log.state(dayOf(2, 1)).tracks.legs?.tempDown).toMatchObject({
+      originalStepId: 'legs.2',
+    });
+    // The first green session after the period gives legs.2 back.
+    const { finished } = log.session({ date: TUE(3) });
+    expect(finished.find((e) => e.type === 'step_changed' && e.trackId === 'legs')).toMatchObject({
+      from: 'legs.1',
+      to: 'legs.2',
+      reason: 'restore',
+    });
+  });
+
   test('S-PAIN-06: let smerte ændrer intet trin, men står i historikken', () => {
     const log = from(1, { press: { stepId: 'press.2', target: 8 } });
     const { finished } = log.session({

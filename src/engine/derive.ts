@@ -434,6 +434,7 @@ function apply(program: Program, state: State, raw: AppEvent, emomHistory: EmomP
       const taken = [
         ...new Set([...(before?.taken ?? []), ...(e.painTracks ?? []), ...(e.tooHeavy ?? [])]),
       ];
+      const takenHeavy = [...new Set([...(before?.takenHeavy ?? []), ...(e.tooHeavy ?? [])])];
       state.sundayChecks = state.sundayChecks.filter((c) => c.weekStart !== e.weekStart);
       state.sundayChecks.push({
         date: e.date,
@@ -442,6 +443,7 @@ function apply(program: Program, state: State, raw: AppEvent, emomHistory: EmomP
         tooHeavy: e.tooHeavy ?? [],
         sleepAvg: e.sleepAvg,
         taken,
+        takenHeavy,
       });
       break;
     }

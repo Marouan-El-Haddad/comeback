@@ -561,7 +561,10 @@ export function submitSundayCheck(
   const state = deriveState(program, events, input.date);
   const weekStart = mondayOf(input.date);
   // Every track a check of the week named: none is taken down twice (S-PAIN-08, S-PAIN-10).
-  const handled = new Set(state.sundayChecks.find((c) => c.weekStart === weekStart)?.taken ?? []);
+  const week = state.sundayChecks.find((c) => c.weekStart === weekStart);
+  const handled = new Set(week?.taken ?? []);
+  // Already »for tungt« this week: a pain period from a session since is restored as any other.
+  const heavyBefore = new Set(week?.takenHeavy ?? []);
   const out: AppEvent[] = [
     make(
       {
@@ -615,7 +618,7 @@ export function submitSundayCheck(
   }
   for (const trackId of input.tooHeavy) {
     const t = state.tracks[trackId];
-    if (!t || input.painTracks.includes(trackId)) continue;
+    if (!t || input.painTracks.includes(trackId) || heavyBefore.has(trackId)) continue;
     // In a pain period the lowered step becomes your step: no restore to the step that was too
     // heavy, and no step further down – also when an earlier check of the week brought the pain
     // (S-PAIN-09). The first step with the lighter variant has nothing lower.
