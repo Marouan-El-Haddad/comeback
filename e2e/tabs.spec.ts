@@ -6,6 +6,9 @@ import { onboard, openApp } from './helpers.ts';
 // design review.
 test('Uge, Stiger, Mere og Diagnose', async ({ page }) => {
   await openApp(page, '2026-11-17');
+  // The welcome drawn with its fonts, not the blank page before it (P4 review follow-up N3).
+  await expect(page.getByTestId('onboarding')).toBeVisible();
+  await page.evaluate(() => document.fonts.ready);
   await page.screenshot({ path: 'screenshots/onboarding.png', scale: 'css' });
   await onboard(page);
 
