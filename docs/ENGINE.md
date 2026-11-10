@@ -53,8 +53,8 @@ Alle hændelser har `id` (ulid), `at` (ISO-tidsstempel), `date` (`YYYY-MM-DD`, E
 | `measurement_logged` | `measureId`, `value`, `programWeek`, `round` | Målinger |
 | `club_logged` | `attended`, `content?[]`, `hardness?`, `freshness?`, `technique?` | Efter klubtræning (Tilføjelse T1). `date` er klubdagen, også når loggen skrives dagen efter (`SPEC.md` 4.6) |
 | `sunday_check` | `weekStart`, `sleepAvg?`, `painTracks?[]`, `tooHeavy?[]` | Søndagstjek. `date` er søndagen og `weekStart` ugens mandag, også når tjekket tages mandag (`SPEC.md` 4.7). Et nyt tjek for samme `weekStart` afløser det forrige (R-PAIN-SUNDAY) |
-| `status_set` | `status`, `from`, `to` | Syg, rejse, ferie, klubben lukket |
-| `calendar_event_added` | `label`, `eventDate` | Kamp o.l. |
+| `status_set` | `status`, `from`, `to` | Syg, rejse, ferie, klubben lukket. Overlapper to statusser, gælder den nyeste. Et nyt `status_set` med samme `status` og `from` som et tidligere afløser det på dets plads, så de dage, der er gået, står som før: »Afslut« skriver `to` = i går, og `to` før `from` fjerner det (»Fjern«, `SPEC.md` 3.6, S-WEEK-13, `DECISIONS.md` D67) |
+| `calendar_event_added` | `label`, `eventDate` | Kamp o.l. En begivenhed kan ikke fjernes: der er ingen hændelse til det (`DECISIONS.md` D67) |
 | `schedule_changed` | `clubDays: number[]` (1 = mandag), `clinch: boolean` | Ugeplan |
 | `overlay_choice` | `overlayId`, `choice` | Jul/nytår |
 | `os_done` | – | Open & Strong gennemført |
@@ -112,9 +112,9 @@ Tilstanden afledes fra bunden ved hver start og efter hver hændelse (loggen er 
 
 1. `k = kalenderuge(date)`; hvis `k < 0`: »Programmet starter mandag 9. november«.
 2. `pw, round = programWeekFor(k)` (5.7). `week = program.weeks[pw]`.
-3. Status på datoen: `ill` → rød dag (kun Open & Strong og gåtur, intet trafiklys). `holiday` → hvile + Open & Strong valgfri. `travel` → rejsepas på dage, der ellers har A eller B. `club_closed` → Muay Thai-dage viser »4–5 kamp-runder hjemme«.
+3. Status på datoen: `ill` → rød dag (kun Open & Strong og gåtur, intet trafiklys). `holiday` → hvile + Open & Strong valgfri. `travel` → rejsepas på dage, der ellers har A eller B. `club_closed` → Muay Thai-dage viser »4–5 kamp-runder hjemme«. Overlapper to statusser, gælder den nyeste (`statusRangeOn`, 3.1).
 4. Ugedagens pas: `layout[kind] = weekday`, eller en `session_moved` til datoen. Klubdage fra `schedule`.
-5. Begivenhed i morgen → spærret indhold (R-EVENT; »aldrig tunge ben, Nordic eller intervaller«, s. 47): A uden power-ben, uden ben-stigen (`legs`) og uden Nordic-trin (`posterior.4–6`); motor som rolig base; B uden etbens-RDL med rygsæk. Appen viser »I morgen: {label} – let udgave«.
+5. Begivenhed i morgen → spærret indhold (R-EVENT; »aldrig tunge ben, Nordic eller intervaller«, s. 47): A uden power-ben, uden ben-stigen (`legs`) og uden Nordic-trin (`posterior.4–6`); motor som rolig base; B uden etbens-RDL med rygsæk. Appen viser motorens forklaring af dagen (`eventExplanation`): det, R-EVENT tog ud af dagens plan (`eventTrim`: blokkene, motoren som rolig base i stedet for intervaller, uden Cooper-testen eller uden stigningsløb, og boss-udfordringen), fx »I morgen: Kamp – let udgave i dag. Dagen før en begivenhed er der aldrig tunge ben, Nordic eller intervaller: Power ben og Ben er taget ud af dagens pas.«; uden pas kun »I morgen: Kamp.« (S-EVENT-03).
 6. Overlejringer, der rammer datoen, tilføjes som forslag (5.8).
 7. Skabelonen opløses: for hver blok hentes `tracks[trackId].stepId` og `target`, sæt fra `week` (tabel 6.3), pause fra blokken, reserve-plan fra `week.rirPlan`. EMOM-blokken får `min(emom.stepId, week.emomCap)`; i let uge erstattes den af `burpee_3min`. Målinger indsættes efter 5.6. Boss-valg vises, hvis R-BOSS tillader.
 8. `volumeFactor` fra R-FLAT anvendes på sæt (rund ned, mindst 2).
@@ -505,11 +505,13 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 - **S-WEEK-10** Givet pw 12 gennemført. Så næste uge pw = 5, round = 2, ingen uge-1-målinger.
 - **S-WEEK-11** Givet tre uger uden gennemført og rygsæk-row med 4 kg, target 15, hits 1. Når den fjerde uge beregnes. Så vægten er 2 kg, target = min og hits = 0 på læg, etbens RDL og rygsæk-row (ét trin ned svarer til −2 kg, ikke under 0). (Tilføjet ved selvreview F6.)
 - **S-WEEK-12** Givet rejse og `legs.5`. Når tirsdag beregnes. Så er rejsepassets ben split squat-trinnet `legs.3` (dit trin, højst `legs.3`) med arbejdstal = min. (Tilføjet ved selvreview F7.)
+- **S-WEEK-13** Givet rejse 9.–20. november, syg 12.–13. november sat bagefter og klubben lukket 16.–22. november. Når rejsen afsluttes søndag 15/11 (`status_set` rejse 9.–14. november) og klubbens lukning fjernes (`status_set` klubben lukket 16.–15. november). Så er 9.–11. og 14. november rejsedage, 12.–13. stadig syge dage, 15.–22. november uden status, og lørdag 21/11 er Muay Thai igen (3.1). (Tilføjet ved P5c, `DECISIONS.md` D67.)
 - **S-XMAS-01** Givet dato 21/12 2026, pw 7. Så overlejringer `xmas_2026_motor` (23/12) og `xmas_2026_B` (26/12) foreslås.
 - **S-XMAS-02** Givet uge fra 28/12 med pw 8. Så målinger foreslås 29–30/12; med pw 6 foreslås ingen målinger.
 - **S-XMAS-03** Givet `club_closed` 24/12–3/1. Så Muay Thai-dage viser kamp-runder.
 - **S-EVENT-01** Givet begivenhed »Kamp« 20/1. Når planen for 19/1 beregnes. Så ingen power-ben, ingen ben-stige, ingen Nordic-trin, ingen intervaller, ingen boss; flaget vises.
 - **S-EVENT-02** Givet en begivenhed fredag i pw 3 og i pw 4. Når torsdagens motor beregnes. Så er den rolig base uden stigningsløb og uden Cooper-test. (Tilføjet ved selvreview F5.)
+- **S-EVENT-03** Givet en begivenhed »Kamp« onsdag i uge 1 og `posterior.4`. Når forklaringen af tirsdagen beregnes. Så er Power ben, Ben og Bagkæde taget ud: »I morgen: Kamp – let udgave i dag. Dagen før en begivenhed er der aldrig tunge ben, Nordic eller intervaller: Power ben, Ben og Bagkæde er taget ud af dagens pas.« I pw 11 slutter tirsdagen »…, og der er ingen boss-udfordring i dag.« Med kampen fredag i pw 5 siger torsdagen »… intervaller: Motoren er en rolig base i stedet for intervaller.«, i pw 3 »… Motoren er en rolig base uden stigningsløb.« og i pw 4 »… Motoren er en rolig base uden Cooper-testen.«; dagen før en kamp torsdag i uge 1 (onsdag, en klubdag uden pas) siger kun »I morgen: Kamp.«, og dagen før en kamp lørdag (fredagens Styrke B uden vægt i rygsækken) »I morgen: Kamp. Dagens pas har hverken tunge ben, Nordic eller intervaller og er uændret.« (Tilføjet ved P5c, `DECISIONS.md` D67.)
 - **S-FLAT-01** Givet standardforløbet (k4 = pw 5, k5 = pw 6, k6 = pw 7), freshness flat i k4 og technique 4 i k5. Så k6 får volumeFactor 0.67: 4 sæt → 2 (rund ned, min 2), 3 → 2; EMOM rykker ikke op i k6; k7 normal.
 - **S-FLAT-02** Givet flad i k5 og k6 i standardforløbet, så k7 er let uge (pw 8). Så skubbes reduktionen til k8 (pw 9).
 
@@ -596,7 +598,7 @@ Alle scenarier er automatiske tests i `src/engine/__tests__`. Datoer er Europe/C
 | 43–44 | Imponer-kataloget | R-IMPRESS | S-IMP-01 |
 | 45 | Boss-udfordringer | R-BOSS | S-BOSS-01 |
 | 46 | Reglerne, comeback-fælden | R-PAIN-*, R-USER-STEP (advarsel), cues (knoer, nakke) | S-PAIN-* |
-| 47 | Flere Muay Thai-pas, motoren ryger først, tunge ben før en begivenhed, rejse, sygdom, sprungne uger | R-EXTRA-MT, R-MOVE, R-EVENT, R-TRAVEL, R-ILL, R-PW, R-ABSENCE-3, R-REST | S-WEEK-02..08, S-WEEK-11..12, S-EXTRA-*, S-MOVE-01, S-MOVE-03, S-MOVE-05..09, S-EVENT-01..02 |
+| 47 | Flere Muay Thai-pas, motoren ryger først, tunge ben før en begivenhed, rejse, sygdom, sprungne uger | R-EXTRA-MT, R-MOVE, R-EVENT, R-TRAVEL, R-ILL, R-PW, R-ABSENCE-3, R-REST | S-WEEK-02..08, S-WEEK-11..13, S-EXTRA-*, S-MOVE-01, S-MOVE-03, S-MOVE-05..09, S-EVENT-01..03 |
 | 48 | Restitution, søndagstjek | `sunday_check`, R-PAIN-SUNDAY | S-PAIN-05, S-PAIN-07..10 |
 | 49 | Log | Historik (SPEC 3.6), eksport | S-DATA-02 |
 | 51–54 | Bag om programmet, kilder | »Hvorfor« i appens egne ord (`content/explain/`, `SPEC.md` 9.1); appen viser ingen kilder (`DECISIONS.md` A2) | – |
