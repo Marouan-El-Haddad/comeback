@@ -230,7 +230,12 @@ function SundayCheckForm(props: LifeFormProps & { sunday: ISODate }) {
     const extra: AppEvent[] = [];
     if (gradeField && loggedGrade === undefined && grade[0] !== undefined) {
       extra.push(
-        model.ctx.make({ type: 'club_logged', attended: true, technique: grade[0] }, saturday),
+        // The empty content list marks the check's grade: it does not answer the club card, so
+        // Saturday's club log can still be given (D65, D69).
+        model.ctx.make(
+          { type: 'club_logged', attended: true, technique: grade[0], content: [] },
+          saturday,
+        ),
       );
     }
     const check = submitSundayCheck(model.ctx, [...model.events, ...extra], {

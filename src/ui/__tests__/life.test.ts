@@ -251,7 +251,7 @@ describe('after the review of P5a', () => {
     const log = onboarded();
     // Written on Sunday, as the Sunday check writes it (the helper's clock only goes forward).
     log.push({ type: 'os_done' }, SUN);
-    log.push({ type: 'club_logged', attended: true, technique: 4 }, SAT);
+    log.push({ type: 'club_logged', attended: true, technique: 4, content: [] }, SAT);
     const [sunday] = clubAsks(PROGRAM, log.state(SUN), SUN, 9 * 60);
     expect(sunday).toMatchObject({ date: SAT, yesterday: true, answered: false });
     expect(sunday?.log && gradeOnly(sunday.log)).toBe(true);
@@ -316,6 +316,17 @@ describe('after the review of P5a', () => {
 
 // The follow-up on the review of P5a (docs/reviews/nat3-p5a-livet.md, »Opfølgning«, D68).
 describe('after the follow-up on the review of P5a', () => {
+  it('N4: a grade alone from the club log, logged the day after, answers; the Sunday check’s does not', () => {
+    const log = onboarded();
+    log.push({ type: 'os_done' }, SUN);
+    log.push({ type: 'club_logged', attended: true, technique: 7 }, SAT);
+    expect(clubAsks(PROGRAM, log.state(SUN), SUN, 9 * 60)[0]?.answered).toBe(true);
+    const check = onboarded();
+    check.push({ type: 'os_done' }, SUN);
+    check.push({ type: 'club_logged', attended: true, technique: 7, content: [] }, SAT);
+    expect(clubAsks(PROGRAM, check.state(SUN), SUN, 9 * 60)[0]?.answered).toBe(false);
+  });
+
   it('N2: a grade logged alone on Saturday itself answers the club card the day after', () => {
     const log = onboarded();
     log.push({ type: 'club_logged', attended: true, technique: 7 }, SAT);

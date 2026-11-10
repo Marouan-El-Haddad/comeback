@@ -139,13 +139,17 @@ export function gradeOnly(log: ClubLog): boolean {
 }
 
 /**
- * A log that answers »Hvordan var det?« the day after: anything but a grade alone written after
- * its club day, as the Sunday check gives it when the club log is missing (D63, D65, D68). A grade
- * logged alone on the club day itself answers.
+ * A log that answers »Hvordan var det?« the day after: anything but the grade the Sunday check
+ * gives when the club log is missing (D63, D65, D68, D69). The check writes it alone with an empty
+ * content list – the club log's own screen leaves content out when none is chosen – and after its
+ * club day; a grade the club log saves alone, on the day or the day after, answers.
  */
 function answers(entry: State['club'][number]): boolean {
-  const alone = gradeOnly({ ...entry, content: entry.content ?? [] });
-  return !alone || todayIn(Date.parse(entry.at)) <= entry.date;
+  const fromCheck =
+    entry.content !== undefined &&
+    gradeOnly({ ...entry, content: entry.content }) &&
+    todayIn(Date.parse(entry.at)) > entry.date;
+  return !fromCheck;
 }
 
 export interface ClubAsk extends ClubDay {
