@@ -102,11 +102,14 @@ Baner: kode bygges af én `comeback-builder` ad gangen i arbejdsmappen. Indhold 
 - Agent: `comeback-builder`. Kilder: ENGINE 5.9 (R-MOVE, R-REST), SPEC 3.1 og 4.11, PLAN M3.
 - Grønt: scenarierne for R-MOVE og R-REST; Playwright i tidsmaskinen (`@date`).
 
-### [~] P5c – Livet: syg, rejse, ferie, klubben lukket og begivenheder
+### [x] P5c – Livet: syg, rejse, ferie, klubben lukket og begivenheder
 
+- Status: bygget (cc7125e–c451433; D67, R30, S-WEEK-13, S-EVENT-03). Review `docs/reviews/nat3-p5c-status.md`: 0 høje, 2 middel, 5 lave, alle rettet (6fcbc0a–25280da; D70, R33, S-WEEK-14); opfølgningen fandt 2 nye fejl fra rettelsen, også rettet (7923e3f–e17e5b5; D71, R34, S-WEEK-15/16) og tjekket uden nye fund. En begivenhed kan kun tilføjes: fjernelse kræver en ny hændelsestype med migration og er brugerens beslutning. Udgives med rapporten.
+- Slutrunde med lave fund fra P4, P5a og P5b (75c4323–91cd51a; D68, D69, R31, R32, S-PAIN-11/12, S-MOVE-06): tjekket af P5a-revieweren; en regression, slutrunden indførte (N5), er rettet og tjekket.
 - Agent: `comeback-builder`. Kilder: ENGINE 5.7 og R-EVENT, SPEC 4.11, PLAN M3.
 - Grønt: scenarierne for S-WEEK og S-EVENT dækket af UI; Playwright i tidsmaskinen (`@date`).
 
-### [ ] P6 (valgfri) – Resten af milepæl 3, derefter milepæl 4
+### [-] P6 (valgfri) – Resten af milepæl 3, derefter milepæl 4
 
+- Status: ikke startet; valgfri ifølge opgaven (`docs/runs/NAT-3.md`, pakke 6).
 - Jul og nytår (5.8), ugeplan med ekstra Muay Thai-dage (5.10), flad-reglen og smerte-gendannelsen synlige, .ics-fil, historik med klubtræninger; derefter PLAN M4.
