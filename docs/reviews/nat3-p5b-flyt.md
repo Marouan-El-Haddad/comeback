@@ -186,3 +186,78 @@ Metode:
   - **`clubDays` [1, 2, 3, 5, 6] med A flyttet til torsdag:**
     - B kan flyttes til søndag, når torsdag gik uden pas;
     - men ikke, når A blev taget torsdag.
+
+## Opfølgning
+
+2026-11-10 · 74c2736, c07d9be, cf4a759 og 5450bf1 (D66, R29, ENGINE 3.1, 5.9 regel 1, 5 og 6, S-MOVE-05..09, SPEC 3.1) · worktree på 5450bf1, hvor P5a's rettelser (8668a44–be3d17d) ligger imellem.
+
+Metode:
+
+- **Kørt** i worktreen:
+  - `npm run check`: exit 0, 793/793 tests. JavaScript fylder 115,3 kB gz: startfilerne `index` 30,6 kB og `engine` 27,4 kB, og `LifeForm` 4,8 kB hentes efter start.
+  - `e2e/moves.spec.ts` og `e2e/life.spec.ts` i `pixel9a` og `pixel9a-utc` (`E2E_PORT=4186`): 42/42.
+- **Egne flows** i begge projekter (4/4, scratch):
+  - Androids tilbage-gestus på flytteskærmen fra I dag og Uge;
+  - tirsdagens A flyttet til torsdag om tirsdagen og ugen frem til søndag (`screenshots/review-p5b-fu-tirsdag-tur.png`).
+- **Motoren** med et scratch-script: den rolige tur dag for dag og efter en flyttet motor.
+
+### Status på fundene
+
+- **M1 rettet:**
+  - `validMoveDays` springer syge- og feriedage over (regel 6), og det gælder også den rolige tur.
+  - En rejsedag kan tage A, som så bliver rejsepasset.
+  - S-MOVE-05 prøver begge dele.
+- **M2 rettet:**
+  - `calmTourDay` giver den første dag, motoren selv kunne flyttes til.
+  - Den dag står linjen over hovedkortet, og »Valgfri rolig tur« står i »I morgen« og »Resten af ugen«.
+  - Noten på flyttedagens knap og på det flyttede pas nævner dagen (»… tag en valgfri rolig tur søndag.«). Er der ingen dag, står kun »Motoren udgår denne uge.«.
+  - S-MOVE-06 og e2e fra onsdag til søndag prøver det. Se dog N1 og N2.
+- **L1 rettet:** status bruger nu `item?.skipped`, og »i gang« vises før »– sprunget over«. Flowet fra reviewet er nu en e2e-test.
+- **L2 rettet:** ved en partnerdag, der er gået, vises advarslen kun, når partneren blev taget (S-MOVE-07).
+- **L3 rettet** i ENGINE 3.1.
+- **L4 rettet:** linjen siger »… Du kan stadig flytte passet under Uge.«, når ugen har en dag til det.
+- **L5 rettet:** S-MOVE-08 prøver regel 3, og S-MOVE-09 prøver hviledagsreglen. S-MOVE-09 skelner virkelig mellem de to tilfælde: fredag er klubdag i den uge, så kun torsdag kan blive hviledag.
+
+**Samspillet med P5a på I dag** gav ingen fund:
+
+- Tilbage-gestussen lukker flytteskærmen på I dag og i Uge uden at skrive.
+- Historikken vokser ikke efter en flytning.
+- »Afslut« lukker nu alle skærme.
+- Dobbelttryk- og tidsmaskinetestene består stadig.
+
+### Nye fund
+
+#### N1 (lav): Den rolige tur kan foreslås to gange og tage ugens eneste hviledag
+
+- **Hvor:**
+  - `src/engine/moves.ts:134–147`: `calmTourDay` regner altid fra i dag.
+  - `src/ui/screens/Today.tsx:227` og `:306`: linjen over hovedkortet.
+- **Hvorfor:**
+  - **Kilderne:**
+    - ENGINE 5.9, regel 1: »Behold én rolig tur, hvis du kan«.
+    - ENGINE 5.9, regel 4, og programmet: »Mindst én hel hviledag om ugen«.
+  - **I appen:** et eksempel, hvor tirsdagens A om tirsdagen flyttes til torsdag:
+    - Knappen siger »… tag en valgfri rolig tur i dag.«, og I dag foreslår turen tirsdag.
+    - Søndag foreslår I dag turen igen. En tur logges ikke, så tirsdag tæller stadig som hviledag.
+    - Tager brugeren begge ture, har ugen ingen hel hviledag: mandag, onsdag og lørdag er klub, torsdag A og fredag B.
+- **Rettelse:**
+  - Lad en dag, der er gået, og som I dag foreslog turen på, tælle som optaget i hviledagsreglen, når den næste tur findes. Så foreslås søndag kun, hvis ugen stadig har en anden hel hviledag.
+  - Tilføj tilfældet til S-MOVE-06.
+
+#### N2 (lav): Den rolige tur kan ikke lægges på motorens egen dag, heller ikke når dagen er fri
+
+- **Hvor:** `src/engine/moves.ts:146`: `calmTourDay` giver motorens plandag som `fromDate`, og `validMoveDays` springer altid den dag over.
+- **Hvorfor:**
+  - ENGINE 5.9, regel 1 (D66): turen står på den første dag, »motoren selv kunne flyttes til«.
+  - Et eksempel:
+    - Mandag flyttes motoren til søndag.
+    - Onsdag flyttes tirsdagens A til søndag, og knappen siger kun »Motoren udgår denne uge.«.
+    - Torsdag er nu fri, men der foreslås ingen tur. Proben viser, at `validMoveDays` ellers ville give torsdag.
+  - Det kræver en sjælden rækkefølge.
+- **Rettelse:**
+  - Brug motorens sidste plads, før den udgik, som `fromDate`, eller lad `validMoveDays` tage en `fromDate`, der ikke springer nogen dag over.
+  - Tilføj tilfældet til S-MOVE-06.
+
+### Resultat efter opfølgningen
+
+Alle syv fund er rettet. Der er 2 nye lave fund (N1 og N2) og ingen høje eller middel.
