@@ -23,9 +23,11 @@ import type {
   SessionSummary,
   State,
   StatusKind,
+  StatusRange,
   Week,
   WeekInfo,
 } from './types.ts';
+import { explainEventTomorrow } from './explain.ts';
 import { computeWeeks } from './weeks.ts';
 
 export type PlanUnit = 'reps' | 'sec' | 'rounds' | 'emom' | 'routine' | 'measure';
@@ -162,12 +164,17 @@ export function weekInfoAt(program: Program, state: State, k: number): WeekInfo 
   return computeWeeks(program, state, k)[k] ?? null;
 }
 
-export function statusOn(state: State, date: ISODate): StatusKind | null {
+/** The status range that applies on a date: of two that overlap, the newest (ENGINE 3.1, 5.1). */
+export function statusRangeOn(state: State, date: ISODate): StatusRange | null {
   for (let i = state.statuses.length - 1; i >= 0; i--) {
     const s = state.statuses[i];
-    if (s && s.from <= date && date <= s.to) return s.status;
+    if (s && s.from <= date && date <= s.to) return s;
   }
   return null;
+}
+
+export function statusOn(state: State, date: ISODate): StatusKind | null {
+  return statusRangeOn(state, date)?.status ?? null;
 }
 
 export function currentLayout(program: Program, state: State): Layout {
@@ -907,4 +914,69 @@ export function planFor(program: Program, state: State, date: ISODate): DayPlan 
 export function weekPlan(program: Program, state: State, date: ISODate): DayPlan[] {
   const monday = mondayOf(date);
   return [0, 1, 2, 3, 4, 5, 6].map((d) => planFor(program, state, addDays(monday, d)));
+}
+
+/** What R-EVENT took out of a day's plan the day before an event (5.1 step 5, S-EVENT-03). */
+export interface EventTrim {
+  /** The event tomorrow. */
+  label: string;
+  /** The day's session, or null on a day without one. */
+  kind: SessionKind | null;
+  /** The tracks whose blocks are out of the session, in the session's order. */
+  tracks: string[];
+  /** The motor became a calm base: instead of intervals, without the Cooper test or the strides. */
+  motor: 'intervals' | 'cooper' | 'strides' | null;
+  /** The boss challenge is not offered. */
+  boss: boolean;
+}
+
+/**
+ * The day's plan compared with the same plan without tomorrow's event: what the rule took out.
+ * Null when tomorrow has no event.
+ */
+export function eventTrim(program: Program, state: State, date: ISODate): EventTrim | null {
+  const label = eventTomorrow(state, date);
+  if (!label) return null;
+  const tomorrow = addDays(date, 1);
+  const after = planFor(program, state, date).session;
+  const before = planFor(
+    program,
+    { ...state, events: state.events.filter((e) => e.eventDate !== tomorrow) },
+    date,
+  ).session;
+  if (!after || !before) return { label, kind: null, tracks: [], motor: null, boss: false };
+  const kept = new Set(after.blocks.map((b) => b.blockId));
+  const tracks: string[] = [];
+  for (const block of before.blocks) {
+    if (block.role === 'warmup' || block.role === 'measure' || kept.has(block.blockId)) continue;
+    if (!tracks.includes(block.trackId)) tracks.push(block.trackId);
+  }
+  // The motor as planned before the rule (the intervals, also when a hard club day made the calm
+  // base the default with »Kør intervallerne alligevel«).
+  const planned = before.intervalsOption ?? before.motor;
+  const motor = after.motor;
+  let change: EventTrim['motor'] = null;
+  if (planned && motor && planned.variant !== motor.variant) {
+    change = planned.variant === 'cooper_or_base' ? 'cooper' : 'intervals';
+  } else if (
+    planned &&
+    motor &&
+    planned.phases.some((p) => p.kind === 'strides') &&
+    !motor.phases.some((p) => p.kind === 'strides')
+  ) {
+    change = 'strides';
+  }
+  return {
+    label,
+    kind: after.kind,
+    tracks,
+    motor: change,
+    boss: before.bossOffered && !after.bossOffered,
+  };
+}
+
+/** I dag's explanation of the day before an event, in the engine's words (S-EVENT-03). */
+export function eventExplanation(program: Program, state: State, date: ISODate): string | null {
+  const trim = eventTrim(program, state, date);
+  return trim ? explainEventTomorrow(program, trim) : null;
 }

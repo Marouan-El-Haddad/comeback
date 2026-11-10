@@ -1,7 +1,14 @@
 // docs/ENGINE.md 8: weeks, absence, calendar, events and the flat rule.
 import { describe, expect, test } from 'vitest';
 import { findSourceRef } from '../../content/refs.ts';
-import { planFor, startSession } from '../index.ts';
+import {
+  eventExplanation,
+  eventTrim,
+  planFor,
+  startSession,
+  statusOn,
+  statusRangeOn,
+} from '../index.ts';
 import { dayOf, Log, mondays, type Steps } from './helpers/log.ts';
 
 const TUE = (k: number) => dayOf(k, 2);
@@ -168,6 +175,75 @@ describe('Uger og fravær', () => {
     expect(state.tracks.press).toMatchObject({ hits: 0, target: 12 });
   });
 
+  test('S-WEEK-13: en status afsluttes og fjernes med et nyt status_set på samme plads, og den nyeste gælder, hvor to overlapper', () => {
+    const log = new Log().onboard();
+    log.push(
+      { type: 'status_set', status: 'travel', from: '2026-11-09', to: '2026-11-20' },
+      '2026-11-09',
+    );
+    log.push(
+      { type: 'status_set', status: 'ill', from: '2026-11-12', to: '2026-11-13' },
+      '2026-11-11',
+    );
+    log.push(
+      { type: 'status_set', status: 'club_closed', from: '2026-11-16', to: '2026-11-22' },
+      '2026-11-11',
+    );
+    const days = (from: number, to: number) =>
+      Array.from(
+        { length: to - from + 1 },
+        (_, i) => `2026-11-${String(from + i).padStart(2, '0')}`,
+      );
+    const before = log.state('2026-11-15');
+    // Overlapping, the newest applies: ill inside the trip, the club closed over its end.
+    expect(days(9, 22).map((d) => statusOn(before, d))).toEqual([
+      ...Array<string>(3).fill('travel'),
+      'ill',
+      'ill',
+      ...Array<string>(2).fill('travel'),
+      ...Array<string>(7).fill('club_closed'),
+    ]);
+
+    // Home on Sunday 15/11: the trip ends yesterday. The club opens again: removed (to before from).
+    log.push(
+      { type: 'status_set', status: 'travel', from: '2026-11-09', to: '2026-11-14' },
+      '2026-11-15',
+    );
+    log.push(
+      { type: 'status_set', status: 'club_closed', from: '2026-11-16', to: '2026-11-15' },
+      '2026-11-15',
+    );
+    const state = log.state('2026-11-15');
+    expect(days(9, 22).map((d) => statusOn(state, d))).toEqual([
+      'travel',
+      'travel',
+      'travel',
+      'ill',
+      'ill',
+      'travel',
+      ...Array<null>(8).fill(null),
+    ]);
+    // The trip kept its place under the illness, so the days that are over read as before.
+    expect(statusRangeOn(state, '2026-11-12')).toEqual({
+      status: 'ill',
+      from: '2026-11-12',
+      to: '2026-11-13',
+    });
+    expect(statusRangeOn(state, '2026-11-14')).toEqual({
+      status: 'travel',
+      from: '2026-11-09',
+      to: '2026-11-14',
+    });
+    expect(statusRangeOn(state, '2026-11-15')).toBeNull();
+    expect(state.statuses).toHaveLength(2);
+    expect(planFor(log.program, state, '2026-11-13').red).toBe(true);
+    expect(planFor(log.program, state, '2026-11-20').kind).toBe('B');
+    expect(planFor(log.program, state, '2026-11-21').club).toMatchObject({
+      day: true,
+      closed: false,
+    });
+  });
+
   test('S-WEEK-09: onboarding 30/11 med uge 9/11 og 16/11 gennemført, ikke 23/11: programuge 2 og trin fra step_set', () => {
     const log = new Log().onboard({
       date: '2026-11-30',
@@ -279,6 +355,65 @@ describe('Jul, nytår og begivenheder', () => {
     const thursday = planFor(log.program, log.state('2027-01-21'), '2027-01-21');
     expect(thursday.session?.motor?.variant).toBe('base');
     expect(thursday.session?.intervalsOption).toBeUndefined();
+  });
+
+  test('S-EVENT-03: dagen før en begivenhed forklarer motoren, hvad der er taget ud af dagens pas', () => {
+    const head =
+      'I morgen: Kamp – let udgave i dag. Dagen før en begivenhed er der aldrig tunge ben, Nordic eller intervaller:';
+    const kamp = (log: Log, eventDate: string) =>
+      log.push({ type: 'calendar_event_added', label: 'Kamp', eventDate }, dayOf(0, 1));
+
+    // Tuesday's Styrke A before a fight on Wednesday, with Nordic on the posterior ladder.
+    const a = new Log().onboard({ steps: { posterior: 'posterior.4' } });
+    kamp(a, dayOf(0, 3));
+    const tuesday = a.state(TUE(0));
+    expect(eventTrim(a.program, tuesday, TUE(0))).toEqual({
+      label: 'Kamp',
+      kind: 'A',
+      tracks: ['power_legs', 'legs', 'posterior'],
+      motor: null,
+      boss: false,
+    });
+    expect(eventExplanation(a.program, tuesday, TUE(0))).toBe(
+      `${head} Power ben, Ben og Bagkæde er taget ud af dagens pas.`,
+    );
+    // The day after the fight and a day without one have nothing to explain.
+    expect(eventTrim(a.program, tuesday, dayOf(0, 3))).toBeNull();
+    expect(eventExplanation(a.program, tuesday, dayOf(0, 1))).toBeNull();
+    // From programme week 11 the boss challenge waits too (R-BOSS).
+    const boss = from(10);
+    kamp(boss, dayOf(10, 3));
+    expect(eventExplanation(boss.program, boss.state(TUE(10)), TUE(10))).toBe(
+      `${head} Power ben og Ben er taget ud af dagens pas, og der er ingen boss-udfordring i dag.`,
+    );
+
+    // Thursday's motor before a fight on Friday: intervals (pw 5), strides (pw 3), Cooper (pw 4).
+    const motor = (k: number) => {
+      const log = from(k);
+      kamp(log, FRI(k));
+      return eventExplanation(log.program, log.state(THU(k)), THU(k));
+    };
+    expect(motor(4)).toBe(`${head} Motoren er en rolig base i stedet for intervaller.`);
+    expect(motor(2)).toBe(`${head} Motoren er en rolig base uden stigningsløb.`);
+    expect(motor(3)).toBe(`${head} Motoren er en rolig base uden Cooper-testen.`);
+
+    // Wednesday, a club day without a session, before a fight on Thursday.
+    const club = new Log().onboard();
+    kamp(club, THU(0));
+    expect(eventTrim(club.program, club.state(dayOf(0, 3)), dayOf(0, 3))).toMatchObject({
+      kind: null,
+      tracks: [],
+    });
+    expect(eventExplanation(club.program, club.state(dayOf(0, 3)), dayOf(0, 3))).toBe(
+      'I morgen: Kamp.',
+    );
+
+    // Friday's Styrke B before a fight on Saturday: no weight in the backpack, so nothing goes.
+    const b = new Log().onboard();
+    kamp(b, dayOf(0, 6));
+    expect(eventExplanation(b.program, b.state(FRI(0)), FRI(0))).toBe(
+      'I morgen: Kamp. Dagens pas har hverken tunge ben, Nordic eller intervaller og er uændret.',
+    );
   });
 });
 

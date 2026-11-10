@@ -445,9 +445,21 @@ function apply(program: Program, state: State, raw: AppEvent, emomHistory: EmomP
       });
       break;
     }
-    case 'status_set':
-      state.statuses.push({ status: e.status, from: e.from, to: e.to });
+    case 'status_set': {
+      // A status_set with the same status and from as an earlier one replaces it in its place, so
+      // which of two overlapping statuses applies (the newest) stays as it was on the days that
+      // are over; a `to` before `from` removes it (»Afslut« and »Fjern«, ENGINE 3.1, S-WEEK-13).
+      const range = { status: e.status, from: e.from, to: e.to };
+      const index = state.statuses.findIndex((s) => s.status === e.status && s.from === e.from);
+      if (index < 0) {
+        if (e.to >= e.from) state.statuses.push(range);
+      } else if (e.to < e.from) {
+        state.statuses.splice(index, 1);
+      } else {
+        state.statuses[index] = range;
+      }
       break;
+    }
     case 'calendar_event_added':
       state.events.push({ label: e.label, eventDate: e.eventDate });
       break;
