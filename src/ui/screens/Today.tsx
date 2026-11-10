@@ -737,7 +737,7 @@ function MainCard({
     );
   }
   if (plan.done) {
-    const status =
+    const light =
       plan.done.status === 'green'
         ? 'grønt'
         : plan.done.status === 'yellow'
@@ -747,7 +747,7 @@ function MainCard({
             : 'logget';
     return (
       <Card title={SESSION_NAME[plan.done.kind]} done>
-        <p class="main-card-done">✓ Logget i dag ({status}).</p>
+        <p class="main-card-done">✓ Logget i dag ({light}).</p>
       </Card>
     );
   }
