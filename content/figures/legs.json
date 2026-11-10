@@ -46,7 +46,8 @@
           "contacts": [
             { "part": "toes", "on": "floor" },
             { "part": "knee", "on": "pillow", "count": 1 }
-          ]
+          ],
+          "ring": "near.foot"
         }
       ]
     },
