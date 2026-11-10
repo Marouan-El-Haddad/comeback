@@ -441,7 +441,9 @@ function apply(program: Program, state: State, raw: AppEvent, emomHistory: EmomP
       const taken = [
         ...new Set([...(before?.taken ?? []), ...(e.painTracks ?? []), ...(e.tooHeavy ?? [])]),
       ];
-      const takenHeavy = [...new Set([...(before?.takenHeavy ?? []), ...(e.tooHeavy ?? [])])];
+      // »For tungt« only where it worked: not on a track the same check named under pain (S-PAIN-12).
+      const heavy = (e.tooHeavy ?? []).filter((id) => !(e.painTracks ?? []).includes(id));
+      const takenHeavy = [...new Set([...(before?.takenHeavy ?? []), ...heavy])];
       state.sundayChecks = state.sundayChecks.filter((c) => c.weekStart !== e.weekStart);
       state.sundayChecks.push({
         date: e.date,

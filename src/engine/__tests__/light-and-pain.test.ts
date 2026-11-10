@@ -367,6 +367,26 @@ describe('Smerte', () => {
     });
   });
 
+  test('S-PAIN-12: smerte og »for tungt« på samme spor, rettet til kun »for tungt«, holder det sænkede trin', () => {
+    const log = from(1, { legs: { stepId: 'legs.3', target: 8 } });
+    const sunday = dayOf(1, 7);
+    const check = (painTracks: string[], tooHeavy: string[]) =>
+      log
+        .add(submitSundayCheck(log.ctx, log.events, { date: sunday, painTracks, tooHeavy }))
+        .filter((e) => e.type === 'step_changed');
+    expect(check(['legs'], ['legs'])).toEqual([
+      expect.objectContaining({ from: 'legs.3', to: 'legs.2', reason: 'pain' }),
+    ]);
+    expect(check([], ['legs'])).toEqual([
+      expect.objectContaining({ from: 'legs.2', to: 'legs.2', by: 'user', reason: 'user_choice' }),
+    ]);
+    expect(log.state(sunday).tracks.legs).toMatchObject({ stepId: 'legs.2', tempDown: undefined });
+    // A green session after the period does not bring the step that was too heavy back.
+    const { finished } = log.session({ date: TUE(3) });
+    expect(finished.some((e) => e.type === 'step_changed' && e.trackId === 'legs')).toBe(false);
+    expect(log.state(TUE(3)).tracks.legs?.stepId).toBe('legs.2');
+  });
+
   test('S-PAIN-06: let smerte ændrer intet trin, men står i historikken', () => {
     const log = from(1, { press: { stepId: 'press.2', target: 8 } });
     const { finished } = log.session({

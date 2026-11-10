@@ -576,7 +576,7 @@ export interface State {
     sleepAvg?: number;
     /** Every track a check of the week named under pain or »for tungt«: not taken down again. */
     taken: string[];
-    /** The tracks a check of the week named under »for tungt« (S-PAIN-11). */
+    /** The tracks a check of the week took down as »for tungt« – not under pain too (S-PAIN-11, 12). */
     takenHeavy: string[];
   }>;
   /** Moves of the week's sessions; `on` is the day the move was made. */
