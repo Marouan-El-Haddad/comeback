@@ -164,13 +164,25 @@ export function weekInfoAt(program: Program, state: State, k: number): WeekInfo 
   return computeWeeks(program, state, k)[k] ?? null;
 }
 
-/** The status range that applies on a date: of two that overlap, the newest (ENGINE 3.1, 5.1). */
+/**
+ * The status range that applies on a date (ENGINE 3.1, 5.1 step 3): of ill, travel and holiday the
+ * newest, otherwise the club closed – which applies to the club days next to the others
+ * (`clubClosedOn`).
+ */
 export function statusRangeOn(state: State, date: ISODate): StatusRange | null {
+  let club: StatusRange | null = null;
   for (let i = state.statuses.length - 1; i >= 0; i--) {
     const s = state.statuses[i];
-    if (s && s.from <= date && date <= s.to) return s;
+    if (!s || date < s.from || s.to < date) continue;
+    if (s.status !== 'club_closed') return s;
+    club ??= s;
   }
-  return null;
+  return club;
+}
+
+/** The club is closed on the date (5.8), whatever else applies that day. */
+export function clubClosedOn(state: State, date: ISODate): boolean {
+  return state.statuses.some((s) => s.status === 'club_closed' && s.from <= date && date <= s.to);
 }
 
 export function statusOn(state: State, date: ISODate): StatusKind | null {
@@ -792,7 +804,7 @@ function clubInfo(program: Program, state: State, date: ISODate) {
     state.schedule.clinch && program.club.clinch.weekday === day
       ? program.club.clinch.time
       : undefined;
-  return { day: isClub, closed: isClub && statusOn(state, date) === 'club_closed', time, clinch };
+  return { day: isClub, closed: isClub && clubClosedOn(state, date), time, clinch };
 }
 
 /** Planned sessions of the given date that were not started, skipped or moved away. */

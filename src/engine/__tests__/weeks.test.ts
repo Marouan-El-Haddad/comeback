@@ -175,7 +175,7 @@ describe('Uger og fravær', () => {
     expect(state.tracks.press).toMatchObject({ hits: 0, target: 12 });
   });
 
-  test('S-WEEK-13: en status afsluttes og fjernes med et nyt status_set på samme plads, og den nyeste gælder, hvor to overlapper', () => {
+  test('S-WEEK-13: en status afsluttes og fjernes med et nyt status_set på samme plads; den nyeste af syg, rejse og ferie gælder, og klubben lukket gælder ved siden af', () => {
     const log = new Log().onboard();
     log.push(
       { type: 'status_set', status: 'travel', from: '2026-11-09', to: '2026-11-20' },
@@ -195,14 +195,20 @@ describe('Uger og fravær', () => {
         (_, i) => `2026-11-${String(from + i).padStart(2, '0')}`,
       );
     const before = log.state('2026-11-15');
-    // Overlapping, the newest applies: ill inside the trip, the club closed over its end.
+    // Ill inside the trip: the newest applies. The club closed applies to the club days next to the
+    // trip, which keeps its travel session on Friday.
     expect(days(9, 22).map((d) => statusOn(before, d))).toEqual([
       ...Array<string>(3).fill('travel'),
       'ill',
       'ill',
-      ...Array<string>(2).fill('travel'),
-      ...Array<string>(7).fill('club_closed'),
+      ...Array<string>(7).fill('travel'),
+      'club_closed',
+      'club_closed',
     ]);
+    expect(planFor(log.program, before, '2026-11-20').kind).toBe('travel');
+    for (const club of ['2026-11-16', '2026-11-18', '2026-11-21']) {
+      expect(planFor(log.program, before, club).club).toMatchObject({ day: true, closed: true });
+    }
 
     // Home on Sunday 15/11: the trip ends yesterday. The club opens again: removed (to before from).
     log.push(
