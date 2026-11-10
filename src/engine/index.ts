@@ -12,6 +12,7 @@ export * from './plan.ts';
 export { PROGRAM } from './program.ts';
 export * from './session.ts';
 export * from './simulate.ts';
+export * from './status.ts';
 export type * from './types.ts';
 export * from './weeks.ts';
 export * from './format.ts';

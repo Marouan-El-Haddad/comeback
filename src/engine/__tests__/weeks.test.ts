@@ -6,9 +6,12 @@ import {
   eventTrim,
   planFor,
   startSession,
+  statusChange,
+  statusEnd,
   statusOn,
   statusRangeOn,
 } from '../index.ts';
+import type { StatusKind } from '../types.ts';
 import { dayOf, Log, mondays, type Steps } from './helpers/log.ts';
 
 const TUE = (k: number) => dayOf(k, 2);
@@ -248,6 +251,61 @@ describe('Uger og fravær', () => {
       day: true,
       closed: false,
     });
+  });
+
+  test('S-WEEK-14: en status, der gælder, rettes kortere eller længere, og den rettede periode gælder over en nyere status', () => {
+    const [MON, TUE0, WED, THU0, FRI0] = [1, 2, 3, 4, 5].map((d) => dayOf(0, d)) as [
+      string,
+      string,
+      string,
+      string,
+      string,
+    ];
+    /** »Gem status« on the day: the events statusChange writes. */
+    const save = (log: Log, status: StatusKind, from: string, to: string, today: string) => {
+      const change = statusChange(log.state(today), { status, from, to, today });
+      for (const body of change.bodies) log.push(body, today);
+      return change;
+    };
+    const days = (log: Log, today: string, from: number, to: number) => {
+      const state = log.state(today);
+      return Array.from({ length: to - from + 1 }, (_, i) =>
+        statusOn(state, `2026-11-${String(from + i).padStart(2, '0')}`),
+      );
+    };
+
+    // A trip 9–20 November, shortened on Wednesday to Friday 13.
+    const trip = new Log().onboard();
+    trip.push({ type: 'status_set', status: 'travel', from: MON, to: '2026-11-20' }, MON);
+    const shorter = save(trip, 'travel', WED, FRI0, WED);
+    expect(shorter.replaced).toEqual([{ status: 'travel', from: MON, to: '2026-11-20' }]);
+    expect(shorter.range).toEqual({ status: 'travel', from: MON, to: FRI0 });
+    expect(days(trip, WED, 9, 20)).toEqual([
+      ...Array<string>(5).fill('travel'),
+      ...Array<null>(7).fill(null),
+    ]);
+    expect(planFor(trip.program, trip.state(WED), '2026-11-17').kind).toBe('A');
+    expect(planFor(trip.program, trip.state(WED), '2026-11-20').kind).toBe('B');
+
+    // Ill Tuesday–Wednesday, extended on Wednesday to Friday: one period applies today, and one
+    // »Afslut« makes Wednesday to Friday ordinary days; Tuesday stays ill.
+    const ill = new Log().onboard();
+    ill.push({ type: 'status_set', status: 'ill', from: TUE0, to: WED }, TUE0);
+    expect(save(ill, 'ill', WED, FRI0, WED).range).toEqual({ status: 'ill', from: TUE0, to: FRI0 });
+    const now = ill.state(WED).statuses.filter((r) => r.to >= WED);
+    expect(now).toEqual([{ status: 'ill', from: WED, to: FRI0 }]);
+    ill.push(statusEnd(now[0] as (typeof now)[number], WED), WED);
+    expect(days(ill, WED, 10, 13)).toEqual(['ill', null, null, null]);
+
+    // Ill on Wednesday, a trip Wednesday–Friday set after it, then ill again Wednesday–Thursday:
+    // the corrected illness is the newest, so it applies over the trip.
+    const over = new Log().onboard();
+    over.push({ type: 'status_set', status: 'ill', from: WED, to: WED }, WED);
+    over.push({ type: 'status_set', status: 'travel', from: WED, to: FRI0 }, WED);
+    expect(save(over, 'ill', WED, THU0, WED).replaced).toEqual([
+      { status: 'ill', from: WED, to: WED },
+    ]);
+    expect(days(over, WED, 11, 13)).toEqual(['ill', 'ill', 'travel']);
   });
 
   test('S-WEEK-09: onboarding 30/11 med uge 9/11 og 16/11 gennemført, ikke 23/11: programuge 2 og trin fra step_set', () => {
