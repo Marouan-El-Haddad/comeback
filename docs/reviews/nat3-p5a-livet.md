@@ -363,3 +363,16 @@ Metode:
 - **Rettelse:**
   1. Lad `takenHeavy` kun tage de spor, hvor »for tungt« virkede: `e.tooHeavy` uden dem, der står i samme tjeks `painTracks`.
   2. Føj forløbet til S-PAIN-09 eller S-PAIN-11 i ENGINE 8, før koden rettes.
+
+### Rettelsen af N4 og N5 (0f36c3c, f8823c7 og 91cd51a, worktree på 91cd51a)
+
+- **N5 er rettet** (S-PAIN-12):
+  - Mit forløb giver nu: tjek 1 med Ben under både smerte og »for tungt« (legs.3 → legs.2 midlertidigt), og rettelsen til kun »for tungt« skriver `legs.2 → legs.2 (user_choice)`.
+  - Et grønt pas efter perioden skriver intet, og Ben bliver på trin 2.
+  - S-PAIN-09, 10 og 11 og M1 giver det samme som før.
+- **N4 er rettet:**
+  - Lørdagens klublog logget søndag med kun »7« lukker kortet og giver én hændelse og »✓ Klubtræningen i går er logget.«.
+  - Søndagstjekkets karakter holder stadig kortet åbent (M3). Den er nu mærket med `content: []`, som klubloggens egen skærm aldrig skriver.
+  - Der er ingen ny hændelse og intet nyt felt. Tjekkets karakter fra før rettelsen, som ingen rigtig log har endnu, ville svare.
+- **Kørt:** `npm test` 815/815, typecheck og lint grønne, og `e2e/life.spec.ts` 26/26 i `pixel9a` og `pixel9a-utc`.
+- **Nye fund:** ingen i de tre commits.
