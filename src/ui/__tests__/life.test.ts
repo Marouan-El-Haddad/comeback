@@ -95,6 +95,18 @@ describe('the club log on I dag (SPEC 4.6)', () => {
     const closed = onboarded();
     closed.push({ type: 'status_set', status: 'club_closed', from: WED, to: WED }, WED);
     expect(clubAsks(PROGRAM, closed.state(WED), WED, 20 * 60)).toEqual([]);
+    const away = onboarded();
+    away.push({ type: 'status_set', status: 'holiday', from: WED, to: WED }, WED);
+    expect(clubAsks(PROGRAM, away.state(WED), WED, 20 * 60)).toEqual([]);
+    // On a trip the club stands, as the engine says, so it is asked as any club day (D70).
+    const trip = onboarded();
+    trip.push({ type: 'status_set', status: 'travel', from: WED, to: WED }, WED);
+    expect(summary(clubAsks(PROGRAM, trip.state(WED), WED, 20 * 60))).toEqual([
+      { date: WED, yesterday: false, ended: true, logged: false },
+    ]);
+    expect(summary(clubAsks(PROGRAM, trip.state(THU), THU, 8 * 60))).toEqual([
+      { date: WED, yesterday: true, ended: true, logged: false },
+    ]);
     // Monday 2 November is before the programme starts; a phase-in on Tuesday 17/11 does not ask
     // about Monday 16/11.
     const early = onboarded('2026-10-30');

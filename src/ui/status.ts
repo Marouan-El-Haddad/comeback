@@ -6,9 +6,11 @@ import {
   ABSENCE_REASON,
   addDays,
   calendarWeek,
+  eventExplanation,
   formatLong,
   mondayOf,
   weekInfoAt,
+  type DayPlan,
 } from '../engine/index.ts';
 import type {
   AppEvent,
@@ -29,11 +31,23 @@ export const STATUS_NAME: Record<StatusKind, string> = {
 
 /** What a status does to the days it covers, in one line (ENGINE 5.1 step 3). */
 export const STATUS_LINE: Record<StatusKind, string> = {
-  ill: 'Kun Open & Strong og en gåtur.',
+  ill: 'Feber eller ondt i kroppen: hvil. Kun forkølet over halsen: Open & Strong og en gåtur.',
   travel: 'Rejsepasset på Styrke-dagene.',
   holiday: 'Hvile. Open & Strong er valgfri.',
   club_closed: '4–5 kamp-runder hjemme på Muay Thai-dagene.',
 };
+
+/**
+ * The day before an event (ENGINE 5.1 step 5, S-EVENT-03): the engine's explanation of what the
+ * rule took out of today's session – or only »I morgen: Kamp.« once that session is logged or under
+ * way, as it ran with what it had (D70). Null without an event tomorrow.
+ */
+export function eventLine(program: Program, state: State, plan: DayPlan): string | null {
+  const flag = plan.flags.find((f) => f.type === 'event_tomorrow');
+  if (!flag || flag.type !== 'event_tomorrow') return null;
+  if (plan.done || plan.open) return `I morgen: ${flag.label}.`;
+  return eventExplanation(program, state, plan.date) ?? `I morgen: ${flag.label}.`;
+}
 
 /** »i dag« or »onsdag 11. november«. */
 export function dayText(date: ISODate, today: ISODate): string {

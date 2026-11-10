@@ -11,6 +11,7 @@ import {
   formatLong,
   getTrack,
   isValidDate,
+  planFor,
   PROGRAM,
   type EventTrim,
 } from '../../engine/index.ts';
@@ -84,7 +85,8 @@ export function EventForm(props: EventFormProps) {
           : null;
   const ready = name !== '' && isValidDate(date) && problem === null;
   const before = isValidDate(date) ? addDays(date, -1) : null;
-  // The day before as the engine plans it with the new event (eventTrim).
+  // The day before as the engine plans it with the new event (eventTrim). A session logged or under
+  // way today ran with what it had, so nothing changes in it (D70).
   const trim =
     ready && before
       ? eventTrim(
@@ -93,6 +95,14 @@ export function EventForm(props: EventFormProps) {
           before,
         )
       : null;
+  const ran = before ? planFor(PROGRAM, state, before) : null;
+  const lines = !trim
+    ? []
+    : ran?.done
+      ? ['Dagens pas er logget, så det ændres ikke.']
+      : ran?.open
+        ? ['Dagens pas er i gang, så det ændres ikke.']
+        : trimLines(trim);
 
   const save = run(async () => {
     if (!ready) throw new Error('not ready');
@@ -171,7 +181,7 @@ export function EventForm(props: EventFormProps) {
             {capitalize(dayText(before, today))} er dagen før: ingen tunge ben, Nordic eller
             intervaller.
           </li>
-          {trimLines(trim).map((line) => (
+          {lines.map((line) => (
             <li key={line}>{line}</li>
           ))}
           <li>En begivenhed kan ikke fjernes igen.</li>

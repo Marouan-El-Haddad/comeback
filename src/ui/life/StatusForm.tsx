@@ -1,17 +1,28 @@
-// Status (docs/SPEC.md 3.6, ENGINE.md 3.1, 5.1 step 3, 5.7 and 5.8, DECISIONS.md D67): a screen in
-// place of Mere or I dag with »Tilbage«, never a dialog. The statuses that apply today or later with
-// »Afslut« or »Fjern«, then a new one – Syg, Rejse, Ferie or Klubben lukket from today or later –
-// with what it does, and »Gem status« at the bottom. A button that writes takes the screen from its
-// first tap (D61), and the screen writes only in the world it was opened in (D64, D65).
+// Status (docs/SPEC.md 3.6, ENGINE.md 3.1, 5.1 step 3, 5.7 and 5.8, DECISIONS.md D67, D70): a
+// screen in place of Mere or I dag with »Tilbage«, never a dialog. The statuses that apply today or
+// later with »Afslut« or »Fjern« and what applies once they end, then a new one – Syg, Rejse, Ferie
+// or Klubben lukket from today or later – with what it does and the status of the same kind it
+// corrects, and »Gem status« at the bottom. The events come from the engine (statusChange,
+// statusEnd). A button that writes takes the screen from its first tap (D61), and the screen writes
+// only in the world it was opened in (D64, D65).
 import { useId, useState } from 'preact/hooks';
-import { addDays, formatLong, isValidDate } from '../../engine/index.ts';
+import { formatLong, isValidDate, statusChange, statusEnd } from '../../engine/index.ts';
 import type { ISODate, StatusKind, StatusRange } from '../../engine/types.ts';
 import { capitalize } from '../format.ts';
 import { useSameWorld, useWriteOnce } from '../hooks.ts';
 import type { Model } from '../model.ts';
-import { currentStatuses, rangeText, STATUS_LINE, STATUS_NAME } from '../status.ts';
+import { currentStatuses, STATUS_LINE, STATUS_NAME } from '../status.ts';
 import { otherWorld, Toggles } from './common.tsx';
 import { Head } from './Head.tsx';
+import {
+  correctionNote,
+  EFFECTS,
+  endedLine,
+  endNote,
+  overlapNote,
+  resultText,
+  spanText,
+} from './statusText.ts';
 
 export interface StatusFormProps {
   model: Model;
@@ -20,24 +31,6 @@ export interface StatusFormProps {
 }
 
 const KINDS: StatusKind[] = ['ill', 'travel', 'holiday', 'club_closed'];
-
-/** What a status does (ENGINE 5.1 step 3, R-ILL, R-TRAVEL, R-HOLIDAY and 5.8), a line each. */
-const EFFECTS: Record<StatusKind, string[]> = {
-  ill: [
-    'Alle dage er røde: kun Open & Strong og en gåtur.',
-    'Ugerne under sygdom er ikke gennemførte.',
-    'Kun forkølet over halsen er din egen vurdering.',
-  ],
-  travel: [
-    'Styrke-dagene får rejsepasset: 25 min med push-ups, rygsæk-row, split squats og 6 min EMOM.',
-    'Rejsepasset gennemfører ugen, men flytter ingen stiger.',
-  ],
-  holiday: [
-    'Hvile: ingen pas, og Open & Strong er valgfri.',
-    'Ugerne er ikke gennemførte. Vil du træne i ferien, så sæt ikke ferie.',
-  ],
-  club_closed: ['Muay Thai-dagene bliver 4–5 kamp-runder hjemme.'],
-};
 
 /** What is wrong with the days, or null. */
 function rangeProblem(from: string, to: string, today: ISODate): string | null {
@@ -48,15 +41,10 @@ function rangeProblem(from: string, to: string, today: ISODate): string | null {
   return null;
 }
 
-/** »til og med onsdag 11. november« for a status that applies today, the days for a later one. */
-function spanText(range: StatusRange, today: ISODate): string {
-  if (range.from > today) return rangeText(range.from, range.to, today);
-  return range.to === today ? 'i dag' : `til og med ${formatLong(range.to)}`;
-}
-
 export function StatusForm(props: StatusFormProps) {
   const { model } = props;
   const today = model.today;
+  const state = model.state;
   const { busy, run } = useWriteOnce();
   const sameWorld = useSameWorld(model);
   const [kind, setKind] = useState<StatusKind[]>([]);
@@ -66,54 +54,34 @@ export function StatusForm(props: StatusFormProps) {
   const fromId = useId();
   const toId = useId();
 
-  const current = currentStatuses(model.state, today);
+  const current = currentStatuses(state, today);
   const chosen = kind[0];
   const problem = rangeProblem(from, to, today);
-  const ready = chosen !== undefined && problem === null;
-
-  // A new status with the same status and first day replaces the old one in its place (ENGINE 3.1);
-  // otherwise it is the newest, and of ill, travel and holiday the newest applies where they overlap
-  // – the club closed applies next to them (5.1 step 3).
-  const notes: string[] = [];
-  if (ready) {
-    const same = current.find((r) => r.status === chosen && r.from === from);
-    const own = (k: StatusKind) => k !== 'club_closed';
-    if (same) {
-      notes.push(`Afløser ${STATUS_NAME[chosen]} ${rangeText(same.from, same.to, today)}.`);
-    } else if (own(chosen)) {
-      const over = current.filter(
-        (r) => own(r.status) && r.status !== chosen && r.from <= to && from <= r.to,
-      );
-      const names = [...new Set(over.map((r) => STATUS_NAME[r.status]))];
-      if (names.length > 0) {
-        notes.push(`Gælder i stedet for ${names.join(' og ')} de dage, de overlapper.`);
-      }
-    }
-  }
+  // What »Gem status« writes: a status of the same kind in force today or later that the new one
+  // overlaps or adjoins is corrected, not left lying under it (ENGINE 3.1, S-WEEK-14).
+  const change =
+    chosen !== undefined && problem === null
+      ? statusChange(state, { status: chosen, from, to, today })
+      : null;
+  const notes = change
+    ? [correctionNote(change, today), overlapNote(state, change, today)].filter(
+        (n): n is string => n !== null,
+      )
+    : [];
 
   const save = run(async () => {
-    if (!chosen || problem !== null) throw new Error('not ready');
+    if (!change) throw new Error('not ready');
     if (!sameWorld()) throw otherWorld(props.onClose);
-    await model.commit([model.ctx.make({ type: 'status_set', status: chosen, from, to }, today)]);
-    props.onSaved(`✓ ${STATUS_NAME[chosen]} ${rangeText(from, to, today)}.`);
+    await model.commit(change.bodies.map((body) => model.ctx.make(body, today)));
+    props.onSaved(`✓ ${STATUS_NAME[change.range.status]} ${resultText(change.range, today)}.`);
   });
-  // A status that applies today ends yesterday; one that starts today or later goes (ENGINE 3.1).
+  // A status that applies today ends yesterday; one that starts later goes (ENGINE 3.1).
   const end = (range: StatusRange) =>
     run(async () => {
       if (!sameWorld()) throw otherWorld(props.onClose);
-      const last = addDays(range.from > today ? range.from : today, -1);
-      await model.commit([
-        model.ctx.make(
-          { type: 'status_set', status: range.status, from: range.from, to: last },
-          today,
-        ),
-      ]);
-      const name = STATUS_NAME[range.status];
-      props.onSaved(
-        range.from <= today
-          ? `✓ ${name} er afsluttet. Fra i dag gælder den almindelige plan.`
-          : `✓ ${name} ${rangeText(range.from, range.to, today)} er fjernet.`,
-      );
+      const line = endedLine(state, range, today);
+      await model.commit([model.ctx.make(statusEnd(range, today), today)]);
+      props.onSaved(line);
     });
 
   return (
@@ -138,11 +106,7 @@ export function StatusForm(props: StatusFormProps) {
                     <strong>{STATUS_NAME[range.status]}</strong> {spanText(range, today)}
                   </p>
                   <p>{STATUS_LINE[range.status]}</p>
-                  <p class="muted">
-                    {now
-                      ? 'Afslut, så gælder den almindelige plan fra i dag.'
-                      : 'Fjern, så gælder statussen ikke.'}
-                  </p>
+                  <p class="muted">{endNote(state, range, today)}</p>
                   <button
                     type="button"
                     class="btn block"
@@ -201,15 +165,16 @@ export function StatusForm(props: StatusFormProps) {
         <p class="error-text" role="alert">
           {problem}
         </p>
-      ) : chosen ? (
+      ) : change ? (
         <ul class="life-effects" data-testid="status-effects">
           <li>
-            {STATUS_NAME[chosen]} {rangeText(from, to, today)}.
+            {STATUS_NAME[change.range.status]} {resultText(change.range, today)}.
           </li>
-          {EFFECTS[chosen].map((line) => (
+          {/* What it corrects and where it applies over another status come first. */}
+          {notes.map((line) => (
             <li key={line}>{line}</li>
           ))}
-          {notes.map((line) => (
+          {EFFECTS[change.range.status].map((line) => (
             <li key={line}>{line}</li>
           ))}
         </ul>
@@ -220,7 +185,7 @@ export function StatusForm(props: StatusFormProps) {
       <button
         type="button"
         class="btn primary block"
-        disabled={busy || !ready}
+        disabled={busy || !change}
         data-testid="status-save"
         onClick={save}
       >

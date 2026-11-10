@@ -4,6 +4,7 @@
 import {
   addDays,
   calendarWeek,
+  clubClosedOn,
   getStep,
   getTrack,
   mondayOf,
@@ -78,13 +79,18 @@ export interface ClubDay {
 
 /**
  * A club day I dag may ask about: a club day in the week plan, in the programme and after the
- * phase-in, without a status (ill, travel, holiday, the club closed).
+ * phase-in, not sick or on holiday and with the club open. On a travel day the club stands, as the
+ * engine says, so it is asked as on any club day (D67, D70).
  */
 export function clubDay(program: Program, state: State, date: ISODate): ClubDay | null {
   if (!state.onboarded || calendarWeek(state.startDate, date) < 0) return null;
   if (state.onboardedOn && date < state.onboardedOn) return null;
   const day = weekday(date);
-  if (!state.schedule.clubDays.includes(day) || statusOn(state, date) !== null) return null;
+  const status = statusOn(state, date);
+  if (!state.schedule.clubDays.includes(day) || status === 'ill' || status === 'holiday') {
+    return null;
+  }
+  if (clubClosedOn(state, date)) return null;
   return { date, time: program.club.days.find((d) => d.weekday === day)?.time };
 }
 

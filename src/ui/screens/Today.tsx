@@ -11,7 +11,6 @@ import {
   addDays,
   calmTourDay,
   daysBetween,
-  eventExplanation,
   formatLong,
   getStep,
   getTrack,
@@ -68,6 +67,7 @@ import type { Model } from '../model.ts';
 import { markTodayVisible } from '../startup.ts';
 import {
   absenceChanges,
+  eventLine,
   repeatedWeek,
   type AbsenceChanges,
   STATUS_LINE,
@@ -127,7 +127,7 @@ function blockLine(block: BlockPlan): BlockLine {
 
 /** A day in »I morgen« and »Resten af ugen«; `calm` is the day of the optional calm run (D66). */
 function dayLine(day: DayPlan, calm: ISODate | null): string {
-  if (day.red) return 'Syg: Open & Strong og en gåtur';
+  if (day.red) return 'Syg: hvil eller Open & Strong og en gåtur';
   if (day.status === 'holiday') return 'Ferie: hvile';
   if (day.kind) return SESSION_NAME[day.kind] + (day.short ? ' · kort version' : '');
   if (day.club.day)
@@ -278,10 +278,10 @@ export function Today(props: {
       {plan.flags.map((flag) => {
         switch (flag.type) {
           case 'event_tomorrow':
-            // What the rule took out of today's session, in the engine's words (S-EVENT-03).
+            // What the rule took out of today's session, in the engine's words (S-EVENT-03, D70).
             return (
               <p key="event" class="flag" data-testid="event-flag">
-                {eventExplanation(PROGRAM, state, today) ?? `I morgen: ${flag.label}.`}
+                {eventLine(PROGRAM, state, plan)}
               </p>
             );
           case 'physio':
@@ -754,7 +754,8 @@ function MainCard({
   if (plan.red) {
     return (
       <Card title="Syg">
-        <p>Kun Open &amp; Strong og en gåtur. Kun forkølet over halsen er din egen vurdering.</p>
+        {/* The programme's own words: »Kun forkølet over halsen« is your call (R-ILL, D70). */}
+        <p>{STATUS_LINE.ill}</p>
         {until}
       </Card>
     );

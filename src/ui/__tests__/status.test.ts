@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { PROGRAM } from '../../engine/index.ts';
+import { planFor, PROGRAM, statusChange } from '../../engine/index.ts';
 import { dayOf, Log, mondays } from '../../engine/__tests__/helpers/log.ts';
+import { correctionNote, endedLine, endNote, overlapNote, resultText } from '../life/statusText.ts';
 import {
   absenceChanges,
   comingEvents,
   currentStatuses,
+  eventLine,
   rangeText,
   repeatedWeek,
   untilText,
@@ -80,5 +82,102 @@ describe('I dag explains a changed day (SPEC 3.1)', () => {
     const log = new Log().onboard();
     log.catchUp(dayOf(3, 1));
     expect(absenceChanges(log.events, dayOf(3, 1))).toEqual({ lines: [], stayed: true });
+  });
+});
+
+describe('Status says what applies (SPEC 3.6, D70)', () => {
+  const WED = '2026-11-11';
+  const FRI = '2026-11-13';
+
+  it('corrects a trip that is shorter: the new days apply, and the screen says so', () => {
+    const log = new Log().onboard();
+    log.push(
+      { type: 'status_set', status: 'travel', from: '2026-11-09', to: '2026-11-20' },
+      '2026-11-09',
+    );
+    const change = statusChange(log.state(WED), {
+      status: 'travel',
+      from: WED,
+      to: FRI,
+      today: WED,
+    });
+    expect(correctionNote(change, WED)).toBe(
+      'Retter Rejse til og med fredag 20. november: nu til og med fredag 13. november.',
+    );
+    expect(resultText(change.range, WED)).toBe('til og med fredag 13. november');
+    expect(overlapNote(log.state(WED), change, WED)).toBeNull();
+  });
+
+  it('says a longer illness continues the one in force, and a new one applies over a trip', () => {
+    const log = new Log().onboard();
+    log.push({ type: 'status_set', status: 'ill', from: TUE, to: WED }, TUE);
+    log.push({ type: 'status_set', status: 'travel', from: WED, to: FRI }, WED);
+    const longer = statusChange(log.state(WED), { status: 'ill', from: WED, to: FRI, today: WED });
+    expect(correctionNote(longer, WED)).toBe(
+      'Retter Syg til og med i dag: nu til og med fredag 13. november.',
+    );
+    expect(overlapNote(log.state(WED), longer, WED)).toBe(
+      'Gælder i stedet for Rejse de dage, de overlapper.',
+    );
+    const fresh = statusChange(log.state(WED), {
+      status: 'holiday',
+      from: FRI,
+      to: FRI,
+      today: WED,
+    });
+    expect(correctionNote(fresh, WED)).toBeNull();
+    expect(resultText(fresh.range, WED)).toBe('fredag 13. november');
+  });
+
+  it('says what applies from today once a status ends', () => {
+    const log = new Log().onboard();
+    log.push({ type: 'status_set', status: 'travel', from: TUE, to: FRI }, TUE);
+    log.push({ type: 'status_set', status: 'ill', from: WED, to: WED }, WED);
+    log.push({ type: 'status_set', status: 'club_closed', from: WED, to: '2026-11-14' }, WED);
+    log.push({ type: 'status_set', status: 'holiday', from: '2026-11-21', to: '2026-11-22' }, WED);
+    const state = log.state(WED);
+    const [trip, ill, club, holiday] = state.statuses as [
+      (typeof state.statuses)[number],
+      (typeof state.statuses)[number],
+      (typeof state.statuses)[number],
+      (typeof state.statuses)[number],
+    ];
+    expect(endNote(state, ill, WED)).toBe(
+      'Afslut, så gælder Rejse stadig til og med fredag 13. november.',
+    );
+    expect(endedLine(state, ill, WED)).toBe(
+      '✓ Syg er afsluttet. Rejse gælder stadig til og med fredag 13. november.',
+    );
+    expect(endNote(state, club, WED)).toBe(
+      'Afslut, så har Muay Thai-dagene Muay Thai igen fra i dag.',
+    );
+    expect(endedLine(state, holiday, WED)).toBe(
+      '✓ Ferie fra lørdag 21. november til og med søndag 22. november er fjernet.',
+    );
+    // With the trip and the illness gone, the club is still closed today.
+    const left = { ...state, statuses: [club, holiday] };
+    expect(endNote({ ...state, statuses: [trip, club, holiday] }, trip, WED)).toBe(
+      'Afslut, så gælder den almindelige plan fra i dag, og klubben er stadig lukket.',
+    );
+    expect(endedLine(left, club, WED)).toBe(
+      '✓ Klubben lukket er afsluttet. Muay Thai-dagene har Muay Thai igen.',
+    );
+  });
+});
+
+describe('the day before an event (SPEC 3.1, D70)', () => {
+  const WED = '2026-11-11';
+
+  it('says only »I morgen: Kamp.« once the session of the day is logged', () => {
+    const log = new Log().onboard();
+    log.push({ type: 'calendar_event_added', label: 'Kamp', eventDate: '2026-11-11' }, TUE);
+    expect(eventLine(PROGRAM, log.state(TUE), planFor(PROGRAM, log.state(TUE), TUE))).toMatch(
+      /^I morgen: Kamp – let udgave i dag. /,
+    );
+    log.session({ date: TUE, kind: 'A' });
+    expect(eventLine(PROGRAM, log.state(TUE), planFor(PROGRAM, log.state(TUE), TUE))).toBe(
+      'I morgen: Kamp.',
+    );
+    expect(eventLine(PROGRAM, log.state(WED), planFor(PROGRAM, log.state(WED), WED))).toBeNull();
   });
 });
