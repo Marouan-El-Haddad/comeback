@@ -544,3 +544,5 @@ Det lave i N2 er også rettet. I `wallsit.W2` står ringen om den hånd, der fal
 **Samlet:** alle 4 figurer, der stadig var afvist, er godkendt, og N1–N3 er rettet eller begrundet. Én linje mangler: `"ring": "near.foot"` i `legs.1`. Indtil den er lagt ind, er 42 af 43 figurer godkendt.
 
 Skærmbilleder: `screenshots/review-p2-1-slut-*.png` (5 filer).
+
+**Bekræftet på bbea6b3:** `"ring": "near.foot"` er lagt ind i `legs.1` (5ad1dcb). `check-explain` er OK for `legs.json`, og på kontaktarket står ringen om hælen. Alle 43 figurer er godkendt.

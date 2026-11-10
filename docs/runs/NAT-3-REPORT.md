@@ -19,8 +19,9 @@ Kørslen 9.–10. november 2026, uden opsyn. Opgaven står i `docs/runs/NAT-3.md
 
 ## 2. Hvad er verificeret
 
-- **`npm run check`** på e17e5b5, koden i den endelige `main` (commits derefter er kun dokumentation): exit 0, 829 Vitest-tests, typecheck, lint og build. JavaScript fylder 120,4 kB gz af 150 og CSS 4,5 kB af 30. Startfilerne henviser ikke til indholdet.
-- **Playwright, hele suiten** i `pixel9a` (Firefox uden JIT) og `pixel9a-utc` på e17e5b5: 179 af 179 bestået i 30 minutter, uden fejl og uden gentagne forsøg. Hele suiten køres igen på den endelige commit med denne rapport; resultatet står i chatten.
+- **`npm run check`** på e17e5b5 og igen på 85dc0a0: exit 0, 829 Vitest-tests, typecheck, lint og build. JavaScript fylder 120,4 kB gz af 150 og CSS 4,5 kB af 30. Startfilerne henviser ikke til indholdet.
+- **Playwright, hele suiten** i `pixel9a` (Firefox uden JIT) og `pixel9a-utc` på e17e5b5 og igen på 85dc0a0: 179 af 179 bestået begge gange, uden fejl og uden gentagne forsøg.
+- **Efter den sidste figurrettelse** (ringen i `legs.1`, kun indhold, godkendt af revieweren) køres `npm run check` og hele suiten igen på den endelige commit med denne rapport. Resultatet står i chatten.
 - **Opstarten** er ikke blevet langsommere. »I dag synlig« var median 37–42 ms undervejs, mod 36–37 ms før.
 - **Udgivet** med GitHub Actions efter hver grøn pakke: 42578277569 (P0 og P3), 42705154428 (P1a, P1b, P2 og P4), 42729966717 (P5a og P5b) og den sidste kørsel med denne rapport, som står i chatten (P5c, slutrunden og rapporten).
 - **Testtal:**
@@ -41,17 +42,29 @@ Kørslen 9.–10. november 2026, uden opsyn. Opgaven står i `docs/runs/NAT-3.md
 | P0 | 1, rettet | 1, rettet | 6: 5 rettet, L4 dækket af P4's målinger |
 | P1a | 3, rettet (H3 i P1b) | 2, rettet | 2, rettet |
 | P1b | 2, rettet | 3, rettet | 5, rettet |
-| P2 (tre dele, 146 figurer) | 3, rettet | 34, rettet eller begrundet | 32, de fleste rettet; resten er forslag |
+| P2 (tre dele, 146 figurer) | 3, rettet | 35, rettet eller begrundet; alle 146 figurer godkendt | 32, de fleste rettet; resten er forslag |
 | P3 (to dele, 129 kort) | 0 | 3, rettet | 17, rettet |
 | P4 | 0 | 2, rettet | 6: 5 rettet, N2 som forslag |
 | P5a, med slutrunden | 1, rettet | 3, rettet | 9, rettet |
 | P5b | 0 | 2, rettet | 7, rettet |
 | P5c | 0 | 2, rettet | 7, rettet (2 nye fra rettelsen, også rettet) |
-| **I alt** | **10, alle rettet** | **52** | **91** |
+| **I alt** | **10, alle rettet** | **53, alle rettet eller begrundet** | **91** |
 
-- **Begrundet i stedet for rettet (middel):**
-  - Split squats (`legs.1` og `legs.2`) vises uden vinkel forfra. Med to vinkler blev figuren kun ca. 50 × 62 px i »Nu«, og sofaen kan ikke stå bag figuren forfra. Fejlparret fra siden er bevaret.
-  - Fejlparrene i nakke N1 og `os.5` er fjernet, fordi forskellen ikke kan ses tydeligt med hovedets model.
+- **Høje og middel fund pr. pakke.** Hvert fund er rettet af den agent, der lavede arbejdet, og tjekket af samme reviewer i rapportens »Opfølgning« (eller »Slutstatus« og »Slutrunde«):
+
+| Pakke og rapport | Høje og middel | Status |
+| --- | --- | --- |
+| P0, `docs/reviews/nat3-p0-passet.md` | H1, M1 | Rettet og godkendt i »Opfølgning« |
+| P1a og P3a, `nat3-p1a-figurmotor.md` | H1, H2, M1, M2 og det nye H3 | H1–M2 rettet og godkendt i »Opfølgning«. H3 er rettet i P1b og godkendt i P1b's »Opfølgning«. P3a har ingen fund |
+| P1b, `nat3-p1b-figurmotor.md` | H1, H2, M1–M3 | Rettet og godkendt i »Opfølgning« |
+| P2, `nat3-p2-figurer-1.md`, `-2.md` og `-3.md` | 3 høje og 35 middel, med de nye i opfølgningerne og i »Slutstatus« (ringen i `legs.1`) | Rettet; alle 146 figurer er godkendt i de tre »Slutstatus«. Begrundet frem for rettet, med reviewerens egen løsning: split squats (`legs.1`, `legs.2`) uden vinkel forfra, fordi to vinkler gjorde figuren ca. 50 × 62 px i »Nu«, og sofaen kan ikke stå bag figuren forfra. Fejlparret fra siden er bevaret |
+| P3, `nat3-p3-forklaringer-a.md` og `-b.md` | A F1, B M1 og M2 | Rettet og godkendt i »Opfølgning« |
+| P4, `nat3-p4-design.md` | M1, M2 | Rettet og godkendt i »Opfølgning« |
+| P5a, `nat3-p5a-livet.md` | H1, M1–M3 | Rettet og godkendt i »Opfølgning«. Slutrundens egen regression (lav) er rettet og godkendt i »Slutrunde« |
+| P5b, `nat3-p5b-flyt.md` | M1, M2 | Rettet og godkendt i »Opfølgning« |
+| P5c, `nat3-p5c-status.md` | M1, M2 | Rettet og godkendt i »Opfølgning«. De to regressioner fra rettelsen (lave) er rettet og godkendt i »Kort tjek af N1 og N2« uden nye fund |
+
+- **Kun lave fund står åbne** som forslag (afsnit 4). Desuden er fejlparrene i nakke N1 og `os.5` fjernet (lavt fund O3), fordi forskellen ikke kan ses tydeligt med hovedets model.
 - **Før og efter** (`screenshots/nat3-foer/` → `screenshots/nat3-efter/`, samme navne): `i-dag.png`, `uge.png`, `stiger.png`, `stige.png`, `kort-skimmet.png`, `kort-foldet-ud.png`, `kort-fra-passet.png`, `pas-skridt.png`, `pausetimer.png`, `trafiklys.png`, `opsummering.png`, `onboarding.png`, `program.png`, `om.png` og `hvorfor.png`. Nye skærme: `dagens-pas.png`, `pas-nu-og-naeste.png`, `pause.png`, `introkort.png`, `kort-fejlpar.png`, `kort-figur-vinkler.png`, `klublog.png`, `soendagstjek.png`, `flyt.png`, `status.png`, `begivenhed.png` og `i-dag-syg.png`.
 - **URL:** appen ligger på `https://<konto>.github.io/comeback/`. Den fulde adresse står i chatten (D27).
 
@@ -73,7 +86,7 @@ Ca. 10 minutter i tidsmaskinen (langt tryk på versionen). Afslut simuleringen t
 - **P6 (valgfri)** er ikke startet: jul og nytår, ugeplan med ekstra Muay Thai-dage, .ics-fil, historik med klubtræninger og milepæl 4.
 - **Lave fund, der står åbne som forslag:**
   - P4 N2: figuren i pausen kan miste en del af sig selv under bundblokken på små figurer.
-  - Fra figur-reviewene: markeringer i meget korte faser; motorens proportioner; skulderens bevægelighed og skulderbladene; en arm, der går over sin rod set ovenfra; spidermans støttearm set ovenfra.
+  - Fra figur-reviewene, alle lave: markeringer i meget korte faser (del 2 L2); motorens proportioner (del 2 L6); striben med en cue står ved sidebilledet, mens linjen er forfra (del 2 N3); fejlringen i pogo (del 3 L6); skulderens bevægelighed og skulderbladene (del 3 L7, L8); en arm, der går over sin rod set ovenfra (del 3 O4); spidermans støttearm set ovenfra (del 3 O5).
 
 ## 5. Forslag uden for opgaven
 
