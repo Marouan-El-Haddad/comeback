@@ -1,5 +1,6 @@
-// Mere (docs/SPEC.md 3.6): Backup (export, import with preview, last backup, persist status) and
-// Om (version, programme version, sources, Diagnose – T6, D34 – and the hidden time machine, 3.7).
+// Mere (docs/SPEC.md 3.6): Status and Begivenheder (screens in place of Mere, D67), Backup (export,
+// import with preview, last backup, persist status) and Om (version, programme version, sources,
+// Diagnose – T6, D34 – and the hidden time machine, 3.7).
 import { useEffect, useRef, useState } from 'preact/hooks';
 import {
   addDays,
@@ -18,6 +19,8 @@ import {
 import { estimate, isPersisted } from '../../storage/persist.ts';
 import type { MirrorStatus } from '../../storage/store.ts';
 import { audioState, type AudioState } from '../audio.ts';
+import { screenSettled, showTopOnClose, useScreenEntry, useSettle } from '../hooks.ts';
+import { LifeForm } from '../lifeScreen.ts';
 import type { Model } from '../model.ts';
 import { median, readStartupTimes, startupTimesFor, thisStart } from '../startup.ts';
 import { swStatus } from '../sw.ts';
@@ -25,7 +28,8 @@ import { APP_VERSION } from '../version.ts';
 import { History } from './History.tsx';
 import { wakeLockSupported, wakeState, type WakeState } from '../wakelock.ts';
 
-export type MorePage = 'menu' | 'history' | 'backup' | 'about' | 'diagnose' | 'timemachine';
+export type MorePage =
+  'menu' | 'history' | 'status' | 'event' | 'backup' | 'about' | 'diagnose' | 'timemachine';
 
 const WAKE: Record<WakeState, string> = {
   off: 'fra',
@@ -50,14 +54,61 @@ export function More({
   page: MorePage;
   onPage: (p: MorePage) => void;
 }) {
+  const life = page === 'status' || page === 'event';
+  /** »✓ Syg fra i dag til og med onsdag 11. november.« after Status or Begivenheder wrote. */
+  const [saved, setSaved] = useState<string | null>(null);
+  const settling = useSettle([life]);
+  // The screens and their »✓« line belong to their world – the real log or the time machine's copy:
+  // when the time machine starts or ends, they go (SPEC 3.7, D64, D65). Each screen also checks its
+  // world before it writes.
+  const world = model.sim !== null;
+  const lastWorld = useRef(world);
+  useEffect(() => {
+    if (lastWorld.current === world) return;
+    lastWorld.current = world;
+    setSaved(null);
+    if (page === 'status' || page === 'event') onPage('menu');
+  }, [world]);
+  useEffect(() => {
+    if (page !== 'menu') setSaved(null);
+  }, [page]);
+  // A screen is a step in the history: Android's back gesture closes it, not the app (D65).
+  useScreenEntry(life, () => onPage('menu'));
+
+  if (page === 'status' || page === 'event') {
+    return (
+      <div class={settling ? 'life-host settling' : 'life-host'}>
+        <LifeForm
+          request={{ kind: page }}
+          model={model}
+          onClose={() => onPage('menu')}
+          onSaved={(message) => {
+            showTopOnClose();
+            setSaved(message ?? null);
+            onPage('menu');
+          }}
+        />
+      </div>
+    );
+  }
   if (page === 'history') return <History model={model} onBack={() => onPage('menu')} />;
   if (page === 'backup') return <Backup model={model} onBack={() => onPage('menu')} />;
   if (page === 'about') return <About model={model} onPage={onPage} />;
   if (page === 'diagnose') return <Diagnose model={model} onBack={() => onPage('about')} />;
   if (page === 'timemachine') return <TimeMachine model={model} onBack={() => onPage('about')} />;
+  // The screen opens once its code is there and no screen is on its way back (D65).
+  const open = (target: 'status' | 'event') => () => {
+    const show = () => onPage(target);
+    void Promise.all([LifeForm.preload(), screenSettled()]).then(show, show);
+  };
   return (
-    <div class="screen more" data-testid="more">
+    <div class={settling ? 'screen more settling' : 'screen more'} data-testid="more">
       <h1>Mere</h1>
+      {saved && (
+        <p class="life-saved" role="status">
+          {saved}
+        </p>
+      )}
       {/* Each row says what is behind it; its name alone is the button's name (D59). */}
       <nav class="menu" aria-label="Mere">
         <button
@@ -68,6 +119,26 @@ export function More({
         >
           <span class="menu-title">Historik</span>
           <span class="menu-text">Dine pas med dato, trafiklys og sæt</span>
+        </button>
+        <button
+          type="button"
+          class="menu-row"
+          aria-label="Status"
+          data-testid="more-status"
+          onClick={open('status')}
+        >
+          <span class="menu-title">Status</span>
+          <span class="menu-text">Syg, rejse, ferie eller klubben lukket</span>
+        </button>
+        <button
+          type="button"
+          class="menu-row"
+          aria-label="Begivenheder"
+          data-testid="more-event"
+          onClick={open('event')}
+        >
+          <span class="menu-title">Begivenheder</span>
+          <span class="menu-text">Fx en kamp – dagen før bliver let</span>
         </button>
         <button type="button" class="menu-row" aria-label="Backup" onClick={() => onPage('backup')}>
           <span class="menu-title">Backup</span>

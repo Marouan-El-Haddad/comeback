@@ -34,15 +34,36 @@ export function screenSettled(): Promise<void> {
   return leaving ?? Promise.resolve();
 }
 
+/** The screen wrote and closes: the tab comes back at its top, where its »✓« line stands. */
+let closeAtTop = false;
+
+/** Called by a tab when its screen has written, just before the screen closes (D67). */
+export function showTopOnClose(): void {
+  closeAtTop = true;
+}
+
 /**
  * A screen shown in place of a tab is a step in the browser's history, as the exercise card is
  * (D47): Android's back gesture closes the screen, not the app (D65). Closed any other way –
  * »Tilbage«, a save, the time machine starting or ending, another tab – it goes back over its
- * step, so the history does not grow.
+ * step, so the history does not grow. The screen opens at its top, also from the bottom of a tab
+ * (»Sæt status« on I dag); closed, the tab comes back where it was, or at its top after a write
+ * (D67). The page is moved by the app alone, not by the browser's step back (`manual`).
  */
 export function useScreenEntry(open: boolean, onBack: () => void): void {
   const back = useRef(onBack);
   back.current = onBack;
+  useLayoutEffect(() => {
+    if (!open) return;
+    const y = window.scrollY;
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+    return () => {
+      const top = closeAtTop;
+      closeAtTop = false;
+      window.scrollTo(0, top ? 0 : y);
+    };
+  }, [open]);
   useEffect(() => {
     if (!open) return;
     if (!screenEntry()) history.pushState({ [SCREEN_ENTRY]: true }, '');

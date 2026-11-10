@@ -6,7 +6,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { formatLong, PROGRAM, weekPlan } from '../../engine/index.ts';
 import type { SessionKind } from '../../engine/types.ts';
 import { capitalize, SESSION_NAME, sessionMinutes } from '../format.ts';
-import { screenSettled, useScreenEntry, useSettle } from '../hooks.ts';
+import { screenSettled, showTopOnClose, useScreenEntry, useSettle } from '../hooks.ts';
 import type { LifeRequest } from '../life.ts';
 import { LifeForm } from '../lifeScreen.ts';
 import type { Model } from '../model.ts';
@@ -40,6 +40,7 @@ export function WeekView({ model }: { model: Model }) {
           model={model}
           onClose={() => setForm(null)}
           onSaved={(message) => {
+            showTopOnClose();
             setSaved(message ? { text: message, on: today } : null);
             setForm(null);
           }}
@@ -123,12 +124,15 @@ export function WeekView({ model }: { model: Model }) {
                 {!d.kind && session && (
                   <span class={`chip ${chipKind(session.kind)}`}>{SESSION_NAME[session.kind]}</span>
                 )}
-                {d.club.day && (
+                {/* A sick or holiday day has no Muay Thai: red, or rest (ENGINE 5.1 step 3, D67). */}
+                {d.club.day && !d.red && d.status !== 'holiday' && (
                   <span class="chip club">
                     {d.club.closed ? 'Kamp-runder hjemme' : `Muay Thai ${d.club.time ?? ''}`}
                   </span>
                 )}
                 {d.red && <span class="chip">Syg</span>}
+                {d.status === 'holiday' && <span class="chip">Ferie</span>}
+                {d.status === 'travel' && d.kind !== 'travel' && <span class="chip">Rejse</span>}
                 {status && <span class="chip status">{status}</span>}
               </div>
             </li>

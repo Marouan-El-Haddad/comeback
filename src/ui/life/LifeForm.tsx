@@ -1,7 +1,7 @@
-// The club log, the Sunday check (docs/SPEC.md 4.6 and 4.7, DECISIONS.md D63) and »Flyt eller spring
-// over« (3.1, 3.4, D64): screens shown in place of I dag or Uge with »Tilbage«, never a dialog.
-// Fetched after start with lazy(). A button that saves takes the screen from its first tap until
-// the tab is back, so a double tap saves once (D61).
+// The club log, the Sunday check (docs/SPEC.md 4.6 and 4.7, DECISIONS.md D63), »Flyt eller spring
+// over« (3.1, 3.4, D64), Status and Begivenheder (3.6, D67): screens shown in place of I dag, Uge or
+// Mere with »Tilbage«, never a dialog. Fetched after start with lazy(). A button that saves takes the
+// screen from its first tap until the tab is back, so a double tap saves once (D61).
 import { useId, useMemo, useState } from 'preact/hooks';
 import {
   addDays,
@@ -47,8 +47,11 @@ import {
   parseSleep,
   readyLadders,
 } from './choices.ts';
+import { otherWorld, Toggles } from './common.tsx';
+import { EventForm } from './EventForm.tsx';
 import { Head } from './Head.tsx';
 import { MoveForm } from './MoveForm.tsx';
+import { StatusForm } from './StatusForm.tsx';
 
 export interface LifeFormProps {
   request: LifeRequest;
@@ -67,70 +70,17 @@ export function LifeForm(props: LifeFormProps) {
       return <SundayCheckForm {...props} sunday={request.sunday} />;
     case 'move':
       return <MoveForm {...props} session={request.session} date={request.date} />;
+    case 'status':
+      return <StatusForm {...props} />;
+    case 'event':
+      return <EventForm {...props} />;
   }
 }
 
 const GRADES: Array<[number, string]> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => [n, String(n)]);
 
-/**
- * A row of toggle buttons under a label: several can be chosen (`multiple`), otherwise one or none
- * – a tap on the chosen one removes the choice. A chosen button is filled navy with aria-pressed.
- */
-function Toggles<T extends string | number>(props: {
-  label: string;
-  options: Array<[T, string]>;
-  value: readonly T[];
-  multiple?: boolean;
-  columns?: 2 | 3 | 5;
-  /** A group under a question (»Styrke A« under »Hvilken øvelse?«): a quieter label. */
-  sub?: boolean;
-  onChange: (value: T[]) => void;
-}) {
-  const id = useId();
-  return (
-    <section class="life-section">
-      <p class={props.sub ? 'life-label sub' : 'life-label'} id={id}>
-        {props.label}
-      </p>
-      <div class={`toggles cols-${props.columns ?? 3}`} role="group" aria-labelledby={id}>
-        {props.options.map(([value, text]) => {
-          const on = props.value.includes(value);
-          return (
-            <button
-              key={String(value)}
-              type="button"
-              class={on ? 'btn selected' : 'btn'}
-              aria-pressed={on}
-              onClick={() =>
-                props.onChange(
-                  on
-                    ? props.value.filter((v) => v !== value)
-                    : props.multiple
-                      ? [...props.value, value]
-                      : [value],
-                )
-              }
-            >
-              {text}
-            </button>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
 // ---------------------------------------------------------------------------------------------
 // The club log (4.6)
-
-/**
- * Opened in the time machine and still open after »Afslut« (or the other way round): nothing is
- * written, and the screen closes (SPEC 3.7, D64, D65).
- */
-function otherWorld(onClose: () => void): Error {
-  onClose();
-  return new Error('the time machine started or ended');
-}
 
 function ClubLogForm(props: LifeFormProps & { date: ISODate }) {
   const { model, date } = props;

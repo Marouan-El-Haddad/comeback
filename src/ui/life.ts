@@ -24,13 +24,16 @@ import type {
 import { distanceText } from './screens/Ladders.tsx';
 
 /**
- * What I dag or Uge opens in its place: the club log of a club day, the Sunday check of a Sunday,
- * or »Flyt eller spring over« for the week plan's session on a day (D64).
+ * What I dag, Uge or Mere opens in its place: the club log of a club day, the Sunday check of a
+ * Sunday, »Flyt eller spring over« for the week plan's session on a day (D64), Status or
+ * Begivenheder (D67).
  */
 export type LifeRequest =
   | { kind: 'club'; date: ISODate }
   | { kind: 'sunday'; sunday: ISODate }
-  | { kind: 'move'; session: SessionKind; date: ISODate };
+  | { kind: 'move'; session: SessionKind; date: ISODate }
+  | { kind: 'status' }
+  | { kind: 'event' };
 
 export const CONTENT: Record<ClubContent, string> = {
   teknik: 'Teknik',

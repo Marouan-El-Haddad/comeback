@@ -316,7 +316,9 @@
 
 .life-host.settling button,
 .today.settling button,
-.week-screen.settling button {
+.week-screen.settling button,
+.more.settling button,
+.more.settling a {
   pointer-events: none;
 }
 
@@ -448,6 +450,48 @@
 .move-skip {
   padding-top: 16px;
   border-top: 1px solid var(--c-line);
+}
+
+/* Status and Begivenheder (SPEC 3.6, D67): a card per status with »Afslut« or »Fjern«, the day a
+   date field holds written out under it, and the events to come. */
+.status-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.status-item {
+  display: grid;
+  gap: 8px;
+  border-left: 6px solid var(--c-navy);
+}
+
+.status-item-name,
+.life-date {
+  font-weight: 600;
+}
+
+.status-item-name strong {
+  font-family: 'Kanit', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.event-item {
+  display: grid;
+  gap: 4px;
+}
+
+/* The shortcut to Status and Begivenheder at the bottom of I dag (SPEC 3.1). */
+.life-links {
+  display: grid;
+  gap: 8px;
+}
+
+.life-links p {
+  font-weight: 600;
 }
 
 .backup-line {
