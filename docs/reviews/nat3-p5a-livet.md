@@ -299,3 +299,67 @@ Metode:
 - **Rettelse:**
   1. Lad grenen kun gælde spor, som ugens tjek ikke allerede har nævnt under »for tungt«. Gem `taken` for smerte og for tungt hver for sig.
   2. Skriv et scenarie S-PAIN-11 i ENGINE 8, før koden rettes.
+
+## Slutrunde
+
+2026-11-10 · 75c4323 (S-PAIN-11), 482a835 (N1 og N2), 7bd8b70 (den rolige tur, S-MOVE-06), 7090f5b (Open & Strong), 666d5dd, 398d46e (SPEC 3.1, 4.6, 4.7 og 5; D68 og R31) og 17fefd9 · worktree på 17fefd9 (`git diff c451433 17fefd9`)
+
+Metode:
+
+- **Kørt** i worktreen:
+  - `npm test`: 811/811. `npm run typecheck` og `npm run lint`: grønne.
+  - `e2e/life.spec.ts`, `moves.spec.ts` og `tabs.spec.ts` i `pixel9a` og `pixel9a-utc` (`E2E_PORT=4187`): 43/43.
+  - Open & Strong i `session.spec.ts`, også det nye dobbelttryk på »Videre«: 2/2.
+- **Motoren** med scratch-scripts på 17fefd9 og c451433:
+  - M1, den omvendte rettelse og N3 igen;
+  - et første tjek med Ben under både smerte og »for tungt« (N5).
+- **Egne flows** i `pixel9a`: N1 (et trin valgt under Stiger samme søndag), N2 (en karakter alene lørdag) og lørdagens klublog logget søndag med kun karakteren (N4).
+
+### Status
+
+- **N3 er rettet** (S-PAIN-11).
+  - Tjekket gemt igen efter et pas med skarp smerte samme søndag skriver intet, og smerteperioden står.
+  - Grenen springer kun spor over, der står i `takenHeavy`, så den kan ikke tage noget ned. M1 og den omvendte rettelse giver stadig ét trin, og et tredje tjek skriver intet.
+  - Se dog N5.
+- **N1 er rettet.** Efter »Vælg trin 3« under Stiger samme søndag nævner kortet kun Lyske (»Fjernet i rettelsen, men står stadig: Lyske«).
+- **N2 er rettet.** En karakter logget alene på selve lørdagen holder ikke »Muay Thai i går« åben søndag.
+- **P4 N1 er rettet.** Et dobbelttryk på »Videre« springer ingen øvelse over (e2e). Velkomstens billede er ikke længere hvidt.
+- **Den rolige tur** (P5b N1 og N2, ENGINE 5.9 og S-MOVE-06) er rigtig mod ENGINE og programmet:
+  - **Hviledagen:** ændringen kan ikke fjerne en hviledag. `taken` bruges kun, når turen foreslås, og alle flytninger kalder `validMoveDays` uden det, så regel 4 er uændret for passene. En dag, turen er foreslået på, tæller som optaget, så to ture tager aldrig ugens sidste hviledag.
+  - **Motorens egen dag:** turen kan stå på motorens egen dag, når den er blevet fri (»Behold én rolig tur, hvis du kan«, »Mindst én hel hviledag«, s. 47).
+
+### Nye fund
+
+0 høj, 0 middel og 2 lav.
+
+#### N4 (lav): Lørdagens klublog logget søndag med kun karakteren lukker ikke kortet
+
+- **Hvor:** `src/ui/life.ts` (`answers`): en karakter alene, skrevet dagen efter, regnes for søndagstjekkets. Det gælder også den, klubloggens egen skærm skriver.
+- **Hvorfor:**
+  - **Kilden:** SPEC 4.6: »Logges den dagen efter, forsvinder kortet, og I dag siger »✓ Klubtræningen i går er logget.««.
+  - **Gentaget** med det rigtige ur søndag 15/11:
+    1. »Muay Thai i går« og kun »7«, så »Gem«.
+    2. I dag siger »✓ Klubtræningen i går er logget.« lige over et kort, der stadig spørger: »Karakteren 7 er givet. Resten kan du logge her.« (`screenshots/review-p5a-slut-karakter-dagen-efter.png`).
+    3. Først endnu et »Gem« uden valg fjerner kortet, og det giver en log mere for lørdag.
+  - **Konsekvensen:** intet går tabt.
+- **Rettelse:**
+  1. Lad kun søndagstjekkets karakter holde kortet åbent. Gem fx tidspunktet for ugens tjek i den afledte tilstand, og sammenlign det med klublogens `at`.
+  2. Eller lad klubloggens skærm altid svare.
+  3. Tilføj en test i `life.test.ts`.
+
+#### N5 (lav): Et første tjek med smerte og »for tungt« på samme spor gendanner alligevel det for tunge trin efter rettelsen
+
+- **Hvor:** `src/engine/derive.ts`: `takenHeavy` tager hele `tooHeavy`, også de spor, der samme tjek stod under smerte, og hvor »for tungt« derfor ikke virkede. `src/engine/session.ts` springer dem så over.
+- **Hvorfor:**
+  - **Kilderne:**
+    - ENGINE R-PAIN-SUNDAY: i en smerteperiode bliver det sænkede trin dit trin, »også når smerten kom fra et tidligere tjek for ugen«.
+    - S-PAIN-09: smerte, der rettes til »for tungt«, giver legs.2 for altid.
+    - PROGRAM_KILDE s. 48: »er noget for tungt?«.
+  - **Gentaget i motoren:**
+    1. Tjek 1 har Ben under både smerte og »for tungt« (legs.3 → legs.2 midlertidigt).
+    2. Rettelsen beholder kun »for tungt« og skriver intet.
+    3. Det første grønne pas efter perioden skriver `legs.2 → legs.3 (restore)`, altså det trin, brugeren to gange har kaldt for tungt.
+  - **Før slutrunden:** på c451433 gav samme forløb `legs.2 → legs.2 (user_choice)`. Det er altså slutrundens rettelse, der har bragt fejlen ind.
+- **Rettelse:**
+  1. Lad `takenHeavy` kun tage de spor, hvor »for tungt« virkede: `e.tooHeavy` uden dem, der står i samme tjeks `painTracks`.
+  2. Føj forløbet til S-PAIN-09 eller S-PAIN-11 i ENGINE 8, før koden rettes.
