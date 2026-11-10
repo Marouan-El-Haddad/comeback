@@ -541,7 +541,7 @@ test('M1: en rejse rettet kortere gælder kun til den nye dag, »Afslut« siger,
   await page.getByTestId('status-open').click();
   await setStatus(page, 'Syg', '2026-11-11');
   await expect(screen.getByTestId('status-effects')).toContainText(
-    'Gælder i stedet for Rejse de dage, de overlapper.',
+    'Gælder i stedet for Rejse i dag.',
   );
   await screen.getByTestId('status-save').click();
   await expect(card.locator('h1')).toHaveText('Syg');
@@ -653,6 +653,64 @@ test('L5: ferie lørdag–mandag er hvile, også på klubdagene, og søndag er s
   await expect(card).toContainText('Kun i dag.');
   await tab(page, 'Uge');
   await expect(row('Mandag').locator('.chip')).toHaveText(['Ferie']);
+  expect(await storedEventCount(page)).toBe(stored);
+});
+
+test('N1 og N2: en ferie foran en kommende lægger sig ved siden af, og en rejse gjort kortere efter »Syg« lader de syge dage stå @date', async ({
+  page,
+}) => {
+  await openAt(page, MONDAY_MORNING);
+  await onboard(page);
+  const stored = await storedEventCount(page);
+  await startSimulation(page, '2026-11-10');
+  const card = page.getByTestId('main-card');
+  const screen = page.getByTestId('status');
+
+  // A holiday 21–27 November, then 18–20 in front of it: both stand.
+  await page.getByTestId('status-open').click();
+  await setStatus(page, 'Ferie', '2026-11-27', '2026-11-21');
+  await screen.getByTestId('status-save').click();
+  await page.getByTestId('status-open').click();
+  await setStatus(page, 'Ferie', '2026-11-20', '2026-11-18');
+  await expect(screen.getByTestId('status-effects')).not.toContainText('Retter');
+  await screen.getByTestId('status-save').click();
+  await page.getByTestId('status-open').click();
+  await expect(screen.getByTestId('status-item').locator('.status-item-name')).toHaveText([
+    'Ferie fra onsdag 18. november til og med fredag 20. november',
+    'Ferie fra lørdag 21. november til og med fredag 27. november',
+  ]);
+  await screen.getByRole('button', { name: 'Tilbage' }).click();
+
+  // A trip from today to Friday 20, sick Thursday–Friday, then the trip made shorter to Friday 13:
+  // the trip keeps its place, and the sick days stay sick.
+  await page.getByTestId('status-open').click();
+  await setStatus(page, 'Rejse', '2026-11-20');
+  await screen.getByTestId('status-save').click();
+  await nextDay(page, 'onsdag 11. november');
+  await nextDay(page, 'torsdag 12. november');
+  await page.getByTestId('status-open').click();
+  await setStatus(page, 'Syg', '2026-11-13');
+  await screen.getByTestId('status-save').click();
+  await expect(card.locator('h1')).toHaveText('Syg');
+  await card.getByTestId('status-change').click();
+  await setStatus(page, 'Rejse', '2026-11-13');
+  await expect(screen.getByTestId('status-effects').locator('li').nth(0)).toHaveText(
+    'Rejse til og med fredag 13. november.',
+  );
+  await expect(screen.getByTestId('status-effects').locator('li').nth(1)).toHaveText(
+    'Retter Rejse til og med fredag 20. november: nu til og med fredag 13. november.',
+  );
+  await expect(screen.getByTestId('status-effects').locator('li').nth(2)).toHaveText(
+    'Syg gælder stadig fra i dag til og med fredag 13. november.',
+  );
+  await screen.getByTestId('status-save').click();
+  await expect(savedLine(page, '✓ Rejse til og med fredag 13. november.')).toBeVisible();
+  await expect(card.locator('h1')).toHaveText('Syg');
+  await nextDay(page, 'fredag 13. november');
+  await expect(card.locator('h1')).toHaveText('Syg');
+  await nextDay(page, 'lørdag 14. november');
+  await expect(card.locator('h1')).toHaveText('Muay Thai');
+  await expect(page.getByTestId('status-card')).toHaveCount(0);
   expect(await storedEventCount(page)).toBe(stored);
 });
 
