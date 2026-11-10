@@ -19,7 +19,7 @@ import {
   EFFECTS,
   endedLine,
   endNote,
-  overlapNote,
+  previewNotes,
   resultText,
   spanText,
 } from './statusText.ts';
@@ -64,7 +64,7 @@ export function StatusForm(props: StatusFormProps) {
       ? statusChange(state, { status: chosen, from, to, today })
       : null;
   const notes = change
-    ? [correctionNote(change, today), overlapNote(state, change, today)].filter(
+    ? [correctionNote(change, today), ...previewNotes(state, change, today)].filter(
         (n): n is string => n !== null,
       )
     : [];

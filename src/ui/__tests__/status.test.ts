@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { planFor, PROGRAM, statusChange } from '../../engine/index.ts';
 import { dayOf, Log, mondays } from '../../engine/__tests__/helpers/log.ts';
-import { correctionNote, endedLine, endNote, overlapNote, resultText } from '../life/statusText.ts';
+import {
+  correctionNote,
+  endedLine,
+  endNote,
+  previewNotes,
+  resultText,
+} from '../life/statusText.ts';
 import {
   absenceChanges,
   comingEvents,
@@ -105,7 +111,7 @@ describe('Status says what applies (SPEC 3.6, D70)', () => {
       'Retter Rejse til og med fredag 20. november: nu til og med fredag 13. november.',
     );
     expect(resultText(change.range, WED)).toBe('til og med fredag 13. november');
-    expect(overlapNote(log.state(WED), change, WED)).toBeNull();
+    expect(previewNotes(log.state(WED), change, WED)).toEqual([]);
   });
 
   it('says a longer illness continues the one in force, and a new one applies over a trip', () => {
@@ -116,9 +122,9 @@ describe('Status says what applies (SPEC 3.6, D70)', () => {
     expect(correctionNote(longer, WED)).toBe(
       'Retter Syg til og med i dag: nu til og med fredag 13. november.',
     );
-    expect(overlapNote(log.state(WED), longer, WED)).toBe(
-      'Gælder i stedet for Rejse de dage, de overlapper.',
-    );
+    expect(previewNotes(log.state(WED), longer, WED)).toEqual([
+      'Gælder i stedet for Rejse fra i dag til og med fredag 13. november.',
+    ]);
     const fresh = statusChange(log.state(WED), {
       status: 'holiday',
       from: FRI,
@@ -127,6 +133,40 @@ describe('Status says what applies (SPEC 3.6, D70)', () => {
     });
     expect(correctionNote(fresh, WED)).toBeNull();
     expect(resultText(fresh.range, WED)).toBe('fredag 13. november');
+  });
+
+  it('says the illness still applies when a trip is made shorter, and where a longer one applies over it (D71)', () => {
+    const THU = '2026-11-12';
+    const log = new Log().onboard();
+    log.push(
+      { type: 'status_set', status: 'travel', from: '2026-11-09', to: '2026-11-20' },
+      '2026-11-09',
+    );
+    log.push({ type: 'status_set', status: 'ill', from: THU, to: FRI }, THU);
+    const state = log.state(THU);
+    const shorter = statusChange(state, { status: 'travel', from: THU, to: FRI, today: THU });
+    expect(previewNotes(state, shorter, THU)).toEqual([
+      'Syg gælder stadig fra i dag til og med fredag 13. november.',
+    ]);
+    const longer = statusChange(state, {
+      status: 'travel',
+      from: THU,
+      to: '2026-11-22',
+      today: THU,
+    });
+    expect(previewNotes(state, longer, THU)).toEqual([
+      'Gælder i stedet for Syg fra i dag til og med fredag 13. november.',
+    ]);
+    const later = statusChange(state, {
+      status: 'travel',
+      from: '2026-11-14',
+      to: '2026-11-22',
+      today: THU,
+    });
+    // From Saturday the sick days keep their place under the illness.
+    expect(previewNotes(state, later, THU)).toEqual([
+      'Syg gælder stadig fra i dag til og med fredag 13. november.',
+    ]);
   });
 
   it('says what applies from today once a status ends', () => {
