@@ -114,9 +114,9 @@ test('PLAN M3 tjekliste 5: »Syg« i to dage viser kun Open & Strong, og »Afslu
   await setStatus(page, 'Syg', '2026-11-11');
   await expect(screen.getByTestId('status-effects').locator('li')).toHaveText([
     'Syg fra i dag til og med onsdag 11. november.',
-    'Alle dage er røde: kun Open & Strong og en gåtur.',
-    'Ugerne under sygdom er ikke gennemførte.',
-    'Kun forkølet over halsen er din egen vurdering.',
+    'Feber eller ondt i kroppen: hvil. Kun forkølet over halsen: Open & Strong og en gåtur.',
+    'Ingen styrkepas og ingen motor de dage.',
+    'Syge- og feriedage gennemfører ikke ugen: den tæller kun med Styrke A, B eller rejsepasset på en anden dag.',
   ]);
   await expect(screen).toContainText('I dag, tirsdag 10. november');
   await expect(screen).toContainText('Onsdag 11. november');
@@ -134,14 +134,18 @@ test('PLAN M3 tjekliste 5: »Syg« i to dage viser kun Open & Strong, og »Afslu
   await expect(screen).toHaveCount(0);
   // I dag comes back at its top, with the »✓« line in sight.
   await expect(savedLine(page, '✓ Syg fra i dag til og med onsdag 11. november.')).toBeInViewport();
-  // Only Open & Strong and a walk: no session to start (R-ILL).
+  // The programme's text: rest with fever, Open & Strong and a walk with a cold – no session (R-ILL).
   await expect(card.locator('h1')).toHaveText('Syg');
-  await expect(card).toContainText('Kun Open & Strong og en gåtur.');
+  await expect(card).toContainText(
+    'Feber eller ondt i kroppen: hvil. Kun forkølet over halsen: Open & Strong og en gåtur.',
+  );
   await expect(card).toContainText('Til og med onsdag 11. november.');
   await expect(card.getByTestId('start-session')).toHaveCount(0);
   await expect(card.getByTestId('status-change')).toHaveText('Ret status');
   await expect(page.getByTestId('os-start')).toBeVisible();
-  await expect(page.locator('.tomorrow')).toHaveText('I morgen: Syg: Open & Strong og en gåtur');
+  await expect(page.locator('.tomorrow')).toHaveText(
+    'I morgen: Syg: hvil eller Open & Strong og en gåtur',
+  );
   await expectClean(page, 'I dag syg');
   await page.screenshot({
     path: 'screenshots/i-dag-syg.png',
@@ -350,6 +354,10 @@ test('rejse viser rejsepasset på Styrke-dagene, og klubben lukket viser kamp-ru
     'Klubben lukket til og med lørdag 14. november',
   ]);
   await expect(items.getByTestId('status-end')).toHaveText(['Afslut', 'Afslut']);
+  await expect(items.locator('.muted')).toHaveText([
+    'Afslut, så gælder den almindelige plan fra i dag, og klubben er stadig lukket.',
+    'Afslut, så har Muay Thai-dagene Muay Thai igen fra i dag.',
+  ]);
   await expectClean(page, 'Status med to statusser');
   await page.screenshot({
     path: 'screenshots/status-liste.png',
@@ -391,7 +399,8 @@ test('S-MOVE-05: »Flyt« tilbyder ingen syge- eller feriedage, men en rejsedag 
   await expect(page.getByTestId('status-effects').locator('li')).toHaveText([
     'Ferie fra lørdag 14. november til og med søndag 15. november.',
     'Hvile: ingen pas, og Open & Strong er valgfri.',
-    'Ugerne er ikke gennemførte. Vil du træne i ferien, så sæt ikke ferie.',
+    'Syge- og feriedage gennemfører ikke ugen: den tæller kun med Styrke A, B eller rejsepasset på en anden dag.',
+    'Vil du træne i ferien, så sæt ikke ferie.',
   ]);
   await page.getByTestId('status-save').click();
   await page.locator('.rest-of-week summary').click();
@@ -400,7 +409,9 @@ test('S-MOVE-05: »Flyt« tilbyder ingen syge- eller feriedage, men en rejsedag 
     'Lørdag: Ferie: hvile',
     'Søndag: Ferie: hvile',
   ]);
-  await expect(page.locator('.tomorrow')).toHaveText('I morgen: Syg: Open & Strong og en gåtur');
+  await expect(page.locator('.tomorrow')).toHaveText(
+    'I morgen: Syg: hvil eller Open & Strong og en gåtur',
+  );
 
   // Only Wednesday as the short version (S-MOVE-05).
   await missed.getByRole('button', { name: 'Flyt', exact: true }).click();
@@ -476,6 +487,172 @@ test('PLAN M3 tjekliste 3: to uger uden pas gentager den sidste gennemførte uge
   await expect(absence).toBeVisible();
   await tab(page, 'Stiger');
   await expect(page.locator('.ladder-row', { hasText: 'Ben · trin 2' })).toBeVisible();
+  expect(await storedEventCount(page)).toBe(stored);
+});
+
+test('M1: en rejse rettet kortere gælder kun til den nye dag, »Afslut« siger, hvad der stadig gælder, og en forlænget sygdom har ét »Afslut« @date', async ({
+  page,
+}) => {
+  await openAt(page, MONDAY_MORNING);
+  await onboard(page);
+  const stored = await storedEventCount(page);
+  await startSimulation(page, '2026-11-10');
+  const card = page.getByTestId('main-card');
+  const status = page.getByTestId('status-card');
+
+  // A trip from Tuesday to Friday 20/11.
+  await page.getByTestId('status-open').click();
+  await setStatus(page, 'Rejse', '2026-11-20');
+  await page.getByTestId('status-save').click();
+  await expect(status.locator('.life-card-title')).toHaveText(
+    'Rejse til og med fredag 20. november',
+  );
+
+  // Wednesday: home on Friday 13 instead. The new status corrects the trip, and says so.
+  await nextDay(page, 'onsdag 11. november');
+  await status.getByTestId('status-change').click();
+  const screen = page.getByTestId('status');
+  await expect(screen.getByTestId('status-item').locator('.status-item-name')).toHaveText([
+    'Rejse til og med fredag 20. november',
+  ]);
+  await setStatus(page, 'Rejse', '2026-11-13');
+  await expect(screen.getByTestId('status-effects').locator('li')).toHaveText([
+    'Rejse til og med fredag 13. november.',
+    'Retter Rejse til og med fredag 20. november: nu til og med fredag 13. november.',
+    'Styrke-dagene får rejsepasset: 25 min med push-ups, rygsæk-row, split squats og 6 min EMOM.',
+    'Rejsepasset gennemfører ugen, men flytter ingen stiger.',
+  ]);
+  await blur(page);
+  await expectClean(page, 'Status, der retter en rejse');
+  await page.screenshot({
+    path: 'screenshots/status-ret.png',
+    scale: 'css',
+    animations: 'disabled',
+    fullPage: true,
+    style: IN_FLOW,
+  });
+  await screen.getByTestId('status-save').click();
+  await expect(savedLine(page, '✓ Rejse til og med fredag 13. november.')).toBeVisible();
+  await expect(status.locator('.life-card-title')).toHaveText(
+    'Rejse til og med fredag 13. november',
+  );
+
+  // Sick today on the trip: the newest applies, and »Afslut« says the trip still does.
+  await page.getByTestId('status-open').click();
+  await setStatus(page, 'Syg', '2026-11-11');
+  await expect(screen.getByTestId('status-effects')).toContainText(
+    'Gælder i stedet for Rejse de dage, de overlapper.',
+  );
+  await screen.getByTestId('status-save').click();
+  await expect(card.locator('h1')).toHaveText('Syg');
+  await card.getByTestId('status-change').click();
+  const sick = screen
+    .getByTestId('status-item')
+    .filter({ has: page.locator('.status-item-name', { hasText: /^Syg/ }) });
+  await expect(sick).toContainText(
+    'Afslut, så gælder Rejse stadig til og med fredag 13. november.',
+  );
+  await sick.getByTestId('status-end').click();
+  await expect(
+    savedLine(page, '✓ Syg er afsluttet. Rejse gælder stadig til og med fredag 13. november.'),
+  ).toBeVisible();
+  await expect(card.locator('h1')).toHaveText('Muay Thai');
+
+  // Tuesday 17/11: Styrke A, not the travel session.
+  for (const day of [
+    'torsdag 12. november',
+    'fredag 13. november',
+    'lørdag 14. november',
+    'søndag 15. november',
+    'mandag 16. november',
+    'tirsdag 17. november',
+  ]) {
+    await nextDay(page, day);
+  }
+  await expect(card.locator('h1')).toHaveText('Styrke A');
+  await expect(status).toHaveCount(0);
+
+  // Ill Tuesday–Wednesday, extended on Wednesday to Friday: one period, one »Afslut«.
+  await page.getByTestId('status-open').click();
+  await setStatus(page, 'Syg', '2026-11-18');
+  await screen.getByTestId('status-save').click();
+  await nextDay(page, 'onsdag 18. november');
+  await card.getByTestId('status-change').click();
+  await setStatus(page, 'Syg', '2026-11-20');
+  await expect(screen.getByTestId('status-effects')).toContainText(
+    'Retter Syg til og med i dag: nu til og med fredag 20. november.',
+  );
+  await screen.getByTestId('status-save').click();
+  await expect(savedLine(page, '✓ Syg til og med fredag 20. november.')).toBeVisible();
+  await expect(card).toContainText('Til og med fredag 20. november.');
+  await card.getByTestId('status-change').click();
+  await expect(screen.getByTestId('status-item')).toHaveCount(1);
+  await screen.getByTestId('status-end').click();
+  await expect(
+    savedLine(page, '✓ Syg er afsluttet. Fra i dag gælder den almindelige plan.'),
+  ).toBeVisible();
+  await expect(card.locator('h1')).toHaveText('Muay Thai');
+  expect(await storedEventCount(page)).toBe(stored);
+});
+
+test('L1: på en rejsedag står klubben, og »Hvordan var det?« spørges efter klubtiden @date', async ({
+  page,
+}) => {
+  // 20:45 in Copenhagen on Monday 9/11, after the club time.
+  await openAt(page, '2026-11-09T19:45:00Z');
+  await onboard(page);
+  const stored = await storedEventCount(page);
+  await startSimulation(page, '2026-11-11');
+  await page.getByTestId('status-open').click();
+  await setStatus(page, 'Rejse', '2026-11-11');
+  await page.getByTestId('status-save').click();
+  const card = page.getByTestId('main-card');
+  await expect(page.getByTestId('status-card').locator('.life-card-title')).toHaveText(
+    'Rejse i dag',
+  );
+  await expect(card.locator('h1')).toHaveText('Muay Thai');
+  await expect(card.getByTestId('club-log-open')).toHaveText('Hvordan var det?');
+  expect(await storedEventCount(page)).toBe(stored);
+});
+
+test('L5: ferie lørdag–mandag er hvile, også på klubdagene, og søndag er søndagstjekket med ferien over @date', async ({
+  page,
+}) => {
+  await openAt(page, MONDAY_MORNING);
+  await onboard(page);
+  const stored = await storedEventCount(page);
+  await startSimulation(page, '2026-11-14');
+  const card = page.getByTestId('main-card');
+  await page.getByTestId('status-open').click();
+  await setStatus(page, 'Ferie', '2026-11-16');
+  await page.getByTestId('status-save').click();
+  await expect(savedLine(page, '✓ Ferie fra i dag til og med mandag 16. november.')).toBeVisible();
+  await expect(card.locator('h1')).toHaveText('Ferie');
+  await expect(card).toContainText('Hvile. Open & Strong er valgfri.');
+  await expect(card).toContainText('Til og med mandag 16. november.');
+  await expect(card.getByTestId('status-change')).toHaveText('Ret status');
+  await expect(page.getByTestId('club-card')).toHaveCount(0);
+  await expectClean(page, 'I dag på ferie lørdag');
+  const row = (weekday: string) =>
+    page.locator('.week-day', { has: page.locator('.week-day-weekday', { hasText: weekday }) });
+  await tab(page, 'Uge');
+  await expect(row('Lørdag').locator('.chip')).toHaveText(['Ferie']);
+  await tab(page, 'I dag');
+
+  // Sunday: the Sunday check is the day's card, with the holiday in a card over it.
+  await nextDay(page, 'søndag 15. november');
+  await expect(card.locator('h1')).toHaveText('Søndagstjek');
+  await expect(page.getByTestId('status-card').locator('.life-card-title')).toHaveText(
+    'Ferie til og med mandag 16. november',
+  );
+  await expect(page.getByTestId('club-card')).toHaveCount(0);
+
+  // Monday, a club day: rest, no Muay Thai.
+  await nextDay(page, 'mandag 16. november');
+  await expect(card.locator('h1')).toHaveText('Ferie');
+  await expect(card).toContainText('Kun i dag.');
+  await tab(page, 'Uge');
+  await expect(row('Mandag').locator('.chip')).toHaveText(['Ferie']);
   expect(await storedEventCount(page)).toBe(stored);
 });
 
