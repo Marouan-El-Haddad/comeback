@@ -406,7 +406,13 @@ function apply(program: Program, state: State, raw: AppEvent, emomHistory: EmomP
       state.skipped.push({ kind: e.kind, forDate: e.forDate, reason: e.reason });
       break;
     case 'session_moved':
-      state.moves.push({ kind: e.kind, fromDate: e.fromDate, toDate: e.toDate, short: e.short });
+      state.moves.push({
+        kind: e.kind,
+        fromDate: e.fromDate,
+        toDate: e.toDate,
+        short: e.short,
+        on: e.date,
+      });
       break;
     case 'measurement_logged':
       state.measurements.push({

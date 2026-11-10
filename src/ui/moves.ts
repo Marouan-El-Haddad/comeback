@@ -130,6 +130,7 @@ export function optionNotes(
       fromDate: item.date,
       toDate: option.date,
       short: option.mode === 'short',
+      on: today,
     };
     const after = { ...state, moves: [...state.moves, move] };
     notes.push(motorNote(calmTourDay(program, after, option.date, today), today));

@@ -26,13 +26,17 @@ function intervalsWeek(program: Program, state: State, date: ISODate): boolean {
   return type === 'intervals_30_15' || type === 'fight_rounds';
 }
 
-/** Valid days to move `kind` from `fromDate` to, from `today` until Sunday. */
+/**
+ * Valid days to move `kind` from `fromDate` to, from `today` until Sunday. `taken` are days that
+ * count as taken in rule 4 although no session stands there (a calm run already offered, S-MOVE-06).
+ */
 export function validMoveDays(
   program: Program,
   state: State,
   kind: SessionKind,
   fromDate: ISODate,
   today: ISODate,
+  taken: readonly ISODate[] = [],
 ): MoveOption[] {
   const monday = mondayOf(fromDate);
   const sunday = addDays(monday, 6);
@@ -67,7 +71,7 @@ export function validMoveDays(
     // Rule 4 (R-REST): at least one whole rest day must remain in the week.
     let restDay = false;
     for (let d = monday; d <= sunday; d = addDays(d, 1)) {
-      if (isClubDay(state, d) || d === date) continue;
+      if (isClubDay(state, d) || d === date || taken.includes(d)) continue;
       const past = d < today;
       const busy = past
         ? state.sessions.some((s) => s.date === d && s.kind !== 'os')
@@ -125,11 +129,32 @@ export function moveSession(
   );
 }
 
+/** The run offered from `from` in the week from `monday`, with `taken` taken in rule 4. */
+function calmRunFrom(
+  program: Program,
+  state: State,
+  monday: ISODate,
+  from: ISODate,
+  taken: readonly ISODate[],
+): ISODate | null {
+  const plan = scheduleForWeek(program, { ...state, moves: [] }, monday);
+  if (!plan.some((a) => a.kind === 'motor')) return null;
+  if (scheduleForWeek(program, state, monday).some((a) => a.kind === 'motor')) return null;
+  // From the motor's last place before it went – its own day, or where a move of the motor put
+  // it – so its own day counts when it is free again (S-MOVE-06).
+  const motorOnly = { ...state, moves: state.moves.filter((m) => m.kind === 'motor') };
+  const place = scheduleForWeek(program, motorOnly, monday).find((a) => a.kind === 'motor')?.date;
+  if (!place) return null;
+  return validMoveDays(program, state, 'motor', place, from, taken)[0]?.date ?? null;
+}
+
 /**
  * The optional calm run when moves took the week's motor (5.9 rule 1: »Behold én rolig tur, hvis
  * du kan«): the first day from `today` until Sunday that the motor itself could move to – a free
  * day without club or session, not sick or on holiday, with a whole rest day left (R-REST). Null
- * when the week keeps its motor, when the week plan has none (5.10), or when no day is free.
+ * when the week keeps its motor, when the week plan has none (5.10), or when no day is free. It is
+ * offered once: a day gone by on which I dag offered it – with the moves made by then – counts as
+ * taken in the rest rule, so two runs never take the week's only whole rest day (S-MOVE-06).
  */
 export function calmTourDay(
   program: Program,
@@ -138,10 +163,11 @@ export function calmTourDay(
   today: ISODate,
 ): ISODate | null {
   const monday = mondayOf(date);
-  const planned = scheduleForWeek(program, { ...state, moves: [] }, monday).find(
-    (a) => a.kind === 'motor',
-  );
-  if (!planned) return null;
-  if (scheduleForWeek(program, state, monday).some((a) => a.kind === 'motor')) return null;
-  return validMoveDays(program, state, 'motor', planned.date, today)[0]?.date ?? null;
+  const sunday = addDays(monday, 6);
+  const offered: ISODate[] = [];
+  for (let d = monday; d < today && d <= sunday; d = addDays(d, 1)) {
+    const then = { ...state, moves: state.moves.filter((m) => m.on <= d) };
+    if (calmRunFrom(program, then, monday, d, offered) === d) offered.push(d);
+  }
+  return calmRunFrom(program, state, monday, today, offered);
 }

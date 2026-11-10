@@ -579,7 +579,14 @@ export interface State {
     /** The tracks a check of the week named under »for tungt« (S-PAIN-11). */
     takenHeavy: string[];
   }>;
-  moves: Array<{ kind: SessionKind; fromDate: ISODate; toDate: ISODate; short: boolean }>;
+  /** Moves of the week's sessions; `on` is the day the move was made. */
+  moves: Array<{
+    kind: SessionKind;
+    fromDate: ISODate;
+    toDate: ISODate;
+    short: boolean;
+    on: ISODate;
+  }>;
   skipped: Array<{ kind: SessionKind; forDate: ISODate; reason: 'user' | 'missed' }>;
   overlayChoices: Record<string, 'default' | 'alternative'>;
   heroes: Record<string, boolean>;

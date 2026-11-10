@@ -223,6 +223,34 @@ describe('Flytning og ugeplan', () => {
     });
     if (first) early.add([first]);
     expect(calmTourDay(early.program, early.state(tuesday), tuesday, tuesday)).toBe(tuesday);
+    // The run was offered on Tuesday, and A and B were taken on Thursday and Friday: Sunday offers
+    // none, or the week had no whole rest day.
+    early.session({ date: dayOf(0, 4), kind: 'A' });
+    early.session({ date: dayOf(0, 5), kind: 'B' });
+    const sunday = dayOf(0, 7);
+    expect(calmTourDay(early.program, early.state(sunday), sunday, sunday)).toBeNull();
+
+    // The motor moved to Sunday on Monday, and Tuesday's A to Sunday on Wednesday: the motor's
+    // own Thursday is free now, and the run is there.
+    const own = new Log().onboard();
+    const monday = dayOf(0, 1);
+    const motor = moveSession(own.program, own.state(monday), own.make, {
+      kind: 'motor',
+      fromDate: dayOf(0, 4),
+      toDate: sunday,
+      today: monday,
+    });
+    if (motor) own.add([motor]);
+    own.catchUp(wednesday);
+    const a = moveSession(own.program, own.state(wednesday), own.make, {
+      kind: 'A',
+      fromDate: dayOf(0, 2),
+      toDate: sunday,
+      today: wednesday,
+    });
+    expect(a).not.toBeNull();
+    if (a) own.add([a]);
+    expect(calmTourDay(own.program, own.state(wednesday), wednesday, wednesday)).toBe(dayOf(0, 4));
 
     // A week plan without a motor (5.10) has none here.
     const extra = new Log().onboard();
