@@ -557,6 +557,8 @@ export interface State {
     freshness?: Freshness;
     technique?: number;
     content?: ClubContent[];
+    /** When the log was written (ISO): the Sunday check writes Saturday's grade the day after. */
+    at: string;
   }>;
   measurements: Array<{
     date: ISODate;

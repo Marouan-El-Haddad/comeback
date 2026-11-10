@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PROGRAM, submitSundayCheck } from '../../engine/index.ts';
+import { chooseStep, PROGRAM, submitSundayCheck } from '../../engine/index.ts';
 import { dayOf, Log, mondays } from '../../engine/__tests__/helpers/log.ts';
 import {
   clubAsks,
@@ -249,6 +249,8 @@ describe('the Sunday check’s fields', () => {
 describe('after the review of P5a', () => {
   it('M3: the grade from the Sunday check alone does not answer yesterday’s club card', () => {
     const log = onboarded();
+    // Written on Sunday, as the Sunday check writes it (the helper's clock only goes forward).
+    log.push({ type: 'os_done' }, SUN);
     log.push({ type: 'club_logged', attended: true, technique: 4 }, SAT);
     const [sunday] = clubAsks(PROGRAM, log.state(SUN), SUN, 9 * 60);
     expect(sunday).toMatchObject({ date: SAT, yesterday: true, answered: false });
@@ -309,5 +311,41 @@ describe('after the review of P5a', () => {
       'Ben – nu trin 2',
     ]);
     expect(standing.map((c) => c.kind)).toEqual(['pain', 'pain', 'heavy']);
+  });
+});
+
+// The follow-up on the review of P5a (docs/reviews/nat3-p5a-livet.md, »Opfølgning«, D68).
+describe('after the follow-up on the review of P5a', () => {
+  it('N2: a grade logged alone on Saturday itself answers the club card the day after', () => {
+    const log = onboarded();
+    log.push({ type: 'club_logged', attended: true, technique: 7 }, SAT);
+    expect(clubAsks(PROGRAM, log.state(SUN), SUN, 9 * 60)[0]).toMatchObject({
+      date: SAT,
+      answered: true,
+    });
+  });
+
+  it('N1: the card leaves out a step chosen back under Stiger on the same Sunday', () => {
+    const log = new Log().onboard({
+      completedWeeks: mondays(1),
+      steps: { legs: { stepId: 'legs.3', target: 8 } },
+    });
+    const sunday = dayOf(1, 7);
+    log.add(
+      submitSundayCheck(log.ctx, log.events, { date: sunday, painTracks: [], tooHeavy: ['legs'] }),
+    );
+    log.add(submitSundayCheck(log.ctx, log.events, { date: sunday, painTracks: [], tooHeavy: [] }));
+    const standing = () => {
+      const state = log.state(sunday);
+      const due = sundayDue(state, sunday);
+      if (!due) throw new Error('no check');
+      return standingChanges(PROGRAM, state, due, (id) => trackDistance(state, id));
+    };
+    expect(standing().map((c) => c.trackId)).toEqual(['legs']);
+    // Back to trin 3 under Stiger the same Sunday: nothing of the check stands.
+    log.add(
+      chooseStep(log.ctx, log.events, { trackId: 'legs', stepId: 'legs.3', date: sunday }).events,
+    );
+    expect(standing()).toEqual([]);
   });
 });

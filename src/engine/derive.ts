@@ -425,6 +425,7 @@ function apply(program: Program, state: State, raw: AppEvent, emomHistory: EmomP
         freshness: e.freshness,
         technique: e.technique,
         content: e.content,
+        at: e.at,
       });
       break;
     case 'sunday_check': {

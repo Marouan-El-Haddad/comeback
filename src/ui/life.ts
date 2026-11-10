@@ -9,7 +9,9 @@ import {
   mondayOf,
   PROGRAM,
   statusOn,
+  stepIndex,
   TIME_ZONE,
+  todayIn,
   weekday,
 } from '../engine/index.ts';
 import type {
@@ -125,10 +127,7 @@ export function clubSummary(log: ClubLog): string {
   return parts.length > 0 ? parts.join(' · ') : 'mødt';
 }
 
-/**
- * Only Saturday's grade, as the Sunday check gives it when the club log is missing (D63, D65): it
- * does not answer »Hvordan var det?«, so the day after still asks.
- */
+/** Only Saturday's grade: no content, hardness or freshness. */
 export function gradeOnly(log: ClubLog): boolean {
   return (
     log.attended &&
@@ -137,6 +136,16 @@ export function gradeOnly(log: ClubLog): boolean {
     log.hardness === undefined &&
     log.freshness === undefined
   );
+}
+
+/**
+ * A log that answers »Hvordan var det?« the day after: anything but a grade alone written after
+ * its club day, as the Sunday check gives it when the club log is missing (D63, D65, D68). A grade
+ * logged alone on the club day itself answers.
+ */
+function answers(entry: State['club'][number]): boolean {
+  const alone = gradeOnly({ ...entry, content: entry.content ?? [] });
+  return !alone || todayIn(Date.parse(entry.at)) <= entry.date;
 }
 
 export interface ClubAsk extends ClubDay {
@@ -172,7 +181,7 @@ export function clubAsks(
       yesterday: true,
       ended: true,
       log,
-      answered: log !== null && !gradeOnly(log),
+      answered: state.club.some((c) => c.date === before.date && answers(c)),
     });
   }
   const day = clubDay(program, state, today);
@@ -245,18 +254,20 @@ export function standingChanges(
   distance: (trackId: string) => string,
 ): StandingChange[] {
   if (!due.check) return [];
-  const changed = (trackId: string, reason: string) =>
-    state.decisions.some(
-      (d) => d.trackId === trackId && d.date === due.sunday && d.reason === reason,
-    );
   const out: StandingChange[] = [];
   for (const id of due.check.taken) {
     const t = state.tracks[id];
-    if (!t) continue;
-    if (t.tempDown && changed(id, 'pain')) {
+    // Only the track's newest step change counts, and only when it is the check's: dated its
+    // Sunday, and not a step up (a step chosen back under Stiger is not the check's, D68).
+    const last = [...state.decisions].reverse().find((d) => d.trackId === id);
+    if (!t || !last || last.date !== due.sunday) continue;
+    if (t.tempDown && last.reason === 'pain') {
       const text = distance(id);
       out.push({ trackId: id, kind: 'pain', now: text.charAt(0).toLowerCase() + text.slice(1) });
-    } else if (changed(id, 'user_choice')) {
+    } else if (
+      last.reason === 'user_choice' &&
+      stepIndex(program, last.to) <= stepIndex(program, last.from)
+    ) {
       out.push({ trackId: id, kind: 'heavy', now: `nu trin ${getStep(program, t.stepId).key}` });
     }
   }
