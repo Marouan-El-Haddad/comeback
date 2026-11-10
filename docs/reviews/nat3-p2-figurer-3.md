@@ -590,3 +590,45 @@ Alle i `screenshots/`:
   - `review-p2-3-opf-os1-over-haandklaedet.png`;
   - `review-p2-3-opf-airplane.png`;
   - `review-p2-3-opf-n3-figurer-oeverst.png`.
+
+## Slutstatus
+
+2026-11-10 · b6e7147 (figurernes rettelser i 118ec40 og kontaktarkene tegnet igen i b6e7147) · worktree `scratchpad/wt/r3`
+
+Metode:
+
+- `git diff 2e0909b b6e7147 -- content/`: groin.3, N1, N2, os.2 og os.5 har fået de afprøvede værdier fra opfølgningen. Forklaringerne er uændrede.
+- `node scripts/check-explain.ts` på de 12 filer: alle OK.
+- Kontaktarkene i `screenshots/figures/` er set.
+- Målt hvert 1/30 sek:
+  - hånden i os.2;
+  - det nederste ben i groin.2–5.
+- **Kortet i `pixel9a`:** Firefox uden JIT og 127.0.0.1:4196.
+- **»Nu« for N1** tirsdag 10/11 i tidsmaskinen, midt i holdet.
+
+### Resultat
+
+52 figurer: **alle 52 godkendt.**
+
+| Tidligere afvist | Status | Grund |
+|---|---|---|
+| os › os.2 | Godkendt | Overkroppen bliver bred, når brystet drejer op (skuldrene 3 → 11 → 20). Hånden går ikke længere mod hovedet (højst 1,5 enheder), men i en bue over hoftesiden (højst 13,6). Pilen tegner den bue (`screenshots/review-p2-3-slut-os2.png`) |
+| groin › groin.3 | Godkendt | I »Hoften nede« er det nederste ben næsten strakt med knæet 6,4 og enden 7 over gulvet. Knæet er laveste punkt 5,6 over gulvet i hele løkken (`screenshots/review-p2-3-slut-groin3.png`) |
+
+De øvrige 16 figurer, der var afvist i første runde, blev godkendt i opfølgningen og er uændrede siden.
+
+### De nye fund
+
+| Fund | Status |
+|---|---|
+| O1 groin.3: knæet i gulvet | Rettet |
+| O2 prikken på hovedet i N1 og N2 | Rettet: prikken står under baghovedet, og hovedet og ansigtets mærke er frie på kortet og i »Nu« tirsdag (`screenshots/review-p2-3-slut-n1-nu.png`) |
+| O3 usynlige fejlpar | Rettet: fejlparrene i N1 og os.5 er fjernet, og teksten står alene |
+| O4 motoren ovenfra og `inFront` | Ikke rettet (lav). os.2 klarer sig med bredden og via-stumpen; fundet gælder kommende figurer |
+| O5 spidermans støttearm ovenfra | Ikke rettet (lav, godtaget). Brystets drejning og fodens plads ses tydeligt |
+
+Ellers åbent fra første runde, alle lave:
+
+- L6 i pogo: ringen står ved albuen. Rettelse: `"ring": "near.knee"` på fejl 2 og armene sænket i `wrong`, `content/figures/warmup.json:673`.
+- L7: tjekket af skulderens bevægelighed.
+- L8: skulderbladene.

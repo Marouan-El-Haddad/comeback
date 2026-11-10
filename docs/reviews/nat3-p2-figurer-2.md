@@ -323,3 +323,22 @@ Gennemgået igen på 2e0909b (7a300af–2e0909b: motorrunde 2 med D62 og figurag
 - `screenshots/review-p2-2-opf-fejlpar.png`
 - `screenshots/review-p2-2-opf-nu.png`
 - `screenshots/review-p2-2-opf-v4-klap.png`
+
+## Slutstatus
+
+Tjekket på b6e7147 (rettelserne i a749ca1 og kontaktarkene tegnet igen i b6e7147) i en ren worktree. `node scripts/check-explain.ts` er OK for alle otte figurfiler. Kontaktarkene og kortet er set i `pixel9a` med `E2E_PORT=4195`, og figurmotoren, kortet og »Nu« er uændrede siden 2e0909b.
+
+**Resultat:** alle 51 figurer i denne del er godkendt. Kun N3, L2 og L6 står åbne, og de ligger i motoren eller er accepterede grænser.
+
+**De to figurer, der stadig var afvist:**
+
+- **burpee_skill.V4 › clap: godkendt.** »Klap under brystet« står i »Pres fri og klap« (1,4–1,8 sek) med prikken ved hånden. Teksten står over figuren uden at dække kroppen, både på kontaktarket og i kortet.
+- **core_situp.2: godkendt.** Fejlringen står ved fødderne i »Fødderne løfter sig fra gulvet«.
+
+**De nye fund:**
+
+- **N1 (middel): rettet.** `"ring": "near.foot"` i `core_situp.2`.
+- **N2 (lav): rettet.** `"ring": "near.knee"` i `power_legs.2`; ringen står nu ved knæet.
+- **N3 (lav): åben.** Teksten i striben står stadig over den første vinkel (»Over tæerne« over sidebilledet i »Nu« for squat jump). Det er en ændring i motoren, og den dækker intet.
+
+Skærmbillede: `screenshots/review-p2-2-slut.png` (klap-cuen i kortet og de to fejlpar).

@@ -513,3 +513,34 @@ Der er 4 nye fund: 3 middel og 1 lav.
   - sofaen midt bag figuren forfra: 6 fejl, derfor er det en sag for motoren.
 
 Skærmbilleder: `screenshots/review-p2-1-opf-*.png` (22 filer).
+
+## Slutstatus
+
+Tjekket på b6e7147 (rettelserne i a749ca1 og kontaktarkene i b6e7147) i worktree `wt/r1`:
+
+- `node scripts/check-explain.ts`: OK for `legs`, `pull`, `shoulder`, `wallsit` og `posterior`;
+- kontaktarkene i `screenshots/figures/` og egne i dobbelt opløsning;
+- »Nu« for split squat tirsdag 10/11 i tidsmaskinen (`E2E_PORT=4194`).
+
+### De figurer, der stadig var afvist
+
+| Figur | Status | Hvad jeg så |
+|---|---|---|
+| `legs.2` | **Godkendt** | Vinklen forfra og fejlparret forfra er væk. Sidebilledet med sofaen bag figuren og hælens fejlpar med ringen ved foden står (`review-p2-1-slut-legs2-fra-siden.png`). |
+| `pull.2` | **Godkendt** | `"ring": "hip"`: ringen står om den hængende hofte. |
+| `shoulder.1` | **Godkendt** | `"ring": "hip"`: ringen står om hoften, der er faldet. |
+| `wallsit.W1` | **Godkendt** | `"ring": "hip"`: ringen står om hoften, der er gledet op ad væggen, ikke om knæet. |
+
+Det lave i N2 er også rettet. I `wallsit.W2` står ringen om den hånd, der falder fra garden, og i `posterior.2` om hoften (`review-p2-1-slut-ringe-pull2-shoulder1-posterior2.png` og `review-p2-1-slut-ringe-w1-w2.png`).
+
+### N1–N3
+
+| Fund | Status |
+|---|---|
+| N1 – sofaen ved siden af forfra i `legs.2` | **Rettet** med den hurtige løsning. Vinklen forfra er fjernet, og `legs.1` viser heller ikke knæ over tæer lige nu (se N3). Det kræver en rekvisit bag figuren i motoren, før vinklen forfra kan komme tilbage. |
+| N2 – fejlringen | **Rettet** i de fem fejlpar. **Men** `legs.1`'s eneste fejlpar, »Forreste hæl letter«, har ringen om knæet, ikke om hælen. Sådan har det været siden D62; jeg overså det i opfølgningen. Det er samme slags fejl, og en ring om knæet kan læses som »knæet for langt frem«. Rettelse (afprøvet: `check-explain` OK, ringen står om anklen, `review-p2-1-slut-legs1-ring-knae-og-fod.png`): `"ring": "near.foot"` i `legs.1`'s fejl 1. Split squat er tirsdagens øvelse. |
+| N3 – to vinkler i »Nu« | **Rettet:** split squat står igen i én vinkel i »Nu« (`review-p2-1-slut-nu-split-squat.png`). Figuren er ca. 65 × 108 px mod 114 × 148 px på da9abf8. Det skyldes D61's 152 px for en stående figur i »Nu« og striben, D62 holder plads til »Hælen i gulvet«. Den er tydelig nok til at kende øvelsen igen, så det er en bevidst afvejning og ikke et nyt fund. Knæ over tæer forfra mangler, til »Nu« kan vise én vinkel og kortet begge. |
+
+**Samlet:** alle 4 figurer, der stadig var afvist, er godkendt, og N1–N3 er rettet eller begrundet. Én linje mangler: `"ring": "near.foot"` i `legs.1`. Indtil den er lagt ind, er 42 af 43 figurer godkendt.
+
+Skærmbilleder: `screenshots/review-p2-1-slut-*.png` (5 filer).
