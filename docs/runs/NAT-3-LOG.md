@@ -59,3 +59,4 @@
 | 00:58 | Orkestratoren: npm run check på 5450bf1 (P5a- og P5b-rettelser) i ren worktree | Grøn: exit 0, 793 tests, JS 115,3 kB gz, CSS 4,5 kB |
 | 01:04 | P5b-opfølgning: alle 7 fund rettet; 2 nye lave (den rolige tur kan foreslås to gange; motorens oprindelige dag springes altid over) | Reviewer: npm run check (793), moves + life 42/42 |
 | 01:08 | P5a-opfølgning: H1, M1–M3, L1–L4 rettet (H1 holder med det rigtige ur og i tidsmaskinen; lageret uændret); 3 nye lave (kortets »står stadig«, karakter logget lørdag spørges igen søndag, N3: et gemt tjek efter nyt pas med skarp smerte gør det midlertidige trin permanent – tages med i slutrunden) | Reviewer: npm test 778/778, life.spec 26/26 |
+| 01:42 | P5a og P5b færdige og udgivet (e9cdc75): klublog, søndagstjek, flyt og spring over | Grøn: hele suiten 154/154 i ren worktree, Actions 42729966717 |
