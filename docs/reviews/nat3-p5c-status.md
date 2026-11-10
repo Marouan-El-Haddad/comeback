@@ -201,3 +201,12 @@ Metode:
   - En rettelse, der kun flytter slutdagen tidligere, beholder sin plads: `status_set` med den gamle `from` og den nye `to`, som S-WEEK-13 afløser på stedet.
   - Kun en rettelse, der lægger dage til (som syg igen fra i dag over en rejse, S-WEEK-14), skrives som den nyeste.
   - Tilføj eksemplet til S-WEEK-14: torsdag og fredag er stadig syge dage.
+
+### Kort tjek af N1 og N2
+
+2026-11-10 · 7923e3f, 18b3437, c5adb54 og e17e5b5 (D71, R34, S-WEEK-14..16) på e17e5b5. Kørt: `npm test` 829/829 (S-WEEK-13..16 grønne i begge tidszoner), typecheck og lint rene, `status.spec` 24/24 og egne flows 14/14 i `pixel9a` og `pixel9a-utc`.
+
+- **N1 rettet:** ferie 18.–20. foran 21.–27. giver to perioder (18.–27.); syg 14.–15. i hullet giver 12.–17.; klubben lukket 21.–23/12 foran 24/12–3/1 giver begge perioder. Et overlap (ferie 18.–22. over 21.–27.) retter til 18.–27.
+- **N2 rettet:** rejsen, der rettes til fredag 13. efter »Syg« torsdag–fredag, beholder sin plads. Torsdag og fredag er »Syg«, og skærmen siger »Syg gælder stadig fra i dag til og med fredag 13. november.«. En rejse, der forlænges fra fredag, lader de syge dage stå.
+- **M1 virker stadig:** rejsen 9.–20., der rettes til 13., giver Styrke A tirsdag 17/11 og Styrke B fredag 20/11, og den forlængede sygdom har ét »Afslut«.
+- **Data:** `applyStatusSet` læser `status_set` som før; der skrives kun `status_set`, og de dage, der er gået, ændres aldrig. Ingen nye fund.
