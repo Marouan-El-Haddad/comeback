@@ -194,3 +194,108 @@ Metode:
   - søndagens rækkefølge med tjekket før klubloggen (M3);
   - stierne med det rigtige ur uden tidsmaskine. Mine kørsler viser, at de virker.
 - **Rettelse:** testene nævnt under H1, M1, M2 og M3. Tilføj mindst ét flow med det rigtige ur søndag 15/11 i `@date`.
+
+## Opfølgning
+
+2026-11-10 · rettelserne 8668a44 (motoren: S-PAIN-09 og S-PAIN-10), 2c426f2 (ENGINE 5.5, 6.5, 8 og 9; SPEC 4.6 og 4.7; D65 og R28), e450394 (UI) og be3d17d (tests) · worktree på c68d4d5. P5b ligger imellem og reviewes for sig.
+
+Metode:
+
+- **Kørt** i worktreen:
+  - `npm test`: 778/778. `npm run typecheck` og `npm run lint` (eslint og prettier): grønne.
+  - `e2e/life.spec.ts` i `pixel9a` og `pixel9a-utc` (`E2E_PORT=4185`): 26/26. Heraf er H1, M1+M2, M3 med det rigtige ur og L2 nye i begge projekter.
+  - `e2e/moves.spec.ts`, `tabs.spec.ts` og `card.spec.ts` i `pixel9a`, fordi historikken er ændret i I dag og Uge: 16 bestod, og 1 var flaky. »Næste viser EMOM'en …« nåede ikke pausen i første forsøg og bestod i andet. Det er et pas-flow uden klublog eller søndagstjek.
+- **Egne flows** i `pixel9a`. De er scratch og ikke committet.
+  - H1 med det rigtige ur søndag 15/11 og i tidsmaskinen (se nedenfor).
+  - Mine flows fra M2 og M3 igen, og et trin valgt under Stiger samme søndag (N1).
+  - En karakter logget alene lørdag (N2).
+  - L1 med »+1 dag«, L2 med `page.goBack()` og `history.length` og L3 søndag og mandag.
+- **Motoren** med scratch-scripts:
+  - M1 som rapporteret;
+  - den omvendte rettelse med et tredje tjek;
+  - smerte fra et pas og så søndagens smerte;
+  - et tjek gemt igen efter et nyt pas med skarp smerte (N3).
+
+### Status for fundene
+
+- **H1 er rettet.**
+  - **I tidsmaskinen:**
+    - Søndagstjekket med »For tungt: Ben · trin 3« lukker ved »Afslut«, og det rigtige lager har 20 hændelser før og efter.
+    - Klubloggen bliver åben hen over »+1 dag«. Det er samme verden, så den skriver kun i kopien. Den lukker ved »Afslut«, og lageret er uændret.
+  - **Med det rigtige ur:** det rigtige søndagstjek gemmes bagefter i den rigtige log (20 → 22: `sunday_check` og `step_changed legs.3 → legs.2`). Indtil da står Ben på trin 3.
+  - **Koden:** I dag og Uge lukker skærmen i en effekt på `model.sim`, og `useSameWorld` afviser at skrive fra en skærm åbnet i den anden verden (`otherWorld` i `LifeForm.tsx`).
+- **M1 er rettet** (S-PAIN-09).
+  - **Motoren:** legs.3 med skarp smerte tirsdag og »For tungt« søndag giver `step_changed legs.2 → legs.2 (user_choice)`. To uger og to grønne pas senere står Ben på legs.2, hverken legs.1 eller legs.3.
+  - **Den omvendte rettelse** (smerte → for tungt) giver det samme, og et tredje tjek med smerte skriver intet. Spørgsmål 2 følger det nyeste tjek.
+  - **Skærmen:** knappen siger »Ben · trin 3« i smerteperioden, og linjen under den siger »Ben bliver på trin 2 og kommer ikke tilbage til trin 3 – dit eget valg.«
+  - **Mod kilderne:** ugens ene problem koster nu ét trin (PROGRAM_KILDE s. 46 og 48). R-PAIN-SUNDAY, tabellen 6.5, scenariet og testen siger det samme. S-PAIN-10 følger D63's »samme smerte tæller én gang pr. uge«.
+  - **Uændret og efter ENGINE:** smerte fra et pas tirsdag, som søndagstjekket siger ikke gik væk, forlænger perioden og giver Fysio-rådet (R-PAIN-RESTORE). Det passer med s. 46: »Smerter, der ikke går væk …«.
+- **M2 er rettet.**
+  - **»Ret søndagstjekket«** viser øverst »Fra søndagstjekket: Lyske – lettere variant til 22. november (smerte) · Ben – nu trin 2« og »Fjerner du et valg, bliver øvelsen, hvor den er«. Under valgene står »Lyske står allerede nede fra søndagstjekket.« og »Ben står allerede nede fra søndagstjekket.« (`screenshots/review-p5a-opf-ret-tjek.png`).
+  - **Kortet** siger efter »Nej« og Ben fravalgt »Ondt: Lyske – …«, »For tungt: Ben – nu trin 2« og »Fjernet i rettelsen, men står stadig: Lyske, Ben. Trinnet kan vælges under Stiger.«
+  - **Linjerne** læses af motorens egne hændelser (`checkEffects`), så skærmen og motoren siger det samme. Se dog N1.
+- **M3 er rettet.** Med det rigtige ur søndag 15/11 bliver »Muay Thai i går« stående efter tjekket med karakter 4 (»Karakteren 4 er givet. Resten kan du logge her.«). Klubloggen viser »4 · allerede givet« og gemmer resten uden karakteren, så flad-reglen læser én (e2e). Se dog N2.
+- **L1 er rettet** af P5b: linjen hører til sin dag, og fredag efter »+1 dag« står den ikke længere.
+- **L2 er rettet.**
+  - Skærmen lægger et trin i historikken (`history.length` 1 → 2), og `page.goBack()` lukker søndagstjekket, klubloggen og »Flyt eller spring over«, mens appen bliver.
+  - Efter »Tilbage«, »Gem«, »Afslut« og tilbage-gestussen er `history.length` stadig 2, så historikken vokser ikke.
+- **L3 er rettet.**
+  - »Film dig selv« siger søndag »i næste uge« og mandag »i denne uge«.
+  - Smerte på første trin siger »Pres får en lettere variant til 22. november.«
+- **L4 er rettet.** `life.spec.ts` har H1, M1+M2, M3 med det rigtige ur og L2 i begge projekter. `life.test.ts` og S-PAIN-09/10 dækker M1–M3.
+
+### Nye fund
+
+0 høj, 0 middel og 3 lav.
+
+#### N1 (lav): Kortet siger »står stadig« om et trin, der samme søndag er valgt tilbage under Stiger
+
+- **Hvor:**
+  - `src/ui/life.ts` (`standingChanges`): `changed` tæller ethvert trinskift med `reason: 'user_choice'` dateret søndagen.
+  - `src/ui/screens/Today.tsx` (`SundaySummary`).
+- **Hvorfor:**
+  - **Kilderne:** SPEC 4.7 og D65 (3) siger, at kortet viser det, ugens tjek har ændret, »og som stadig står«. Både kortet og rettelsen beder brugeren vælge trinnet under Stiger.
+  - **Gentaget** i tidsmaskinen 15/11:
+    1. Tjekket gemmes med »For tungt: Ben« (trin 3 → 2).
+    2. »Ret søndagstjekket« uden Ben.
+    3. »Vælg trin 3« under Stiger samme søndag.
+    4. Kortet siger »For tungt: Ben – nu trin 3« og »Fjernet i rettelsen, men står stadig: Lyske, Ben.« (`screenshots/review-p5a-opf-stiger-samme-soendag.png`).
+  - **I en smerteperiode** bliver et valg under Stiger samme søndag til »For tungt: …«.
+  - **Konsekvensen:** ingen virkning på træningen, men teksten er forkert.
+- **Rettelse:**
+  1. Tæl kun sporets seneste trinskift, og kun når det er tjekkets. Det kan afgøres på to måder:
+     - trinskiftet er dateret søndagen og går ikke op, for et valg op under Stiger er ikke tjekkets;
+     - eller gem tidspunktet for ugens seneste tjek i den afledte tilstand, og spring spor over, der har et nyere trinskift.
+  2. Tilføj en test i `life.test.ts`.
+
+#### N2 (lav): En karakter logget alene på selve lørdagen bliver der spurgt om igen søndag
+
+- **Hvor:** `src/ui/life.ts` (`gradeOnly` og `answered` dagen efter i `clubAsks`).
+- **Hvorfor:**
+  - **Kilderne:** ifølge D65 (4) er det kun karakteren fra søndagstjekket, der ikke svarer, og »En log på selve klubdagen svarer altid«. SPEC 4.6 siger det samme om karakteren fra tjekket.
+  - **Gentaget** med det rigtige ur: klubloggen lørdag 14/11 kl. 11.30 gemmes med kun »7«. Søndag står »Muay Thai i går · Karakteren 7 er givet. Resten kan du logge her.« (`screenshots/review-p5a-opf-loerdag-kun-karakter.png`).
+  - **Konsekvensen:** svarer brugeren, får lørdagen endnu en log. Intet går tabt.
+- **Rettelse:**
+  1. Skeln på, hvornår loggen blev skrevet: læg Københavns dato for `at` på den afledte klublog.
+  2. Lad kun en log med kun `technique`, skrevet dagen efter, holde kortet åbent.
+  3. Tilføj en test i `life.test.ts`.
+
+#### N3 (lav): Et tjek gemt igen efter et nyt pas med skarp smerte gør smertens midlertidige trin permanent
+
+- **Hvor:** `src/engine/session.ts`, løkken over `tooHeavy`: grenen for `tempDown` kommer før `handled`.
+- **Hvorfor:**
+  - **Kilderne:**
+    - ENGINE R-PAIN-SUNDAY: et spor, som et tjek for ugen har nævnt, tages ikke ned igen.
+    - R-PAIN-RESTORE: smertens trin gendannes efter perioden.
+    - S-PAIN-08: de samme svar igen skriver intet.
+  - **Gentaget i motoren:**
+    1. Tjek 1 søndag med »For tungt: Ben« (legs.3 → legs.2).
+    2. Et flyttet Styrke A samme søndag med skarp smerte i ben (legs.1 midlertidigt til 29/11).
+    3. »Ret søndagstjekket« mandag med de forudfyldte svar, hvor kun søvnen er ændret, skriver `step_changed legs.1 → legs.1 (user_choice)`.
+    4. To uger senere står Ben stadig på legs.1.
+
+    Gendannelsen efter den nye smerte er væk, uden at brugeren har valgt noget nyt om Ben.
+  - **Afbødning:** skærmen viser linjen »Ben bliver på trin 1 og kommer ikke tilbage til trin 2«, og det kræver et pas mellem tjekket og rettelsen.
+- **Rettelse:**
+  1. Lad grenen kun gælde spor, som ugens tjek ikke allerede har nævnt under »for tungt«. Gem `taken` for smerte og for tungt hver for sig.
+  2. Skriv et scenarie S-PAIN-11 i ENGINE 8, før koden rettes.
