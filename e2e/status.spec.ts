@@ -351,6 +351,13 @@ test('rejse viser rejsepasset på Styrke-dagene, og klubben lukket viser kamp-ru
   ]);
   await expect(items.getByTestId('status-end')).toHaveText(['Afslut', 'Afslut']);
   await expectClean(page, 'Status med to statusser');
+  await page.screenshot({
+    path: 'screenshots/status-liste.png',
+    scale: 'css',
+    animations: 'disabled',
+    fullPage: true,
+    style: IN_FLOW,
+  });
   await page.getByTestId('status').getByRole('button', { name: 'Tilbage' }).click();
 
   // Uge: the travel session on Friday, the fight rounds on Saturday.
