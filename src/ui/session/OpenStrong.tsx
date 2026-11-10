@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { mondayOf, osCue, osThisWeek, PROGRAM } from '../../engine/index.ts';
 import { enableAudio, play } from '../audio.ts';
 import { ExerciseCard, useCard } from '../card.tsx';
+import { useSettle } from '../hooks.ts';
 import type { Model } from '../model.ts';
 import { keepAwake, releaseAwake } from '../wakelock.ts';
 import { DayParts, PlanTime, type DayItem } from './DayPlan.tsx';
@@ -46,6 +47,9 @@ export function OpenStrong({ model, onClose }: { model: Model; onClose: () => vo
   // item keeps its time (docs/SPEC.md 3.8, DECISIONS.md D47).
   const card = useCard();
   const held = paused || card.id !== null;
+  // Half a second without taps after a new item or the card closing, as in the session (D33, D57):
+  // the second tap of a double tap on »Videre« lands on nothing, so no item is skipped (D68).
+  const settling = useSettle([index, card.id]);
   const routine = OS?.id ?? 'os';
   useSubjects([routine]);
 
@@ -90,7 +94,11 @@ export function OpenStrong({ model, onClose }: { model: Model; onClose: () => vo
 
   return (
     <>
-      <div class="session" data-testid="open-strong" hidden={card.id !== null}>
+      <div
+        class={settling ? 'session settling' : 'session'}
+        data-testid="open-strong"
+        hidden={card.id !== null}
+      >
         <div class="session-top">
           <header class="session-header">
             <div class="session-heading">

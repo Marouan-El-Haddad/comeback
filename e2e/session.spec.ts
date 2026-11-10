@@ -741,6 +741,23 @@ test('Open & Strong i tidsmaskinen: listen før start, figuren følger uret, ing
   expect(await storedEventCount(page)).toBe(stored);
 });
 
+test('et dobbelttryk på »Videre« i Open & Strong springer ingen øvelse over (D61, D68)', async ({
+  page,
+}) => {
+  await stillFigures(page);
+  await openApp(page, '2026-11-10');
+  await onboard(page);
+  await page.getByTestId('os-start').click();
+  await page.getByTestId('os-go').click();
+  await expect(page.locator('.session-progress')).toHaveText('Øvelse 1 af 6');
+  // The second tap lands on the next item's »Videre« in its first half second: nothing happens.
+  await doubleTapOn(page, page.getByRole('button', { name: 'Videre', exact: true }));
+  await expect(page.locator('.session-progress')).toHaveText('Øvelse 2 af 6');
+  await page.waitForTimeout(600);
+  await expect(page.locator('.session-progress')).toHaveText('Øvelse 2 af 6');
+  await expect(now(page).locator('.set-name')).toHaveText('Åben bog');
+});
+
 test('»Hold pause« fører til fanerne midt i et pas, og passet venter samme sted', async ({
   page,
 }) => {
